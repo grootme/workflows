@@ -1,0 +1,402 @@
+{
+  "name": "Automatizacion_Nano_Banana_JosemaFernandez",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Generar Anuncios con Nano-Banana🍌",
+        "formDescription": "Sube la imagen de tu producto para crear tu anuncio",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Imagen",
+              "fieldType": "file",
+              "acceptFileTypes": ".jpg, .jpeg, .png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -784,
+        -144
+      ],
+      "id": "40fc07b9-85d9-441b-b938-0085095ea13a",
+      "name": "On form submission",
+      "webhookId": "d7e75a77-d5b1-40aa-b42e-3a66dace795a",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "jV3SbHWReIbKbQai",
+          "name": "Formulario"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "binaryPropertyName": "Imagen",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -144
+      ],
+      "id": "6a630abc-4164-4774-91db-a3ee1ae71666",
+      "name": "Convertir Imagen a Base64"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1Xo9D_213Cs7-2Gs62ZFwfodDboPoXxLb",
+            "mode": "list",
+            "cachedResultName": "Modelos",
+            "cachedResultUrl": ""
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        -144
+      ],
+      "id": "ae90d5af-26b0-43c9-ad8d-465c25a9b9d8",
+      "name": "Obener Imagenes de Influencers",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rrSrRkUr5t0BSniH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        -144
+      ],
+      "id": "55a585a1-1fa8-4767-872c-6ab58c86cd73",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        144,
+        -144
+      ],
+      "id": "6538b043-5cfe-4903-a063-7a382bceb68d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rrSrRkUr5t0BSniH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -144
+      ],
+      "id": "afa833ac-6675-4b1d-8638-bdda88cbf210",
+      "name": "Convertir Imagen Influencer a Base64"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        -80
+      ],
+      "id": "2d2e48de-05f0-4f3a-a180-b7f2773f163b",
+      "name": "Wait",
+      "webhookId": "57a0a546-afda-4b40-a7de-9f09f9f1c8fd"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "redirect",
+        "redirectUrl": "",
+        "options": {
+          "formTitle": "¡Imágenes Generadas con Éxito!"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        -336
+      ],
+      "id": "5069b15d-f086-48d8-a6c9-2072edbb1604",
+      "name": "Form",
+      "webhookId": "c585df7a-b568-4775-9772-8e1245d0a67a"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"google/gemini-2.5-flash-image-preview:free\",\n  \"modalities\": [\"image\", \"text\"],\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"Crea una imagen en la que la persona de la imagen 2 tenga puesta la camiseta de la imagen 1. La persona debe estar de pie y mirando al frente, y mostrando el cuerpo completo. Debe parecer una foto de un modelo para una tienda de ropa.\"\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": {\n            \"url\": \"data:image/jpeg;base64,{{ $('Convertir Imagen a Base64').item.json.data }}\"\n          }\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": {\n            \"url\": \"data:image/jpeg;base64,{{ $json.data }}\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        -144
+      ],
+      "id": "14ef2e81-4bb3-4984-91a3-676fbbd9c059",
+      "name": "Generar Imagen con Nano-Banana",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "6IMAtKflYcYjGBWD",
+          "name": "Google Gemini"
+        },
+        "httpBearerAuth": {
+          "id": "UKgW7tfRnpHGFI6V",
+          "name": "OpenRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const dataUrl = item.json.choices[0].message.images[0].image_url.url;\n  // Cortamos en la primera coma y nos quedamos solo con la parte base64\n  const base64 = dataUrl.split(',')[1];\n\n  // Lo devolvemos dentro de un objeto para que sea válido\n  return {\n    json: {\n      base64\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        -144
+      ],
+      "id": "b9a0794c-c8c8-48b5-ab50-e2b57324530e",
+      "name": "Limpiar Base64"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        -144
+      ],
+      "id": "22f2d210-23da-4d37-8f1a-8e66925e2add",
+      "name": "Converte Base64 a Imagen"
+    },
+    {
+      "parameters": {
+        "name": "=imagen_{{ $now.format('yyyy-MM-dd HH-mm-ss') }}.png",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "17_7oNURykFJsktJTP5eiMTjs-BsdDZep",
+          "mode": "list",
+          "cachedResultName": "Resultados",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1264,
+        -144
+      ],
+      "id": "0ab98e16-cc33-4cb2-b157-ae7a705bef3e",
+      "name": "Subir Imagen",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rrSrRkUr5t0BSniH",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Convertir Imagen a Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir Imagen a Base64": {
+      "main": [
+        [
+          {
+            "node": "Obener Imagenes de Influencers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obener Imagenes de Influencers": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Convertir Imagen Influencer a Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir Imagen Influencer a Base64": {
+      "main": [
+        [
+          {
+            "node": "Generar Imagen con Nano-Banana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Imagen con Nano-Banana": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Base64": {
+      "main": [
+        [
+          {
+            "node": "Converte Base64 a Imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converte Base64 a Imagen": {
+      "main": [
+        [
+          {
+            "node": "Subir Imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir Imagen": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7ba34cb3-cfd1-49a3-a581-3fb83f2f2b83",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cd45752616b99f4db905fdbf77b15f941dcae0df3c6a48b8fdb10fb443542c37"
+  },
+  "id": "oiSinYhCkTHlyjHV",
+  "tags": []
+}

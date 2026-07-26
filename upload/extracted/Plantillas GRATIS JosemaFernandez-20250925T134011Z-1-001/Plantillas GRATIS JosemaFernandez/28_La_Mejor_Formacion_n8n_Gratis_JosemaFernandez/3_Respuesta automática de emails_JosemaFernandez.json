@@ -1,0 +1,348 @@
+{
+  "name": "#3 Respuesta automática de emails",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        -96
+      ],
+      "id": "d2c44d2a-01a0-4aea-add3-9a1597f5efc1",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "=Lead que envía el email:\n{{ $json.from.value[0].name }}\n\n{{ $json.from.value[0].address }}\n\nAsunto del email: {{ $json.subject }}\n\nCuerpo del email: {{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "nombre",
+              "description": "el nombre del lead",
+              "required": true
+            },
+            {
+              "name": "email",
+              "description": "email del lead",
+              "required": true
+            },
+            {
+              "name": "telefono",
+              "description": "telefono del lead",
+              "required": true
+            },
+            {
+              "name": "descripcion",
+              "description": "servicio que necesita o solicita el lead",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        -96
+      ],
+      "id": "899386e8-7f77-4951-83e5-01895eb67054",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        80
+      ],
+      "id": "0e9fa156-25e2-4e4c-998f-336c57f6457b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "whUEULFkcYZOxOU5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FHzYp6LkRdOwdHxcnr9p3fRpjgO6KbGQkwNg0gmnMBg",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.output.nombre }}",
+            "email": "={{ $json.output.email }}",
+            "Telefono": "={{ $json.output.telefono }}",
+            "Descripcion": "={{ $json.output.descripcion }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        192,
+        -96
+      ],
+      "id": "127597ef-bcf5-4e21-b667-944511edd733",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "l3JAlYfhCSkoPGTN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -96
+      ],
+      "id": "a0a76068-b315-4a6d-9d5f-745e07fd3d51",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Responde al siguiente email que tiene esta información:\n\nNombre:  {{ $('Information Extractor').item.json.output.nombre }}\n\nEmail: {{ $('Information Extractor').item.json.output.email }}\n\nAsunto: {{ $('Gmail Trigger').item.json.subject }}\n\nCuerpo del correo:\n{{ $('Gmail Trigger').item.json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Eres un asistente virtual de BlunexAI, empresa dedicada a la implementación de automatizaciones y agentes de inteligencia artificial.\n\nTu objetivo consiste en responder a las consultas de leads interesados en nuestros servicios.\n\nUtiliza un tono profesional.\n\nServicios ofrecidos:\n\n* Agente de voz: 2000 €\n\n* Agente WhatsApp: 2000 €\n\n* Automatizacion de facturas: 1500 €\n\n* Consultoría IA: desde 150 € la hora\n\nSolo responde con el correo, no añadas mas información ni tampoco añadas el asunto.\n\nEn tus correos siempre tienes que terminar así:\n\nUn saludo,\nJosema Fernández\n\nFecha y hora actual: {{ $now }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        608,
+        -96
+      ],
+      "id": "ae35e887-c612-4dd5-91f5-9b6126992833",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        544,
+        112
+      ],
+      "id": "4154bd26-90ad-411c-9bc3-bb51c7c79d71",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "whUEULFkcYZOxOU5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        -96
+      ],
+      "id": "e469e04e-6a5e-4d0d-866a-db4a055984ba",
+      "name": "Reply to a message",
+      "webhookId": "7344a755-e331-49a0-b91f-81ece87dc4e0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ba5adc4b-4f25-4dce-878d-4b0d87228ff0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f73766c8dff811f322680c8f9e08a80468d54b826c95e7acb37f9f1014260f9b"
+  },
+  "id": "KTRYE1WzYmLr1Qes",
+  "tags": []
+}

@@ -1,0 +1,910 @@
+{
+  "name": "Asistente personal",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -180,
+        -40
+      ],
+      "id": "55cbcf15-c6ea-4a74-b703-fed95c881fa5",
+      "name": "Telegram Trigger",
+      "webhookId": "d99374ec-b5f1-4308-9cdf-6697507f3eeb",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40c7d190-14c7-4798-8cdc-0fad8b1edf0f",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        -40
+      ],
+      "id": "9c566571-6d7d-461d-916c-d0f658a7d977",
+      "name": "Set texto"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=petición del ususario: {{ $json.text || 'Not provided' }} \nfile_id (imagen): {{ $json.file_id || 'Not provided' }}\n",
+        "options": {
+          "systemMessage": "=**Fecha y hora actual:** {{ $now }}\n\nEres el asistente personal de **Kevin Belier**.\nA continuación se describen las herramientas disponibles y cómo utilizarlas correctamente:\n\n---\n\n** Obtener db contactos **\nUsa esta herramienta para recabar información de los contactos, siempre que te pidan enviar un correo, agendar una reunion u otra herramienta que involucre el contacto a otra persona, asegurate de consultar su información con esta herramienta.\n\n---\n\n** Enviar email**\nUtiliza esta herramienta siempre que necesites enviar un correo electrónico.\nAntes de enviarlo, asegúrate de tener todos los datos necesarios del contacto: nombre, correo, empresa, teléfono. Puedes conocer toda esta información con la herramienta 'Obtener db contactos'.\nSi el correo incluye un enlace a una reunión, espera a obtener dicho enlace antes de enviarlo.\n\n---\n\n** Agendar reunion **\nUsa esta herramienta para programar reuniones a través de Cal.com.\n*IMPORTANTE*: antes de agendar la reunion obten los datos de los asistentes con la herramienta 'Obtener db contactos'\nDebes incluir la fecha y hora en el siguiente formato:\n`AAAA-MM-DDTHH:MM:SS-HH:MM`\nEjemplo: `2025-06-05T09:00:00-04:00`\n\n---\n\n\n** Postear contenido instagram **\nUsa esta herramienta para crear y publicar contenido en Instagram.\nDebes proporcionar el campo `text`, que será el tema resumido del post.\nEjemplo: `\"La importancia de automatizar tu negocio para escalar\"`\n\n---\n\n** Leer imagen**\nUtiliza esta herramienta para analizar una imagen.\nDebes pasar el `file ID` correspondiente para que pueda ser procesada.\n\n---\n\n** Registrar gasto o ingreso**\nUsa esta herramienta para registrar un gasto o ingreso en la hoja de cálculo de Google Sheets.\nEspecifica claramente si se trata de un **gasto** o un **ingreso**, junto con los detalles relevantes (fecha, monto, categoría, descripción).\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        980,
+        -80
+      ],
+      "id": "8146529c-39e7-4152-b69e-7dd9375198a2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        120
+      ],
+      "id": "33a8321d-a687-4f62-be01-637f7928a082",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        840,
+        200
+      ],
+      "id": "a4d1ae15-a75b-4af3-80af-92e0cfdf2a3b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        -80
+      ],
+      "id": "222d619e-7666-4233-b222-f822a3ec546a",
+      "name": "Telegram",
+      "webhookId": "7ba7e90c-14cb-4622-b175-e90a66694c8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        -220
+      ],
+      "id": "90c7506e-c581-4707-8a02-252bc29d6b26",
+      "name": "Obtener audio",
+      "webhookId": "6ebfc5b1-bb49-48c3-b5ac-9f303b978db9",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        -220
+      ],
+      "id": "93e2eb6b-c1b6-4ea0-aaa1-711cfed8b003",
+      "name": "Transcribir audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Enviar correos electrónicos",
+        "fromEmail": "contacto@aishiagency.tech",
+        "toEmail": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To_Email', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "html": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('HTML', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSendTool",
+      "typeVersion": 2.1,
+      "position": [
+        920,
+        320
+      ],
+      "id": "2db66060-d7ff-4319-92f9-882b9b2fa306",
+      "name": "Enviar email",
+      "webhookId": "f26eaff1-ea0b-4a31-8aa8-f21ae2b8cfba",
+      "credentials": {
+        "smtp": {
+          "id": "Vwn5BaPtLUpWwchH",
+          "name": "contacto@aishiagency.tech"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Esta herramienta sirva para obtener la base de datos de contactos\n",
+        "documentId": {
+          "__rl": true,
+          "value": "1pbx_dWeTwgmFIu3qK0xHN4Mgd5n0Gs3OYtKF1wXUAq0",
+          "mode": "list",
+          "cachedResultName": "Base de contactos ficticia",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pbx_dWeTwgmFIu3qK0xHN4Mgd5n0Gs3OYtKF1wXUAq0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pbx_dWeTwgmFIu3qK0xHN4Mgd5n0Gs3OYtKF1wXUAq0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1140,
+        520
+      ],
+      "id": "8dc41341-eed0-4ba9-94d6-5bd95a65a861",
+      "name": "Obtener db contactos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lW48EeoNMrAC0bmk",
+          "name": "Aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Agenda una reunion en cal.com",
+        "method": "POST",
+        "url": "https://api.cal.com/v2/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2024-08-13"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"start\": \"{{ $fromAI('fechaHoraInicio') }}\",\n  \"attendee\": {\n    \"name\": \"{{ $fromAI('nombre') }}\",\n    \"email\": \"{{ $fromAI('email') }}\",\n    \"timeZone\": \"America/Mexico_City\"\n  },\n  \"bookingFieldsResponses\": {\n    \"phone_number\": \"{{ $fromAI('telefono') }}\",\n    \"subject\" : \"{{ $fromAI('asunto') }}\"\n  },\n  \"eventTypeSlug\": \"30min\",\n  \"username\": \"[tu username]\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        440
+      ],
+      "id": "b9ec916a-501f-4de4-af3e-e5fb7918791a",
+      "name": "Agendar reunion",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "XVBhFJIFx9Tk8sQR",
+          "name": "Bearer kevinrivm (Cal.com)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Llama a esta función para postear contenido en instagram \n",
+        "workflowId": {
+          "__rl": true,
+          "value": "Vgtcnl51X5LeAneV",
+          "mode": "list",
+          "cachedResultName": "Crear imágenes con citas (con asistente)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('text', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "text"
+          ],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        520
+      ],
+      "id": "7089a55b-628b-4b60-be81-093808f966b9",
+      "name": "Postear contenido instagram"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "b8699367-474b-4233-9062-008da0eeef41"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voz"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1a865cc2-e39e-45e8-abaa-a804a0de115d",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "56211cee-fbd8-4c05-9ea7-c699816149f8",
+                    "leftValue": "={{ $json.message.photo }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        20,
+        -40
+      ],
+      "id": "2d1e9a51-6841-4d8f-a04d-97bf2a71fe05",
+      "name": "Es audio, texto o imagen"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Script para obtener el file_id de la imagen más grande, chat.id y caption\n// Funciona con datos de entrada de Telegram Bot API\n\n// Obtener los datos de entrada\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json;\n  \n  // Verificar si existe el array photo en el mensaje\n  if (data.message && data.message.photo && Array.isArray(data.message.photo)) {\n    const photos = data.message.photo;\n    \n    // Encontrar la imagen con mayor file_size\n    let largestPhoto = null;\n    let maxSize = 0;\n    \n    for (const photo of photos) {\n      if (photo.file_size && photo.file_size > maxSize) {\n        maxSize = photo.file_size;\n        largestPhoto = photo;\n      }\n    }\n    \n    // Si encontramos una imagen, devolver solo los campos solicitados\n    if (largestPhoto) {\n      results.push({\n        json: {\n          file_id: largestPhoto.file_id,\n          chat_id: data.message.chat.id,\n          caption: data.message.caption || null\n        }\n      });\n    } else {\n      // Si no hay fotos, devolver error con estructura mínima\n      results.push({\n        json: {\n          file_id: null,\n          chat_id: data.message.chat ? data.message.chat.id : null,\n          caption: null,\n          error: \"No photos found in message\"\n        }\n      });\n    }\n  } else {\n    // Si no es un mensaje con fotos, devolver estructura mínima\n    results.push({\n      json: {\n        file_id: null,\n        chat_id: data.message && data.message.chat ? data.message.chat.id : null,\n        caption: null,\n        error: \"Message does not contain photo array\"\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        140
+      ],
+      "id": "a0addf74-614e-4441-9b2e-0aca234dbecb",
+      "name": "Obtener la imagen mas grande"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21cc03f5-a0a4-4267-adba-a054064e007c",
+              "name": "file_id",
+              "value": "={{ $json.file_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b24e0ec9-c28b-408d-a010-0a45874e3ec9",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "18829d81-7977-4494-90dc-222a4a85d99d",
+              "name": "text",
+              "value": "={{ $json.caption }} **Desde una imagen**",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        140
+      ],
+      "id": "b9b5d200-e7aa-4dcf-a292-9bc956824c08",
+      "name": "Set ID imagen"
+    },
+    {
+      "parameters": {
+        "description": "Esta herramienta lee una imagen\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "FhHHs1VoQRLhlCoz",
+          "mode": "list",
+          "cachedResultName": "Leer imagen telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "file_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('file_id', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "file_id"
+          ],
+          "schema": [
+            {
+              "id": "file_id",
+              "displayName": "file_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1400,
+        440
+      ],
+      "id": "953fd2c5-b798-48ae-b28c-529f9f853bc5",
+      "name": "Leer imagen"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KjnEzgRNsIqfhamwrkI0e-4A5dApZIdtYVCTw0vob-E",
+          "mode": "list",
+          "cachedResultName": "Registro de gastos e ingresos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KjnEzgRNsIqfhamwrkI0e-4A5dApZIdtYVCTw0vob-E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KjnEzgRNsIqfhamwrkI0e-4A5dApZIdtYVCTw0vob-E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Descripción": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n', ``, 'string') }}",
+            "Categoría": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categor_a', ``, 'string') }}",
+            "Monto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Monto', ``, 'string') }}",
+            "Método de pago": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('M_todo_de_pago', ``, 'string') }}",
+            "Comentarios": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Comentarios', ``, 'string') }}",
+            "Tipo (ingreso o gasto)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tipo__ingreso_o_gasto_', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripción",
+              "displayName": "Descripción",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoría",
+              "displayName": "Categoría",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto",
+              "displayName": "Monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo (ingreso o gasto)",
+              "displayName": "Tipo (ingreso o gasto)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Método de pago",
+              "displayName": "Método de pago",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comentarios",
+              "displayName": "Comentarios",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1520,
+        320
+      ],
+      "id": "fe73a104-c8b8-494d-9aa3-45a0bd0e5e4d",
+      "name": "Registrar gasto",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lW48EeoNMrAC0bmk",
+          "name": "Aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Esta herramienta sirve para generar una cotización en formato pdf\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "d1pRmmLXVJd1Hllv",
+          "mode": "list",
+          "cachedResultName": "Generar cotizacion en pdf"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "descripcion_servicio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descripcion_servicio', ``, 'string') }}",
+            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', ``, 'string') }}",
+            "monto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('monto', ``, 'string') }}",
+            "empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "descripcion_servicio",
+              "displayName": "descripcion_servicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "monto",
+              "displayName": "monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "empresa",
+              "displayName": "empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1620,
+        220
+      ],
+      "id": "1a249564-f7b6-4245-8459-7b1d9189b8fd",
+      "name": "Generar cotizacion en pdf"
+    },
+    {
+      "parameters": {
+        "content": "*Reemplaza tu usuario por el tuyo de cal.com\n\nEsta api facilita la integración con apps de calendario y videoconferencias.\n\nLa documentación de esta api está aquí: \n\nhttps://cal.com/docs/api-reference/v2/introduction\n\nSi tienes dudas puedes hacer un notebook llm, pasale este enlace y consultar con el\n",
+        "height": 240,
+        "width": 370
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -380
+      ],
+      "id": "286140b1-59e6-45fc-bb5b-23555c77159e",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Es audio, texto o imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set texto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribir audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribir audio": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar reunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener db contactos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postear contenido instagram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es audio, texto o imagen": {
+      "main": [
+        [
+          {
+            "node": "Obtener audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Obtener la imagen mas grande",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener la imagen mas grande": {
+      "main": [
+        [
+          {
+            "node": "Set ID imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID imagen": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer imagen": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar gasto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar cotizacion en pdf": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7827d782-fbff-4b37-9931-6210ae28e1a8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "ieD5aTMjdR9UGsSE",
+  "tags": []
+}

@@ -1,0 +1,957 @@
+{
+  "name": "Crear imágenes con citas backup",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        -20
+      ],
+      "id": "4b6f890c-cfbb-4f99-9a7e-569373c3dff7",
+      "name": "Obtener audio",
+      "webhookId": "6ebfc5b1-bb49-48c3-b5ac-9f303b978db9",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        340,
+        -20
+      ],
+      "id": "d5329541-6479-432c-87b8-beebd6659b91",
+      "name": "Transcribir a texto",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        200
+      ],
+      "id": "275b8d0a-3215-45a6-bc5a-521bfad5343f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un generador experto en contenido para redes sociales, especializado en crear publicaciones visuales, inspiradoras y profesionales dirigidas a emprendedores modernos.\n\nTu tarea consiste en generar 4 elementos basados en la idea o concepto proporcionado por el usuario en el campo `{{ $json.text }}`.\n\n### Personaje Principal: **Kevin Belier**\n\nDebes representar a Kevin Belier con las siguientes características:\n\n* Hombre de 26 años\n* Estatura: 170 cm\n* Cuerpo: mesomorfo, musculatura media\n* Apariencia: joven, atractivo, con mirada segura y carismática\n* Vestimenta: ropa casual moderna (camiseta ajustada tipo T-shirt o polo lisa, pantalones entallados). Evitar trajes o ropa ostentosa\n* Estética: limpia, sobria, realista\n\n### Escena:\n\nCrea una escena **hiperrealista, atractiva y coherente con la estética de un emprendedor exitoso**, evitando poses forzadas o escenarios irreales. Algunas poses sugeridas:\n\n* Sentado en una cafetería elegante pero casual\n* Caminando por la ciudad con aire decidido\n* Apoyado relajadamente contra una pared de concreto\n* Trabajando desde un coworking moderno\n\n### Salida esperada (formato JSON válido):\n\n```json\n{\n  \"prompt\": \"Prompt hiperrealista y detallado en inglés para el modelo `lucataco/flux-dev-lora`, incluyendo una descripción precisa de Kevin Belier (edad, cuerpo, vestimenta, expresión, pose), el entorno realista, y un estilo fotográfico profesional. El contenido debe estar levemente relacionado con el concepto proporcionado en `{{ $json.text }}` y mostrar a Kevin sentado, con ligera sonrisa, en una pose relajada pero confiada.\",\n  \n  \"quote\": \"Frase inspiradora o reflexiva en español mexicano (entre 180 y 200 caracteres), relacionada directamente con la idea en `{{ $json.text }}`. Debe conectar con mentalidad emprendedora, sin hashtags.\",\n  \n  \"title\": \"Título breve, impactante y en español mexicano que incluya al menos un hashtag relacionado con emprendimiento, automatización, marketing o n8n, y capte la atención del público objetivo.\",\n  \n  \"description\": \"Texto motivacional en español mexicano que profundice en el mensaje de la publicación. Debe conectar emocionalmente con emprendedores y profesionales, tener un tono claro y auténtico, y puede incluir hashtags como #KevinBelier #MentalidadGanadora y otros relacionados con automatización, marketing o emprendimiento.\"\n}\n```",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        560,
+        40
+      ],
+      "id": "1ad1006f-fb0a-4d63-9765-6ee56d8550f7",
+      "name": "Hacer el prompt"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"prompt\": \"Prompt hiperrealista y detallado en inglés para el modelo `lucataco/flux-dev-lora`, incluyendo descripción del personaje, ropa, entorno y pose.\",\n  \"quote\": \"Frase inspiradora o reflexiva de máximo 220 caracteres, relacionada a la idea dada en {{ $json.text }}.\",\n  \"title\": \"Título atractivo para captar atención en redes sociales.\",\n  \"description\": \"Texto de descripción del post que profundice en el mensaje y conecte emocionalmente con la audiencia. Debe tener tono motivacional, claro y breve. Puede incluir hashtags como #KevinBelier #MentalidadGanadora.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        200
+      ],
+      "id": "a961544f-ed74-421b-afc1-cd38b1ba6059",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "url": "=https://res.cloudinary.com/[tu space]]/image/upload/l_Overlay_sombra2_es2coo/l_{{ $json.public_id }},g_south,y_40/{{ $('Subir imagen de persona a cloudinary').item.json.public_id }}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "imagen_combinada.png"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1900,
+        -40
+      ],
+      "id": "ce22233f-7fa3-49c5-9116-8e5f12b64fb2",
+      "name": "Combinar imagenes"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "imagen_combinada.png",
+        "name": "=imagen_combinada.png",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1rSLiKt8fuFJsAwkQ9DyM8bkDFFI5mqJp",
+          "mode": "list",
+          "cachedResultName": "Imagenes contenido automatizado",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1rSLiKt8fuFJsAwkQ9DyM8bkDFFI5mqJp"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1020,
+        500
+      ],
+      "id": "969cda9e-e8b1-4ba6-90b3-dd743445be63",
+      "name": "Subir imagen combinada",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wJ5VmC9BmKK0BQkM",
+          "name": "Drive kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1240,
+        500
+      ],
+      "id": "ad6f8cda-cb08-49e9-a0e1-98a37dc99b6d",
+      "name": "Poner permisos publicos1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wJ5VmC9BmKK0BQkM",
+          "name": "Drive kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k",
+          "mode": "list",
+          "cachedResultName": "buffer content automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "==ROW()",
+            "link": "={{ $json.directUrl }}",
+            "Titulo": "={{ $('Hacer el prompt').item.json.output.title }}",
+            "Descripción": "={{ $('Hacer el prompt').item.json.output.description }}",
+            "timestamp": "={{$now.toFormat(\"dd 'de' MMMM yyyy, hh:mm a\", { locale: 'es' })}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descripción",
+              "displayName": "Descripción",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1680,
+        500
+      ],
+      "id": "408f3f92-d569-47a2-a360-df518852b5de",
+      "name": "Subir link a sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lW48EeoNMrAC0bmk",
+          "name": "Aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://textoverimage.moesif.com/image/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "[la url a tu imagen]"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Hacer el prompt').item.json.output.quote }}"
+            },
+            {
+              "name": "text_color",
+              "value": "#00000ff"
+            },
+            {
+              "name": "text_size",
+              "value": "32"
+            },
+            {
+              "name": "x_align",
+              "value": "center"
+            },
+            {
+              "name": "y_align",
+              "value": "bottom"
+            },
+            {
+              "name": "margin",
+              "value": "40px"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        -40
+      ],
+      "id": "f207d330-b052-4e5e-91b2-81db0389dc2d",
+      "name": "Crear overlay [BINARIO]"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.replicate.com/v1/predictions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer [tu bearer token]"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "wait"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={\n  \"version\": \"091495765fa5ef2725a175a57b276ec30dc9d39c22d30410f2ede68a3eab66b3\",\n  \"input\": {\n    \"prompt\": \"{{ $json.output.prompt }}\",\n    \"hf_lora\": \"kevinrivm/portraitnew\",\n    \"aspect_ratio\": \"9:16\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        -40
+      ],
+      "id": "68971f3f-9591-49c5-a4c9-ab48c1d713b2",
+      "name": "Generar imagen persona [URL]"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/[tu space]/image/upload",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.output[0] }}"
+            },
+            {
+              "name": "upload_preset",
+              "value": "[tu preset]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        -40
+      ],
+      "id": "e5227e4d-89fb-4a80-8d11-afcb915d97f4",
+      "name": "Subir imagen de persona a cloudinary"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.cloudinary.com/v1_1/[tu space]]/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "[tu preset]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        -40
+      ],
+      "id": "538d9121-a63e-42d3-8815-21cf49a9af67",
+      "name": "Subir overlay cloudinary [BINARIO]"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        40
+      ],
+      "id": "bec7d7d4-4796-4bff-a23e-76f98d3cf6fd",
+      "name": "Telegram Trigger",
+      "webhookId": "3c287c54-ddf6-4640-871c-f07b9bec1f8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la URL original desde el nodo \"subir overlay\"\nconst originalUrl = $('Subir imagen combinada').first().json.webViewLink;\n\n// Extraer el ID del archivo de la URL\nconst match = originalUrl.match(/\\/d\\/([^\\/]+)\\//);\n\nif (match && match[1]) {\n  const fileId = match[1];\n  const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;\n\n  return [\n    {\n      json: {\n        originalUrl,\n        directUrl\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        originalUrl,\n        error: \"No se pudo extraer el ID del enlace de Google Drive.\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        500
+      ],
+      "id": "a6702a64-29eb-48fd-88be-08392433a044",
+      "name": "Convertir en link directo"
+    },
+    {
+      "parameters": {
+        "content": "## Recibir mensaje de audio y generar prompt\nSustituye el prompt con las caracteristicas fisicas tuyas",
+        "height": 500,
+        "width": 1280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -100
+      ],
+      "id": "3a42f5e0-7835-460e-83ee-789025e33db4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generar imagenes\n",
+        "height": 240,
+        "width": 1180,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -100
+      ],
+      "id": "056e33ee-a4b9-433d-8f76-58797ee06297",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Subir imagenes\n",
+        "height": 220,
+        "width": 1180,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        440
+      ],
+      "id": "2c45e1b0-49cc-434f-b9c3-4f9610bad1db",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "b8699367-474b-4233-9062-008da0eeef41"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voz"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1a865cc2-e39e-45e8-abaa-a804a0de115d",
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -120,
+        40
+      ],
+      "id": "a446efc5-cace-4350-a427-d5c97760247f",
+      "name": "Es audio o texto"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aca2921b-2225-4cf5-85bf-d13abdba90b1",
+              "name": "text",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        220
+      ],
+      "id": "af5dffc4-4d60-449b-9b6b-61e763908608",
+      "name": "Set texto"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b6a3616-4a8c-41cb-8a55-6d70af1fb80a",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        240
+      ],
+      "id": "2f8f4be7-d122-4d17-84a6-c48aa6681757",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## Aprobación\n",
+        "height": 220,
+        "width": 760,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        920,
+        180
+      ],
+      "id": "bd785448-c893-431c-95c4-f887fc2f9871",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.result.chat.id }}",
+        "message": "¿Apruebas el resultado?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "✅ Aprobado",
+            "disapproveLabel": "❌ Desaprobado"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        240
+      ],
+      "id": "2ddccd89-315b-4b84-b9f7-ba7b916b48e6",
+      "name": "Mensaje aprobación",
+      "webhookId": "53614abc-77fb-4adb-98b1-5cb96faed149",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "imagen_combinada.png",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        240
+      ],
+      "id": "44e15836-d00b-4afe-ab34-587b3936f973",
+      "name": "Enviar imagen",
+      "webhookId": "b978fddf-8bff-42cb-9ea0-f0e27b86f459",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        40
+      ],
+      "id": "43c61840-cbd0-4a91-8cc2-9abb1d6f6f9b",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Obtener audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribir a texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribir a texto": {
+      "main": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hacer el prompt": {
+      "main": [
+        [
+          {
+            "node": "Generar imagen persona [URL]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar imagenes": {
+      "main": [
+        [
+          {
+            "node": "Enviar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir imagen combinada": {
+      "main": [
+        [
+          {
+            "node": "Poner permisos publicos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poner permisos publicos1": {
+      "main": [
+        [
+          {
+            "node": "Convertir en link directo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear overlay [BINARIO]": {
+      "main": [
+        [
+          {
+            "node": "Subir overlay cloudinary [BINARIO]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar imagen persona [URL]": {
+      "main": [
+        [
+          {
+            "node": "Subir imagen de persona a cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir imagen de persona a cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Crear overlay [BINARIO]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir overlay cloudinary [BINARIO]": {
+      "main": [
+        [
+          {
+            "node": "Combinar imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Es audio o texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir en link directo": {
+      "main": [
+        [
+          {
+            "node": "Subir link a sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es audio o texto": {
+      "main": [
+        [
+          {
+            "node": "Obtener audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set texto": {
+      "main": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Subir imagen combinada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generar imagen persona [URL]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje aprobación": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar imagen": {
+      "main": [
+        [
+          {
+            "node": "Mensaje aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "74152287-80eb-4c1d-8c79-92a83ebfce8d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "unFpUK5uWyhUwe2H",
+  "tags": [
+    {
+      "createdAt": "2025-05-21T06:49:51.225Z",
+      "updatedAt": "2025-05-21T06:49:51.225Z",
+      "id": "ECrAPXz6hINRf7vz",
+      "name": "marketing"
+    }
+  ]
+}

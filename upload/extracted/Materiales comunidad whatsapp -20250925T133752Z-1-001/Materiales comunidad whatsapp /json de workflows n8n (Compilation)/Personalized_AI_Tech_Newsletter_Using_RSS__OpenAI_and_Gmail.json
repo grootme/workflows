@@ -1,0 +1,633 @@
+{
+  "name": "Personalized AI Tech Newsletter Using RSS, OpenAI and Gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "rss",
+        "options": {}
+      },
+      "id": "0f276fb6-7282-467f-aa1a-06702bb9d36b",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        260,
+        -140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "61c84664-617c-455a-95f1-84fb80d0ca06",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        800,
+        60
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "=# {{ $json.title }}\n{{ $json.content }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "title",
+                "value": "={{ $json.title }}"
+              },
+              {
+                "name": "createDate",
+                "value": "={{ $now.toISO() }}"
+              },
+              {
+                "name": "publishDate",
+                "value": "={{ $json.date }}"
+              },
+              {
+                "name": "link",
+                "value": "={{ $json.link }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "dd744a43-0e00-4ffa-b156-08b0590224a9",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        960,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkSize": 3000,
+        "options": {}
+      },
+      "id": "7a778a8b-2595-45c8-9ad2-4fe521efcd74",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        1100,
+        160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "id": "50ef7f4d-f2ab-4d66-a759-c6ab5d10282e",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        240,
+        680
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "4b630bdb-cf8e-4eed-98b7-e24c3206dfb3",
+      "name": "Get Articles Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -200,
+        -140
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 5
+            }
+          ]
+        }
+      },
+      "id": "a98cb63c-b0c3-4818-9b45-31dbb61adf46",
+      "name": "Send Weekly Summary",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -220,
+        520
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## 1. Save news in a vector store (runs daily)",
+        "height": 600,
+        "width": 1560,
+        "color": 7
+      },
+      "id": "a39add2e-a4f6-4707-bc0a-0e8819b2bbe5",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        -300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Send a summary (runs once a week)",
+        "height": 580,
+        "width": 1380,
+        "color": 7
+      },
+      "id": "b43485a0-5e54-48df-92e1-28d94acc7e28",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Summarize the most relevant tech news published in the past 7 days. Today is {{ $now }}",
+        "options": {
+          "systemMessage": "=Write in clear, concise, and easy-to-understand English, as if curating a weekly tech newsletter.\n\nPrioritize stories related to the following topics: {{ $json.Interests }}.\nIf those topics aren't present, choose the most impactful, widely reported, and noteworthy tech events from the week.\n\nFor each news item:\n\nProvide a short, informative summary (1–3 sentences max)\n\nInclude the article title and a direct link to the original source\n\nAvoid duplicate stories.\n\nInclude exactly {{ $json['Number of news items to include'] }} distinct news items.\nMaintain a tone that's friendly yet professional, suitable for a broad audience of tech enthusiasts."
+        }
+      },
+      "id": "67ca90c0-c94c-4ea7-b996-c26b082b5f4d",
+      "name": "News reader AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        260,
+        460
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "sendTo": "your@email.com",
+        "subject": "Weekly tech newsletter",
+        "message": "={{ $json.data }}",
+        "options": {}
+      },
+      "id": "b6b72598-092c-43c7-b813-61b4474d278e",
+      "name": "Send Newsletter",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        860,
+        520
+      ],
+      "webhookId": "0de8b6e8-8611-48a9-ba25-1d023698f577",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "id": "b650efe8-7f6c-4bd1-b27d-a78a8f3f679e",
+      "name": "Convert Response to an Email-Friendly Format",
+      "type": "n8n-nodes-base.markdown",
+      "position": [
+        620,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Edit this:",
+        "height": 240,
+        "width": 220,
+        "color": 3
+      },
+      "id": "a5e7fbd0-c726-481d-a0f0-6db3a387545a",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "018882ca-37c3-45af-944f-2081b0605065",
+              "name": "Interests",
+              "type": "string",
+              "value": "AI, games, gadgets"
+            },
+            {
+              "id": "4cfdafc1-47a4-41cc-9eb8-72880ea34511",
+              "name": "Number of news items to include",
+              "type": "string",
+              "value": "15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7713c790-c38f-452f-972d-d2a913b1d7c4",
+      "name": "Your topics of interest",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        20,
+        520
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "news_store_key"
+      },
+      "id": "bb6b1818-11d9-47d2-b270-7b496444327c",
+      "name": "Store News Articles",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        920,
+        -140
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8c00469-890b-4b5b-8e2e-2ad9ec2d0815",
+              "name": "rss",
+              "type": "array",
+              "value": "=[\n  \"https://www.engadget.com/rss.xml\",\n  \"https://feeds.arstechnica.com/arstechnica/index\",\n  \"https://www.theverge.com/rss/index.xml\",\n  \"https://www.wired.com/feed/rss\",\n  \"https://www.technologyreview.com/topnews.rss\",\n  \"https://techcrunch.com/feed/\"\n]\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "951273f2-6c83-42cd-b1f6-31b6d726cf24",
+      "name": "Set Tech News RSS Feeds",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        40,
+        -140
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.rss }}",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "id": "fe35bea7-30f5-4687-871c-5f02622bfc64",
+      "name": "Read RSS News Feeds",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        480,
+        -140
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "get_news",
+        "toolDescription": "Call this tool to get the latest news articles.",
+        "memoryKey": "news_store_key",
+        "topK": 20
+      },
+      "id": "5f242efa-3bb4-4c62-872c-ebcde5435dc8",
+      "name": "Get News Articles",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        380,
+        660
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8cf9f943-bd8a-42dc-96ed-979d170a2011",
+      "name": "Embeddings OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        580,
+        780
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "### Edit this:",
+        "height": 240,
+        "width": 220,
+        "color": 3
+      },
+      "id": "4c65983f-bf37-48d7-8cfd-f6e60a6ce4d7",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        -200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "\n## Let AI read the tech news for you\n\nThis workflow fetches news via [RSS feeds](https://en.wikipedia.org/wiki/RSS) from selected tech websites, stores them in a vector database and uses an AI agent to send you a weekly, personalized newsletter - keeping you informed without daily distractions.\n\n### How it works\n* A **daily scheduled trigger** fetches articles from multiple popular tech RSS feeds like Wired, TechCrunch, and The Verge.\n\n* Fetched articles are:\n  * **Normalized** to extract titles, summaries, and publish dates.\n  * **Converted to vector embeddings** via OpenAI and stored in memory for fast semantic querying.\n\n* A **weekly scheduled trigger** activates the AI summarization flow:\n  * The AI is provided with your interests (e.g., *AI, games, gadgets*) and the desired number of items (e.g., 15).\n  * It queries the vector store to retrieve relevant articles and summarizes the most newsworthy stories.\n  * The summary is converted into a clean, email-friendly format and sent to your inbox.\n\n### How to use\n1. Connect your **OpenAI** and **Gmail** accounts to n8n.\n2. Customize the list of RSS feeds in the “Set Tech News RSS Feeds” node.\n3. Update your interests and number of desired news items in the “Your Topics of Interest” node.\n4. Enter your email address in the \"Send Newsletter\" node.\n4. Activate the workflow and let the automation run on schedule.\n\n### Requirements\n* **OpenAI** credentials for embeddings and summarization\n* **Gmail** (or another email service) for sending the newsletter",
+        "height": 920,
+        "width": 420
+      },
+      "id": "dc031b1b-3b85-47ed-8a80-2504293ad2cb",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        -300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 💡 Customizing this workflow\n\n* Want to use different sources? Swap in your own RSS feeds, or use an API-based news aggregator.\n* Replace the in-memory vector store with **Pinecone**, **Weaviate**, or another persistent vector DB for longer-term storage.\n* Adjust the agent's summarization style to suit internal updates, industry-specific briefings, or even entertainment recaps.\nHere’s an additional bullet point to include under **Customizing this workflow**:\n* Prefer chat over email? Replace the email node with a **Telegram bot** to receive your personalized tech newsletter directly in a Telegram chat.\n\n",
+        "height": 280,
+        "width": 520,
+        "color": 7
+      },
+      "id": "6c48813c-ff04-48cc-af4b-402a0f447932",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        740,
+        740
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Add your email:",
+        "height": 240,
+        "width": 220,
+        "color": 3
+      },
+      "id": "f491bd92-e767-44bc-b2c5-117851a1d80c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9f27ceb-c5f2-4997-8cb1-67576a7bb337",
+              "name": "title",
+              "type": "string",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "id": "4c4f9417-40f2-4fb0-9976-d09f5984680f",
+              "name": "content",
+              "type": "string",
+              "value": "={{ $json['content:encodedSnippet'] ?? $json.contentSnippet}}"
+            },
+            {
+              "id": "e1986bac-054e-4240-ba50-536dbcd27337",
+              "name": "date",
+              "type": "string",
+              "value": "={{ $json.isoDate}}"
+            },
+            {
+              "id": "9566e23c-ac30-4d66-abbd-889f322688b7",
+              "name": "link",
+              "type": "string",
+              "value": "={{ $json.link }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f45677f3-9382-4045-bde8-b96c63b5db81",
+      "name": "Set and Normalize Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        -140
+      ],
+      "typeVersion": 3.4
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Read RSS News Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "News reader AI": {
+      "main": [
+        [
+          {
+            "node": "Convert Response to an Email-Friendly Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get News Articles": {
+      "ai_tool": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Get News Articles",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Articles Daily": {
+      "main": [
+        [
+          {
+            "node": "Set Tech News RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read RSS News Feeds": {
+      "main": [
+        [
+          {
+            "node": "Set and Normalize Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Weekly Summary": {
+      "main": [
+        [
+          {
+            "node": "Your topics of interest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Tech News RSS Feeds": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Your topics of interest": {
+      "main": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set and Normalize Fields": {
+      "main": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Response to an Email-Friendly Format": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aaf7feef-5404-4f47-a11f-5d379df6381e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "XUN3zXAPePHOqVAi",
+  "tags": []
+}

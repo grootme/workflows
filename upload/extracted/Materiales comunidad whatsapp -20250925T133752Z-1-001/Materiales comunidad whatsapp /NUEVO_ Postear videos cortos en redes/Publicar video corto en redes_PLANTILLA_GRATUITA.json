@@ -1,0 +1,739 @@
+{
+  "name": "Publicar video corto en redes",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1g27kInUC3Duk630cikh-h1HuFmsR2Je2",
+          "mode": "list",
+          "cachedResultName": "Automatización de videos cortos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1g27kInUC3Duk630cikh-h1HuFmsR2Je2"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1456,
+        112
+      ],
+      "id": "67caf76c-dc03-4f83-ac70-58d9920a716c",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "7ZmmNzcd2YzSpKp0",
+          "name": "aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/transcript",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"audio_url\": \"{{ $('filtrarCamposImportantes').item.json.directURL }}\",\n  \"language_code\": \"es\",\n  \"format_text\": true,\n  \"punctuate\": true,\n  \"disfluencies\": false,\n  \"filter_profanity\": true,\n  \"speaker_labels\": false,\n  \"auto_highlights\": false,\n  \"word_boost\": [],\n  \"boost_param\": \"default\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -752,
+        112
+      ],
+      "id": "faefc108-6d91-4767-b93c-efb85e5a2245",
+      "name": "transcribirVideoBase",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "aKMHdnVzw4pz3WDt",
+          "name": "Assembly kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        176
+      ],
+      "id": "7ba61d97-6df3-49b4-9de5-3c32355f2c14",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "x1lVYdMOv3NAVULK",
+          "name": "OpenAi kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "mediaUrl": "={{ $('filtrarCamposImportantes').item.json.directURL }}"
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "2b59f85d-1c25-414f-8687-0a463f94eae8",
+      "name": "Upload media",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "platform": "tiktok",
+        "accountId": {
+          "__rl": true,
+          "value": "14808",
+          "mode": "list",
+          "cachedResultName": "kevinbelier",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/14808"
+        },
+        "postContentText": "={{ $('crear titulos post').item.json.output.tiktok }}",
+        "postContentMediaUrls": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -304
+      ],
+      "id": "30c8e80f-bb00-4268-8f47-93db6ff247f3",
+      "name": "postTiktok",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "platform": "facebook",
+        "accountId": {
+          "__rl": true,
+          "value": "7899",
+          "mode": "list",
+          "cachedResultName": "Kevin Belier",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/7899"
+        },
+        "postContentText": "={{ $('crear titulos post').item.json.output.facebook }}",
+        "postContentMediaUrls": "={{ $json.url }}",
+        "facebookPageId": {
+          "__rl": true,
+          "value": "518050418049023",
+          "mode": "list",
+          "cachedResultName": "Aishia - Agencia de automatización",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/7899/subaccounts/518050418049023"
+        },
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -112
+      ],
+      "id": "6526a360-6213-4964-9867-53ac154ffa17",
+      "name": "postFacebook",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "platform": "youtube",
+        "accountId": {
+          "__rl": true,
+          "value": "11576",
+          "mode": "list",
+          "cachedResultName": "Kevin Belier (Kevin Belier | Automatizacion IA)",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/11576"
+        },
+        "postContentText": "={{ $('crear titulos post').item.json.output.youtube_description }}",
+        "postContentMediaUrls": "={{ $json.url }}",
+        "postCreateYoutubeOptionTitle": "={{ $('crear titulos post').item.json.output.youtube_title }}",
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        80
+      ],
+      "id": "312e1f84-feb5-4125-bd3e-3ac630176d81",
+      "name": "postYoutube",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "accountId": {
+          "__rl": true,
+          "value": "11041",
+          "mode": "list",
+          "cachedResultName": "kevin.belier",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/11041"
+        },
+        "postContentText": "={{ $('crear titulos post').item.json.output.instagram }}",
+        "postContentMediaUrls": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        256
+      ],
+      "id": "9738345f-be0c-4ab0-b304-0c13b3807388",
+      "name": "postInstagram",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "platform": "linkedin",
+        "accountId": {
+          "__rl": true,
+          "value": "5723",
+          "mode": "list",
+          "cachedResultName": "Kevin Belier",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/5723"
+        },
+        "postContentText": "={{ $('crear titulos post').item.json.output.linkedin }}",
+        "postContentMediaUrls": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        432
+      ],
+      "id": "a99d7233-49ee-46d1-8e19-d57c9f810058",
+      "name": "postLinkedin",
+      "credentials": {
+        "blotatoApi": {
+          "id": "CjpnTTjWyK3Q5tAr",
+          "name": "Blotato agentia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -992,
+        112
+      ],
+      "id": "1982507b-5f1b-42ca-b889-d76c387d4ea3",
+      "name": "darPermisos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "7ZmmNzcd2YzSpKp0",
+          "name": "aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        144,
+        0
+      ],
+      "id": "5aa09300-2932-4d9a-a539-98e7bfa20088",
+      "name": "Obtener transcripcion con tiempos",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "aKMHdnVzw4pz3WDt",
+          "name": "Assembly kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -304,
+        112
+      ],
+      "id": "2cddb32a-fd50-4a1c-9421-db47d7c584aa",
+      "name": "obtenerStatusTranscripcion",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "aKMHdnVzw4pz3WDt",
+          "name": "Assembly kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        112
+      ],
+      "id": "1390d215-0280-4ac9-8466-9fad7601cf0c",
+      "name": "waitTranscripcion",
+      "webhookId": "6243fd87-7579-4843-ad75-7e93d6da0117"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b1fc1920-8e85-4c09-b023-8c92ca0a51d3",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        48
+      ],
+      "id": "bb547f6e-0614-40e6-a672-3276b2330103",
+      "name": "siCompletoTranscripcion"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        208
+      ],
+      "id": "c44bac37-24ea-46d6-8d20-4d2d97ac9e2b",
+      "name": "pollingTranscripcion",
+      "webhookId": "8cb0109c-1cdb-4874-8334-a33f6e493a99"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8de97403-d221-4ce5-ae05-4fc0cc8946f1",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "41419dd4-79a3-4943-8463-29a3491b9861",
+              "name": "createdTime",
+              "value": "={{ $json.createdTime }}",
+              "type": "string"
+            },
+            {
+              "id": "fe802a85-c690-4a10-869d-df987e9c8e12",
+              "name": "webViewLink",
+              "value": "={{ $json.webViewLink }}",
+              "type": "string"
+            },
+            {
+              "id": "0a1dc496-b369-4f17-9ffb-5fb7c56eeac6",
+              "name": "directURL",
+              "value": "=https://drive.google.com/uc?id={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1216,
+        112
+      ],
+      "id": "acb3172e-1891-4cda-b7f8-6da8c05bc326",
+      "name": "filtrarCamposImportantes"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=# Identidad del Agente\n\nEres un agente experto en **analizar transcripciones de videos cortos** y **generar textos de post** optimizados para **TikTok, Facebook, YouTube, Instagram y LinkedIn**.\n\n# Objetivo\n\nA partir de una **transcripción** (breve video/short), crea **5 copys** adaptados por red social, **manteniendo el mismo mensaje central** y **respetando un Call To Action**.\n\n# CTA (Call to action)\n\nSi quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\n\n# Reglas de Estilo y Adaptación por Red\n\n* **Idioma**: utiliza el **mismo idioma de la transcripción**; si no se deduce, usa **español neutro**.\n* **Coherencia**: conserva el mensaje central, beneficios clave y tono del hablante.\n* **CTA**: insértalo exactamente **una vez** por copy, en un cierre natural del texto.\n* **Hashtags**: 3–8 relevantes, naturales; evita términos genéricos vacíos.\n* **Emojis**: opcionales, con intención; no satures (máx. 3–6 según red).\n* **Legibilidad**: frases cortas, líneas separadas cuando ayude a escaneabilidad.\n* **Prohibido**: enlaces falsos, claims no sustentados, mayúsculas excesivas.\n\n### Guías específicas por red\n\n* **TikTok**: muy breve, directo, máximo 2–3 frases cortas; 3–6 hashtags; 1–3 emojis; invita a comentar/duet/stitch si aplica; CTA incluido.\n* **Facebook**: introductorio + beneficio + cierre; 3–5 hashtags al final; apto para compartir/guardar; CTA incluido.\n* **YouTube**:\n\n  * **youtube\\_title**: título breve, atractivo y directo, máximo 70 caracteres.\n  * **youtube\\_description**: texto con gancho 1–2 líneas + bullets o frases clave + hashtags; CTA incluido.\n* **Instagram**: primera línea potente (gancho); bloques con saltos de línea; 3–8 hashtags; 1–4 emojis estratégicos; CTA incluido.\n* **LinkedIn**: profesional y orientado a valor; 1–3 párrafos claros, bullets si aplica; 2–5 hashtags discretos; evita jerga excesiva; CTA incluido.\n\n# Proceso\n\n1. **Analiza** la transcripción para extraer: gancho, problema, solución/idea, prueba/ejemplo, beneficio y cierre.\n2. **Sintetiza** el mensaje central y 2–3 beneficios/insights clave.\n3. **Adapta** el copy a cada red siguiendo las guías específicas.\n4. **Inserta** el CTA exactamente una vez en cada texto.\n5. **Optimiza** con hashtags relevantes y formato escaneable.\n6. **Valida**: tono consistente, sin redundancias, sin enlaces inventados, CTA presente una vez por red.\n7. **Entrega** el resultado exclusivamente en **JSON** con las claves definidas.\n\n# Salida (formato obligatorio)\n\nDevuelve **solo** un JSON con las claves:\n\n* `tiktok`\n* `facebook`\n* `youtube_title`\n* `youtube_description`\n* `instagram`\n* `linkedin`\n\nCada valor es **string** con el copy final. No incluyas campos extra ni metadatos.\n\n# Consideraciones de Calidad\n\n* Evita redundancia entre redes; cada copy debe sentirse nativo de su plataforma.\n* Mantén la promesa del video y no añadas features no mencionados.\n* Si es técnica, explica con lenguaje claro y un ejemplo rápido.\n\n# Ejemplo de salida (demo)\n\n```json\n{\n  \"tiktok\": \"¿Quieres crecer más rápido creando mejor contenido? 🚀 Aprende el marco de 3 pasos y aplícalo hoy. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about #Crecimiento #ContentTips #TikTokCreator\",\n  \"facebook\": \"¿Tus publicaciones no generan resultados? Aquí tienes un esquema sencillo:\\n• Empieza con un gancho atractivo\\n• Expón un beneficio claro\\n• Cierra con un paso accionable\\nFunciona tanto para marcas personales como para negocios pequeños. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#MarketingDigital #Contenido #Emprendedores\",\n  \"youtube_title\": \"El marco de 3 pasos para posts que convierten 🚀\",\n  \"youtube_description\": \"En este Short te muestro un marco práctico para crear posts que atraen y convierten:\\n- Gancho claro\\n- Beneficio específico\\n- Cierre accionable\\nPonlo en práctica hoy y mide tus resultados. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#Shorts #Marketing #Contenido\",\n  \"instagram\": \"¿Tus posts no enganchan? 🤔\\n\\nUsa este marco simple:\\n✨ Gancho llamativo\\n💡 Beneficio claro\\n🚀 Cierre accionable\\n\\nMantén tu mensaje breve y medible. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#MarketingDigital #Contenido #Emprender #SocialMedia\",\n  \"linkedin\": \"Para aumentar la conversión en tus contenidos cortos:\\n- Define un gancho potente\\n- Comunica un beneficio claro\\n- Cierra con un paso accionable\\n\\nEste marco genera claridad y reduce fricción con la audiencia. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#Estrategia #MarketingDeContenidos #Crecimiento\"\n}\n```\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        480,
+        0
+      ],
+      "id": "f2212cf8-099c-4596-8e4e-75f35e8339e4",
+      "name": "crear titulos post"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"tiktok\": \"¿Quieres crecer más rápido creando mejor contenido? 🚀 Aprende el marco de 3 pasos y aplícalo hoy. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about #Crecimiento #ContentTips #TikTokCreator\",\n  \"facebook\": \"¿Tus publicaciones no generan resultados? Aquí tienes un esquema sencillo:\\n• Empieza con un gancho atractivo\\n• Expón un beneficio claro\\n• Cierra con un paso accionable\\nFunciona tanto para marcas personales como para negocios pequeños. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#MarketingDigital #Contenido #Emprendedores\",\n  \"youtube_title\": \"El marco de 3 pasos para posts que convierten 🚀\",\n  \"youtube_description\": \"En este Short te muestro un marco práctico para crear posts que atraen y convierten:\\n- Gancho claro\\n- Beneficio específico\\n- Cierre accionable\\nPonlo en práctica hoy y mide tus resultados. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#Shorts #Marketing #Contenido\",\n  \"instagram\": \"¿Tus posts no enganchan? 🤔\\n\\nUsa este marco simple:\\n✨ Gancho llamativo\\n💡 Beneficio claro\\n🚀 Cierre accionable\\n\\nMantén tu mensaje breve y medible. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#MarketingDigital #Contenido #Emprender #SocialMedia\",\n  \"linkedin\": \"Para aumentar la conversión en tus contenidos cortos:\\n- Define un gancho potente\\n- Comunica un beneficio claro\\n- Cierra con un paso accionable\\n\\nEste marco genera claridad y reduce fricción con la audiencia. Si quieres aprender como construir agentes desde cero únete a mi comunidad exclusiva: https://www.skool.com/vibe-community-vip/about\\n#Estrategia #MarketingDeContenidos #Crecimiento\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        656,
+        176
+      ],
+      "id": "c916d850-fc80-46d4-aea4-099d0941baad",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "![Logo Vibe VIP](https://subir-imagen.com/images/2025/07/25/Logo-Vibe-VIP.png)",
+        "height": 240,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1488,
+        -368
+      ],
+      "id": "59ee1266-871b-45de-a871-c343ba1a71ab",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# 📽️📱🚀 Publicación de videos cortos en múltiples redes sociales con blotato\n\nEste flujo en **N8n** permite publicar automáticamente un video en múltiples redes sociales a partir de un archivo subido a una carpeta específica de **Google Drive**.\n\n¡Únete a la comunidad exclusiva! [Vibe Comunty VIP](https://www.skool.com/vibe-community-vip/about) ",
+        "height": 240,
+        "width": 816,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        -368
+      ],
+      "id": "4a453992-c90c-4d24-8e50-b366e00cefe8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "![Kevin Belier](https://subir-imagen.com/images/2025/08/20/Foto-perfil-dorado.png)",
+        "height": 240,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -368
+      ],
+      "id": "4b5d5ca8-2e0c-40e3-8bbc-8da451fa51db",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 Flujo General\n\n1. **Trigger de Google Drive**\n\n   * El flujo inicia al detectar un **nuevo archivo de video** en una carpeta de Google Drive.\n   * Se valida que el archivo sea un **video corto** (ideal para redes sociales).\n   * Se asignan permisos de acceso al archivo.\n\n2. **Transcripción del video (AssemblyAI)**\n\n   * Se utiliza la API de [AssemblyAI](https://www.assemblyai.com) para transcribir automáticamente el contenido del video.\n   * Esto permite comprender de qué trata el video y generar títulos adecuados.\n   * 👉 Para obtener un **token gratuito**, consulta aquí: [AssemblyAI Docs](https://www.assemblyai.com/docs).\n\n3. **Generación de títulos y CTAs (Basic LLM Chain)**\n\n   * Con la transcripción, un nodo **Basic LLM Chain** genera:\n\n     * Títulos personalizados para cada red social.\n     * CTAs (**Call To Action**) diseñados para aumentar interacción y tráfico.\n\n4. **Carga del video (Blotato API)**\n\n   * Antes de publicar, el video se sube mediante el nodo de **Blotato**.\n   * Esto es un requisito de la API de Blotato.\n\n5. **Publicación en redes sociales**\n\n   * Blotato permite publicar directamente en:\n\n     * TikTok\n     * Facebook\n     * YouTube\n     * Instagram\n     * LinkedIn\n   * Se respetan los títulos y CTAs generados por el **LLM Chain**.\n\n6. **Notas sobre Blotato**\n\n   * Es una herramienta **de pago**: \\$30/mes.\n   * Permite gestionar hasta **20 redes sociales**.\n   * Registro y obtención de token son sencillos.\n   * 👉 Más info en: [Blotato](https://blotato.com)\n\n\n",
+        "height": 1008,
+        "width": 624,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        -432
+      ],
+      "id": "029a2df7-c362-4b5a-911b-9af448d0db22",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# 🛠️ Guía de Implementación Paso a Paso\n\n## 1. Preparativos\n\n* Tener tus credenciales de Oauth2 de **Google Drive**, si no sabes como ve este [video](https://www.youtube.com/watch?v=_5q0TOkZkIk) y una carpeta dedicada a los videos.\n* Crear cuenta y obtener tokens en:\n\n  * [AssemblyAI](https://www.assemblyai.com) (gratis).\n  * [Blotato](https://blotato.com) (pago, \\$30/mes).\n\n## **Nodo Blotato (Publish)**\n\n   * Publica el video en las redes sociales configuradas.\n   * Asegúrate de incluir los y CTAs en el basic llm chain\n\n---\n\n## ✅ Resultado\n\nCon este flujo, cada vez que subas un video corto a tu carpeta de Google Drive:\n\n* Será transcrito automáticamente.\n* Se generarán títulos y CTAs personalizados.\n* El video se publicará en varias redes sociales sin intervención manual.\n",
+        "height": 736,
+        "width": 640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2176,
+        -384
+      ],
+      "id": "44ae5ad5-6b35-415b-9b32-e4b9095e611d",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "filtrarCamposImportantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcribirVideoBase": {
+      "main": [
+        [
+          {
+            "node": "waitTranscripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "crear titulos post",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload media": {
+      "main": [
+        [
+          {
+            "node": "postTiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "postFacebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "postYoutube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "postInstagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "postLinkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "darPermisos": {
+      "main": [
+        [
+          {
+            "node": "transcribirVideoBase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenerStatusTranscripcion": {
+      "main": [
+        [
+          {
+            "node": "siCompletoTranscripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "waitTranscripcion": {
+      "main": [
+        [
+          {
+            "node": "obtenerStatusTranscripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "siCompletoTranscripcion": {
+      "main": [
+        [
+          {
+            "node": "Obtener transcripcion con tiempos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "pollingTranscripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pollingTranscripcion": {
+      "main": [
+        [
+          {
+            "node": "obtenerStatusTranscripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener transcripcion con tiempos": {
+      "main": [
+        [
+          {
+            "node": "crear titulos post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrarCamposImportantes": {
+      "main": [
+        [
+          {
+            "node": "darPermisos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear titulos post": {
+      "main": [
+        [
+          {
+            "node": "Upload media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "crear titulos post",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "49cd6204-3b4b-4259-9c3a-9452a85bcd23",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f3a98f40fb64e208df064eb4ca9c4caa5193e60ed3fd0435e65337c100171db6"
+  },
+  "id": "Jm6n1gtqUFKJt0mZ",
+  "tags": []
+}

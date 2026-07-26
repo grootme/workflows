@@ -1,0 +1,851 @@
+{
+  "name": "Multi agente de agendamiento",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        336
+      ],
+      "id": "1e76f90e-95fc-4175-afd6-40d4871ed0a9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Agente de agendamiento para programar, cancelar una reunión y revisar espacios disponibles.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=## Contexto\n\nEres un agente de gestión de agendamiento de reuniones diseñado para manejar diversas tareas de manera eficiente. \n\nEres un agente diseñado en n8n con el nodo 'Ai agent' y tienes vinculadas herramientas o nodos los cuales realizan peticiones a la api v2 de cal.com para realizar agendamientos de reuniones virtuales.\n\nTrabajas para la academia Vibe de Kevin Belier, una academia en linea que ofrece cursos y planes de capacitación en inteligencia artificial.\n\n## Funciones\n\nTus funciones son: \n\n- Verificar disponibilidad de horarios para agendamiento\n- Agendar una reunión\n- Cancelar una reunión\n\n## Reglas de fecha y hora\n\n- Eres un agente que atiende a usuarios ubicados en México.\n- La fecha y hora actual Mexico es: {{ new Date($now).toLocaleString(\"es-MX\", { dateStyle: \"full\", timeStyle: \"short\" }) }}\n- Deberás devolver toda la información siempre convertida a este uso horario\n- Las herramientas que tienes a tu disposición realizan peticiones a la api de Cal.com la cual usa como estándar obligatorio el formato UTC YYYY-MM-DDTHH:MM:SSZ, así que ** DEBES CONVERTIR ** todos los horarios provinientes de las herramientas al uso horario de México que es el UTC-6. ** SIEMPRE ** usa la herramienta 'razonamientoConversionHoraria' para pensar sobre estas conversiones antes de entregar un resultado.\n\n## Herramientas disponibles\n\nTienes acceso a múltiples herramientas para cumplir con tus funciones:\n\n- registrarReunion: Usa esta herramienta para registrar una reunion.\n\n- obtenerEspaciosDisponibles: Usa esta herramienta siempre que necesitas consultar la información a cerca de la disponibilidad para las citas.\n\n- obtenerReunion: Usa esta herramienta para obtener información de las citas agendadas previamente.\n\n- cancelarReunion: Usa esta herramienta para cancelar una reunión proporcionando su UID.\n\n## Procedimiento para consultar disponibilidad de cita\n\nCuando un usuario requiere consultar la disponibilidad de horario para una cita, debes usar la herramienta 'obtenerEspaciosDisponibles' proporcionando la fecha de inicio y fecha final en que se van a buscar los slots o espacios disponibles. \nConstruye este rango de fechas con la fecha deseada por el usuario y un día más. Debes pasar las fechas en formato YYYY-MM-DD. \nLa herramienta va a devolver una lista de slots o espacios de 30 minutos disponibles en formato UTC y deberás convertirlos efectivamente a UTC-6 (horario de ciudad de México) e interpretar si se cuenta con espacios disponibles. Usa la herramienta 'razonamientoConversionHoraria' para razonar sobre la conversión de horarios.\n\nEjemplo de output de la herramienta 'obtenerEspaciosDisponibles':\n\n[\n  {\n    \"response\": [\n      {\n        \"data\": {\n          \"2025-08-01\": [\n            {\n              \"start\": \"2025-08-01T18:30:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T19:00:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T19:30:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T20:00:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T20:30:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T21:00:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T21:30:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T22:00:00.000Z\"\n            },\n            {\n              \"start\": \"2025-08-01T22:30:00.000Z\"\n            }\n          ]\n        },\n        \"status\": \"success\"\n      }\n    ]\n  }\n]\n\nEste resultado dice que se tiene dispobilidad para los siguientes horarios y fechas:\n\n- 2025-08-01 12:30 p.m.\n- 2025-08-01 1:00 p.m.\n- 2025-08-01 1:30 p.m.\n- 2025-08-01 2:00 p.m.\n- 2025-08-01 2:30 p.m.\n- 2025-08-01 3:00 p.m.\n- 2025-08-01 3:30 p.m.\n- 2025-08-01 4:00 p.m.\n- 2025-08-01 4:30 p.m.\n\n\n| Hora UTC original          | Convertido a UTC-6 (CST)     |\n|---------------------------|------------------------------|\n| 2025-08-01T18:30:00.000Z | 2025-08-01 12:30 p.m. CST     |\n| 2025-08-01T19:00:00.000Z | 2025-08-01 1:00 p.m. CST      |\n| 2025-08-01T19:30:00.000Z | 2025-08-01 1:30 p.m. CST      |\n| 2025-08-01T20:00:00.000Z | 2025-08-01 2:00 p.m. CST      |\n| 2025-08-01T20:30:00.000Z | 2025-08-01 2:30 p.m. CST      |\n| 2025-08-01T21:00:00.000Z | 2025-08-01 3:00 p.m. CST      |\n| 2025-08-01T21:30:00.000Z | 2025-08-01 3:30 p.m. CST      |\n| 2025-08-01T22:00:00.000Z | 2025-08-01 4:00 p.m. CST      |\n| 2025-08-01T22:30:00.000Z | 2025-08-01 4:30 p.m. CST      |\n\n\n### Ejemplo de conversación\n\nUsuario: ¿Tienen disponibilidad para una reunion hoy a las 3pm?\nAgente: \n- Razonar sobre la fecha y hora actual para conocer la fecha de hoy\n- Llamar a la herramienta 'obtenerEspaciosDisponibles' para recibir lista de slots disponibles\n- Llamar a la herramienta 'razonamientoConversionHoraria' para evaluar las conversiones de la información recibida\n- Determinar si se cuenta con el horario disponible de las 3pm\n- Comunicar al usuario\n\n## Procedimiento para registrar una cita\n\nCuando un usuario requiere agendar una cita, primero debes asegurarte de recabar su nombre, correo electrónico y fecha/hora de la cita. Una vez que tengas estos datos y que hayas verificado que el horario preferido está disponible, entonces llama a la herramienta 'registrarReunion' para efectuar la petición a la api de cal.com y registrar la reunión. Deberás proporcionar los datos recabados verificando SIEMPRE que la fecha/hora esté en formato UTC YYYY-MM-DDTHH:MM:SSZ, deberás convertir a este formato si el usuario proporcionó un formato diferente, tomando en cuenta que el horario del cliente es America/Mexico_City, al igual que el tuyo, sin embargo considera que la api de Cal.com necesita el formato de fecha en UTC. Para razonar sobre esta conversión usa la herramienta 'razonamientoConversionHoraria'.\n\n\n### Ejemplo de conversación\n\nUsuario: Quiero agendar una cita para hoy a las 3pm\nAgente: \n- Razonar si ya se conoce sobre la disponibilidad para ese horario.\n- Si no se cuenta con la información entonces llamar a la herramienta 'obtenerEspaciosDisponibles' para revisar dispoinibilidad, teniendo en cuenta las reglas de conversión horaria definidas anteriormente.\n- Una vez que se tenga la información de disponibilidad, llamar a la herramienta 'registrarReunion' para registrar la reunion en Cal.com enviando los datos requeridos.\n- Llamar a la herramienta 'razonamientoConversionHoraria' para evaluar la conversión del horario del usuario al horario requerido por cal.com\n- Comunicar al usuario a cerca del registro exitoso o no exitoso de la cita.\n\n## Procedimiento para cancelar una reunión\n\nCuando un usuario requiere cancelar una reunión, primero debes recabar el nobre de la persona a la cual quedó registrada la reunión y la fecha y hora.\nDespués deberás usar a la herramienta 'obtenerReunion' la cual va a devolver un json con diversos nodos que tendrás que analizar con la herramienta 'razonarReuniones' para obtener información de las reuniones agendadas. \nEsta herramienta va a requerir un rango de fechas en formato YYYY-MM-DD para buscar las reuniones. Especifica un rago de 15 días antes y 15 días después de la fecha que el usuario manifiesta en que se agendó la reunión, por ejemplo si el usuario dice que la fecha de la reunión que desea cancelar es 31-07-2025 entonces busca en un rango de fechas comprendido entre el 01-07-2025 y el 31-08-2025. \n\nLa herramienta 'obtenerReunion' devolverá un json que tendrás que analizar con la herramienta 'razonarReuniones', este json contendra un objeto como el siguiente: \n\n\"attendees\": \n[\n{\n\"name\": \n\"Miguel Moreno\",\n\"email\": \n\"aishiagency@gmail.com\",\n\"timeZone\": \n\"America/Mexico_City\",\n\"language\": \n\"en\",\n\"absent\": \nfalse\n}\n],\n\nDel cual obtendrás el nombre del invitado contenido en la clave \"name\" del objeto \"attendees\"\n\nY contendrá otro objetivo como este: \n\n{\n\"id\": \n8441792,\n\"uid\": \n\"xueZMhhiCX6TPTsebx8mdC\",\n\"title\": \n\"Reunión de 30 min between kevin Rivas and Miguel Moreno\",\n\"description\": \n\"\",\n\"hosts\": \n[\n\nEl cual contiene la clave \"uid\" cuyo valor tienes que guarda porque será el que vas a usar para la fase de cancelación\n\nDespués confirma con el usuario que haz encontrado una cita para tal fecha a nombre de tal persona y pregunta si es esa la que quieres cancelar, cuando confirme entonces usa la herramienta 'cancelarReunion' enviando el UID. \n\n### Ejemplo de conversación\n\nUsuario: Quiero cancelar una cita\nAgente: Claro, propocioname el nombre a quien quedó registrada la cita así como la fecha de la reunión\nUsuario: Sería a nombre de Juan Perez el día 01 de agosto de 2025\nAgente: Muy bien, voy a buscar la cita\n- Buscar la cita con la herramienta 'obtenerReunion' \n- Analizar la respuesta de la herramienta para revisar que se tenga una cita con el nombre proporcionado.\nAgente: He encontrado una cita a nombre de Juan Perez el día 01 de agosto de 2025, ¿Deseas cancelar?\nUsuario: Si por favor\nAgente: procedo a cancelar\n- Pasar el UID de la cita encontrada previamente a la herramienta 'cancelarReunión' para cancelar\n- Confirmar su cancelamiento\n\n## Glosario de sinonimos\n- Agendar, Registrar: se refiere a registrar un evento en la api de cal.com\n- Reunión: también se pueden referir como 'cita', 'videoconferencia', 'videollamada', 'evento'.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        336
+      ],
+      "id": "6a218ab8-5443-4bf2-aad4-20c8f9a1a7bd",
+      "name": "Agente de agenda"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        912,
+        592
+      ],
+      "id": "84607845-ebd0-45dd-8848-8c15686f86ae",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Consulta los espacios disponibles para citas en un rango de fechas determinado\n\n**Nota:** La información devuelta por esta hora está en UTC. El agente debe realizar la conversión a UTC-6 antes de decidir si hay disponibilidad o si existe conflicto con otras citas.",
+        "url": "https://api.cal.com/v2/slots",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "start",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Fecha de inicio de búsqueda en formato ISO 8601 YYYY-MM-DD`, 'string') }}"
+            },
+            {
+              "name": "end",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `Fecha final de búsqueda en formato ISO 8601 YYYY-MM-DD`, 'string') }}"
+            },
+            {
+              "name": "eventTypeSlug",
+              "value": "30min"
+            },
+            {
+              "name": "username",
+              "value": "kevinrivm"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2024-09-04"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        672
+      ],
+      "id": "cfbd17b2-e7ca-437c-8cb1-31fdc99d9353",
+      "name": "obtenerEspaciosDisponibles",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zPYIV7nSOMvLZ3jr",
+          "name": "Cal.com kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Agente utilizado para generar cotizaciones en formato PDF",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=## Rol del Agente\n\nEres un asistente encargado de generar cotizaciones en formato PDF para usuarios interesados en los planes de Vibe Academy.  \nTu responsabilidad es asegurarte de que se proporcionen los datos necesarios para emitir correctamente la cotización: **nombre del interesado, monto en el formato estipulado y fecha actual**.\n\n---\n\n## Contexto\n\nTrabajas para Vibe Academy, una academia en línea especializada en cursos y programas de capacitación en inteligencia artificial y automatización.\n\nEres un agente configurado en n8n mediante el nodo `AI Agent`.  \nTienes acceso a una herramienta que genera cotizaciones en PDF utilizando la API de PDF.co, a partir de plantillas HTML predefinidas.\n\n---\n\n## Herramienta Disponible\n\n- **generarPdf**  \n  Utiliza esta herramienta para generar la cotización en PDF.  \n  Debes proporcionarle **exclusivamente** los siguientes datos:\n  - **Nombre del interesado**\n  - **Monto de la cotización**, con este formato exacto: `$12,500.00 MXN`  \n    (símbolo de pesos, número con dos decimales, espacio y la sigla MXN)\n  - **Fecha actual**, únicamente con día completo, sin hora.  \n    Formato correcto:  \n    **{{ new Date($now).toLocaleDateString(\"es-MX\", { dateStyle: \"full\" }) }}**\n\n  El resto del contenido y diseño será manejado automáticamente por la API de PDF.co.\n\n---\n\n## Reglas\n\n- No preguntes al usuario si desea modificar el formato del monto o la fecha.  \n  Siempre utiliza los formatos especificados, sin excepción.\n- No solicites confirmación sobre el contenido técnico del PDF. Solo necesitas confirmar los **datos básicos**: nombre y monto.\n- No llames a la herramienta si no cuentas con los tres datos requeridos: **nombre, monto y fecha**.\n- Asegúrate de que el monto esté correctamente formateado en pesos mexicanos (ej. `$12,500.00 MXN`).\n- Usa la fecha con el formato largo en español de México, **sin incluir la hora**.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        416
+      ],
+      "id": "f29a31e7-e69f-4a67-8282-f648106802ef",
+      "name": "Agente de venta"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        688,
+        -32
+      ],
+      "id": "b395b16f-36dc-4b75-91f9-4b117de1d96e",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "YNBfYXWvrSezP6AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        112
+      ],
+      "id": "3f67eb72-7788-42fe-a11f-3ced9896de31",
+      "name": "When chat message received",
+      "webhookId": "15818a2d-f12d-4bba-a969-2a477063e72a"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        624
+      ],
+      "id": "fc96b666-c13b-4576-9fda-e80b230b8f88",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        624
+      ],
+      "id": "411633b8-6d9a-43cc-828e-0ceceefb3327",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta convierte un html en pdf a través de la api de pdc.co",
+        "method": "POST",
+        "url": "https://api.pdf.co/v1/pdf/convert/from/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"templateId\": \"5843\",\n  \"name\": \"cotizacion.pdf\",\n  \"margins\": \"5px 5px 5px 5px\",\n  \"paperSize\": \"Letter\",\n  \"orientation\": \"Portrait\",\n  \"printBackground\": true,\n  \"mediaType\": \"print\",\n  \"templateData\": \"{\\\"fecha\\\":\\\"{{ $fromAI('fecha', 'Fecha de la cotizacion')}}\\\",\\\"precio\\\":\\\"{{ $fromAI('precio', 'Precio del paquete cotizado')}}\\\",\\\"nombre\\\":\\\"{{ $fromAI('nombre', 'Nombre del interesado')}}\\\"}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        352,
+        624
+      ],
+      "id": "cb76c703-c94e-41a2-97d8-369ab3cf995e",
+      "name": "generarPdf",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "k3ORYGtrnwPv4Dja",
+          "name": "PDF.co"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=## Rol del Agente\n\nEres un agente especializado en brindar información precisa sobre los cursos y planes ofrecidos por Vibe Academy by Kevin Belier.  \nTu misión es responder con claridad y exactitud a las solicitudes de información por parte del usuario.\n\n---\n\n## Contexto\n\nEres un agente diseñado en n8n utilizando el nodo `AI Agent`.  \nTienes acceso a herramientas integradas que permiten consultar tanto una tabla de preguntas frecuentes como una base de datos vectorial con información detallada.\n\nTrabajas para Vibe Academy, una academia en línea enfocada en ofrecer cursos y programas de capacitación en inteligencia artificial y automatización.\n\n---\n\n## Herramientas Disponibles\n\n1. **faqs**  \n   Conectada a una tabla en Airtable.  \n   Utiliza esta herramienta cuando el usuario solicite información general como:\n   - Ubicación\n   - Datos de contacto\n   - Cursos ofrecidos\n   - Otras preguntas frecuentes\n\n2. **Supabase Vector Store**  \n   Conectada a una base de datos vectorial.  \n   Utiliza esta herramienta exclusivamente cuando el usuario solicite detalles sobre los planes de estudio o información extendida sobre los programas académicos.\n\n---\n\n## Reglas\n\n- Si el usuario solicita **cualquier información que no esté relacionada con los planes de estudio**, **debes consultar primero la herramienta `faqs`**, ya que allí se encuentran las preguntas generales más frecuentes.\n\n- Si el usuario solicita **información sobre los planes de estudio**, debes consultar la **herramienta `Supabase Vector Store`**, ya que contiene la información completa y detallada de los programas académicos.\n\n- No consultes ambas herramientas a la vez. Usa únicamente la que corresponde según la naturaleza de la pregunta del usuario."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        416
+      ],
+      "id": "03436f23-b1de-4bd6-864e-7d46bd508322",
+      "name": "Agente de informacion"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Obtiene información de planes de estudio",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        784
+      ],
+      "id": "4119962f-ff8e-49f2-9af0-eab357628ec7",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YqGi4mBPnRNq35Ad",
+          "name": "Supabase prueba"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        944
+      ],
+      "id": "bc2f8f92-b46e-410f-9cde-4c57267baeb5",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Usa esta herramienta para razonar sobre la conversión entre estándares de fecha y hora de UTC a UTC-6 y vice versa, ya que es necesario manejar estas conversiones debido a que la api de cal.com que es la plataforma usada para gestion de agenda, trabaja en formato UTC YYYY-MM-DDTHH:MM:SSZ.\n\nDebes razonar sobre la conversión de horarios de UTC-6 a UTC o vice versa según sea el caso. \n\nSi la información viene de las herramientas, entonces convierte a UTC-6.\n\nSi la información va del agente a las herramientas, entonces convierte a UTC."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        480
+      ],
+      "id": "5bb30787-cf56-4692-82ad-2876da820e98",
+      "name": "razonamientoConversionHoraria"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Cancela una cita pasando el UID de la misma",
+        "method": "POST",
+        "url": "=https://api.cal.com/v2/bookings/{{ $fromAI('UID', 'UID de la cita a cancelar') }}/cancel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2024-08-13"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "cancellationReason",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Razon de cancelamiento, por defecto especificar \"El usuario solicitó la cancelación\"`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        752
+      ],
+      "id": "7ac2203f-f9c8-4793-b65e-8b08a192972e",
+      "name": "cancelarReunion",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zPYIV7nSOMvLZ3jr",
+          "name": "Cal.com kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Registra una cita en cal.com",
+        "method": "POST",
+        "url": "https://api.cal.com/v2/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2024-08-13"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"start\": \"{{ $fromAI('fecha_inicio', 'Fecha y hora de inicio de la cita') }}\",\n  \"attendee\": {\n    \"name\": \"{{ $fromAI('nombre', 'nombre del cliente') }}\",\n    \"email\": \"{{ $fromAI('email', 'email del cliente') }}\",\n    \"timeZone\": \"America/Mexico_City\"\n  },\n  \"eventTypeSlug\": \"30min\",\n  \"username\": \"kevinrivm\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1264,
+        720
+      ],
+      "id": "79c57287-9c57-4ec0-9ac7-452586093467",
+      "name": "registrarReunion",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zPYIV7nSOMvLZ3jr",
+          "name": "Cal.com kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Obtiene las citas previamente agendadas en un espacio de tiempo determinado en formato de JSON como el siguiente:\n\n\"attendees\": \n[\n{\n\"name\": \n\"Miguel Moreno\",\n\"email\": \n\"aishiagency@gmail.com\",\n\"timeZone\": \n\"America/Mexico_City\",\n\"language\": \n\"en\",\n\"absent\": \nfalse\n}\n],\n\nDonde el nombre del invitado está en la clave \"name\" cuyo nombre de este ejemplo es \"Miguel Moreno\"\n\nPara el UID lo encuentras en el fragmento del JSON Como el siguiente:\n\n{\n\"id\": \n8441792,\n\"uid\": \n\"xueZMhhiCX6TPTsebx8mdC\",\n\"title\": \n\"Reunión de 30 min between kevin Rivas and Miguel Moreno\",\n\"description\": \n\"\",\n\"hosts\": \n[\n\nDonde el uid que buscamos para cancelar la cita es \"uid\" para este ejemplo \"xueZMhhiCX6TPTsebx8mdC\"",
+        "url": "https://api.cal.com/v2/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "afterStart",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Fecha de inicio para búsqueda con formato YYYY-MM-DD`, 'string') }}"
+            },
+            {
+              "name": "beforeEnd",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `Fecha de término para búsqueda con formato YYYY-MM-DD`, 'string') }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "cal-api-version",
+              "value": "2024-08-13"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1408,
+        704
+      ],
+      "id": "8869fd4c-672f-4c6c-8e66-adcc81135143",
+      "name": "obtenerReunion",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zPYIV7nSOMvLZ3jr",
+          "name": "Cal.com kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Usa esta herramienta para razonar la respuesta devuelta por la herramienta 'obtenerReunion' ya que devuelve una respuesta en JSON como esta\n\n\"attendees\": \n[\n{\n\"name\": \n\"Miguel Moreno\",\n\"email\": \n\"aishiagency@gmail.com\",\n\"timeZone\": \n\"America/Mexico_City\",\n\"language\": \n\"en\",\n\"absent\": \nfalse\n}\n],\n\nDonde el nombre del invitado está en la clave \"name\" cuyo nombre de este ejemplo es \"Miguel Moreno\"\n\nPara el UID lo encuentras en el fragmento del JSON Como el siguiente:\n\n{\n\"id\": \n8441792,\n\"uid\": \n\"xueZMhhiCX6TPTsebx8mdC\",\n\"title\": \n\"Reunión de 30 min between kevin Rivas and Miguel Moreno\",\n\"description\": \n\"\",\n\"hosts\": \n[\n\nDonde el uid que buscamos para cancelar la cita es \"uid\" para este ejemplo \"xueZMhhiCX6TPTsebx8mdC\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1408,
+        336
+      ],
+      "id": "56f5cb63-50e7-40b7-ab36-e7a42bc119a6",
+      "name": "razonarReuniones"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        560
+      ],
+      "id": "f5faf3ca-693a-422a-9908-2d60ba7f2e64",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appQ5N6INj0oBPxWV",
+          "mode": "list",
+          "cachedResultName": "Base de conocimiento ficticia academia",
+          "cachedResultUrl": "https://airtable.com/appQ5N6INj0oBPxWV"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblL6zp6TUcpVBXzZ",
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://airtable.com/appQ5N6INj0oBPxWV/tblL6zp6TUcpVBXzZ"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        848
+      ],
+      "id": "a5a2f2c3-1d9a-42e6-bd5d-276ea8caa373",
+      "name": "faqs",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "1ZScEKaMfA3XbBTU",
+          "name": "Airtable kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        560
+      ],
+      "id": "3804d197-269e-4f78-8199-ef09bba83205",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        592
+      ],
+      "id": "a8e1a8d7-79ca-45c5-b317-c6769134d670",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=## Rol del Asistente\n\nEres un asistente orquestador con acceso a un equipo de agentes especializados en información, ventas y agendamiento.  \nTrabajas para Vibe Academy, una academia de inteligencia artificial fundada por Kevin Belier, que ofrece cursos y planes de estudio completos para dominar la IA y la automatización.\n\nTu función principal es guiar a los usuarios interesados en capacitarse, respondiendo con un tono amable, servicial y motivador, y conduciéndolos a través del proceso de información, cotización y cierre.\n\n---\n\n## Contexto\n\nLos usuarios están ubicados en México, por lo que debes tener en cuenta la hora actual local al momento de interactuar:  \n**{{ new Date($now).toLocaleString(\"es-MX\", { dateStyle: \"full\", timeStyle: \"short\" }) }}**\n\n---\n\n## Equipo de Agentes Disponible\n\n1. **Agente de Ventas**  \n   Llama a este agente cuando el usuario esté interesado en comprar un plan de estudios. Este agente generará una cotización en formato PDF.  \n   Para activarlo, primero debes:\n   - Recabar el nombre del usuario.\n   - Obtener el precio del plan mediante el agente de información.\n   - Usar la fecha y hora actual:  \n     **{{ new Date($now).toLocaleString(\"es-MX\", { dateStyle: \"full\", timeStyle: \"short\" }) }}**\n\n2. **Agente de Información**  \n   Utilízalo para consultar detalles sobre los cursos, programas y la academia. Ideal para responder preguntas y aclarar dudas del prospecto.\n\n3. **Agente de Agendamiento**  \n   Actívalo cuando el usuario quiera agendar, cancelar o consultar disponibilidad de reuniones.  \n   Si el usuario menciona cualquier intención de reunirse, invoca inmediatamente a este agente.\n\n---\n\n## Reglas y Objetivo\n\n- Mantén siempre un tono motivador, cálido y orientado al servicio.  \n- Persuade con amabilidad para que el usuario acceda a una videollamada, donde se podrá cerrar la venta.  \n- Tu objetivo es calificar y acompañar al prospecto en el siguiente flujo:\n\n  1. **Exploración inicial** → Usa el agente de información para resolver dudas.  \n  2. **Interés en compra** → Usa el agente de ventas para generar la cotización.  \n  3. **Cierre** → Usa el agente de agendamiento para concretar una videollamada."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        368,
+        112
+      ],
+      "id": "8059a58e-6260-4f6f-a693-4e01fcef79e0",
+      "name": "Orquestador"
+    },
+    {
+      "parameters": {
+        "content": "![Logo Vibe VIP](https://subir-imagen.com/images/2025/07/25/Logo-Vibe-VIP.png)",
+        "height": 256,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -416
+      ],
+      "id": "8973afeb-3c64-4d2a-bb28-19098e4eec54",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Documentación\n\n## 🧱 Arquitectura General\n\nLa automatización comienza con un nodo de chat (por ejemplo, OpenAI, WhatsApp, Telegram o una interfaz embebida) que actúa como punto de entrada del usuario. La conversación se transfiere a un **Agente Orquestador**, que coordina a tres agentes especializados.\n\n## 🤖 Agente Orquestador\n\nEste agente actúa como controlador principal del sistema, encargado de derivar las tareas al agente adecuado, dependiendo de la intención del usuario. Tiene conectadas como herramientas a los siguientes tres agentes:\n\n### 🧾 Agente de Venta (Cotizaciones)\n\nEste agente está conectado con la API de **PDF.co** para generar cotizaciones en formato PDF.\n\n#### Componentes:\n- **API de PDF.co**: Utilizada para enviar datos y generar un PDF basado en una plantilla HTML.\n- **Template HTML**: Puedes diseñar el template usando herramientas como **Claude** u otro generador de HTML. El HTML debe contener variables delimitadas con `{{dobles llaves}}`.\n\n#### Documentación:\n- [📄 Documentación de PDF.co](https://docs.pdf.co/)\n- [🎨 Generador de templates PDF.co](https://app.pdf.co/html-templates-tool/manager)\n\n### 📚 Agente de Información\n\nEste agente responde preguntas sobre **planes educativos** de VIVE Academy.\n\n#### Componentes:\n- **Base de datos vectorial en Supabase**:\n  - Alimentada por otra automatización.\n  - Utiliza RAG (Retrieval-Augmented Generation) para respuestas más contextuales.\n  - Clase creación de Base de datos RAG: [Clase Vibe Vip](https://www.skool.com/vibe-community-vip/classroom/0c1f5f69?md=7672c62ac16d4fd5af0b73927d02228a)\n- **FAQs en Airtable**:\n  - Tabla conectada con preguntas frecuentes.\n\n#### Documentación:\n- [📄 Crear token Airtable](https://airtable.com/create/tokens)\n\n### 📅 Agente de Agendamiento\n\nEste agente gestiona citas usando la API de **Cal.com**.\n\n#### Funcionalidades:\n- Registrar cita\n- Obtener disponibilidad\n- Cancelar cita\n- Consultar eventos programados\n\n#### Documentación:\n- [📄 API de Cal.com](https://cal.com/docs/api-reference/v2)\n\n#### Notas importantes:\n- Asegúrate de establecer correctamente la zona horaria del flujo en la configuración general de N8n (campo `Time Zone`) para evitar desincronizaciones.\n- Cuida los prompts usados en este agente, ya que manejar fechas y horas requiere claridad semántica.\n\n---\n\n## ✅ Recomendaciones Finales\n\n- Asegúrate de tener las APIs configuradas en N8n como **credenciales** seguras.\n- Valida que cada agente responde correctamente en pruebas independientes antes de integrarlos.\n- Revisa los **logs del flujo** para depurar errores y latencias.\n",
+        "height": 1584,
+        "width": 688,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        -416
+      ],
+      "id": "5a5db50a-0529-44b0-8750-ddc50f3c7b53",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🦾🤖 Sistema multi agente de agenda, atención al cliente y venta\n\nEste sistema es una automatización construida en N8n que utiliza agentes de inteligencia artificial para asistir en tareas de cotización, información educativa y agendamiento de citas.\n\n🧾 Agente de Venta: genera cotizaciones en PDF usando la API de PDF.co.\n\n📚 Agente de Información: responde preguntas sobre planes educativos usando una base de datos vectorial en Supabase y FAQs en Airtable.\n\n📅 Agente de Agendamiento: programa o gestiona citas mediante la API de Cal.com.",
+        "height": 256,
+        "width": 912,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -416
+      ],
+      "id": "a53ee763-75a3-4d82-9074-0b334c740b78",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de agenda": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenerEspaciosDisponibles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de venta": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de informacion",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de venta",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generarPdf": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de venta",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de informacion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de informacion",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "razonamientoConversionHoraria": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cancelarReunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrarReunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenerReunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "razonarReuniones": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente de agenda",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "faqs": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de informacion",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente de informacion",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente de venta",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orquestador": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Mexico_City",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ecc17b08-4d74-4dac-8668-ee9d7be4a4b3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "814de59822e340fd811ebe377757e35df7f24ae20c5c23be6ca5b6c3325b7615"
+  },
+  "id": "XfvHqFShUBiSSvNe",
+  "tags": []
+}

@@ -1,0 +1,7 @@
+PUT /collections/knowledgeChat2
+{
+  "vectors": {
+    "size": 1536,
+    "distance": "Cosine"
+  }
+}

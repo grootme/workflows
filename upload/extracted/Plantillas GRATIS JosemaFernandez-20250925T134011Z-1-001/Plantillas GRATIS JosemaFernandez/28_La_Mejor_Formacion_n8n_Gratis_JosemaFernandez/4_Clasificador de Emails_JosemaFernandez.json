@@ -1,0 +1,377 @@
+{
+  "name": "#4 Clasificador de Emails",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -496,
+        -272
+      ],
+      "id": "a45211b1-3c51-49cd-8d97-c6139ad99b09",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=Aquí te envío el email que tienes que clasificar.\n\nAsunto: {{ $json.subject }}\n\nCuerpo del correo: \n\n{{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "SolicitarInformacion",
+              "description": "El lead solicita información de los servicios de la empresa "
+            },
+            {
+              "category": "AgendarReunion",
+              "description": "El lead hace mención a realizar el agendamiento de una reunión para automatizar su negocio"
+            }
+          ]
+        },
+        "options": {
+          "fallback": "other"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "2e1de96d-7a84-4122-a4ba-8724c67d9a03",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        -256
+      ],
+      "id": "69adbe0f-5d39-4ee9-85d6-aa95c17cdee9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rRatTgE5Y050ZxO0",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        -160
+      ],
+      "id": "e17a8a4b-8525-4d50-80f2-61568732ed69",
+      "name": "Mark a message as read",
+      "webhookId": "5540e7fb-e155-4ddc-8b1b-9292022087c6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        48
+      ],
+      "id": "627aca57-a1c0-4f4b-a78d-742c1ec09f85",
+      "name": "Mark a message as read1",
+      "webhookId": "5540e7fb-e155-4ddc-8b1b-9292022087c6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_5430944862026098731"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        -160
+      ],
+      "id": "26b294eb-63b6-4da4-ac46-723ae139a530",
+      "name": "Etiquetar como Informacion",
+      "webhookId": "7f9dd0ff-f8d9-4e52-ac5e-529736cee016",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_575303701962773144"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        432,
+        48
+      ],
+      "id": "d6635c4c-1cb7-4d4d-b967-69412b28439d",
+      "name": "Etiquetar como Agendar",
+      "webhookId": "7f9dd0ff-f8d9-4e52-ac5e-529736cee016",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        704,
+        240
+      ],
+      "id": "219c34ad-4d58-44c5-8431-41da9d98af29",
+      "name": "Mark a message as read2",
+      "webhookId": "5540e7fb-e155-4ddc-8b1b-9292022087c6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_5129349975686141138"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        464,
+        240
+      ],
+      "id": "b5319362-f37b-446b-9e24-67f1b7debba1",
+      "name": "Etiquetar como Otro",
+      "webhookId": "7f9dd0ff-f8d9-4e52-ac5e-529736cee016",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=Aquí te envío el email que tienes analizar.\n\nAsunto: {{ $json.subject }}\n\nCuerpo del correo: \n\n{{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -480
+      ],
+      "id": "3b180811-ef9f-4cfa-a9c4-2d65ca4f94b2",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "sendTo": "",
+        "subject": "¡ATENCION!",
+        "emailType": "text",
+        "message": "=Un usuario está enfadado y requiere atención. Por favor preste atención al siguiente email:\n\nContacto: {{ $json.from.value[0].address }}\nAsunto: {{ $json.subject }}\n\nMotivo:\n\n{{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        -368
+      ],
+      "id": "42a74b03-c077-402f-8f84-baae9dd0bc33",
+      "name": "Send a message",
+      "webhookId": "bcaa4319-3d0e-4f58-bc31-ac14ea4ebaff",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Etiquetar como Informacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Etiquetar como Agendar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Etiquetar como Otro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiquetar como Informacion": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiquetar como Agendar": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiquetar como Otro": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4312ad83-0b98-428a-9d46-7f43c518d09f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f73766c8dff811f322680c8f9e08a80468d54b826c95e7acb37f9f1014260f9b"
+  },
+  "id": "w9NdPKqAkXorEYzL",
+  "tags": []
+}

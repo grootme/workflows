@@ -1,0 +1,58 @@
+// 1) Obtiene todo el texto
+const fullText = items[0].json.text || '';
+
+// 2) Encuentra todos los encabezados de capítulo, sección y artículo
+const headingRegex = /^((?:CAP[IÍ]TULO|SECCI[ÓO]N|ART[IÍ]CULO)\s+[\wÀ-ÿ\.\-]+)/gim;
+const matches = [];
+let m;
+while ((m = headingRegex.exec(fullText)) !== null) {
+  matches.push({
+    index: m.index,
+    header: m[1].trim()    // guarda el encabezado completo
+  });
+}
+// añade marcador final para trocear hasta el final
+matches.push({ index: fullText.length, header: null });
+
+// 3) Recorre los matches para acumular contexto y extraer cada artículo
+const results = [];
+let currentChapter = null;
+let currentSection = null;
+
+for (let i = 0; i < matches.length - 1; i++) {
+  const { index, header } = matches[i];
+  const nextIndex = matches[i + 1].index;
+  
+  // Parseamos el encabezado en dos partes: tipo y resto
+  const piece = header.match(/^(CAP[IÍ]TULO|SECCI[ÓO]N|ART[IÍ]CULO)\s+(.+)$/i);
+  if (!piece) continue;
+  const [, typeRaw, numRaw] = piece;
+  const type = typeRaw.toUpperCase();
+
+  if (type === 'CAPÍTULO' || type === 'CAPITULO') {
+    // guardamos el encabezado completo
+    currentChapter = header;
+    continue;
+  }
+  if (type === 'SECCIÓN' || type === 'SECCION') {
+    currentSection = header;
+    continue;
+  }
+  if (type === 'ARTÍCULO' || type === 'ARTICULO') {
+    // extrae el contenido desde este encabezado hasta el siguiente
+    const content = fullText.slice(index, nextIndex).trim();
+    // usamos el encabezado completo para article
+    const articleHeader = header;
+    results.push({
+      json: {
+        chapter: currentChapter,    // e.g. "CAPÍTULO IV."
+        section: currentSection,    // e.g. "SECCIÓN 1ª"
+        article: articleHeader,     // e.g. "ARTÍCULO 10."
+        content
+      }
+    });
+  }
+}
+
+// 4) Devuelve el array de artículos
+return results;

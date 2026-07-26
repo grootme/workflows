@@ -1,0 +1,556 @@
+{
+  "name": "Agente LinkedIn - Marketing",
+  "nodes": [
+    {
+      "parameters": {
+        "toolDescription": "Usa esta herramienta para acceder a internet",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"api_key\": \"AQUI TU CLAVE API\",\n    \"query\": \"{TerminoBusqueda}\",\n    \"search_depth\": \"basic\",\n    \"include_answer\": true,\n    \"topic\": \"news\",\n    \"include_raw_content\": true,\n    \"max_results\": 3\n} ",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "TerminoBusqueda",
+              "description": "Lo que el usuario ha solicitado para escribir un publicacion de LinkedIn",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        980,
+        440
+      ],
+      "id": "f8cd1d6c-220f-498f-aec4-327ace12db18",
+      "name": "Tavily"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tema de la publicación:  {{ $json.TemaPublicacion }}\nPúblico Objetivo: {{ $json.AudienciaObjetiva }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Descripción general  \nEres un agente de IA especializado en crear publicaciones para LinkedIn que sean profesionales, educativas y atractivas, basadas en cualquier tema que el usuario proporcione.\n\n## Objetivos  \n- Empieza siempre realizando una búsqueda en tiempo real con la herramienta Tavily para recopilar la información más precisa y actualizada sobre el tema.  \n- La publicación debe redactarse pensando en el público objetivo proporcionado.\n\nBasándote en tu investigación, genera una publicación de LinkedIn bien estructurada que:  \n- Comience con un gancho atractivo  \n- Tenga un tono profesional  \n- Sea clara y fácil de leer  \n- Sea educativa y perspicaz  \n- Use pocos emojis (solo cuando sean muy relevantes y de forma mínima)  \n- Incluya la atribución adecuada de las fuentes (por ejemplo, “según [fuente]”)  \n- Contenga hashtags relevantes para mejorar la visibilidad  \n- Termine con un llamado a la acción claro (por ejemplo, pidiendo opiniones, comentarios o compartidos)\n\n## Instrucciones de salida  \n- Tu única salida debe ser un objeto JSON con dos campos:\n  - `title`: un gancho que sirva como título de la publicación.\n  - `text`: el texto completo de la publicación de LinkedIn.  \n- No incluyas explicaciones, notas ni nada más allá de ese JSON.\n\n## Flujo de trabajo de ejemplo  \n1. Recibir un tema (por ejemplo, “El retorno de la inversión de la automatización de almacenes”)  \n2. Usar la herramienta Tavily para buscar y recopilar información reciente o casos de estudio  \n3. Redactar una publicación de LinkedIn usando esa investigación  \n4. Formatearla con citas de fuentes, estructura limpia, hashtags opcionales y un llamado a la acción  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        900,
+        220
+      ],
+      "id": "98a0588c-22fe-4151-bc04-20ab73e7fad3",
+      "name": "Agente Publicación LinkedIn"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Utiliza esta información para crear la imagen:\n\nTítulo de la publicación de LinkedIn: {{ $json.output.title }}\nContenido de la publicación de LinkedIn:  {{ $json.output.text }}",
+        "options": {
+          "systemMessage": "=# Descripción general  \nEres un agente de IA que transforma publicaciones de LinkedIn en descripciones de prompts visuales para generar material gráfico de marketing. Estos visuales están diseñados para acompañar la publicación en LinkedIn y comunicar el mensaje de forma atractiva y coherente con la marca.\n\n## Objetivo  \n- Leer y analizar la publicación de LinkedIn proporcionada.  \n- Identificar el mensaje principal, la idea clave o la conclusión de la publicación.  \n- Utilizar el contenido de la publicación, incluidas estadísticas o información específica, para personalizar el gráfico.  \n- Crear un prompt gráfico claro y persuasivo que pueda usarse con un generador de texto a imagen.  \n- El resultado debe ser un gráfico de estilo marketing —no una escena literal ni una foto hiperrealista— que:  \n  1. Ilustre o refuerce visualmente la idea principal de la publicación  \n  2. Sea apropiado para un feed profesional de LinkedIn  \n  3. Transmita una sensación pulida, moderna y atractiva  \n\n## Instrucciones de salida  \n- Solo output el prompt final para la imagen. No uses comillas.  \n- No repitas ni reformules la publicación de LinkedIn.  \n- No añadas explicaciones ni contenido extra: únicamente el prompt de imagen.  \n- Nunca dejes campos en blanco como “Área de encabezado reservada para texto personalizable”.  \n- Incluye estadísticas numéricas cuando estén disponibles en la publicación original.  \n- Asegúrate de que toda la imagen esté completa y que ningún elemento quede cortado.\n\n## Guía de estilo  \n- Piensa como un diseñador de marca o creativo de marketing.  \n- Los visuales pueden incluir: texto, gráficos, iconos, formas abstractas, superposiciones, ilustraciones modernas, efectos de movimiento, tipografía audaz (descrita, no renderizada) o conceptos metafóricos.  \n- Puedes sugerir distribuciones (p. ej., “diseño de pantalla dividida”, “encabezado con título destacado y sutil ilustración de fondo”).  \n- Asume que el prompt se ejecutará en herramientas de IA para generación de imágenes: tu descripción debe guiar esos sistemas de forma efectiva.  \n\n## Formato de ejemplo de prompt  \nUn gráfico moderno de estilo plano que muestre un cerebro humano conectado a engranajes mecánicos, representando la fusión de IA y automatización. Fondo minimalista, degradados suaves y texto en sans-serif limpio.  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1300,
+        220
+      ],
+      "id": "ddd9d0f1-4b7f-4863-ab3b-9fd2d3b163c2",
+      "name": "Agente Prompt de Imagenes"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "=victorperezsanz2004@gmail.com",
+        "subject": "Tu publicación de LinkedIn esta lista!",
+        "message": "=Aquí tienes Víctor!\n\nTítulo: {{ $('Agente Publicación LinkedIn').item.json.output.title }}\n\nContenido: {{ $('Agente Publicación LinkedIn').item.json.output.text }}\n\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2080,
+        220
+      ],
+      "id": "91c9b014-6511-41dc-9c21-a9ad98433ce6",
+      "name": "Enviar Email",
+      "webhookId": "20f8ef41-7183-41f1-9104-a6a042b807ce",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zKID3ZnhwixBQcD2",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1880,
+        220
+      ],
+      "id": "631cb15f-207a-4dba-aed5-c4bb52d20564",
+      "name": "Convertir a Binario"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU CLAVE API AQUI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        220
+      ],
+      "id": "813381de-2915-48c1-a904-aaf36d8dbcfb",
+      "name": "Generar Imagen con GPT-4o"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b17a748c-a908-4174-bf83-5dc3428a752e",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2260,
+        220
+      ],
+      "id": "82f8160c-7c5e-4b66-9b37-2c177914ca92",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        440
+      ],
+      "id": "b7c5f480-ee6d-487a-8eec-cd272d853558",
+      "name": "GPT 4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "NqIUOK3Y1Eg1Qg0e",
+          "name": "OpenAI API New 13/01/25"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        840,
+        440
+      ],
+      "id": "aff45fa0-e9b6-4d43-bc2e-e05de23c540a",
+      "name": "Claude Sonnet 3.7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "a5tS5dusBZzLl5oY",
+          "name": "prueba youtube"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"Tu gancho irresistible aquí\",\n  \"text\": \"Aquí va el contenido completo de la publicación de LinkedIn…\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        440
+      ],
+      "id": "e1a5b1a8-f82b-48f4-813c-d536c8b66ce2",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        340
+      ],
+      "id": "decfc158-adee-40e0-a651-94248b34762f",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc",
+          "mode": "list",
+          "cachedResultName": "Registro Marketing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Baxgf0bJunZD9GW2lF-r8kn3cr9xfMy77bf2Onf7ymc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Título": "={{ $('Agente Publicación LinkedIn').item.json.output.title }}",
+            "Petición": "=Tema de la publicación:  {{ $json.TemaPublicacion }}\nPúblico Objetivo: {{ $json.AudienciaObjetiva }}",
+            "Tipo": "Linkedin Post",
+            "Publicación": "={{ $('Agente Publicación LinkedIn').item.json.output.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Petición",
+              "displayName": "Petición",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Publicación",
+              "displayName": "Publicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2460,
+        120
+      ],
+      "id": "f87c88d2-88ce-48ec-b1c9-0e2dc2c1bcfb",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "63RgPzTSFDrHAKRK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "TemaPublicacion"
+            },
+            {
+              "name": "AudienciaObjetiva"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        220
+      ],
+      "id": "ffd24e26-547c-4137-8817-eef97c1521f5",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "630c1cb6-3a84-40f4-88d3-2612ea8aab14",
+              "name": "respuesta",
+              "value": "=La publicación de LinkedIn ya ha sido creada exitósamente!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2660,
+        120
+      ],
+      "id": "1d3e3a7f-685b-4a9c-8bf6-ba20ae5a3a07",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Publicación LinkedIn",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Publicación LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Agente Prompt de Imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Prompt de Imagenes": {
+      "main": [
+        [
+          {
+            "node": "Generar Imagen con GPT-4o",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir a Binario": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Imagen con GPT-4o": {
+      "main": [
+        [
+          {
+            "node": "Convertir a Binario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Email": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Prompt de Imagenes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet 3.7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Publicación LinkedIn",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente Publicación LinkedIn",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Agente Publicación LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6efcd21e-023e-468c-bfda-0b4f47d1d84e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aac574544802a17aad902d42e8f7770e23d852adf6e8e0ac80531236fecac715"
+  },
+  "id": "TyHgblS4wUznPxjz",
+  "tags": []
+}

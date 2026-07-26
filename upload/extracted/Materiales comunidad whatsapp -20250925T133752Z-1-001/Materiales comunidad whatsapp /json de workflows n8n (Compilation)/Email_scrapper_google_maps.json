@@ -1,0 +1,606 @@
+{
+  "name": "Email scrapper google maps",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2080,
+        -760
+      ],
+      "id": "698613c8-1ed0-48e1-b75e-f110a97c0fd5",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {},
+      "id": "d4ace40e-5d97-4598-9905-09b9d775a076",
+      "name": "Remove Duplicate URLs1",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "position": [
+        -1200,
+        -760
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "=https://www.google.com/maps/search/{{ $json.query }}",
+        "options": {
+          "allowUnauthorizedCerts": false
+        }
+      },
+      "id": "bcf7f136-73aa-4675-aa93-697675eabd26",
+      "name": "Search Google Maps with query1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1860,
+        -760
+      ],
+      "executeOnce": false,
+      "typeVersion": 4.2,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data;\n\n// Ensure data is a valid string\nif (typeof data !== 'string' || !data.trim()) return [];\n\n// Step 1: Extract URLs using regex for href attributes\nconst regex = /https?:\\/\\/[^\\s\"']+/g;\nconst matches = data.match(regex) || [];\n\n// Step 2: Remove unwanted backslash-encoded query parameters\nconst cleanedUrls = matches.map(url => url.split('\\\\')[0]);\n\nreturn cleanedUrls.map(url => ({ json: { url } }));"
+      },
+      "id": "6c3e082b-4207-4046-95b6-d19fcaf8c168",
+      "name": "Scrape URLs from results1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -1640,
+        -760
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "041797f2-2fe2-41dc-902a-d34050b9b304",
+              "operator": {
+                "type": "string",
+                "operation": "notRegex"
+              },
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "=(google|gstatic|ggpht|schema\\.org|example\\.com|sentry-next\\.wixpress\\.com|imli\\.com|sentry\\.wixpress\\.com|ingest\\.sentry\\.io)"
+            },
+            {
+              "id": "eb499a7e-17bc-453c-be08-a47286f726dd",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "79eb29a1-e5ca-4ea2-af3f-766f40948dd9",
+      "name": "Filter irrelevant URLs1",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -1420,
+        -760
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "id": "7768d1e8-a916-47be-a6d2-edd81f72468e",
+      "name": "Request web page for URL1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -540,
+        -760
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "8de384c0-45cc-4cb1-a6ef-480a2dc1287a",
+      "name": "Loop over URLs1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -980,
+        -760
+      ],
+      "typeVersion": 3,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $json.data;\n\n// Expresión regular para extraer correos electrónicos\nconst emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?!png|jpg|gif|jpeg)[a-zA-Z]{2,}/g;\n\n// Expresión regular para extraer el título de la página\nconst titleRegex = /<title>(.*?)<\\/title>/i;\n\n// Extraer el título de la página\nconst titleMatch = data.match(titleRegex);\nconst pageTitle = titleMatch ? titleMatch[1] : 'Título no encontrado';\n\n// Extraer los correos electrónicos\nconst emails = data.match(emailRegex);\n\nreturn { json: { emails: emails, title: pageTitle } };"
+      },
+      "id": "269e827d-9a13-4f4c-b72b-5e4d968c2aa9",
+      "name": "Scrape emails and title from page",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -320,
+        -760
+      ],
+      "typeVersion": 2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4dfb36c9-ac48-4d12-a508-b28f56fca4df",
+              "name": "emails",
+              "value": "={{ $json.emails }}",
+              "type": "string"
+            },
+            {
+              "id": "2d6b3508-a0cc-451c-ba65-86ba31cfd509",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "c7808000-8123-4d8e-abff-8d194be954d9",
+              "name": "url",
+              "value": "={{ $('Set url').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -100,
+        -680
+      ],
+      "id": "d3161c57-7dc4-4876-822a-51dd08ae3a0f",
+      "name": "Set 3 fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d89aa5cd-bfea-4bef-808e-c355a0bfcb0a",
+              "leftValue": "={{ $json.emails }}",
+              "rightValue": "null",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -760,
+        -960
+      ],
+      "id": "02bdb3d3-b664-443c-9386-7a8a9ffb46ec",
+      "name": "Filter null email",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Suponiendo que recibes los datos como items (input de n8n)\nreturn items.map(item => {\n  let emailsRaw = item.json.emails;\n\n  // Asegurarse de que es una cadena y luego parsear a array\n  let emailsArray = [];\n  try {\n    emailsArray = JSON.parse(emailsRaw);\n  } catch (e) {\n    emailsArray = [];\n  }\n\n  // Eliminar duplicados\n  const uniqueEmails = [...new Set(emailsArray)];\n\n  // Devolver el objeto con emails únicos\n  return {\n    json: {\n      ...item.json,\n      emails: uniqueEmails\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -540,
+        -960
+      ],
+      "id": "a9a15b7f-53d1-4cb9-9690-0733074c27e3",
+      "name": "Remover emails duplicados"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cb962ba6-72ed-46b5-8e8c-792cf81d3240",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "(google|gstatic|ggpht|schema\\.org|example\\.com|sentry\\.wixpress\\.com|sentry-next\\.wixpress\\.com|ingest\\.sentry\\.io|sentry\\.io|imli\\.com)",
+              "operator": {
+                "type": "string",
+                "operation": "notRegex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -960
+      ],
+      "id": "109df9de-3a8d-4587-b544-cf222e06dac0",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28",
+          "mode": "list",
+          "cachedResultName": "Scrap import from web",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1504434449,
+          "mode": "list",
+          "cachedResultName": "MCP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit#gid=1504434449"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.titulo }}",
+            "Email": "={{ $json.email }}",
+            "Url": "={{ $json.url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Url",
+              "displayName": "Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        120,
+        -960
+      ],
+      "id": "545e95d4-f779-4f97-845e-c68fdcecc5d9",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aT0j8fwl8trvGISh",
+          "name": "kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "550d7801-50f8-4184-a629-2022e91b8562",
+              "name": "titulo",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "22e45b28-3883-4f2b-a12a-7adb4592b3cf",
+              "name": "email",
+              "value": "={{ $json.emails[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "c10b63dd-4397-4078-9c27-cb188cb7a233",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        -960
+      ],
+      "id": "40b1ee21-6231-482d-b672-6ac5b4890e91",
+      "name": "Set def"
+    },
+    {
+      "parameters": {
+        "content": "## Configura tu credencial para sheets\nCrealo con los 3 campos nombre, url y correo\n",
+        "height": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -1120
+      ],
+      "id": "57279299-93f9-4edb-ab4e-7370c6a61cab",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d5d2a14c-fc7e-4196-99f5-8a38be86dc27",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -760,
+        -760
+      ],
+      "id": "cae566eb-07fe-443b-8c86-d2765b62ad20",
+      "name": "Set url"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Search Google Maps with query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate URLs1": {
+      "main": [
+        [
+          {
+            "node": "Loop over URLs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Google Maps with query1": {
+      "main": [
+        [
+          {
+            "node": "Scrape URLs from results1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape URLs from results1": {
+      "main": [
+        [
+          {
+            "node": "Filter irrelevant URLs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter irrelevant URLs1": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate URLs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request web page for URL1": {
+      "main": [
+        [
+          {
+            "node": "Scrape emails and title from page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop over URLs1": {
+      "main": [
+        [
+          {
+            "node": "Filter null email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape emails and title from page": {
+      "main": [
+        [
+          {
+            "node": "Set 3 fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set 3 fields": {
+      "main": [
+        [
+          {
+            "node": "Loop over URLs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter null email": {
+      "main": [
+        [
+          {
+            "node": "Remover emails duplicados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover emails duplicados": {
+      "main": [
+        [
+          {
+            "node": "Set def",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set def": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Set url": {
+      "main": [
+        [
+          {
+            "node": "Request web page for URL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7c234390-52ab-497e-9c29-b540b4c95615",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "s8WDHO9UNNcwz9IV",
+  "tags": [
+    {
+      "createdAt": "2025-04-25T07:15:27.823Z",
+      "updatedAt": "2025-04-25T07:15:27.823Z",
+      "id": "gLFf96j4RIxjSTql",
+      "name": "lead gen"
+    }
+  ]
+}

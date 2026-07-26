@@ -1,0 +1,1208 @@
+{
+  "name": "Crear videos virales",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres una inteligencia artificial especializada en generar prompts para imágenes cinematográficas fijas en tercera persona.\n\nRecibirás una descripción creativa de una idea de video. Tu tarea es generar exactamente **13 escenas visuales** altamente cinematográficas, **basadas en esa idea**.\n\n### Instrucciones:\n\n- Las escenas deben mostrar momentos congelados (nada de movimiento).\n- Escribe en tercera persona, en **inglés**.\n- Usa un estilo de **realismo cinematográfico**:\n  - Detallado, frío, táctil y técnico.\n  - Texturas ambientales como niebla, luces, sombras, reflejos, superficies húmedas o brillantes.\n  - Planos amplios o medios.\n- No incluyas lenguaje emocional, narrativo o fantasioso.\n- No uses términos de cámara o animación.\n- Máximo **500 caracteres por escena**.\n\n### Entrada:\n\n**Idea del video:** {{ $('Generar nueva idea de video').item.json.message.content }}\n\n---\n\n### Salida esperada:\n\n**Scene 1:**  \n[Descripción en inglés de una escena visual basada en la idea]\n\n**Scene 2:**  \n...\n\n**Scene 13:**  \n...\n```\n\n---\n\n### ✅ EJEMPLO DE USO\n\n**Entrada (idea del video):**\nUn convoy de carros del futuro impulsados por energía solar, recorriendo un exuberante bosque donde la tecnología se fusiona con la naturaleza. Los coches poseen un diseño bio-luminescente que cambia de color al interactuar con el entorno, ilustrando una armonía perfecta entre tecnología y ecología.\n\n**Resultado esperado:**\n\n```markdown\nScene 1:  \nA bioluminescent car glows soft blue as it rests under dense green canopy, solar panels shimmering with filtered sunlight.\n\nScene 2:  \nTwo cars pause beside a mossy rock wall, their surfaces pulsing with color that reflects nearby foliage.\n\n...\n\nScene 13:  \nThe lead vehicle halts near a waterfall, its body shifting hue to match the cascading light and surrounding mist."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        60
+      ],
+      "id": "c00d847b-2697-465e-a359-15ff00134481",
+      "name": "Generar prompts",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": " https://queue.fal.run/fal-ai/flux/schnell",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json[\"message.content\"] }}"
+            },
+            {
+              "name": "image_size",
+              "value": "portrait_16_9"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        60
+      ],
+      "id": "d3e35358-87a1-4e2e-aa27-31fbd57a1815",
+      "name": "Crear imagenes"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/flux/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        60
+      ],
+      "id": "44c467a6-7606-43d9-bf03-7ed9e5df2698",
+      "name": "Obtener imágenes"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "=Eres una IA experta en generar prompts visuales realistas, precisos y cinematográficos basados en imágenes. \n\nTu tarea es analizar cuidadosamente la imagen proporcionada y crear un **único prompt claro y descriptivo** que pueda utilizarse para generar una escena en video.\n\n\n### **Prompt Original de la Imagen (Referencia Única)**\n\n*\"{{ $('Separar prompts').item.json['message.content'] }}\"*\nEste prompt sirve como referencia para entender el estilo general o intenciones visuales.\n\n---\n\n### **Reglas para el Prompt Generado**\n\n* El resultado debe estar en **inglés**.\n* Usa solo tercera persona. Nunca uses \"yo\", \"nosotros\" ni \"POV\".\n* Cada frase debe tener **menos de 300 caracteres**.\n* Describe solo **una acción específica por frase**.\n* Incluye **texturas ambientales visibles** si están presentes (ej: polvo, vapor, reflejos, arena, agua, fuego, etc).\n* **No uses lenguaje emocional o cinematográfico** (ej: \"la cámara se mueve\", \"una toma épica\").\n* Enfócate en **acciones físicas detalladas** y entorno directo observable en la imagen.\n* No repitas descripciones del prompt original o del contexto; **genéralas desde la imagen**.\n\n---\n\n### **Ejemplos de Salidas por Categoría**\n\n**Limpieza submarina**\n\n* Diver scraping barnacles off whale’s side under sunlit water.\n* Tool peeling thick barnacle growth from whale’s underbelly.\n\n**Cocina**\n\n* Knife slicing through ripe tomato on wooden cutting board.\n* Steam rising from boiling pot filled with vegetables.\n\n**Desierto / Exploración**\n\n* Boots crushing dry sand as hiker steps over cracked earth.\n* Wind brushing dust off old machinery under desert sun.\n\n---\n\n### **Generación de Prompt**\n\nAnaliza la imagen proporcionada y crea un **único prompt visual realista**. Si hay un contexto adicional, úsalo solo para reforzar tu comprensión del estilo, pero no lo repitas. El resultado debe estar en **inglés**.\n",
+        "imageUrls": "={{ $json.images[0].url }}",
+        "options": {
+          "detail": "high"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        880,
+        360
+      ],
+      "id": "ea2ee047-61b8-4990-ad5e-0fe5972d5496",
+      "name": "Video prompt",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": " https://queue.fal.run/fal-ai/kling-video/v1.6/standard/image-to-video",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.content }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Obtener imágenes').item.json.images[0].url }}"
+            },
+            {
+              "name": "duration",
+              "value": "5"
+            },
+            {
+              "name": "aspect_ratio",
+              "value": "9:16"
+            },
+            {
+              "name": "negative_prompt",
+              "value": "bad quality"
+            },
+            {
+              "name": "cfg_scale",
+              "value": "0.5"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        360
+      ],
+      "id": "0e8cd265-f926-42c6-8fdf-d3ff163bec86",
+      "name": "Crear videos"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/kling-video/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        360
+      ],
+      "id": "99415d96-3d20-4e50-b35f-a8ac92a790a7",
+      "name": "Obtener videos"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Genera una descripción sonora **concisa e inmersiva** en inglés para Eleven Labs, basándote únicamente en el entorno descrito en el prompt de video proporcionado.\n\nprompt: {{ $('Video prompt').item.json.content }}\n\n---\n\n### **Reglas**\n\n* El resultado debe estar en **inglés**.\n* Máximo **250 caracteres**, incluyendo espacios y símbolos.\n* La descripción debe ser clara, precisa y coherente con el entorno visual.\n* No añadas elementos que no estén implícitos en el prompt.\n* Omite palabras innecesarias o florituras.\n* Céntrate en **sonidos ambientales esenciales** (viento, agua, maquinaria, voces, etc).\n\n\n\n### **Ejemplo de Salidas**\n\n* Soft ocean swells, distant gulls, gentle scraping against wet surface.\n* Crackling fire, rustling leaves, faint footsteps over dry ground.\n* Hum of machinery, echoing clangs, steady dripping in metal corridor.\n* Wind sweeping across sand, muffled radio chatter, gear shifting."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        760,
+        680
+      ],
+      "id": "fde98ca1-d049-4e34-9f00-d992bcd936a5",
+      "name": "Music prompts",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": " https://queue.fal.run/fal-ai/mmaudio-v2",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "=Ambient musical background sounds for this idea: {{ $json.message.content }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Obtener imágenes').item.json.images[0].url }}"
+            },
+            {
+              "name": "duration",
+              "value": "5"
+            },
+            {
+              "name": "video_url",
+              "value": "={{ $('Obtener videos').item.json.video.url }}"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        680
+      ],
+      "id": "8d55032d-44ca-4d1d-bbd3-2369d59bfcd4",
+      "name": "Crear sonidos"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/mmaudio-v2/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        680
+      ],
+      "id": "b04483d3-fbbc-4729-b23b-e6f45abc72bd",
+      "name": "Obtener sonidos"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/ffmpeg-api/compose",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"tracks\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"video\",\n      \"keyframes\": [\n        { \"url\": \"{{ $json.video_urls[0] }}\", \"timestamp\": 0, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[1] }}\", \"timestamp\": 5, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[2] }}\", \"timestamp\": 10, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[3] }}\", \"timestamp\": 15, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[4] }}\", \"timestamp\": 20, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[5] }}\", \"timestamp\": 25, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[6] }}\", \"timestamp\": 30, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[7] }}\", \"timestamp\": 35, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[8] }}\", \"timestamp\": 40, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[9] }}\", \"timestamp\": 45, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[10] }}\", \"timestamp\": 50, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[11] }}\", \"timestamp\": 55, \"duration\": 5 },\n        { \"url\": \"{{ $json.video_urls[12] }}\", \"timestamp\": 60, \"duration\": 5 }\n      ]\n    }\n  ]\n}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        960
+      ],
+      "id": "fa4b57a2-77e5-4c03-af76-814eee349c92",
+      "name": "Combinar video"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/ffmpeg-api/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key 80274bd2-a7aa-4ab9-bb72-faae56c3da01:edcb3c93269e78e0b48e6ab54883c326"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        960
+      ],
+      "id": "052ad0fb-c2dc-49c7-b2b3-439e5190c85b",
+      "name": "Obtener video final"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Tu tarea es generar una idea general y atractiva para un video viral de TikTok. El video debe ajustarse a un canal que se enfoque en el siguiente tema:\n\n[Tema del canal, por ejemplo: “carros del futuro”]\n\nLa idea debe ser interesante, sorprendente y visualmente impactante, pero sin entrar en detalles técnicos ni especificaciones irrealistas. Piensa en algo que atraiga la atención de manera rápida y que sea fácil de visualizar, pero que también sea creíble y atractivo para el público general.\n\nTu respuesta debe incluir:\nIdea del video: una descripción breve del concepto principal (máximo 100 palabras).\n\nEnfoque específico: qué hace que esta idea sea atractiva para un público amplio y cómo puede generar interés viral.\n\nEjemplos de ideas amplias y visuales:\n\"Carros deportivos futuristas cruzando una ciudad estilo cyberpunk.\"\n\n\"Coches de lujo navegando por el desierto con tecnología avanzada.\"\n\n\"El futuro de los autos eléctricos: diseños aerodinámicos y funcionales para la ciudad del mañana.\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -380,
+        80
+      ],
+      "id": "13d4663d-9d39-41fb-b990-e0a0baebabb1",
+      "name": "Generar nueva idea de video",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "={{ $json.message.content }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "✅ Aprobado",
+            "disapproveLabel": "❌ Desaprobado"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        20
+      ],
+      "id": "62767ad7-c044-48c9-a587-85b3fe279c3e",
+      "name": "Telegram",
+      "webhookId": "82e5c8ad-6590-4c1d-bf0a-3b0a6acdf9bd",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c5f12be2-c48e-4517-9f53-05e7f03ba067",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "\"true\"",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        200,
+        80
+      ],
+      "id": "614157ba-9f5e-4e62-a3c1-bfe92c6ff3f9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        880,
+        60
+      ],
+      "id": "538fa5e5-127c-408c-a3e8-4008a844343b",
+      "name": "Separar prompts"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1YcFSaRJB7MncLsNDCmg7ojzHWOEXYgAozv5Hhz7E3Qs",
+          "mode": "list",
+          "cachedResultName": "ideas virales para videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YcFSaRJB7MncLsNDCmg7ojzHWOEXYgAozv5Hhz7E3Qs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1035176779,
+          "mode": "list",
+          "cachedResultName": "Links_zapier",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YcFSaRJB7MncLsNDCmg7ojzHWOEXYgAozv5Hhz7E3Qs/edit#gid=1035176779"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "==ROW()-1",
+            "Titulo": "={{ $json.message.content }}",
+            "Link": "={{ $('Obtener video final').item.json.video_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2320,
+        960
+      ],
+      "id": "0a9f9594-feee-4280-9002-21b9eb6ca2cc",
+      "name": "Actualizar en hoja",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lW48EeoNMrAC0bmk",
+          "name": "Aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres una IA experta en crear **títulos ultra virales** para TikTok. A partir de la idea completa del video proporcionada, genera un **solo texto** que combine:\n\n1. Un **título impactante** al inicio:\n\n   * Atrae la atención en los **primeros 2 segundos**.\n   * Despierta **curiosidad o emoción inmediata**.\n   * Usa lenguaje **informal, directo y propio de TikTok**.\n   * Puede incluir emojis si aportan fuerza visual.\n   * No repitas literalmente frases del contenido: **reinterpreta creativamente**.\n   * Máximo **100 caracteres antes de los hashtags** (para no perder visibilidad).\n\n2. Una **lista de 3 a 5 hashtags relevantes** al final del mismo texto:\n\n   * Relacionados directamente con el tema del video.\n   * Mezcla hashtags amplios (#fyp, #viral) con específicos (#deepsea, #cleantech, etc.).\n   * Escritos en minúsculas y sin símbolos extra.\n\n---\n\n### **Variable de entrada**\n\nVideo Idea: \n{{ $('Combinar usrl').item.json.video_idea }}\n\n---\n\n### **Ejemplos de salida**\n\n**Texto final (título + hashtags):**\nNo vas a creer lo que encontró bajo el agua 😳🌊 #fyp #underwater #deepsea #foundfootage #viral"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1940,
+        960
+      ],
+      "id": "4748f0ce-ee30-4df6-ae7c-0607d5e7d2ce",
+      "name": "Generar título viral",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Enviar mensaje a las 5pm\n\n",
+        "height": 360,
+        "width": 1160,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -20
+      ],
+      "id": "c2b3dc0f-c8ae-497a-8b7d-d54eb85b9c8f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 17
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        80
+      ],
+      "id": "2e31b5e3-4ed3-42bc-a856-01cdcc83329b",
+      "name": "Enviar mensaje a las 5pm"
+    },
+    {
+      "parameters": {
+        "content": "## Generar imagenes",
+        "height": 280,
+        "width": 1380,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -20
+      ],
+      "id": "0c132d39-87bf-4ae9-9055-7906a6f90c6b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Generar videos",
+        "height": 280,
+        "width": 1380,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        280
+      ],
+      "id": "2999bf7b-7f26-4320-bed8-1a0b85e6301d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Generar música\n",
+        "height": 280,
+        "width": 1380,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        580
+      ],
+      "id": "98bbe28b-4dca-4afa-83e4-1328404f0eaa",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Combinar video y mandarlo\n",
+        "height": 280,
+        "width": 1380,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        880
+      ],
+      "id": "31178379-ec21-4876-9119-93f43bdb73d7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Poner título y actualizar en la hoja de calculo\n",
+        "height": 280,
+        "width": 700,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        880
+      ],
+      "id": "d14f4506-5e02-4cb0-9bfa-063323e842c8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        360
+      ],
+      "id": "8d2fa31b-2224-493e-adbe-fec8828215f0",
+      "name": "5 minutos",
+      "webhookId": "4633e3cf-cf81-4b38-ab85-f4601f23700a"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        680
+      ],
+      "id": "f30a4c15-5b37-4f81-95ce-3c4d9e7cfcd0",
+      "name": "2 minutos",
+      "webhookId": "4633e3cf-cf81-4b38-ab85-f4601f23700a"
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        960
+      ],
+      "id": "f5cbea2e-644e-4b30-ac4f-a5315d04e2ba",
+      "name": "60 segundos",
+      "webhookId": "4633e3cf-cf81-4b38-ab85-f4601f23700a"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    video_urls: items.map(item => item.json.video.url),\n    video_idea: $('Generar nueva idea de video').first().json.message.content\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        960
+      ],
+      "id": "80722e51-3f70-40c5-ae1e-73ae5728aab2",
+      "name": "Combinar usrl"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        60
+      ],
+      "id": "b72d05fb-54cc-418e-8238-4f203cba6c13",
+      "name": "2 minutos1",
+      "webhookId": "4633e3cf-cf81-4b38-ab85-f4601f23700a"
+    }
+  ],
+  "pinData": {
+    "5 minutos": [
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "bb4afedb-3bc6-455a-9664-aec614baa22d",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/bb4afedb-3bc6-455a-9664-aec614baa22d",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/bb4afedb-3bc6-455a-9664-aec614baa22d/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/bb4afedb-3bc6-455a-9664-aec614baa22d/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "9ea0798b-9f38-4a88-a3aa-e208c1da47bb",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/9ea0798b-9f38-4a88-a3aa-e208c1da47bb",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/9ea0798b-9f38-4a88-a3aa-e208c1da47bb/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/9ea0798b-9f38-4a88-a3aa-e208c1da47bb/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "f4e27461-c97e-44f7-b8ff-1bddc235b106",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/f4e27461-c97e-44f7-b8ff-1bddc235b106",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/f4e27461-c97e-44f7-b8ff-1bddc235b106/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/f4e27461-c97e-44f7-b8ff-1bddc235b106/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "99eb2962-d7e1-4ce7-b735-711fc8f65cb8",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/99eb2962-d7e1-4ce7-b735-711fc8f65cb8",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/99eb2962-d7e1-4ce7-b735-711fc8f65cb8/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/99eb2962-d7e1-4ce7-b735-711fc8f65cb8/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "c583e989-1b1a-46c7-8e22-8e95b4af337f",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/c583e989-1b1a-46c7-8e22-8e95b4af337f",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/c583e989-1b1a-46c7-8e22-8e95b4af337f/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/c583e989-1b1a-46c7-8e22-8e95b4af337f/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "76416297-85c7-43e1-9b47-174ee11f0bd4",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/76416297-85c7-43e1-9b47-174ee11f0bd4",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/76416297-85c7-43e1-9b47-174ee11f0bd4/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/76416297-85c7-43e1-9b47-174ee11f0bd4/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "3ad17617-bf15-42b0-9df7-d82f44fadb4b",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/3ad17617-bf15-42b0-9df7-d82f44fadb4b",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/3ad17617-bf15-42b0-9df7-d82f44fadb4b/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/3ad17617-bf15-42b0-9df7-d82f44fadb4b/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "f749a2e0-7e68-48c4-bd56-6c88d8e70586",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/f749a2e0-7e68-48c4-bd56-6c88d8e70586",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/f749a2e0-7e68-48c4-bd56-6c88d8e70586/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/f749a2e0-7e68-48c4-bd56-6c88d8e70586/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "4ad30ba0-f60a-4666-9abb-62a53d9f8130",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/4ad30ba0-f60a-4666-9abb-62a53d9f8130",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/4ad30ba0-f60a-4666-9abb-62a53d9f8130/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/4ad30ba0-f60a-4666-9abb-62a53d9f8130/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "b70fd72b-a53f-4dd2-a35b-5058199febb3",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/b70fd72b-a53f-4dd2-a35b-5058199febb3",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/b70fd72b-a53f-4dd2-a35b-5058199febb3/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/b70fd72b-a53f-4dd2-a35b-5058199febb3/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "8d62231d-d39c-47d9-a8b6-07cc0b1e8dc1",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/8d62231d-d39c-47d9-a8b6-07cc0b1e8dc1",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/8d62231d-d39c-47d9-a8b6-07cc0b1e8dc1/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/8d62231d-d39c-47d9-a8b6-07cc0b1e8dc1/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "37716363-bdb3-4aeb-a786-1c4927ab3a4a",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/37716363-bdb3-4aeb-a786-1c4927ab3a4a",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/37716363-bdb3-4aeb-a786-1c4927ab3a4a/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/37716363-bdb3-4aeb-a786-1c4927ab3a4a/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      },
+      {
+        "json": {
+          "status": "IN_QUEUE",
+          "request_id": "c21bdab0-abd4-467d-b43b-b8f4615d4cff",
+          "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/c21bdab0-abd4-467d-b43b-b8f4615d4cff",
+          "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/c21bdab0-abd4-467d-b43b-b8f4615d4cff/status",
+          "cancel_url": "https://queue.fal.run/fal-ai/kling-video/requests/c21bdab0-abd4-467d-b43b-b8f4615d4cff/cancel",
+          "logs": null,
+          "metrics": {},
+          "queue_position": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Generar prompts": {
+      "main": [
+        [
+          {
+            "node": "Separar prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear imagenes": {
+      "main": [
+        [
+          {
+            "node": "2 minutos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener imágenes": {
+      "main": [
+        [
+          {
+            "node": "Video prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video prompt": {
+      "main": [
+        [
+          {
+            "node": "Crear videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear videos": {
+      "main": [
+        [
+          {
+            "node": "5 minutos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener videos": {
+      "main": [
+        [
+          {
+            "node": "Music prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Music prompts": {
+      "main": [
+        [
+          {
+            "node": "Crear sonidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear sonidos": {
+      "main": [
+        [
+          {
+            "node": "2 minutos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener sonidos": {
+      "main": [
+        [
+          {
+            "node": "Combinar usrl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar video": {
+      "main": [
+        [
+          {
+            "node": "60 segundos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar nueva idea de video": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Generar prompts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generar nueva idea de video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener video final": {
+      "main": [
+        [
+          {
+            "node": "Generar título viral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar prompts": {
+      "main": [
+        [
+          {
+            "node": "Crear imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar título viral": {
+      "main": [
+        [
+          {
+            "node": "Actualizar en hoja",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensaje a las 5pm": {
+      "main": [
+        [
+          {
+            "node": "Generar nueva idea de video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5 minutos": {
+      "main": [
+        [
+          {
+            "node": "Obtener videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 minutos": {
+      "main": [
+        [
+          {
+            "node": "Obtener sonidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "60 segundos": {
+      "main": [
+        [
+          {
+            "node": "Obtener video final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar usrl": {
+      "main": [
+        [
+          {
+            "node": "Combinar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 minutos1": {
+      "main": [
+        [
+          {
+            "node": "Obtener imágenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8713d600-ceab-42b2-9295-a0184634c645",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "2pEZY4nuTJKWBCKb",
+  "tags": []
+}

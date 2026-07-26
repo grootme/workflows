@@ -1,0 +1,410 @@
+{
+  "name": "Creador Imagenes - Marketing",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -320,
+        220
+      ],
+      "id": "f8de8638-461f-449b-9c4a-3078b11ca48a",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "TituloImagen"
+            },
+            {
+              "name": "PromptImagen"
+            },
+            {
+              "name": "chatID"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        220
+      ],
+      "id": "2212f776-7019-4f9e-9a1d-aed60fd17752",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.output.replace(/\"/g, '') }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        220
+      ],
+      "id": "f4b3ee1e-1a36-45c2-a7f5-2fb26e7ae02f",
+      "name": "Generate Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1oQQ85RnGoejiR2O",
+          "name": "runway mL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('When Executed by Another Workflow').item.json.TituloImagen }}.png",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "12ZhqwW2W9PHIdk3Sh3yytUl1PF4znayU",
+          "mode": "list",
+          "cachedResultName": "Imagenes Marketing ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/12ZhqwW2W9PHIdk3Sh3yytUl1PF4znayU"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -120,
+        340
+      ],
+      "id": "54418b22-dd01-404f-983d-228f4ae95a67",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "P6sMGoFA5ZwUppcG",
+          "name": "Google Drive account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc",
+          "mode": "list",
+          "cachedResultName": "Registro Marketing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "Link": "={{ $json.webViewLink }}",
+            "Título": "={{ $('When Executed by Another Workflow').item.json.TituloImagen }}",
+            "Tipo": "Imagen",
+            "Petición": "={{ $( 'When Executed by Another Workflow').item.json.PromptImagen }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Petición",
+              "displayName": "Petición",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publicación",
+              "displayName": "Publicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        40,
+        340
+      ],
+      "id": "39ba9065-1ea8-4a3b-ab4c-f2c2dfbdc7d5",
+      "name": "Image Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "63RgPzTSFDrHAKRK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -920,
+        460
+      ],
+      "id": "b4e27426-b8d3-45ed-aa0e-a70b50f4ab71",
+      "name": "GPT 4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "NqIUOK3Y1Eg1Qg0e",
+          "name": "OpenAI API New 13/01/25"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.chatID }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -120,
+        80
+      ],
+      "id": "575df0b6-b0ee-403f-b0a5-2e67362ad5f8",
+      "name": "Enviar Foto",
+      "webhookId": "8fcbda9c-8396-41f7-8f2d-39e4ae4337c7",
+      "credentials": {
+        "telegramApi": {
+          "id": "gmU2f8Y5ThiJGWmk",
+          "name": "MARKETING AGENTE"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.PromptImagen }}",
+        "options": {
+          "systemMessage": "=# Descripción general\nEres un ingeniero experto en prompts de imagen. Tu función es tomar un tema o concepto sencillo y convertirlo en un prompt totalmente detallado que pueda usarse en un modelo de generación de imágenes por texto.\n\n## Instrucciones para el prompt\nTu prompt detallado debe describir claramente lo siguiente:  \n1. **Sujeto principal:** ¿Cuál es el foco principal de la imagen?  \n2. **Fondo/Entorno:** ¿Qué ocurre en el fondo o en el ambiente?  \n3. **Estilo:** Especifica el estilo visual (por ejemplo, hiperrealista, pintura digital, acuarela, anime, render 3D, etc.).  \n4. **Ambiente/Iluminación:** Describe el tono emocional y la iluminación (por ejemplo, atardecer cálido y suave, nubes de tormenta, luces neón futuristas).  \n5. **Detalles adicionales:** Menciona objetos específicos, vestimenta, colores, texturas o elementos destacados que deban aparecer.\n\n## Formato de salida\n- Comienza con un prompt descriptivo, natural y fluido que integre todos los elementos anteriores de forma coherente.  \n- La descripción debe parecer escrita específicamente para una IA, orientada a generar una imagen profesional y de alta calidad.  \n- Evita repetir el tema original de forma literal: en su lugar, refránmalo como una escena vívida o un concepto visual.  \n- Usa lenguaje rico, vívido y evocador.\n\n## Ejemplo\n- **Entrada:** “Una ciudad futurista”  \n- **Salida:**  \n  > Una metrópolis futurista extendiéndose al caer la noche, iluminada por neones en tonos azules y púrpura. Rascacielos altos con fachadas de vidrio reflejante bordean el horizonte. Vehículos voladores se deslizan entre los edificios bajo un cielo tormentoso cargado de destellos eléctricos. En las calles, hologramas publicitarios flotan sobre transeúntes con atuendos de alta tecnología. Pintura digital hiperrealista, altamente detallada, perspectiva cinematográfica y atmósfera dramática con reflejos suaves sobre el pavimento húmedo.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -840,
+        220
+      ],
+      "id": "59a3b4f4-8d02-42fb-91fe-b0e6aeb0e7bb",
+      "name": "Prompt de Imagenes"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2a5ed46f-4729-4be3-bdf1-264702466be7",
+              "name": "respuesta",
+              "value": "=He creado la imagen con éxtio!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        340
+      ],
+      "id": "fadce49c-2c7e-4a6f-89e3-69bb27e0c2b8",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Prompt de Imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar Foto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Image Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prompt de Imagenes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt de Imagenes": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Log": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "50b95a54-7c2a-4f3d-8916-63c39757a487",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aac574544802a17aad902d42e8f7770e23d852adf6e8e0ac80531236fecac715"
+  },
+  "id": "86LvyKRLY5FLFQfm",
+  "tags": []
+}

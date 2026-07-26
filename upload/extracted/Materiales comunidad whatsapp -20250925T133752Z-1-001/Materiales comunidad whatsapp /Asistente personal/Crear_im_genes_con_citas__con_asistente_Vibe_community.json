@@ -1,0 +1,622 @@
+{
+  "name": "Crear imágenes con citas (con asistente)",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        200
+      ],
+      "id": "feccdc47-de34-4d23-a1f2-a4dd84a6cf6a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un generador experto en contenido para redes sociales, especializado en crear publicaciones visuales, inspiradoras y profesionales dirigidas a emprendedores modernos.\n\nTu tarea consiste en generar 4 elementos basados en la idea o concepto proporcionado por el usuario en el campo `{{ $json.text }}`.\n\n### Personaje Principal: **Kevin Belier**\n\nDebes representar a Kevin Belier con las siguientes características:\n\n* Hombre de 26 años\n* Estatura: 170 cm\n* Cuerpo: mesomorfo, musculatura media\n* Apariencia: joven, atractivo, con mirada segura y carismática\n* Vestimenta: ropa casual moderna (camiseta ajustada tipo T-shirt o polo lisa, pantalones entallados). Evitar trajes o ropa ostentosa\n* Estética: limpia, sobria, realista\n\n### Escena:\n\nCrea una escena **hiperrealista, atractiva y coherente con la estética de un emprendedor exitoso**, evitando poses forzadas o escenarios irreales. Algunas poses sugeridas:\n\n* Sentado en una cafetería elegante pero casual\n* Caminando por la ciudad con aire decidido\n* Apoyado relajadamente contra una pared de concreto\n* Trabajando desde un coworking moderno\n\n### Salida esperada (formato JSON válido):\n\n```json\n{\n  \"prompt\": \"Prompt hiperrealista y detallado en inglés para el modelo `lucataco/flux-dev-lora`, incluyendo una descripción precisa de Kevin Belier (edad, cuerpo, vestimenta, expresión, pose), el entorno realista, y un estilo fotográfico profesional. El contenido debe estar levemente relacionado con el concepto proporcionado en `{{ $json.text }}` y mostrar a Kevin sentado, con ligera sonrisa, en una pose relajada pero confiada.\",\n  \n  \"quote\": \"Frase inspiradora o reflexiva en español mexicano (entre 180 y 200 caracteres), relacionada directamente con la idea en `{{ $json.text }}`. Debe conectar con mentalidad emprendedora, sin hashtags.\",\n  \n  \"title\": \"Título breve, impactante y en español mexicano que incluya al menos un hashtag relacionado con emprendimiento, automatización, marketing o n8n, y capte la atención del público objetivo.\",\n  \n  \"description\": \"Texto motivacional en español mexicano que profundice en el mensaje de la publicación. Debe conectar emocionalmente con emprendedores y profesionales, tener un tono claro y auténtico, y puede incluir hashtags como #KevinBelier #MentalidadGanadora y otros relacionados con automatización, marketing o emprendimiento.\"\n}\n```",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        560,
+        40
+      ],
+      "id": "7b35e995-1231-44d6-9fc1-46decba501a4",
+      "name": "Hacer el prompt"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"prompt\": \"Prompt hiperrealista y detallado en inglés para el modelo `lucataco/flux-dev-lora`, incluyendo descripción del personaje, ropa, entorno y pose.\",\n  \"quote\": \"Frase inspiradora o reflexiva de máximo 220 caracteres, relacionada a la idea dada en {{ $json.text }}.\",\n  \"title\": \"Título atractivo para captar atención en redes sociales.\",\n  \"description\": \"Texto de descripción del post que profundice en el mensaje y conecte emocionalmente con la audiencia. Debe tener tono motivacional, claro y breve. Puede incluir hashtags como #KevinBelier #MentalidadGanadora.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        200
+      ],
+      "id": "9ce9f4eb-d41c-4417-8e46-5da7b959bcb8",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "url": "=https://res.cloudinary.com/[tu cloud]/image/upload/l_Overlay_sombra2_es2coo/l_{{ $json.public_id }},g_south,y_40/{{ $('Subir imagen de persona a cloudinary').item.json.public_id }}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "imagen_combinada.png"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1900,
+        -40
+      ],
+      "id": "c4e9a027-a68f-4dad-a72f-4e7ab31c1237",
+      "name": "Combinar imagenes"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "imagen_combinada.png",
+        "name": "=imagen_combinada.png",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1rSLiKt8fuFJsAwkQ9DyM8bkDFFI5mqJp",
+          "mode": "list",
+          "cachedResultName": "Imagenes contenido automatizado",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1rSLiKt8fuFJsAwkQ9DyM8bkDFFI5mqJp"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1020,
+        260
+      ],
+      "id": "134dd0d0-c5d0-4432-92bc-a40b983e6bf6",
+      "name": "Subir imagen combinada",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wJ5VmC9BmKK0BQkM",
+          "name": "Drive kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1240,
+        260
+      ],
+      "id": "7e7f0722-e88b-4e07-844f-2a92cce0edc3",
+      "name": "Poner permisos publicos1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wJ5VmC9BmKK0BQkM",
+          "name": "Drive kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k",
+          "mode": "list",
+          "cachedResultName": "buffer content automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gqe78u-LY0-KZnjGWUrjUrbE9NNysOVaFBroOHj-n8k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "==ROW()",
+            "link": "={{ $json.directUrl }}",
+            "Titulo": "={{ $('Hacer el prompt').item.json.output.title }}",
+            "Descripción": "={{ $('Hacer el prompt').item.json.output.description }}",
+            "timestamp": "={{$now.toFormat(\"dd 'de' MMMM yyyy, hh:mm a\", { locale: 'es' })}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descripción",
+              "displayName": "Descripción",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1680,
+        260
+      ],
+      "id": "d2ac5ba9-d314-4659-a9c7-ee9aa5f8daa0",
+      "name": "Subir link a sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lW48EeoNMrAC0bmk",
+          "name": "Aishiagency@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://textoverimage.moesif.com/image/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "[url de tu imagen base]"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Hacer el prompt').item.json.output.quote }}"
+            },
+            {
+              "name": "text_color",
+              "value": "#00000ff"
+            },
+            {
+              "name": "text_size",
+              "value": "32"
+            },
+            {
+              "name": "x_align",
+              "value": "center"
+            },
+            {
+              "name": "y_align",
+              "value": "bottom"
+            },
+            {
+              "name": "margin",
+              "value": "40px"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        -40
+      ],
+      "id": "8cf1a981-740d-4e00-9f58-93ac9359e921",
+      "name": "Crear overlay [BINARIO]"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.replicate.com/v1/predictions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=[tu bearer token]"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "wait"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={\n  \"version\": \"091495765fa5ef2725a175a57b276ec30dc9d39c22d30410f2ede68a3eab66b3\",\n  \"input\": {\n    \"prompt\": \"{{ $json.output.prompt }}\",\n    \"hf_lora\": \"[tu reppo de hf]\",\n    \"aspect_ratio\": \"9:16\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        -40
+      ],
+      "id": "c2b073ae-c823-472d-9e1a-63215f4504fa",
+      "name": "Generar imagen persona [URL]"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/[tu cloud]/image/upload",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.output[0] }}"
+            },
+            {
+              "name": "upload_preset",
+              "value": "[tu upload preset]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        -40
+      ],
+      "id": "5a986279-9d3d-4287-9738-8eb8ee2786fb",
+      "name": "Subir imagen de persona a cloudinary"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.cloudinary.com/v1_1/[tu cloud]/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "[tu preset]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        -40
+      ],
+      "id": "ade2d9df-a8f3-44f9-929a-64962efae6e1",
+      "name": "Subir overlay cloudinary [BINARIO]"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la URL original desde el nodo \"subir overlay\"\nconst originalUrl = $('Subir imagen combinada').first().json.webViewLink;\n\n// Extraer el ID del archivo de la URL\nconst match = originalUrl.match(/\\/d\\/([^\\/]+)\\//);\n\nif (match && match[1]) {\n  const fileId = match[1];\n  const directUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;\n\n  return [\n    {\n      json: {\n        originalUrl,\n        directUrl\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        originalUrl,\n        error: \"No se pudo extraer el ID del enlace de Google Drive.\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        260
+      ],
+      "id": "5090a265-2817-4496-bcaf-42e635ffce29",
+      "name": "Convertir en link directo"
+    },
+    {
+      "parameters": {
+        "content": "## Recibir mensaje de audio y generar prompt",
+        "height": 500,
+        "width": 720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -100
+      ],
+      "id": "65d50692-8385-44b1-848f-d86fd9894749",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Generar imagenes\n",
+        "height": 240,
+        "width": 1180,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -100
+      ],
+      "id": "1d4cc952-9aec-42a6-a43e-d88a807530e4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Subir imagenes\n",
+        "height": 220,
+        "width": 1180,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        200
+      ],
+      "id": "8378aa58-26e3-43e4-8650-6a46443bd8eb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "text"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        40
+      ],
+      "id": "65370478-82fa-4f8d-b19a-4c220c798ad7",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "text": "¡Emprendedores, la automatización es el futuro! Aprender a usar N8n te permitirá ofrecer un servicio muy demandado a nivel global. ¡No pierdas la oportunidad de destacarte en el mercado!"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hacer el prompt": {
+      "main": [
+        [
+          {
+            "node": "Generar imagen persona [URL]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar imagenes": {
+      "main": [
+        [
+          {
+            "node": "Subir imagen combinada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir imagen combinada": {
+      "main": [
+        [
+          {
+            "node": "Poner permisos publicos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poner permisos publicos1": {
+      "main": [
+        [
+          {
+            "node": "Convertir en link directo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear overlay [BINARIO]": {
+      "main": [
+        [
+          {
+            "node": "Subir overlay cloudinary [BINARIO]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar imagen persona [URL]": {
+      "main": [
+        [
+          {
+            "node": "Subir imagen de persona a cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir imagen de persona a cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Crear overlay [BINARIO]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir overlay cloudinary [BINARIO]": {
+      "main": [
+        [
+          {
+            "node": "Combinar imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir en link directo": {
+      "main": [
+        [
+          {
+            "node": "Subir link a sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Hacer el prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4c5008c-8e59-4efa-9728-15d7602d79de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "Vgtcnl51X5LeAneV",
+  "tags": [
+    {
+      "createdAt": "2025-06-03T15:44:18.344Z",
+      "updatedAt": "2025-06-03T15:44:33.702Z",
+      "id": "pIiZRtyJV2Dc860H",
+      "name": "youtube"
+    }
+  ]
+}

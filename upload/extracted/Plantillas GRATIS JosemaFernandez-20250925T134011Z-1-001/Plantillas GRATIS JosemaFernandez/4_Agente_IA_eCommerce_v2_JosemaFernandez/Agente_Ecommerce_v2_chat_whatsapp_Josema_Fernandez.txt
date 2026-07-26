@@ -1,0 +1,27 @@
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/34123456789?text=Hola,%20quiero%20información%20sobre%20sus%20productos" 
+   class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+  <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp">
+</a>
+
+<style>
+.whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+.whatsapp-button img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+.whatsapp-button img:hover {
+  transform: scale(1.1);
+}
+</style>

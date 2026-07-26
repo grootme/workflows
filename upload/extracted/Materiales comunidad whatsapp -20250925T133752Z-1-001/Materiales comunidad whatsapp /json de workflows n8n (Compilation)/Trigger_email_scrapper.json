@@ -1,0 +1,298 @@
+{
+  "name": "Trigger email scrapper",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "985ac7e3-b501-4079-a043-780677c94b52",
+      "name": "Loop over queries",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        2440,
+        580
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "id": "dffaf04e-d1d2-4002-9a69-f0904b61fc2d",
+      "name": "Wait between executions",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        3000,
+        580
+      ],
+      "webhookId": "40eb11a9-0f7d-4932-993e-0052b69dbf9b",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "s8WDHO9UNNcwz9IV",
+          "mode": "list",
+          "cachedResultName": "Email scrapper google maps"
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "18787007-1d11-41b9-89c3-d5f69756eda7",
+      "name": "Execute scraper for query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        2700,
+        460
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tarea:  \nGenera una lista de {{ $json.queries }} cadenas de búsqueda relacionadas con esta ciudad: {{ $json.ubicacion }} y este tipo de negocio: {{ $json.tipoNegocio }}.\n\nInstrucciones:\n\n1. Formato de cada consulta:  \n- Sigue este formato estrictamente: '<tipo_de_negocio>'+'<subregion>'  \n- Usa siempre minúsculas.  \n- Reemplaza todos los espacios por el signo '+'.  \n- No uses acentos ni caracteres especiales.  \n- Traduce el tipo de negocio al idioma principal hablado en la ciudad. Ejemplo: 'plomero' → 'plumber'.  \n- Traduce el nombre de la ciudad al nombre que utilizan sus habitantes. Ejemplo: 'Nueva York' → 'New York'.  \n- Optimiza el término de búsqueda para aumentar su efectividad. Ejemplo: 'Doctores' → 'doctor'.\n\n2. Cobertura geográfica:  \n- Lista subregiones, barrios o colonias relevantes que estén dentro de la ciudad especificada.  \n- Asegúrate de que las subregiones cubran la mayor distribución geográfica posible y sean reales y conocidas.\n\n3. Formato de salida:  \n- Devuelve la respuesta en un objeto JSON válido.  \n- Solo debe existir un nodo llamado 'query', cuyo valor será un arreglo que contenga todas las cadenas de búsqueda generadas.\n\nEjemplo de salida:\n\n{\n  \"query\": [\n    \"doctor+manhattan\",\n    \"doctor+brooklyn\",\n    \"doctor+queens\",\n    \"doctor+the+bronx\",\n    \"doctor+staten+island\"\n  ]\n}\n\nNotas importantes:  \n- Asegúrate de que cada subregión mencionada sea adecuada y localizada dentro de la ciudad indicada.  \n- No agregues explicaciones, encabezados u otra información adicional fuera del objeto JSON solicitado.",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        1440,
+        580
+      ],
+      "id": "963a44bc-6389-4e5b-a552-246d4c629135",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1420,
+        780
+      ],
+      "id": "2fab7fcf-0b59-4dc8-aaf2-cda0986386e5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"query\": [\n      \"plumbing+los+feliz\",\n      \"plumbing+silver+lake\",\n      \"plumbing+hollywood\",\n      \"plumbing+westwood\",\n      \"plumbing+brentwood\",\n      \"plumbing+echo+park\",\n      \"plumbing+boyle+heights\",\n      \"plumbing+chinatown\"\n    ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        780
+      ],
+      "id": "7ae958bd-05b1-4cb5-8b18-49f28028191e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "query",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        580
+      ],
+      "id": "be943e69-81da-40d2-a539-175afa80a4a4",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "977c11c1-d6b0-4748-ab74-510b5204d880",
+              "name": "query",
+              "value": "={{ $json.output.query }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1840,
+        580
+      ],
+      "id": "c3d5deb0-239a-4645-83c7-bf1c46c094b2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "ubicacion"
+            },
+            {
+              "name": "tipoNegocio"
+            },
+            {
+              "name": "queries"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1180,
+        580
+      ],
+      "id": "9f259c1a-09cd-4fd1-9511-db5fe5ea4297",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "ubicacion": "Los Angeles",
+          "tipoNegocio": "Abogados",
+          "queries": "20"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Loop over queries": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Execute scraper for query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait between executions": {
+      "main": [
+        [
+          {
+            "node": "Loop over queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute scraper for query": {
+      "main": [
+        [
+          {
+            "node": "Wait between executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop over queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "0176a7cc-ee26-4824-aeda-1e8649a59351",
+  "meta": {
+    "templateId": "2567",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "GpF7JzCW8yQEJjD6",
+  "tags": [
+    {
+      "createdAt": "2025-04-25T07:15:27.823Z",
+      "updatedAt": "2025-04-25T07:15:27.823Z",
+      "id": "gLFf96j4RIxjSTql",
+      "name": "lead gen"
+    }
+  ]
+}

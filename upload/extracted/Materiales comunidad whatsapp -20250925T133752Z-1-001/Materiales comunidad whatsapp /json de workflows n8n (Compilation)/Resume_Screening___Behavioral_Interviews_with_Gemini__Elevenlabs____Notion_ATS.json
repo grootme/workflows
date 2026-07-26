@@ -1,0 +1,2127 @@
+{
+  "name": "Resume Screening & Behavioral Interviews with Gemini, Elevenlabs, & Notion ATS",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "5fdb061a-f235-41d2-815b-f1b3eab1f8e7",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1500,
+        780
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"resume_score\": {\n\t\t\t\"type\": \"string\"\n\t\t},\n\t\t\"resume_evaluation\": {\n\t\t\t\"type\": \"string\"\n\t\t}\n\t}\n}"
+      },
+      "id": "764f6b6d-a7ef-4794-9f97-506b59bb77bd",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        3000,
+        1000
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Profile received:\n{{ $json.job_description }}\n\nCandidate:\n{{ $('Applicant Summary').item.json.response.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an HR expert and you need to understand if the candidate aligns with the profile sought by the company. You must give a score from 1 to 10, where 1 means the candidate does not align with what is required, while 10 means they are the ideal candidate because they fully reflect the desired profile. Furthermore, in the 'consideration' field, explain the reasoning behind your score."
+            }
+          ]
+        }
+      },
+      "id": "e09679a1-18aa-4d9e-ac4e-7aba826add0a",
+      "name": "HR Expert",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        2900,
+        780
+      ],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Resume",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "19gFV-OtPby1Q7OCFJYWFgf1HsMhmk7yJ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/19gFV-OtPby1Q7OCFJYWFgf1HsMhmk7yJ",
+          "cachedResultName": "[CV]"
+        },
+        "options": {}
+      },
+      "id": "4c0931fb-05d8-4099-b74d-1fe10c2eae4e",
+      "name": "Upload CV",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        680,
+        1140
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "content": "## Applicant Qualifications\n### Creates individual summary for Education, Job History, and Skills that is sent to LLM for processing; captures total years of experience",
+        "height": 480,
+        "width": 360
+      },
+      "id": "0c142170-80ba-4187-a0f6-530626c20be0",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1060,
+        620
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Applicant Summary \n### Writes a concise summary of applicant’s Education, Job History, and Skills.",
+        "height": 400,
+        "width": 360
+      },
+      "id": "25690c83-4a8b-42dc-88fa-273883d7b8c6",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1660,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## HR Expert Evaluation\n### Compares resume to job description in Notion ATS and assesses candidate, outputting evaluation rationale and score of 1 to 10",
+        "height": 400,
+        "width": 360
+      },
+      "id": "ab34ccad-3898-4277-a06f-c13b5106c933",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2860,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Gets Job Description \n### Searches Notion ATS database and pulls description that matches Job Code in Applicant form trigger",
+        "height": 400,
+        "width": 300
+      },
+      "id": "8ff9c5bd-5ae3-430f-a3e2-674df92e1322",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2000,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=Resume",
+        "options": {}
+      },
+      "id": "aaa5f71b-8f29-4409-a7c6-6184ef33fa18",
+      "name": "Extract Resume",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        900,
+        780
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "combineMapPrompt": "=Write a concise summary of the following:\n\nEducational qualification: {{ $json.output[\"Educational qualification\"] }}\nJob History: {{ $json.output[\"Job History\"] }}\nSkills: {{ $json.output.Skills }}\n\nUse 300 words or less. Be concise and conversational.",
+              "prompt": "="
+            }
+          }
+        }
+      },
+      "id": "15199983-b3ca-444e-87cd-afaf25f76017",
+      "name": "Applicant Summary",
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "position": [
+        1720,
+        780
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.property_job_description }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "summarize this in less than 250 words"
+            }
+          ]
+        }
+      },
+      "id": "2ce265e4-a3af-4860-9f9d-5648b17ed0b2",
+      "name": "Job Description Summary",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        2320,
+        780
+      ],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "content": "## Creates ATS Record\n### Updates Notion ATS database (free template) with applicant information, including AI assessment of qualifications vs job description.",
+        "height": 400,
+        "width": 280
+      },
+      "id": "a402e849-3468-4a7d-a896-bab24c500b14",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3420,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Creates G-Sheets Record\n### Updates Google Sheet with applicant data as source for compliance reporting",
+        "height": 400,
+        "width": 280
+      },
+      "id": "f1a9259b-d481-4b16-babf-52e0e79f060a",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3200,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Job Description Summary\n### Summarizes the job description into a string, 250 words or less",
+        "height": 400,
+        "width": 360
+      },
+      "id": "384ef56b-2c20-4e01-acf6-d1951fab0982",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2260,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Educational qualification",
+              "description": "Summary of academic career, focusing on undergraduate and university studies.  Summarize in 100 words maximum.",
+              "required": true
+            },
+            {
+              "name": "Job History",
+              "description": "Work history summary, focusing on most recent work experiences. Summarize in 100 words maximum",
+              "required": true
+            },
+            {
+              "name": "Skills",
+              "description": "Extract the candidate’s technical skills. What software, frameworks, functional skills they are proficient in. Make a bulleted list.",
+              "required": true
+            },
+            {
+              "name": "Experience",
+              "description": "Extract years of experience and group experience by job function or role type. Format Example: Total Years Exp: 7 - Account Executive: 2 years - Sales Development Representative: 2 years - Account Manager: 3 years",
+              "required": true
+            },
+            {
+              "name": "Title & Employer",
+              "description": "Extract most recent Job Title and Employer"
+            },
+            {
+              "name": "Total Years Experience",
+              "description": "Extract total years of experience and format as Total Years Exp:  "
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "id": "28e12356-835b-42e7-a7ee-3c9c5abd0580",
+      "name": "Applicant Qualifications",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "position": [
+        1120,
+        940
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"telephone\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"description\": \"Phone number of the contact (digits only)\"\n\t\t},\n\t\t\"city\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"description\": \"City of the contact\"\n\t\t},\n\t\t\"full_name\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"description\": \"Full name of the contact\"\n\t\t},\n\t\t\"email\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"format\": \"email\",\n\t\t\t\"description\": \"Email address of the contact\"\n\t\t}\n\t},\n\t\"required\": [\n\t\t\"full_name\",\n\t\t\"email\",\n\t\t\"telephone\",\n\t\t\"city\"\n\t]\n}",
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, include the  attribute's value as N/A."
+        }
+      },
+      "id": "a70946c4-8d00-477d-a1c4-f34ff5fe20fd",
+      "name": "Applicant Personal Data",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "position": [
+        1120,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Application Data\n### Captures data elements from Application Form and provides as input for workflow ",
+        "height": 400,
+        "width": 300
+      },
+      "id": "a2739625-9006-4d72-a808-56430f67caca",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        580,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "240c052e-7799-4cc2-8d6d-ae521a469b0d",
+              "name": "job_code",
+              "type": "string",
+              "value": "={{ $json.undefined }}"
+            },
+            {
+              "id": "612cdd0d-456d-4ebf-b8d8-8638b2b59390",
+              "name": "date_time",
+              "type": "string",
+              "value": "={{ $json.submittedAt }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3419d60a-03a1-4f55-b6bc-bf925002260a",
+      "name": "Application Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        680,
+        780
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "  ",
+        "height": 660,
+        "width": 360
+      },
+      "id": "1110c752-d992-4647-a330-95275f25871f",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        340,
+        780
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Human in the Loop 1 (Notion)\n### Hiring manager reviews qualified applicants in Notion ATS dashboard (free template) and triggers next steps with drag and drop that invites applicants to AI behavioral-based interview.  ",
+        "height": 180,
+        "width": 500,
+        "color": 4
+      },
+      "id": "bb1b65ae-a652-4c37-8284-ff814313a56e",
+      "name": "Sticky Note12",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4380,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Candidate Application > Resume Screen > ATS Record Creation > Invite to Interview\n## Automating the process from application to first round interview invitation.",
+        "width": 4500,
+        "color": 3
+      },
+      "id": "6b674e52-0978-4271-b50c-dacb43c2e63c",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        360,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a3c17b54-7cd0-496a-af8a-74a6298dcfb4",
+        "options": {}
+      },
+      "id": "b660108f-e5de-4735-94d0-d7bddfbbd4e3",
+      "name": "ElevenLabs Web Hook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        460,
+        1640
+      ],
+      "webhookId": "a3c17b54-7cd0-496a-af8a-74a6298dcfb4",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4d283fef-ea58-4479-9ddb-f4cd6f89020d",
+              "name": "criteria_1_result",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.evaluation_criteria_results.problem_solving.result }}"
+            },
+            {
+              "id": "0584a114-baa3-4744-bcb0-4c52ba2760c1",
+              "name": "criteria_1_rationale",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.evaluation_criteria_results.problem_solving.rationale }}"
+            },
+            {
+              "id": "b0aee518-3da0-4d82-b31b-8d5db29fa697",
+              "name": "criteria_2_result",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.evaluation_criteria_results.handling_escalated_issues.result }}"
+            },
+            {
+              "id": "d9b9a697-e89a-41a4-abf0-bef5e5d5379a",
+              "name": "criteria_2_rationale",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.evaluation_criteria_results.handling_escalated_issues.rationale }}"
+            },
+            {
+              "id": "cc3576db-804e-4aae-acf4-9ea9f6ef5223",
+              "name": "ai_screen_phone_number_value",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.data_collection_results.phone_number_AI_screen.value }}"
+            },
+            {
+              "id": "a6a65cb1-f5f2-4d05-900a-9b4d6242a993",
+              "name": "ai_screen_full_name_value",
+              "type": "string",
+              "value": "={{ $json.body.data.analysis.data_collection_results.full_name.value }}"
+            },
+            {
+              "id": "665854b1-d0af-42c3-9e96-465872fd367c",
+              "name": "ai_screen_call_time",
+              "type": "string",
+              "value": "={{ $json.body.data.conversation_initiation_client_data.dynamic_variables.system__time_utc }}"
+            },
+            {
+              "id": "f295a22c-2266-4906-acf1-de60697c7611",
+              "name": "ai_screen_conversation_id",
+              "type": "string",
+              "value": "={{ $json.body.data.conversation_initiation_client_data.dynamic_variables.system__conversation_id }}"
+            },
+            {
+              "id": "39309fb6-223e-487e-ac7e-6b5ce6e9e243",
+              "name": "full_transcript",
+              "type": "string",
+              "value": "={{ $json.body.data }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2ab88d9c-665c-410b-9b4a-8c34baca33c1",
+      "name": "ai_convo_items",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        680,
+        1640
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "url": "=https://api.elevenlabs.io/v1/convai/conversations/{{ $node[\"ai_convo_items\"].json.ai_screen_conversation_id }}/audio",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"xi-api-key\":\"insert elevenlabs api key\"\n}\n",
+        "options": {}
+      },
+      "id": "93643edf-0da7-44c1-94bc-f1f9c4821e16",
+      "name": "Extract_Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1940,
+        1640
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a4107790-d8d6-4f65-bc0b-f7c33a573769",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.property_phone }}",
+              "rightValue": "={{ $('ai_convo_items').item.json.ai_screen_phone_number_value }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c2b6a463-e146-41fe-9c9b-e863053668a1",
+      "name": "Filter_Notion_db",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1500,
+        1640
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.full_transcript }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI agent embodying the role of a skilled and objective Talent Acquisition Specialist. Your primary purpose is to review and critically evaluate answers to behavior-based interview questions. Review the full transcript and provide an expert evaluation of the candidate, based on their answers, using the evaluation criteria in the attached Notion tool to form the basis of your assessment. \n\nFilter Criteria Instructions:\nSearch the Notion database (attached tool) for the evaluation_criteria that matches the Job or Position title in the transcript First Message.  \n\n\nProvide a written assessment of the overall interview in a concise summary less than 300 words. Also provide a score 1 low to 5 high for the overall interview and place this at the start of the assessment. Confirm if you were able to use the evaluation criteria to make your assessment. Format the output as a text string.\n\nExample Output:\n  \"Score: 2 | The candidate's responses...\""
+        }
+      },
+      "id": "2c4dce70-ff35-48b7-8bf0-4bdfc83cca56",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        900,
+        1640
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "content": "## Elevenlabs Trigger\n### AI Conversation agent behavior-based interview data/audio sent at end of conversation.  Includes an AI evaluation of interview questions.   \n",
+        "height": 400,
+        "width": 280
+      },
+      "id": "ed509ba1-0db2-45a7-9f12-12ce2e049917",
+      "name": "Sticky Note14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Data Mapping\n### Conversation data elements, including evaluation criteria and transcript summary mapped as output fields\n",
+        "height": 400,
+        "width": 260
+      },
+      "id": "e3adafc7-c5bf-4a2b-945f-eee26547f1c9",
+      "name": "Sticky Note15",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        600,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent Interview Assessment\n### AI agent reviews full conversation transcript and provides overall assessment of behavior based interview, scoring applicants from 1 low to 5 high.\n",
+        "height": 400,
+        "width": 440
+      },
+      "id": "fab86a90-614c-4d48-afaa-c56382e468b7",
+      "name": "Sticky Note16",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Applicant Tracker\n### Pulls applicant record from Notion db",
+        "height": 400,
+        "width": 260
+      },
+      "id": "0056e6cf-6b6a-4e72-9725-0d43c5fb8de7",
+      "name": "Sticky Note17",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1200,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Applicant ID\n### Using phone number captured during interview, matches interview with candidate record in db",
+        "height": 400,
+        "width": 260
+      },
+      "id": "cf1f7798-8a79-464e-ad4a-5c71b76efecc",
+      "name": "Sticky Note18",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Update Notion DB\n### Matches record and updates applicant record with AI conversation agent criteria evaluation and N8N AI agent overall interview score.\n",
+        "height": 400,
+        "width": 260
+      },
+      "id": "f098f367-7941-4339-bf14-1381b3378062",
+      "name": "Sticky Note19",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1640,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Conversation Audio\n### Downloads conversation audio and saves to Google Drive.  Option to delete audio from Elevenlabs server.\n",
+        "height": 400,
+        "width": 260
+      },
+      "id": "e6cb6556-b00c-43dd-8ddc-887a0322508a",
+      "name": "Sticky Note20",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1860,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Human in the Loop 2 - (Notion)\n### Hiring manager reviews Notion ATS dashboard (free template) and views AI Agent’s, overall assessment of conversation, including score, and individual assessment of each question response.  Manager can then automatically schedule the next interview  by dragging the applicant profile to the next process stage in Notion dashboard.\n",
+        "height": 180,
+        "width": 720,
+        "color": 4
+      },
+      "id": "38cbb365-3efb-40a0-bd23-bb21d28adbbb",
+      "name": "Sticky Note21",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3220,
+        1840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Conversation AI Agent Interview > AI Assessment - Evaluation > Notion ATS Update with Audio transcript\n## Automating behavioral based interview evaluation and scoring; updating manager dashboard in Notion. ",
+        "width": 4480,
+        "color": 3
+      },
+      "id": "309423d9-521f-407c-ae60-b3c20f699e21",
+      "name": "Sticky Note22",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        1360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Application \n## Applicant initiates process from Notion hosted Career Page (free template), submitting application using N8N form embedded into job postings.  Hidden field in form, Job Code, matches applicant to position.  The current configuration enables the employer to run AI recruiting for 3 roles at the same time.  Templates can be expanded to accommodate more than 3 jobs.",
+        "height": 980,
+        "width": 520,
+        "color": 5
+      },
+      "id": "fa5f4de1-ecc1-4623-bda8-6f5138e28fac",
+      "name": "Sticky Note23",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -180,
+        340
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": " # AI Agent Interview\n## Successful candidates are invited to an instant interview with the AI agent",
+        "height": 400,
+        "width": 520,
+        "color": 5
+      },
+      "id": "d1713705-2e08-4239-b6d8-61aca6ca225c",
+      "name": "Sticky Note24",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        1720
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Configuration Note: \nUpdate Title and Job code in form to match your job posting hosted in Notion (free template) \n",
+        "height": 140,
+        "width": 360
+      },
+      "id": "cc7334a8-e83b-4b44-9435-ead68d1815ce",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        1180
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Applicant Record').item.json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Interview Audio|files",
+              "fileUrls": {
+                "fileUrl": [
+                  {
+                    "name": "Interview Audio",
+                    "url": "=https://drive.google.com/file/d/{{ $json.id }}/preview"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d3a4e723-6ae5-4a8b-b0fa-042d699fa139",
+      "name": "Link Audio in Notion",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        2380,
+        1640
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "## Embed audio transcript in Notion\n### Embeds audio transcript in applicant profile hosted in Notion ATS database, providing hiring manager easy access to validate AI assessment. \n",
+        "height": 400,
+        "width": 340
+      },
+      "id": "d5a13f33-5207-4b74-bb6d-a8bac426a993",
+      "name": "Sticky Note25",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2260,
+        1400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Workflow 1",
+        "width": 520,
+        "color": 5
+      },
+      "id": "74db5310-8bd5-4f91-acdf-798443019d89",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -180,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Workflow 2",
+        "height": 140,
+        "width": 520,
+        "color": 5
+      },
+      "id": "819c2bb7-9b9b-459a-b0ac-65c22260c23a",
+      "name": "Sticky Note26",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        1380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0230d7a-037b-4d69-a133-28a611fba010",
+              "name": "resume_url",
+              "type": "string",
+              "value": "=https://drive.google.com/file/d/{{ $json.id }}/preview "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ad448e2a-8d69-4d2b-98b1-a16e84344685",
+      "name": "Resume URL",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        1140
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1cc7f9c9-6878-80c9-a271-ca0521f11b30",
+          "_comment": "removed notion database above",
+          "cachedResultUrl": "  ",
+          "cachedResultName": "Applicant Tracker"
+        },
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Resume |files",
+              "condition": "is_empty"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7d6475e-6a91-498d-80a2-692d59ebcfd8",
+      "name": "Get Applicant Record",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1500,
+        1140
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Resume |files",
+              "fileUrls": {
+                "fileUrl": [
+                  {
+                    "name": "Resume",
+                    "url": "={{ $('Resume URL').item.json.resume_url }}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59d0f9c3-d90a-4f7e-b696-75c17c41d38a",
+      "name": "Embed Resume in Notion",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1800,
+        1140
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {},
+      "id": "b24a8845-9025-4835-9418-1ff6441ce68d",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        1200,
+        1140
+      ],
+      "webhookId": "71a63e24-b5a7-475f-b3d4-4f062d1caf41",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "formTitle": "Sr Account Executive",
+        "formDescription": "[Company Name]",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "hiddenField",
+              "fieldName": "job_code",
+              "fieldValue": "300"
+            },
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Resume",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Submit",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thank you for your interest in joining the [Company Name] team! We’ll review your information, and if your background looks like a match, we’ll reach out to schedule the next steps.  While we review your application, please know that we will not share your application information with anyone outside the [Company Name] team except where necessary to assist us in assessing your candidacy throughout the recruitment process. That means your data may be assessed in the United States by our team in [City/Location]. We may keep the information you submitted for up to four years and use it to keep you informed of other opportunities that might be a good fit for you.  If you would like to know more about how we use your personal data, please review our Privacy Notice, where you can also find information on how to update your contact preferences.  In the meantime, check out our company culture!  Thanks again,  The [Company Name] Talent Acquisition Team"
+            }
+          }
+        }
+      },
+      "id": "0204dec2-62cc-41c2-a43b-87ad5ea53034",
+      "name": "Application Form 1 of 3",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        460,
+        640
+      ],
+      "webhookId": "fbcca45f-efd3-4f31-9b0e-1ddb19705200",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "formTitle": "Full Stack Developer",
+        "formDescription": "[Company Name]",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "hiddenField",
+              "fieldName": "Job Code",
+              "fieldValue": "200"
+            },
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Resume",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Submit",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thank you for your interest in joining the [Company Name] team! We’ll review your information, and if your background looks like a match, we’ll reach out to schedule the next steps.  While we review your application, please know that we will not share your application information with anyone outside the [Company Name] team except where necessary to assist us in assessing your candidacy throughout the recruitment process. That means your data may be assessed in the United States by our team in [City/Location]. We may keep the information you submitted for up to four years and use it to keep you informed of other opportunities that might be a good fit for you.  If you would like to know more about how we use your personal data, please review our Privacy Notice, where you can also find information on how to update your contact preferences.  In the meantime, check out our company culture!  Thanks again,  The [Company Name] Talent Acquisition Team"
+            }
+          }
+        }
+      },
+      "id": "2d34b7af-bf6d-4b69-a95c-6eca6685a53b",
+      "name": "Application Form 2 of 3",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        460,
+        940
+      ],
+      "webhookId": "0b2ad1e6-4867-4f4e-9eae-141b16266a2a",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "formTitle": "IT Support Analyst",
+        "formDescription": "[Company Name]",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "hiddenField",
+              "fieldName": "Job Code",
+              "fieldValue": "100"
+            },
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Resume",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Submit",
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thank you for your interest in joining the [Company Name] team! We’ll review your information, and if your background looks like a match, we’ll reach out to schedule the next steps.  While we review your application, please know that we will not share your application information with anyone outside the [Company Name] team except where necessary to assist us in assessing your candidacy throughout the recruitment process. That means your data may be assessed in the United States by our team in [City/Location]. We may keep the information you submitted for up to four years and use it to keep you informed of other opportunities that might be a good fit for you.  If you would like to know more about how we use your personal data, please review our Privacy Notice, where you can also find information on how to update your contact preferences.  In the meantime, check out our company culture!  Thanks again,  The [Company Name] Talent Acquisition Team"
+            }
+          }
+        }
+      },
+      "id": "f8b437d7-3bcf-49fd-8cbb-1fff76761c69",
+      "name": "Application form 3 of 3",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        460,
+        1280
+      ],
+      "webhookId": "1224b9b0-05b1-4ed5-af9a-ccd7ff01eb6c",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1d97f9c9-6878-80c1-bdca-e0e803367326",
+          "_comment": "removed notion database above",
+          "cachedResultUrl": "  ",
+          "cachedResultName": "                             Work at [Company Name]"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Job Code|select",
+              "condition": "equals",
+              "selectValue": "={{ $('Application Data').item.json.job_code }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5254a20a-0724-438f-ba72-0e28b67eb6f2",
+      "name": "Get Job Description",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        2100,
+        780
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3d049b0-5a70-4e7b-a6f2-81447da5282a",
+              "name": "job_description",
+              "type": "string",
+              "value": "={{ $json.response.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aa8eab0c-ca1b-480b-bba6-a2729b7406bf",
+      "name": "Job Description Mapping",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2680,
+        780
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1l4JFmEqY6CJdAICdr6fpetCMJSpU57wk2kduFwNx6fo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l4JFmEqY6CJdAICdr6fpetCMJSpU57wk2kduFwNx6fo/edit?usp=drivesdk",
+          "cachedResultName": "CV Agent Score Tracker (Simple)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l4JFmEqY6CJdAICdr6fpetCMJSpU57wk2kduFwNx6fo/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "value": {
+            "YOE": "={{ $('Merge').item.json.output['Total Years Experience'] }}",
+            "Name": "={{ $('Application Data').item.json.Name }}",
+            "Phone": "={{ $('Merge').item.json.output.telephone }}",
+            "Skills": "={{ $('Merge').item.json.output['Job History'] }}",
+            "Job Code": "={{ $('Application Data').item.json.job_code }}",
+            "Education": "={{ $('Merge').item.json.output['Educational qualification'] }}",
+            "Job History": "={{ $('Merge').item.json.output['Job History'] }}",
+            "Resume Score": "={{ $json.output.resume_score }}",
+            "Hiring Manager": "={{ $('Get Job Description').item.json.property_hiring_manager }}",
+            "Candidate Email": "={{ $('Merge').item.json.output.email }}",
+            "Application Date": "={{ $('Application Data').item.json.date_time }}",
+            "Applicant Location": "={{ $('Merge').item.json.output.city }}",
+            "Experience Summary": "={{ $('Merge').item.json.output.Experience }}",
+            "AI Resume Assessment": "={{ $json.output.resume_evaluation }}",
+            "Hiring Manager Email": "={{ $('Get Job Description').item.json.property_hiring_manager_email }}"
+          },
+          "schema": [
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Application Date",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Application Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Requisition Title",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Requisition Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume Score",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Resume Score",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "YOE",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "YOE",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experience Summary",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Experience Summary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Resume Assessment",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "AI Resume Assessment",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Phone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Education",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Education",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job History",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Job History",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Skills",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Applicant Location",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Applicant Location",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hiring Manager",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Hiring Manager",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hiring Manager Email",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Hiring Manager Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Candidate Email",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Candidate Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job Code",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Job Code",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "conversation_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Evaluation Criteria 1",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Evaluation Criteria 1",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Evaluation Criteria 2",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Evaluation Criteria 2",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Evaluation Criteria 3",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Evaluation Criteria 3",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ai_interview_evaluation",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "ai_interview_evaluation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interview Audio",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Interview Audio",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Applicant Snapshot",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Applicant Snapshot",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "eb5914eb-4e17-488d-94d4-4eb76ba977b3",
+      "name": "Applicant Data Backup",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        3280,
+        780
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1cc7f9c9-6878-80c9-a271-ca0521f11b30",
+          "_comment": "removed notion database above",
+          "cachedResultUrl": "  ",
+          "cachedResultName": "Applicant Tracker"
+        },
+        "title": "={{ $('Application Data').item.json.Name }} | {{ $('Merge').item.json.output['Title & Employer'] }}",
+        "simple": false,
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Resume Score|select",
+              "selectValue": "={{ $('HR Expert').item.json.output.resume_score }}"
+            },
+            {
+              "key": "Candidate Email|email",
+              "emailValue": "={{ $('Application Data').item.json.Email }}"
+            },
+            {
+              "key": "Applicant Location|rich_text",
+              "textContent": "={{ $('Applicant Personal Data').item.json.output.city }}"
+            },
+            {
+              "key": "Phone|rich_text",
+              "textContent": "={{ $('Merge').item.json.output.telephone }}"
+            },
+            {
+              "key": "Name|rich_text",
+              "textContent": "={{ $('Application Data').item.json.Name }}"
+            },
+            {
+              "key": "Application Date|date",
+              "includeTime": false,
+              "date": "={{ $('Application Data').item.json.submittedAt }}"
+            },
+            {
+              "key": "AI Resume Assessment |rich_text",
+              "textContent": "={{ $('HR Expert').item.json.output.resume_evaluation }}"
+            },
+            {
+              "key": "Education|rich_text",
+              "textContent": "={{ $('Applicant Qualifications').item.json.output['Educational qualification'] }}"
+            },
+            {
+              "key": "Job History|rich_text",
+              "textContent": "={{ $('Applicant Qualifications').item.json.output['Job History'] }}"
+            },
+            {
+              "key": "Skills|rich_text",
+              "textContent": "={{ $('Applicant Qualifications').item.json.output.Skills }}"
+            },
+            {
+              "key": "Job Code|rich_text",
+              "textContent": "={{ $('Application Data').item.json.undefined }}"
+            },
+            {
+              "key": "Experience Summary|rich_text",
+              "textContent": "={{ $('Merge').item.json.output.Experience }}"
+            },
+            {
+              "key": "YOE|rich_text",
+              "textContent": "={{ $('Merge').item.json.output['Total Years Experience'] }}"
+            },
+            {
+              "key": "Applicant Snapshot|rich_text",
+              "textContent": "={{ $('Applicant Summary').item.json.response.text }}"
+            },
+            {
+              "key": "Requisition Title|rich_text",
+              "textContent": "={{ $('Get Job Description').item.json.name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af43b87a-bb0d-4d52-8100-8ade84064505",
+      "name": "Create Applicant Record",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        3500,
+        780
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "19gFV-OtPby1Q7OCFJYWFgf1HsMhmk7yJ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/19gFV-OtPby1Q7OCFJYWFgf1HsMhmk7yJ",
+          "cachedResultName": "[CV]"
+        },
+        "options": {}
+      },
+      "id": "98297229-d1c8-4183-b555-e8d5a66650e4",
+      "name": "Upload Audio to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        2160,
+        1640
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-001",
+        "options": {}
+      },
+      "id": "47eb4db9-7f24-4c60-89a5-6f7c694e0307",
+      "name": "Google Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        1200,
+        760
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1d97f9c9-6878-80c1-bdca-e0e803367326",
+          "_comment": "removed notion database above",
+          "cachedResultUrl": "  ",
+          "cachedResultName": "                             Work at [Company Name]"
+        },
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "evaluation_criteria|rich_text",
+              "condition": "is_not_empty"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1591a9f-14a3-482c-90dc-caeb707b87d7",
+      "name": "Evaluation Criteria",
+      "type": "n8n-nodes-base.notionTool",
+      "position": [
+        1040,
+        1860
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1cc7f9c9-6878-80c9-a271-ca0521f11b30",
+          "_comment": "removed notion database above",
+          "cachedResultUrl": "  ",
+          "cachedResultName": "Applicant Tracker"
+        },
+        "simple": false,
+        "options": {}
+      },
+      "id": "3341388a-2fac-4338-96f4-e8153ce19f5e",
+      "name": "Applicant Record",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1280,
+        1640
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Evaluation Criteria 1|rich_text",
+              "textContent": "=Interview Criteria 1 | {{ $('ai_convo_items').item.json.criteria_1_result }} | {{ $('ai_convo_items').item.json.criteria_1_rationale }}"
+            },
+            {
+              "key": "Evaluation Criteria 2|rich_text",
+              "textContent": "=Interview Criteria 2 | {{ $('ai_convo_items').item.json.criteria_2_result }} | {{ $('ai_convo_items').item.json.criteria_2_rationale }}"
+            },
+            {
+              "key": "ai_interview_evaluation|rich_text",
+              "textContent": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3074a4a4-06b5-42f9-8e3a-bb00f98c9462",
+      "name": "Update_Applicant_Record",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1720,
+        1640
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "id": "5f1f4bb5-1381-4fdd-a2fc-13b94dfbe37c",
+      "name": "Google Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        920,
+        1860
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "1312ff5f-0197-473c-bcb7-316d7eb3a67a",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1980,
+        780
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Processes Application and extracts resume",
+        "width": 960
+      },
+      "id": "59570bc1-1b61-4b5f-871d-b7412ae51091",
+      "name": "Sticky Note27",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Summarizes Applicant’s Education, Job History, and Skills",
+        "width": 920
+      },
+      "id": "3c33b90a-3d8c-4fde-986c-eec694ba4106",
+      "name": "Sticky Note28",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1380,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Gets role specific Job Description from Notion",
+        "width": 860
+      },
+      "id": "c81570b2-2bd3-4da6-af38-724bd0717409",
+      "name": "Sticky Note29",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2340,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Scores Applicant’s resume, adding applicant record to Notion",
+        "width": 1040
+      },
+      "id": "fac43ddc-42ea-4523-ba84-fead4b2d1b54",
+      "name": "Sticky Note30",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3260,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Receives AI Voice agent interview from Elevenlabs  ",
+        "width": 560
+      },
+      "id": "7c944c54-6c51-4220-94b7-0040af162197",
+      "name": "Sticky Note31",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        380,
+        1540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Scores interview and provides assessment",
+        "width": 460
+      },
+      "id": "d6088d42-f9c8-4adb-ba6a-904634716c97",
+      "name": "Sticky Note32",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        980,
+        1540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Updates applicant record with AI Interview Assessment and Interview Audio file",
+        "width": 1700
+      },
+      "id": "d4d8e2ab-66f5-4724-94bc-d93115202010",
+      "name": "Sticky Note33",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        1540
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Applicant Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Applicant Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Applicant Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HR Expert": {
+      "main": [
+        [
+          {
+            "node": "Applicant Data Backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload CV": {
+      "main": [
+        [
+          {
+            "node": "Resume URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume URL": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract_Audio": {
+      "main": [
+        [
+          {
+            "node": "Upload Audio to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Applicant Summary",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Applicant Qualifications",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "HR Expert",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Applicant Personal Data",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Job Description Summary",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Resume": {
+      "main": [
+        [
+          {
+            "node": "Applicant Qualifications",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Applicant Personal Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ai_convo_items": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant Record": {
+      "main": [
+        [
+          {
+            "node": "Filter_Notion_db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Data": {
+      "main": [
+        [
+          {
+            "node": "Extract Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter_Notion_db": {
+      "main": [
+        [
+          {
+            "node": "Update_Applicant_Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant Summary": {
+      "main": [
+        [
+          {
+            "node": "Get Job Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs Web Hook": {
+      "main": [
+        [
+          {
+            "node": "ai_convo_items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluation Criteria": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job Description": {
+      "main": [
+        [
+          {
+            "node": "Job Description Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Applicant Record": {
+      "main": [
+        [
+          {
+            "node": "Embed Resume in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant Data Backup": {
+      "main": [
+        [
+          {
+            "node": "Create Applicant Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Audio to Drive": {
+      "main": [
+        [
+          {
+            "node": "Link Audio in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant Personal Data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Form 1 of 3": {
+      "main": [
+        [
+          {
+            "node": "Upload CV",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Application Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Form 2 of 3": {
+      "main": [
+        [
+          {
+            "node": "Upload CV",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Application Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application form 3 of 3": {
+      "main": [
+        [
+          {
+            "node": "Upload CV",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Application Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Description Mapping": {
+      "main": [
+        [
+          {
+            "node": "HR Expert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Description Summary": {
+      "main": [
+        [
+          {
+            "node": "Job Description Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update_Applicant_Record": {
+      "main": [
+        [
+          {
+            "node": "Extract_Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Applicant Qualifications": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "HR Expert",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "74410996-b182-4c43-aa79-f07609ed18df",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "XUN3zXAPePHOqVAi",
+  "tags": []
+}

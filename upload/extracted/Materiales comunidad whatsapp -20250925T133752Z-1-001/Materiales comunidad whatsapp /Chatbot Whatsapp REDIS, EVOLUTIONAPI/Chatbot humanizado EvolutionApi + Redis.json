@@ -1,0 +1,740 @@
+{
+  "name": "Chatbot humanizado EvolutionApi + Redis",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensaje }}",
+        "options": {
+          "systemMessage": "=# System Prompt - Orquestador Vibe Academy\n\n## Rol del Asistente\nEres un **asistente** orientado a resolver las dudas de las personas interesadas en la academia Vibe Academy. \n\nContestas de forma amable y servicial.\n\n---\n\n## Preguntas Frecuentes\n\n1. **¿Qué cursos ofrecen?**  \n   Ofrecemos cursos de **Introducción a la Inteligencia Artificial, Automatización con N8N, Diseño de Agentes Multiagente y Machine Learning con Python**.\n\n2. **¿Tienen cursos en línea?**  \n   Sí, todos nuestros cursos se ofrecen en modalidad **100% en línea** a través de nuestra plataforma educativa.\n\n3. **¿Qué duración tienen los cursos?**  \n   La mayoría de los cursos duran **6 a 8 semanas**, con clases en vivo y contenido asincrónico.\n\n4. **¿Quiénes son los maestros?**  \n   Nuestros instructores son profesionales en activo como **Laura Méndez (experta en ML)**, **Juan Torres (especialista en N8N)**, y **Sofía Rodríguez (diseñadora de UX conversacional)**.\n\n5. **¿Cuánto cuesta el curso?**  \n   Cada curso tiene un costo de **$2,500 MXN**, y aceptamos pagos con **tarjeta, PayPal o transferencia**.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1616,
+        1264
+      ],
+      "id": "d48951be-34e5-4436-b3e3-7c7b82695603",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1568,
+        1440
+      ],
+      "id": "e9256595-977f-40fa-9792-fb4a9e795a32",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('setCampos').item.json.sender }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1744,
+        1440
+      ],
+      "id": "88480f72-a27a-4a4e-872c-c99512ff2e6e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "amount": 7
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1152,
+        1152
+      ],
+      "id": "66680a8a-7a35-476c-a6cc-1d1d92bb4391",
+      "name": "Wait",
+      "webhookId": "96c27c05-96e6-490e-ac24-3c38c75c7d9b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7c0e7b4b-342a-43d9-98d0-d383de1d8cf7",
+              "name": "sender",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "63566525-58bb-474e-b363-f218f196cd15",
+              "name": "mensaje",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "6f616e3b-5a54-45ae-89d6-5fe50910a117",
+              "name": "Instancia",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "e74683c5-3350-4987-a200-df59c30f658a",
+              "name": "session_id",
+              "value": "={{ $json.body.data.key.id }}",
+              "type": "string"
+            },
+            {
+              "id": "54e495b7-589b-47ae-993e-e4eac49c6e9f",
+              "name": "mensaje_timestamp",
+              "value": "={{ $json.body.data.messageTimestamp }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        1008
+      ],
+      "id": "3bcbed8c-a43d-43b7-b191-e2cb37788c47",
+      "name": "setCampos"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $json.sender }}",
+        "messageData": "={{ JSON.stringify({\n      message   : $json.mensaje,\n      sessionID : $json.session_id,\n      date_time : $json.mensaje_timestamp.toDateTime('s').toLocal()\n}) }}\n",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        864,
+        1008
+      ],
+      "id": "a736e5d5-559c-42e3-a7ae-2e50c938a53c",
+      "name": "pushRedis",
+      "credentials": {
+        "redis": {
+          "id": "IKtCea4XqZ6BanQd",
+          "name": "Redis credencial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Mensaje",
+        "key": "={{ $('setCampos').item.json.sender }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        1008
+      ],
+      "id": "41abf871-cbc7-49e2-9941-fde9b4b993ea",
+      "name": "bufferRedis",
+      "credentials": {
+        "redis": {
+          "id": "IKtCea4XqZ6BanQd",
+          "name": "Redis credencial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('setCampos').item.json.sender }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        1008
+      ],
+      "id": "c1c3ee24-98b1-4447-b615-7b65f9716498",
+      "name": "borrarRedis",
+      "credentials": {
+        "redis": {
+          "id": "IKtCea4XqZ6BanQd",
+          "name": "Redis credencial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b594f1da-51e8-47a4-a636-7928a73b69f8",
+              "name": "mensaje",
+              "value": "={{ $json.Mensaje.map(m => JSON.parse(m).message).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1728,
+        1008
+      ],
+      "id": "42a14d38-b50c-4c98-a0db-26b24be2e1a9",
+      "name": "concatenarMensaje"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "operation": "send-presence",
+        "instanceName": "={{ $('setCampos').item.json.Instancia }}",
+        "remoteJid": "={{ $('setCampos').item.json.sender }}",
+        "delay": "={{ Math.round(1800 + Math.min(($json.output?.length || 0) / 500, 1) * 1200) }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1968,
+        1264
+      ],
+      "id": "ec3cce1c-72a3-4547-9fdc-db68e25be683",
+      "name": "statusEscribiendo",
+      "credentials": {
+        "evolutionApi": {
+          "id": "cUcgoDLesAdgRm9F",
+          "name": "Evolutionapi Prueba"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('setCampos').item.json.Instancia }}",
+        "remoteJid": "={{ $('setCampos').item.json.sender }}",
+        "messageText": "={{ $('AI Agent').item.json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        1264
+      ],
+      "id": "588e15be-6acb-4be4-821b-1b6b72bb092b",
+      "name": "enviarTexto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "cUcgoDLesAdgRm9F",
+          "name": "Evolutionapi Prueba"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0d7c1682-6f76-417c-9c2d-b5237a85c547",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        416,
+        1008
+      ],
+      "id": "6e256e64-0f3f-4c86-8182-bc2676018811",
+      "name": "Webhook",
+      "webhookId": "0d7c1682-6f76-417c-9c2d-b5237a85c547"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse(\n  $json.Mensaje\n    .filter(m => m.trim().startsWith('{'))\n    .slice(-1)[0]\n    .split('||')[0]\n    .trim()\n).sessionID }}\n",
+                    "rightValue": "={{ String($node[\"pushRedis\"].json.session_id).trim() }}\n",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    },
+                    "id": "81c7205c-84c9-480e-8b5a-1a12b5ff7baa"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ignorar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4fca4c39-e8bf-490b-8e2e-176c95d9156e",
+                    "leftValue": "={{ DateTime.fromISO(JSON.parse($json.Mensaje.filter(m => m.trim().startsWith('{')).slice(-1)[0].split('||')[0].trim()).date_time) }}\n",
+                    "rightValue": "={{ $now.minus(7, 'seconds').toLocal() }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Continuar"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Esperar"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1280,
+        992
+      ],
+      "id": "1f4e16af-cf49-475d-9066-34d0da8787b5",
+      "name": "Switch"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        848
+      ],
+      "id": "c2564ee0-23f8-4be4-83b5-c3285d0e6abb",
+      "name": "sinAccion"
+    },
+    {
+      "parameters": {
+        "content": "![Chatbot humanizado](https://subir-imagen.com/images/2025/08/25/Chatbot-humanizado.png)",
+        "height": 240,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        384,
+        528
+      ],
+      "id": "249044cc-9996-414e-8af1-dd30e22fd522",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# 🚀🦾Chatbot: N8N + Redis + Evolution API\n\nEste flujo en **n8n** recibe mensajes de **Evolution API**, los gestiona en cola con **Redis** y los envía procesados a un **AI Agent**, respondiendo de nuevo vía Evolution API.\n\n---",
+        "height": 240,
+        "width": 816,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        784,
+        528
+      ],
+      "id": "7e68d5af-d03e-4f61-9064-0a99232ab74d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "![Kevin Belier](https://subir-imagen.com/images/2025/08/20/Foto-perfil-dorado.png)",
+        "height": 240,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        528
+      ],
+      "id": "8e2f9c89-e80e-4631-b552-f57584e209d2",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "1. **Webhook de Producción**  \n   - Se pega en el panel de Evolution API → *Eventos del Webhook*.  \n   - Recibe todos los mensajes entrantes.\n\n2. **Filtrado de datos**  \n   - Se extraen solo campos necesarios (`from`, `timestamp`, `message`).\n\n3. **Push a Redis**  \n   - Los mensajes se encolan en Redis.  \n   - Orion Design instala Redis → solo cambiar `host` a `redis`.  \n   - [Video instalación Orion Design](https://www.youtube.com/watch?v=ZYrbgyhcVoE)\n\n4. **Buffer y validación (Switch)**  \n   - Se valida el último `timestamp`.  \n   - Regla: `timestamp_mensaje < fecha_actual - 7s`.\n\n5. **Casos del Switch**  \n   - **> 7s** → Se limpia Redis, se concatenan mensajes y se envían al **AI Agent** → luego a Evolution API.  \n   - **≤ 7s** → Se espera 7s más y se vuelve a evaluar.\n   - **Sender diferente** → No se hace nada (evita colisiones)\n\n6. **Respuesta final**  \n   - El **AI Agent** genera salida.  \n   - Se envía vía nodos de comunidad de **Evolution API (Orion Design)**.\n\n---\n\n## Tecnologías clave\n- **n8n** (automatización)  \n- **Evolution API** (mensajes)  \n- **Redis** (cola/buffer)  \n- **Orion Design** (instalación + nodos)  \n- **AI Agent** (procesamiento)  \n",
+        "height": 832,
+        "width": 464,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        512
+      ],
+      "id": "0cb3ada1-ba51-4f55-8054-573d7afd521e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensaje }}",
+        "options": {
+          "systemMessage": "=## Rol del Asistente\nEres un **asistente** orientado a resolver las dudas de las personas interesadas en la academia Vibe Academy. \n\nContestas de forma amable y servicial.\n\n---\n\n## Preguntas Frecuentes\n\n1. **¿Qué cursos ofrecen?**  \n   Ofrecemos cursos de **Introducción a la Inteligencia Artificial, Automatización con N8N, Diseño de Agentes Multiagente y Machine Learning con Python**.\n\n2. **¿Tienen cursos en línea?**  \n   Sí, todos nuestros cursos se ofrecen en modalidad **100% en línea** a través de nuestra plataforma educativa.\n\n3. **¿Qué duración tienen los cursos?**  \n   La mayoría de los cursos duran **6 a 8 semanas**, con clases en vivo y contenido asincrónico.\n\n4. **¿Quiénes son los maestros?**  \n   Nuestros instructores son profesionales en activo como **Laura Méndez (experta en ML)**, **Juan Torres (especialista en N8N)**, y **Sofía Rodríguez (diseñadora de UX conversacional)**.\n\n5. **¿Cuánto cuesta el curso?**  \n   Cada curso tiene un costo de **$2,500 MXN**, y aceptamos pagos con **tarjeta, PayPal o transferencia**.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        1536
+      ],
+      "id": "91e9b9a7-9b82-4d83-b56e-5842d1c1d2d8",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        1712
+      ],
+      "id": "20c56ad9-dd53-4924-98d2-fd73acfabecc",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2XxlaDKXt0jUhQl",
+          "name": "openai kevirivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('setCampos').item.json.sender }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        1712
+      ],
+      "id": "7eea1242-dc96-4159-a831-aa2c7a6a5fdc",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "operation": "send-presence",
+        "instanceName": "={{ $('setCampos').item.json.Instancia }}",
+        "remoteJid": "={{ $('setCampos').item.json.sender }}",
+        "delay": "={{ Math.round(1800 + Math.min(($json.output?.length || 0) / 500, 1) * 1200) }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        976,
+        1536
+      ],
+      "id": "9913360a-7acf-4893-89ca-cddb9391a1a2",
+      "name": "statusEscribiendo1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "cUcgoDLesAdgRm9F",
+          "name": "Evolutionapi Prueba"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('setCampos').item.json.Instancia }}",
+        "remoteJid": "={{ $('setCampos').item.json.sender }}",
+        "messageText": "={{ $('AI Agent1').item.json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        1536
+      ],
+      "id": "4098cf3a-4583-455a-a3f7-f36bf0d79ec5",
+      "name": "enviarTexto1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "cUcgoDLesAdgRm9F",
+          "name": "Evolutionapi Prueba"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Sin redis\nSolo para observar la diferencia en el comportamiento\n",
+        "height": 80,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        1424
+      ],
+      "id": "09b82bc0-3efd-4e47-9e38-3e2892f6c9a7",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "statusEscribiendo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "bufferRedis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setCampos": {
+      "main": [
+        [
+          {
+            "node": "pushRedis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pushRedis": {
+      "main": [
+        [
+          {
+            "node": "bufferRedis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bufferRedis": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "borrarRedis": {
+      "main": [
+        [
+          {
+            "node": "concatenarMensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "concatenarMensaje": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "statusEscribiendo": {
+      "main": [
+        [
+          {
+            "node": "enviarTexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviarTexto": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "setCampos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "sinAccion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "borrarRedis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "statusEscribiendo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "statusEscribiendo1": {
+      "main": [
+        [
+          {
+            "node": "enviarTexto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Mexico_City",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "6cd09538-c75f-43cb-a2b3-5b8e311298d3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "814de59822e340fd811ebe377757e35df7f24ae20c5c23be6ca5b6c3325b7615"
+  },
+  "id": "rrDQ0jBbxuyDX3sk",
+  "tags": []
+}

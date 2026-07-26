@@ -1,0 +1,481 @@
+{
+  "name": "Scrapp emails from instagram/likedin/x/facebook",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "cantidadConsultas"
+            },
+            {
+              "name": "tipoNegocio"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        40,
+        135
+      ],
+      "id": "7d8fe6d2-4aff-44cf-a984-b118530bf1e5",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28",
+          "mode": "list",
+          "cachedResultName": "Scrap import from web",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1174085852,
+          "mode": "list",
+          "cachedResultName": "IG",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit#gid=1174085852"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "correo": "={{ $json.email }}",
+            "Titulo": "={{ $json.pageTitle }}",
+            "Link": "={{ $json.pageLink }}",
+            "Snippet": "={{ $json.snippet }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Snippet",
+              "displayName": "Snippet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Icebreaker",
+              "displayName": "Icebreaker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Valido",
+              "displayName": "Valido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email1",
+              "displayName": "email1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email2",
+              "displayName": "email2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email3",
+              "displayName": "email3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email4",
+              "displayName": "email4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email5",
+              "displayName": "email5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1956,
+        135
+      ],
+      "id": "4427c303-2f2b-4aa6-aabb-6674ee284837",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aT0j8fwl8trvGISh",
+          "name": "kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1736,
+        60
+      ],
+      "id": "2ed09c2a-d3e4-440f-987d-2b559926b912",
+      "name": "Wait",
+      "webhookId": "20957c0c-ee00-4b5f-a456-3270b8e49a2b"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        355
+      ],
+      "id": "6784bb19-ff68-4cf5-9101-be22b0a80780",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"queries\": [\n    \"site:instagram.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"odontologos+profesionales\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"consultorio+odontologico\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"dentistas+especialistas\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"ortodoncistas\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"periodoncia\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"blanqueamiento+dental\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"implantes+dentales\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"odontopediatria\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"terapia+oral\\\"+\\\"@gmail.com\\\" OR \\\"@hotmail.com\\\" OR \\\"@outlook.com\\\" OR \\\"@yahoo.com\\\"\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        408,
+        355
+      ],
+      "id": "251a8801-d59b-42ba-9b8a-f9c9b1110a5c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "email",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        1516,
+        60
+      ],
+      "id": "dd400dad-ca56-40e2-97d7-dae26fec7eb8",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tarea:  \nGenera una lista de {{ $json.cantidadConsultas }} cadenas de búsqueda relacionadas con este tipo de negocio: {{ $json.tipoNegocio }}.\n\nInstrucciones:\n\n1. **Formato de cada consulta**:  \n- Por cada término generado, crea 4 consultas, una para cada uno de estos sitios: `instagram.com`, `x.com`, `facebook.com`, `linkedin.com`.\n- El formato de cada consulta debe ser:  \n  `site:<DOMINIO>+\"<tipo_de_negocio_formateado>\"+\"@gmail.com\" OR \"@hotmail.com\" OR \"@outlook.com\" OR \"@yahoo.com\"`.\n- Dentro de las comillas `\"`, todos los espacios deben ser reemplazados por signos `+`.\n- Usa siempre minúsculas. No uses acentos ni caracteres especiales.\n- No traduzcas el término proporcionado en la variable `tipoNegocio`; respétalo tal como está en su idioma original.\n- Expande el término principal en variaciones relevantes en el mismo idioma, incluyendo sinónimos, servicios relacionados y especializaciones específicas del tipo de negocio.\n- Utiliza términos que estén más orientados a una búsqueda más específica y localizada. Por ejemplo, si el `tipoNegocio` es \"Dentistas\", genera consultas como: \"consultorio dental\", \"clínica dental\", \"endodoncia\", \"odontólogos\", \"higienistas dentales\", etc. No uses términos genéricos como \"dentist\" o traducciones incorrectas como \"surgery\" si el término original está en español.\n\n2. **Generación de términos**:  \n- Para cada tipo de negocio, expande el término principal usando variaciones como sinónimos, especializaciones, servicios adicionales relacionados y nombres populares locales. Las búsquedas deben ser lo más específicas posible a la industria y contexto local.\n- Evita términos demasiado generales o irreales, y enfócate en aquellos que puedan generar resultados precisos.\n- Las búsquedas deben estar orientadas a encontrar contactos de correos electrónicos en plataformas como Instagram, Facebook, LinkedIn y X, ya que se utilizarán para scrapeo con SerpApi.\n\n3. **Formato de salida**:  \n- Devuelve exclusivamente un objeto JSON válido con un nodo `\"queries\"`, que contendrá todas las cadenas de búsqueda generadas.  \n- El número total de consultas será de `{{ $json.cantidadConsultas * 4 }}`, ya que hay 4 sitios por cada búsqueda.\n\nEjemplo de salida:\n\n```json\n{\n  \"queries\": [\n    \"site:instagram.com+\\\"consultorio+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:x.com+\\\"consultorio+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:facebook.com+\\\"consultorio+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:linkedin.com+\\\"consultorio+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:x.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:facebook.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:linkedin.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:instagram.com+\\\"endodoncia\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:x.com+\\\"endodoncia\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:facebook.com+\\\"endodoncia\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    \"site:linkedin.com+\\\"endodoncia\\\"+\\\"@gmail.com\\\"+OR+\\\"@hotmail.com\\\"+OR+\\\"@outlook.com\\\"+OR+\\\"@yahoo.com\\\"\",\n    ...\n  ]\n}\n",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        260,
+        135
+      ],
+      "id": "3a292025-1374-45b2-a656-0f356c75081e",
+      "name": "Generar queries"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.queries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        636,
+        135
+      ],
+      "id": "179fb02a-12d0-4b31-8c4d-c0b029e64909",
+      "name": "Separar queries"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        856,
+        135
+      ],
+      "id": "239a08fa-b93e-4d94-ba1e-1d9e5f7957e4",
+      "name": "Loop queries"
+    },
+    {
+      "parameters": {
+        "url": "=https://serpapi.com/search?engine=google&q={{ $json[\"output.queries\"] }}&num=100&gl=MX&hl=es&api_key=[tu api key]",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1076,
+        60
+      ],
+      "id": "73fa1023-38b1-4c63-b403-95f1da19d2ff",
+      "name": "Obtener resultados"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener datos de entrada\nconst items = $input.all();\n\n// Crear un array para guardar los datos extraídos\nconst extractedData = [];\n\nfor (const item of items) {\n  const results = item.json.organic_results || [];\n\n  for (const result of results) {\n    const text = result.snippet || '';\n    const title = result.title || '';\n    const link = result.link || '';\n    const emails = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g);\n\n    if (emails) {\n      for (const email of emails) {\n        extractedData.push({\n          pageTitle: title,\n          pageLink: link,\n          snippet: text,\n          email\n        });\n      }\n    }\n  }\n}\n\n// Devolver solo los datos que contienen email\nreturn extractedData.map(data => ({ json: data }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        60
+      ],
+      "id": "420313a3-6ad3-4d1c-98b0-e5d0161392f5",
+      "name": "Extraer datos"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "cantidadConsultas": "5",
+          "tipoNegocio": "clinicas"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Generar queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Loop queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generar queries",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generar queries",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar queries": {
+      "main": [
+        [
+          {
+            "node": "Separar queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar queries": {
+      "main": [
+        [
+          {
+            "node": "Loop queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop queries": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Obtener resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener resultados": {
+      "main": [
+        [
+          {
+            "node": "Extraer datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer datos": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ae7a7e74-d465-4f6b-ad4b-a755cd1a4667",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "U56SqDbYMxwcKWmY",
+  "tags": [
+    {
+      "createdAt": "2025-04-25T07:15:27.823Z",
+      "updatedAt": "2025-04-25T07:15:27.823Z",
+      "id": "gLFf96j4RIxjSTql",
+      "name": "lead gen"
+    }
+  ]
+}

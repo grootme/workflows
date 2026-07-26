@@ -1,0 +1,788 @@
+{
+  "name": "Practica 8 Nodos IA",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Demostración de Nodos de IA en n8n\n\nEste workflow ejemplifica todos los nodos de IA disponibles en n8n, divididos en:\n- **Nodos Primarios**: Interacción directa con LLMs y agentes\n- **Nodos Secundarios**: Soporte y utilidades para los primarios",
+        "height": 312,
+        "width": 512
+      },
+      "id": "301920b1-9da7-44d3-9d21-eca51b42af80",
+      "name": "📋 Introducción",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        0
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## NODOS PRIMARIOS - Punto central de operaciones de IA\nEstos nodos interactúan directamente con LLMs y crean agentes de IA. Son el núcleo de la mayoría de workflows de IA.",
+        "height": 80,
+        "width": 1200,
+        "color": 2
+      },
+      "id": "726e54e0-6d43-4fca-8957-3040c1259ffd",
+      "name": "🎯 Nodos Primarios",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1160,
+        0
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**AI Agent**\n- Requiere: modelo de chat, memoria y herramientas\n- Permite parsers de salida para formato específico\n- No recomendado para todas las necesidades de IA\n- Patrón React con bucles de revisión\n- Casos de uso: Agentes conversacionales complejos. Ej Asistente de atención al cliente",
+        "height": 236,
+        "width": 300,
+        "color": 3
+      },
+      "id": "5648721d-a85d-4b01-b2c2-7099ad8f2b72",
+      "name": "📝 AI Agent",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1180,
+        380
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**OpenAI**\n- Solicitud HTTP simple a OpenAI\n- Sin memoria ni herramientas\n- Funciones: asistente, mensajes, audio, imágenes\n- Transcripción de grabaciones\n- Casos de uso: Llamadas directas y sencillas. Ej. Generación de títulos para blog ",
+        "height": 236,
+        "width": 300,
+        "color": 3
+      },
+      "id": "22c9f537-b6f1-490b-91dc-dd2b8049a85e",
+      "name": "📝 OpenAI",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1560,
+        380
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Basic LLM Chain**\n- Una consulta → una respuesta\n- Sin memoria ni herramientas\n- Prompts: sistema, usuario, IA\n- Procesamiento por lotes potente\n- Más eficiente que AI Agent para casos simples\n- Casos de uso: Llamadas directas optimizadas. Ej. 5000 descripciones de productos en inglés",
+        "height": 240,
+        "width": 300,
+        "color": 3
+      },
+      "id": "5d641721-bb2b-4774-bad5-2005103a9c30",
+      "name": "📝 Basic LLM Chain",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1940,
+        380
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Information Extractor**\n- Extrae detalles específicos del texto\n- Más simple que AI Agent\n- Manejo automático de JSON\n- Reduce alucinación\n- Casos de uso: Extracción de datos estructurados. Ej. Procesamiento de CVs",
+        "height": 236,
+        "width": 300,
+        "color": 3
+      },
+      "id": "0bc6c608-4064-43e0-840a-16e3fc737f78",
+      "name": "📝 Information Extractor",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2340,
+        380
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Sentiment Analysis**\n- Identifica intención/sentimiento\n- Categorías personalizables\n- Plantilla de prompt modificable\n- Puntuaciones de confianza\n- Autofixing recomendado\n- Procesamiento por lotes\n- Casos de uso: Análisis de feedback. Ej. Monitoreo de reseñas de productos",
+        "height": 224,
+        "width": 300,
+        "color": 3
+      },
+      "id": "14435f41-0eaf-4d32-9635-764cbab4e5cc",
+      "name": "📝 Sentiment Analysis",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1180,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Text Classifier**\n- Clasifica texto en categorías definidas\n- Similar a Sentiment Analysis\n- Categorías y descripciones personalizables\n- Autofixing recomendado\n- Múltiples clasificaciones opcionales\n- Casos de uso: Categorización de contenido. Ej. Clasificación de tickets de soporte",
+        "height": 240,
+        "width": 300,
+        "color": 3
+      },
+      "id": "984a6e56-3a3f-44af-9176-1d4d7c411f83",
+      "name": "📝 Text Classifier",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1960,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "558778fa-c3d2-411d-b87a-d713efef4c0f",
+      "name": "Question & Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "position": [
+        2340,
+        720
+      ],
+      "typeVersion": 1.4,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Question & Answer Chain**\n- Específico para RAG (Retrieval Augmented Generation)\n- Sin memoria ni herramientas\n- Más rápido y económico que AI Agent\n- Retrievers: Vector Store, Workflow, Multi-Query, Contextual Compression\n- Casos de uso: Búsqueda de información en documentos. Ej. FAQ automático de documentación",
+        "height": 228,
+        "width": 300,
+        "color": 3
+      },
+      "id": "f3d458f9-bb5d-4e1a-b2c9-ed56d8da3a72",
+      "name": "📝 Q&A Chain",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2340,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## NODOS SECUNDARIOS - Nodos de soporte requeridos por los primarios\nEstos nodos proporcionan las funcionalidades específicas que los nodos primarios necesitan para operar correctamente.",
+        "height": 80,
+        "width": 1800,
+        "color": 4
+      },
+      "id": "62c687bd-3563-479a-aefa-6d2d82cb6e17",
+      "name": "⚙️ Nodos Secundarios",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2880,
+        0
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Document Loader**\n- Carga datos de diversas fuentes\n- Default Data Loader\n- Google Drive, GitHub\n- Usado con Summarization Chain",
+        "height": 248,
+        "width": 250,
+        "color": 5
+      },
+      "id": "13951aa9-178f-43bd-8a65-bc8641d49de9",
+      "name": "📄 Document Loader",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2900,
+        360
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Large Language Models**\n- Cerebro de los nodos de IA\n- Anthropic/Claude, Azure OpenAI\n- AWS Bedrock, Deepseek\n- Google Gemini, Grok\n- Mistral, Ollama (auto-hospedados)\n- OpenRouter (múltiples modelos)",
+        "height": 252,
+        "width": 250,
+        "color": 5
+      },
+      "id": "98bc5d80-ff2b-417b-aea1-64cbb84eb32d",
+      "name": "🧠 LLM Models",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3200,
+        360
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sessionKey": "={{ $json.session_id }}"
+      },
+      "id": "eca7015e-4586-40d1-a6f0-c2a6b5085c11",
+      "name": "Memory Buffer",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        3580,
+        160
+      ],
+      "typeVersion": 1.3,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Memory**\n- Recuerda historial de conversación\n- Guarda automáticamente mensajes\n- Simple memory solo para demo\n- Otros tipos según servicio usado",
+        "height": 248,
+        "width": 250,
+        "color": 5
+      },
+      "id": "8ae9ce59-d2c4-4265-bd62-7bbcac8da0b6",
+      "name": "💭 Memory",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3500,
+        360
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "08bc9f1e-6300-49eb-a36f-410efeffbe1c",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        3900,
+        160
+      ],
+      "typeVersion": 1.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Output Parsers**\n- Structured Output Parser\n- Item List Output Parser\n- Autofixing Output Parser\n- Aseguran formato deseado",
+        "height": 248,
+        "width": 250,
+        "color": 5
+      },
+      "id": "32801aef-86b5-45b7-82ce-a7860cd5f041",
+      "name": "📐 Output Parser",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3820,
+        360
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Retrievers**\n- Vector Store Retriever\n- Workflow Retriever\n- Multi-Query Retriever\n- Contextual Compression Retriever\n- Obtienen información relevante",
+        "height": 252,
+        "width": 250,
+        "color": 5
+      },
+      "id": "b5361f9b-0f89-46fc-a983-174859b5c63f",
+      "name": "🔍 Retrievers",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4120,
+        360
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "id": "04405d7a-799b-48cf-baf3-0430830304a3",
+      "name": "Recursive Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        2980,
+        740
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Text Splitters**\n- Character Text Splitter\n- Recursive (recomendado)\n- Token Splitter\n- Dividen documentos en chunks",
+        "height": 216,
+        "width": 250,
+        "color": 5
+      },
+      "id": "6cd4db46-870d-49f6-a36c-35b4d817a0c9",
+      "name": "✂️ Text Splitters",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2900,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Tools**\n- Acciones predefinidas/personalizadas\n- Se adjuntan al AI Agent\n- Integran servicios, HTTP calls\n- Cliente MCP para servidores MCP",
+        "height": 216,
+        "width": 250,
+        "color": 5
+      },
+      "id": "0f5775d1-4d73-4b76-9bbb-188f41166c8c",
+      "name": "🛠️ Tools",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3200,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "84c4faae-d656-4e15-ad2c-41d179409cc6",
+      "name": "OpenAI Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        3580,
+        740
+      ],
+      "typeVersion": 1.1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Embeddings**\n- Representaciones numéricas de texto\n- Capturan significado semántico\n- Utilizados en workflows RAG\n- Múltiples proveedores disponibles",
+        "height": 216,
+        "width": 250,
+        "color": 5
+      },
+      "id": "dc1a54f2-6a40-4b97-b059-f1fa64ce53f0",
+      "name": "🔢 Embeddings",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3500,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "tableName": "documents",
+        "options": {}
+      },
+      "id": "92cdaa82-121d-4c6f-9c6b-501547fa04dd",
+      "name": "Supabase Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "position": [
+        3820,
+        740
+      ],
+      "typeVersion": 1.1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Vector Stores**\n- Bases de datos especializadas\n- Almacenan embeddings\n- Búsqueda por similitud semántica\n- Fundamental para RAG",
+        "height": 216,
+        "width": 250,
+        "color": 5
+      },
+      "id": "eaa7db71-6f18-4b10-b450-82e551304567",
+      "name": "🗄️ Vector Stores",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3820,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Model Selector**\n- Selecciona dinámicamente modelos de IA\n- Implementa mecanismos de fallback\n- Elige modelo óptimo por tarea\n- Maneja múltiples modelos conectados",
+        "height": 220,
+        "width": 250,
+        "color": 5
+      },
+      "id": "df750f26-09a0-4ebb-85b1-e0bf3c313034",
+      "name": "🔄 Memory Manager",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4120,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputs": {
+          "input": [
+            {
+              "type": "ai_languageModel"
+            },
+            {
+              "type": "ai_memory"
+            },
+            {
+              "type": "ai_tool"
+            }
+          ]
+        }
+      },
+      "id": "b964b447-c60d-4dde-9432-b720f9cb2b89",
+      "name": "LangChain Code",
+      "type": "@n8n/n8n-nodes-langchain.code",
+      "position": [
+        4440,
+        740
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**LangChain Code Node**\n- Sandbox para código LangChain\n- JavaScript o Python\n- Ejecuta código LangChain directo\n- Entradas: chain, document, embeddings\n- Requiere conocimiento de LangChain",
+        "height": 220,
+        "width": 250,
+        "color": 5
+      },
+      "id": "ad42963f-5797-4474-9692-fcda83041797",
+      "name": "💻 LangChain Code",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4400,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## CASOS DE USO PRINCIPALES POR NODO\n\n**Simples**: OpenAI, Basic LLM Chain → Llamadas directas sin complejidad\n**Extracción**: Information Extractor → Datos estructurados de texto\n**Clasificación**: Sentiment Analysis, Text Classifier → Categorización automática\n**Documentos**: Summarization Chain, Q&A Chain → Procesamiento de contenido extenso\n**Agentes**: AI Agent → Conversaciones complejas con herramientas\n**RAG**: Q&A Chain + Vector Store + Embeddings → Búsqueda en conocimiento específico\n**Memoria**: Memory + Memory Manager → Conversaciones con contexto",
+        "height": 340,
+        "width": 504,
+        "color": 6
+      },
+      "id": "c556301a-c144-486a-8bfe-c8f77dbbd212",
+      "name": "💡 Casos de Uso Principales",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        580
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.chatInput }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Nombre",
+              "description": "Nombre de la persona interesada al puesto"
+            },
+            {
+              "name": "Linkedin",
+              "description": "Usuario de linkedin"
+            },
+            {
+              "name": "Telefono",
+              "description": "Numero telefónico"
+            }
+          ]
+        },
+        "options": {
+          "batching": {}
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        2340,
+        160
+      ],
+      "id": "d28f01d3-7fff-41ca-8172-092fb2798186",
+      "name": "Information Extractor",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.chatInput }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Falla de atención",
+              "description": "Fallas relacionadas con la atención al cliente"
+            },
+            {
+              "category": "Falla de producto",
+              "description": "Fallos del producto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        1940,
+        720
+      ],
+      "id": "b2fb7976-9617-4393-827c-7d79fde0764f",
+      "name": "Text Classifier",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        160
+      ],
+      "id": "ab26a2ce-3d60-47bb-b877-3de83099845e",
+      "name": "Default Data Loader",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3280,
+        160
+      ],
+      "id": "1db6937d-2366-428d-8428-4674f1f7760e",
+      "name": "OpenAI Chat Model",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        4100,
+        160
+      ],
+      "id": "c90f5b2f-6f66-4e91-9397-397b73cab5dc",
+      "name": "Vector Store Retriever1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3280,
+        740
+      ],
+      "id": "4b8b31ed-39fb-4688-9e39-19196eae49b4",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        4120,
+        740
+      ],
+      "id": "a9d040e7-3ca9-43a6-a964-5ebb4f322077",
+      "name": "Model Selector",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "**Summarization Chain**\n- Resume contenido pequeño/grande\n- Estrategias de chunking: simple/avanzada\n- Text Splitters: Character, Recursive, Token\n- Métodos: Map Reduce, Refine, Stuff\n- Procesamiento por lotes\n- Casos de uso: Resúmenes de documentos. Ej. Resúmenes ejecutivos de informes",
+        "height": 244,
+        "width": 300,
+        "color": 3
+      },
+      "id": "b14a69e4-daf8-4384-af45-5bca793ea821",
+      "name": "📝 Summarization Chain",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1560,
+        960
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.chatInput }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1540,
+        160
+      ],
+      "id": "2393c565-347d-4b6e-9621-65fbabdc36c4",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "e6uhpX1IdAdu7TEp",
+          "name": "kevin api key"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        1160,
+        720
+      ],
+      "id": "f7b1c769-a376-47bd-8c79-784f8a332aa5",
+      "name": "Sentiment Analysis",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "batching": {
+          "batchSize": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1960,
+        160
+      ],
+      "id": "7318f79c-12b9-4e22-85a1-95eaf8204bbe",
+      "name": "Basic LLM Chain",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "1. AI Agent - Estoy triste, por favor genera una imágen de un perrito que me haga feliz.\n\n2. OpenAI - Mensaje a asistente o GPT\nExplícame las diferencias entre machine learning y deep learning de una manera simple y práctica.\n\n3. Basic LLM Chain\nEscribe un email profesional para solicitar una reunión con un cliente potencial sobre servicios de automatización.\n\n4. Information Extractor\n'Juan Pérez, CEO de TechSolutions, ubicado en Madrid, España. Email: juan.perez@techsolutions.com, teléfono: +34 912 345 678, LinkedIn: /in/juanperez-ceo'\n\n\n5. Sentiment Analysis:\n'El servicio fue excelente, muy rápido y eficiente. Sin embargo, el precio me pareció un poco elevado para lo que recibí.'\n\n6. Summarization Chain:\nLa inteligencia artificial está transformando múltiples industrias. En healthcare, ayuda en diagnósticos más precisos. En finanzas, mejora la detección de fraudes. En retail, personaliza experiencias de compra. Los desafíos incluyen privacidad de datos, bias en algoritmos y necesidad de regulación. El futuro requiere colaboración entre humanos y AI para maximizar beneficios minimizando riesgos.'\n\n7. Text Classifier - Clasifica texto en categorías distintas\n'Hola, ayer compré un producto en su tienda online pero no he recibido el email de confirmación. ¿Podrían ayudarme a verificar mi pedido? Mi número de orden es #12345. Gracias.'",
+        "height": 784,
+        "width": 480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "295e3493-c1d1-4813-96cd-e56527e41bee",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2.1,
+      "position": [
+        1560,
+        740
+      ],
+      "id": "f1daa53a-a846-445a-a62e-f13972f7d193",
+      "name": "Summarization Chain",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "toolDescription": "Obtiene una imagen aleatoria de un perrito",
+        "url": "https://dog.ceo/api/breeds/image/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        380
+      ],
+      "id": "36277ee4-0453-4ef5-90a2-1a10fa91a763",
+      "name": "imagenMascota"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        380
+      ],
+      "id": "c7cc3e67-0ce7-4fb9-b417-cd396d6a67e8",
+      "name": "When chat message received",
+      "webhookId": "87b173e1-3895-4e35-86e2-911ab27c46dd"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Eres un asistente virtual amigable y empático especializado en brindar apoyo emocional y entretenimiento a los usuarios.\n\nPERSONALIDAD:\n- Cálido, comprensivo y optimista\n- Siempre buscas alegrar el día de los usuarios\n- Detectas cuando alguien necesita ánimo o distracción\n- Respondes de manera natural y conversacional\n\nHERRAMIENTAS DISPONIBLES:\nTienes acceso a la herramienta \"imagenMascota\" que genera una imagen adorable de una mascota al azar.\n\nCUÁNDO USAR LA HERRAMIENTA imagenMascota:\n- Cuando el usuario expresé tristeza, estrés o desánimo\n- Si alguien pide ver fotos de animales o mascotas\n- Cuando detectes que necesitan una sonrisa o momento de alegría\n- Si mencionan que aman los animales o tienen mascotas\n- Para celebrar logros o buenas noticias con algo tierno\n- Cuando el usuario esté aburrido y busque entretenimiento\n\nCÓMO USAR LA HERRAMIENTA:\n- Úsala de forma natural en la conversación\n- Siempre introduce la imagen con un comentario cálido\n- Explica brevemente por qué pensaste que les gustaría ver una mascota\n- Pregunta si les gustaría ver otra si parece que disfrutaron la primera\n\nCASOS DE USO ESPECÍFICOS:\n- \"Me siento muy estresado hoy\" → Usa imagenMascota + mensaje de ánimo\n- \"Extraño a mi perro\" → Usa imagenMascota + empatía sobre mascotas\n- \"¿Puedes mostrarme algo lindo?\" → Usa imagenMascota directamente\n- \"Estoy aburrido\" → Sugerir ver mascotas adorables y usar la herramienta\n- \"Conseguí el trabajo!\" → Celebrar con imagenMascota como \"regalo\"\n\nEJEMPLOS DE INTRODUCCIÓN:\n- \"Aquí tienes algo que seguro te alegrará el día:\"\n- \"Creo que esta adorable mascota te ayudará a sentirte mejor:\"\n- \"¡Nada como una carita tierna para celebrar!\"\n- \"Te traje una sorpresa peluda:\"\n\nREGLAS IMPORTANTES:\n- No uses la herramienta en exceso (máximo 2-3 veces por conversación)\n- Siempre acompaña la imagen con palabras de apoyo apropiadas\n- Si el usuario no responde positivamente, no insistas con más imágenes\n- Combina la herramienta con consejos útiles cuando sea apropiado\n- Mantén un equilibrio entre usar la herramienta y proporcionar valor conversacional\n\nCONTEXTO EMOCIONAL:\n- Detecta señales de tristeza, estrés, soledad o aburrimiento\n- Responde con empatía antes de usar la herramienta\n- Adapta tu tono según el estado emocional del usuario\n- Usa las imágenes como complemento, no como respuesta única\n\nTu objetivo es ser un compañero virtual que usa las adorables imágenes de mascotas como una forma de conexión emocional y apoyo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        160
+      ],
+      "id": "f98a1cb4-661e-4f90-9d5e-5232fe078148",
+      "name": "AI Agent",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6e843af8-d299-40c9-9dc0-0723e42028db",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7918938d86824bcdb6efb0a3686e94f90625a1a786b622e3d4f09549a10d475c"
+  },
+  "id": "cWghhKGkbfTJrdme",
+  "tags": []
+}

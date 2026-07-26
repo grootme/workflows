@@ -1,0 +1,291 @@
+{
+  "name": "#5 Agente IA Atencion al cliente",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -416,
+        -128
+      ],
+      "id": "28951e5a-365e-4ebc-af2a-a5e512e92bd6",
+      "name": "When chat message received",
+      "webhookId": "8709f7e4-eb50-47d1-b9ad-f8eeed10e067"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un asistente virtual de atención al cliente de la empresa BlunexAI, que se dedica al desarrollo de automatizaciones y de agentes de inteligencia artificial. \n\n# Objetivo:\n\nTu objetivo principal consiste en resolver dudas a los usuarios que te contactan, que son potenciales clientes, acerca de los servicios que ofrece blunexAI.\n\nTambién tienes la capacidad de agendar una reunión con el usuario. Debes tratar de ofrecer al usuario de forma proactiva la opción de agendar una reunión. Sin embargo, nunca ofrezcas una reunión sin que el cliente te haya solicitado previamente información acerca de tus servicios.\n\nPara agendar una reunión solicita al usuario la siguiente información: nombre y apellidos, email, fecha y hora de la reunión, y una descripción de la solución que necesita (solo pide esto si no te lo ha dicho antes).\n\nUna vez que te haya dado toda la información, utiliza tu herramienta \"ComprobarDisponibilidad\" y si hay disponibilidad utiliza la herramienta \"CrearReunion\", donde el título de la reunión será \"Consultoría IA - {nombre}\" y la descripción de la reunión será la {descripcion} aportada por el usuario.\n\n# Herramientas:\n\n* \"Conocimiento\": usa esta herramienta para obtener información de la empresa BlunexAI y los servicios ofrecidos.\n\n* \"Calculator\": utiliza esta herramienta cuando necesites realizar operaciones matemáticas.\n\n* \"Think\": utiliza esta herramienta para analizar que acción realizar y para mejorar tus respuestas.\n\n* \"ComprobarDisponibilidad\": utiliza esta herramienta para comprobar la disponibilidad de la fecha solicitada por el usuario para agendar. Siempre tienes que ejecutar esta herramienta antes de \"CrearReunion\".\n\n* \"CrearReunion\": utiliza esta herramienta para agendar una reunion donde el título de la reunión será \"Consultoría IA - {nombre}\" y la descripción de la reunión será la {descripcion} aportada por el usuario.\n\n# Comportamiento:\n\n* Usa un tono profesional y alegre.\n\n* Nunca corrijas a los usuarios, limítate a responder a sus consultas.\n\n* Cuando la consulta no tenga que ver con tu cometido, limítate a responder que no puedes contestar a eso.\n\n\n# Recordatorios:\n\n* Cuando la consulta no tenga que ver con tu cometido, limítate a responder que no puedes contestar a eso.\n\n* Utiliza siempre tu MEMORY para mantener el hilo de la conversación. Es muy importante que cuando le pidas datos al usuario para agendar una reunión, consultes primero tu MEMORY para no pedirle datos de forma repetida.\n\n* Fecha y hora actual: {{ $now }}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        -128
+      ],
+      "id": "3fce2dfa-6ee1-4fa2-99f0-72b98e918acb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        96
+      ],
+      "id": "3dee284c-16dd-434f-88ea-cc516e10471b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "whUEULFkcYZOxOU5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        112
+      ],
+      "id": "6d721c95-bff7-49cc-a182-8261a3b2d905",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para obtener información de la empresa BlunexAI o sus servicios ofrecidos",
+        "operation": "get",
+        "documentURL": "1ENEg-JUSSXoCqXXzg1QPVSHfTeuq6Byk5VhtQjNJjUU"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        320,
+        144
+      ],
+      "id": "f4c9e673-fd21-4df7-89a4-da53d590dcde",
+      "name": "Conocimiento",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "IlGvG1eezlAzQ4se",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        464,
+        128
+      ],
+      "id": "d35d955e-b1cb-4909-b925-0e7c5784c774",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "ebeb8e88-156b-46d5-8601-e6412bda4e74",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para buscar disponibilidad en el calendario",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {
+          "timezone": {
+            "__rl": true,
+            "value": "Europe/Madrid",
+            "mode": "list",
+            "cachedResultName": "Europe/Madrid"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        224
+      ],
+      "id": "0d273871-7014-461d-87b1-5bae3a5f4777",
+      "name": "ComprobarDisponibilidad",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "pOl6qpQF2N0AG2HQ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta para crear una reunión",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "",
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees1_Attendees', ``, 'string') }}"
+          ],
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "sendUpdates": "all",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        176,
+        224
+      ],
+      "id": "cd0c0645-6ec6-472e-8f05-d3b0aaa7f11a",
+      "name": "CrearReunion",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "pOl6qpQF2N0AG2HQ",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conocimiento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComprobarDisponibilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CrearReunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f443f83-8a6f-4cb7-b455-5fd72cba78b1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f73766c8dff811f322680c8f9e08a80468d54b826c95e7acb37f9f1014260f9b"
+  },
+  "id": "0UlrzyzFxuLqNHCd",
+  "tags": []
+}

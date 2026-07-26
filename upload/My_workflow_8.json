@@ -1,0 +1,231 @@
+{
+  "name": "Multichannel Sales Agent",
+  "id": "abcd1234-ef56-7890-ab12-cd34ef56gh78",
+  "versionId": "v1",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodes": [
+    {
+      "id": "triggerWhatsApp",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "position": [-600, 200],
+      "parameters": {
+        "updates": ["messages"]
+      },
+      "webhookId": "whatsapp-webhook-id"
+    },
+    {
+      "id": "triggerManual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [-600, 50],
+      "parameters": {}
+    },
+    {
+      "id": "parseProducts",
+      "name": "Parse Products",
+      "type": "n8n-nodes-base.code",
+      "position": [-300, 125],
+      "parameters": {
+        "language": "javascript",
+        "code": ""
+      }
+    },
+    {
+      "id": "validateData",
+      "name": "Validate Product Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [0, 125],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1-name",
+              "leftValue": "={{$json.name}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a2-price",
+              "leftValue": "={{$json.price}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a3-image",
+              "leftValue": "={{$json.imageUrl}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a4-link",
+              "leftValue": "={{$json.link}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a5-recipient",
+              "leftValue": "={{$json.recipientNumber}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "postFacebookGroup",
+      "name": "Post to Facebook Group",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [300, 0],
+      "credentials": {
+        "httpRequest": {
+          "id": "FacebookGroup",
+          "name": "FacebookGroup"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.groupId }}/feed",
+        "bodyContentType": "form-data",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "message", "value": "={{`${$json.name} — ${$json.price}\\n${$json.link}`}}" },
+            { "name": "picture", "value": "={{$json.imageUrl}}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "postTelegramGroup",
+      "name": "Post to Telegram Group",
+      "type": "n8n-nodes-base.telegram",
+      "position": [300, 150],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.telegramChatId }}",
+        "photo": "={{ $json.imageUrl }}",
+        "caption": "={{ `${$json.name} — ${$json.price}` }}"
+      }
+    },
+    {
+      "id": "createIgContainer",
+      "name": "Create IG Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [300, 300],
+      "credentials": {
+        "httpRequest": {
+          "id": "InstagramGraph",
+          "name": "InstagramGraph"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.igUserId }}/media",
+        "bodyParametersUi": {
+          "parameter": [
+            { "name": "image_url", "value": "={{$json.imageUrl}}" },
+            { "name": "caption", "value": "={{`${$json.name} — ${$json.price}`}}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "publishIgContainer",
+      "name": "Publish IG Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [550, 300],
+      "credentials": {
+        "httpRequest": {
+          "id": "InstagramGraph",
+          "name": "InstagramGraph"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.igUserId }}/media_publish",
+        "queryParametersUi": {
+          "parameter": [
+            { "name": "creation_id", "value": "={{ $node[\"Create IG Container\"].json.id }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "postWhatsApp",
+      "name": "Post to WhatsApp",
+      "type": "n8n-nodes-base.whatsapp",
+      "position": [300, 450],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WhatsAppBusinessCreds",
+          "name": "WhatsAppBusinessCreds"
+        }
+      },
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $json.phoneNumberId }}",
+        "recipientPhoneNumber": "={{ $json.recipientNumber }}",
+        "textBody": "={{`¡Hola! Tenemos un nuevo producto: ${$json.name} — ${$json.price}. Mira más aquí: ${$json.link}`}}",
+        "additionalFields": {
+          "previewUrl": true
+        }
+      }
+    }
+  ],
+  "connections": {
+    "triggerWhatsApp": {
+      "main": [[{ "node": "parseProducts", "type": "main", "index": 0 }]]
+    },
+    "triggerManual": {
+      "main": [[{ "node": "parseProducts", "type": "main", "index": 0 }]]
+    },
+    "parseProducts": {
+      "main": [[{ "node": "validateData", "type": "main", "index": 0 }]]
+    },
+    "validateData": {
+      "main": [[
+        { "node": "postFacebookGroup",   "type": "main", "index": 0 },
+        { "node": "postTelegramGroup",   "type": "main", "index": 0 },
+        { "node": "createIgContainer",   "type": "main", "index": 0 },
+        { "node": "postWhatsApp",        "type": "main", "index": 0 }
+      ]]
+    },
+    "createIgContainer": {
+      "main": [[{ "node": "publishIgContainer", "type": "main", "index": 0 }]]
+    }
+  }
+}

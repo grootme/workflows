@@ -1,0 +1,15 @@
+Documentación de n8n: https://docs.n8n.io/choose-n8n/
+Instalar Node y npm: https://nodejs.org/es/download
+Comando para instalar n8n con npm: npm install n8n -g
+Instalar ngrok: https://ngrok.com/
+Comando configurar ngrok: ngrok config add-authtoken 1zShrJnYekHxx3EqfdXFW1va0uB_89XRC5RwCbGVufZQ4hYcQ
+Instalar Docker Compose: https://docs.docker.com/compose/install/
+
+Comandos Docker: 
+docker volume create n8n_data
+docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+
+Railway: https://railway.com/
+
+Comando Dokploy:
+curl -sSL https://dokploy.com/install.sh | sh

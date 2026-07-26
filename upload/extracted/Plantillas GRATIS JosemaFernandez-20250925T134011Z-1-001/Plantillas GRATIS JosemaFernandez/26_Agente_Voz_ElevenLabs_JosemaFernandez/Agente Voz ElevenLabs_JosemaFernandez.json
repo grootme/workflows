@@ -1,0 +1,273 @@
+{
+  "name": "Agente Voz ElevenLabs_JosemaFernandez",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "97c633f9-906e-4e0d-95d4-1ca8a005fe77",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        -112
+      ],
+      "id": "c3f79f5a-ae72-4e79-9021-d3e7224f1362",
+      "name": "Webhook",
+      "webhookId": "97c633f9-906e-4e0d-95d4-1ca8a005fe77"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        192,
+        -112
+      ],
+      "id": "101f2e6d-7012-403c-bfc8-7d402564bf93",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ymPKK6qetnoTIctN6E6PdNALzraOTHubwN1k6YNUN10",
+          "mode": "list",
+          "cachedResultName": "Base de Leads",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefono": "={{ $json.body.telefono }}",
+            "nombre": "={{ $json.body.nombre }}",
+            "apellidos": "={{ $json.body.apellido }}",
+            "email": "={{ $json.body.email }}",
+            "descripcion": "={{ $json.body.descripcion }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "apellidos",
+              "displayName": "apellidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "descripcion",
+              "displayName": "descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -512,
+        -112
+      ],
+      "id": "d11a4b37-5f60-49de-9869-e4e618b303ef",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cX2gNhyZTi4YkXta",
+          "name": "Google Sheets 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Fecha y hora de la reunión:  {{ $('Webhook').item.json.body.fecha_hora }}\n\nemail: {{ $('Webhook').item.json.body.email }}\n\ndescripcion: {{ $('Webhook').item.json.body.descripcion }}",
+        "options": {
+          "systemMessage": "=Tu tarea consiste en agendar una reunión con los datos aportados. Adapta la fecha al formato necesario para enviarlo a tu herramienta.\n\n\n# Herramienta\n* \"CrearEvento\": utiliza siempre esta herramienta para agendar la reunión. Envía la fecha y hora en el formato adecuado."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -272,
+        -112
+      ],
+      "id": "22b6cf8d-4b79-488c-a559-394d1c5ee1d1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        96
+      ],
+      "id": "de36849f-a07c-46e1-9d0e-6cd36a69c923",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "NdyPXiyPUwmqADX5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+          ],
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "sendUpdates": "all",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        128
+      ],
+      "id": "72d20757-3531-4692-a648-2639f25f9409",
+      "name": "Crear Evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "KAD4BPyZz8DGMdZc",
+          "name": "Google Calendar 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c57ad01-d6ec-4e5d-8c1a-5ff63f39a984",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9bf9145e22226d3dde31d69a2254018e4fb1eec7eb0d3a8fb5176a27c2816db5"
+  },
+  "id": "sV49nqQ0qBj1wq14",
+  "tags": []
+}

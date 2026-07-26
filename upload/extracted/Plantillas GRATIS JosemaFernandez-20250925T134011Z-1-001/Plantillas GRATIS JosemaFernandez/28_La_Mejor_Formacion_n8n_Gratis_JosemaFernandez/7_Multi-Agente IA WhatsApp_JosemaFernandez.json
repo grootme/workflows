@@ -1,0 +1,1769 @@
+{
+  "name": "Agente IA WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "03bd6045-5d16-4a86-9510-3e5f3b3dafe4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "fdb1835e-5c07-49b8-9c61-371fbdb185b1",
+      "name": "Webhook",
+      "webhookId": "03bd6045-5d16-4a86-9510-3e5f3b3dafe4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eebf8477-8ec9-4e3c-9cab-e3733c46a517",
+              "name": "serverUrl",
+              "value": "={{ $json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "2a723e4f-5e32-453f-bf2a-d79277e18d40",
+              "name": "instanceName",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "e2945e33-690c-46bb-b200-8cd463af78ba",
+              "name": "apiKey",
+              "value": "={{ $json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "fc017cf3-2d80-46dc-8588-a5da16d94098",
+              "name": "messageId",
+              "value": "={{ $json.body.data.key.id }}",
+              "type": "string"
+            },
+            {
+              "id": "51142f8e-9f2f-415f-865d-66416ddb5cc2",
+              "name": "chatId",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "bbfd21fe-08f0-454e-99b7-ea1d1b8b7b8b",
+              "name": "userName",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "c8042535-1b73-4988-a8a8-3797882e8c24",
+              "name": "content",
+              "value": "={{ $json.body.data.message.conversation || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "7b9b536d-6f3d-4670-a090-b24e6d490ebd",
+              "name": "messageType",
+              "value": "={{ $json.body.data.message.conversation ? 'text' : '' }}{{ $json.body.data.message.audioMessage ? 'audio' : '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "ec1e5077-c8d5-4b8a-ad4a-cc05d2e494cb",
+      "name": "Entrada WhasApp"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messageType }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d08c7ad2-37c8-4bed-b286-a9f54d9f0825"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d579600d-4ef5-4bc3-a209-b833a5a95e22",
+                    "leftValue": "={{ $json.messageType }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "1f4c186c-0593-457c-926b-a04ccf08f967",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.serverUrl }}/chat/getBase64FromMediaMessage/{{ $json.instanceName }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.apiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message.key.id",
+              "value": "={{ $json.messageId }}"
+            },
+            {
+              "name": "convertToMp4",
+              "value": "={{ Boolean(false) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        512,
+        -16
+      ],
+      "id": "c7314739-7720-471d-a775-9a2f485d8f23",
+      "name": "Descargar Audio"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "mimeType": "={{ $json.mimetype }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -16
+      ],
+      "id": "5c673d2a-dfc7-422d-90d0-d7945420a165",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        928,
+        -16
+      ],
+      "id": "8959a6d4-4f71-4e74-9782-b1071f76fe57",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6f339c18-da30-4999-92ae-1a732d427a37",
+              "name": "text",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        -176
+      ],
+      "id": "23dd1708-3102-43fd-93db-03f3c550b477",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fd69cd2b-7b00-494c-9f3a-0c68f51ff21e",
+              "name": "contenido",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "761537b2-72c0-48b0-8c33-6c579b850f39",
+              "name": "serverUrl",
+              "value": "={{ $('Entrada WhasApp').item.json.serverUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "3fa2f805-795a-48fb-b7dd-f48ebac018cf",
+              "name": "instanceName",
+              "value": "={{ $('Entrada WhasApp').item.json.instanceName }}",
+              "type": "string"
+            },
+            {
+              "id": "f0e0836d-bb05-4618-8a69-0b531c715d86",
+              "name": "apiKey",
+              "value": "={{ $('Entrada WhasApp').item.json.apiKey }}",
+              "type": "string"
+            },
+            {
+              "id": "09ddba41-54dc-4328-af3a-b2349950e377",
+              "name": "messageId",
+              "value": "={{ $('Entrada WhasApp').item.json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "54ea7083-7691-4b01-b403-d3c670f9a71c",
+              "name": "chatId",
+              "value": "={{ $('Entrada WhasApp').item.json.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "a385656f-a259-4716-8dc0-dab1ed61e3e9",
+              "name": "userName",
+              "value": "={{ $('Entrada WhasApp').item.json.userName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -112
+      ],
+      "id": "1ea2ae47-075b-4ec8-b6c6-5ea3433feafc",
+      "name": "Entrada Agente"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Nombre del usuario: {{ $json.userName }}\n\nMensaje del usuario: {{ $json.contenido }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un asistente personal encargado de ayudar con tareas de gestión de email, calendario y contactos. También dispones de la capacidad de responder a consultas jurídicas y legales sobre normativas y leyes de España.\n\n# Objetivo:\n\nDispones de un conjunto de agentes especializados en una labor concreta. Tus objetivos consisten en:\n\n1. Orquestar y redirigir la consulta del usuario al agente  adecuado, asegurando que la consulta que le envías a estos agentes tenga la información suficiente para desarrollar su labor.\n\n2. Generar una respuesta al usuario que sea completa y que resuelva su consulta.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que agente utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"AgenteEmail\": agente encargado de gestionar cualquier acción relacionada con correo electrónico. Este agente puede redactar y enviar emails, y también puede obtener emails de la bandeja entrada. Envíale la información necesaria para que pueda realizar esta labor correctamente.\n\n* \"AgenteCalendario\": agente encargado de gestionar cualquier acción relacionada con calendario o reuniones. Este agente puede comprobar disponibilidad horaria y también agendar una reunión. Envíale la información necesaria para que pueda realizar esta labor correctamente.\n\n* \"AgenteContactos\": agente encargado de gestionar cualquier acción relacionada con su base de datos de contactos. Este agente puede obtener contactos, crear nuevos, incluso puede actualizar uno existente. Envíale la información necesaria para que pueda realizar esta labor correctamente.\n\n* \"AgenteConocimiento\": agente encargado de resolver cualquier cuestión relacionada con leyes y normativas del ámbito jurídico, legal y del derecho en España.\n\n# Reglas:\n\n* Cuando necesites enviar un email a un destinatario y no te hayan facilitado el correo electrónico, utiliza a tu agente \"AgenteContactos\" para obtener el email asociado al nombre del contacto.\n\n* Cuando necesites agendar una reunión con un destinatario y no te hayan facilitado el correo electrónico, utiliza a tu agente \"AgenteContactos\" para obtener el email asociado al nombre del contacto.\n\n\n# Recordatorios:\n\n* Utiliza tu MEMORY para consultar el historial de conversación y tener en cuenta información necesaria para llevar a cabo tus acciones.\n\n* Fecha y hora actual: {{ $now }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1408,
+        -112
+      ],
+      "id": "e0217fac-4599-46c3-93b7-20b2dbceb2e2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        176
+      ],
+      "id": "79458f67-4cbf-4140-a4a3-c4cd4b61fc5c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8n6l0eyUwgHnCdvg",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6c0778c-e863-46d5-b84b-99ba21861be3",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "d70af613-7f47-43b6-8540-408961c92d81",
+              "name": "serverUrl",
+              "value": "={{ $('Entrada Agente').item.json.serverUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "71a09bf0-0180-42f8-81d1-30d026299428",
+              "name": "instanceName",
+              "value": "={{ $('Entrada Agente').item.json.instanceName }}",
+              "type": "string"
+            },
+            {
+              "id": "eff6b97c-50aa-44b9-81fb-6793472ae766",
+              "name": "apiKey",
+              "value": "={{ $('Entrada Agente').item.json.apiKey }}",
+              "type": "string"
+            },
+            {
+              "id": "2697bbea-0d70-409d-bfa8-4a1b63b09be6",
+              "name": "messageId",
+              "value": "={{ $('Entrada Agente').item.json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "127999c8-f5cd-4a47-95ab-07e9e54dfd0e",
+              "name": "chatId",
+              "value": "={{ $('Entrada Agente').item.json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -112
+      ],
+      "id": "f4ce866c-62bb-4a1c-8511-460a43b3524c",
+      "name": "Salida Agente"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.serverUrl }}/message/sendText/{{ $json.instanceName }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.apiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.chatId }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{ 3000 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1968,
+        -112
+      ],
+      "id": "e9a3fb2c-380e-49e2-817a-056dbede6f4c",
+      "name": "Respuesta WhatsApp"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1552,
+        416
+      ],
+      "id": "6c0bdcbb-defe-4691-b1ad-3ce70c105c6e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        496
+      ],
+      "id": "e1940e4b-c29d-4f42-be9b-5079e6978826",
+      "name": "EnviarEmail",
+      "webhookId": "d3cfdb21-2a96-4e1f-8de5-b1240866ff4f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zMw2ZBmuHMVnlCra",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "filters": {
+          "receivedAfter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_After', ``, 'string') }}",
+          "receivedBefore": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_Before', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1904,
+        496
+      ],
+      "id": "fa49b47a-3d0b-4b8c-8452-2ad9d126cfae",
+      "name": "ObtenerEmails",
+      "webhookId": "0c73f6c2-813d-4a46-8b2f-4d123e2086dd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zMw2ZBmuHMVnlCra",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Utiliza esta herramienta cuando quieras enviar y obtener emails.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\nEres un agente encargado de gestionar el correo electrónico.\n\n# Objetivo:\n\nTu objetivo consiste en redactar email basados en la información que te envía en la entrada. También tienes la capacidad de obtener emails de la bandeja de entrada.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que herramienta utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"EnviarEmail\": redacta un email y envíalo al destinatario que te llega a tu entrada.\n\n* \"ObtenerEmails\": usa esta herramienta para recuperar emails.\n\n# Reglas:\n\nUtiliza un tono profesional a la hora de redactar los emails. Recuerda que eres un profesional y tienes que ser serio. Por supuesto tienes que ser muy educado.\n\nFinaliza todos tus emails con el siguiente pie: \"Un saludo, Josema Fernández\".\n\n# Recordatorios:\n\n* Fecha y hora actual: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        240
+      ],
+      "id": "594da443-b599-46ca-b69c-c6052dd43f5f",
+      "name": "AgenteEmail"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Este agente se encarga de la gestión de calendario.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un agente de calendario. Te encargas de comprobar disponibilidad y agendar reuniones.\n\n# Objetivo:\n\nTu objetivo consiste en buscar disponibilidad de calendario dada unas fechas que te envíen usando la herramienta \"ComprobarDisponibilidad\". En caso de que haya disponibilidad, deberás agendar una reunión con los datos ofrecidos usando la herramienta \"AgendarReunion\".\n\nHerramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que herramienta utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"ComprobarDisponibilidad\": utiliza esta herramienta para comprobar la disponibilidad de la fecha solicitada por el usuario para agendar. Siempre tienes que ejecutar esta herramienta antes de \"AgendarReunion\".\n\n* \"AgendarReunion\": utiliza esta herramienta para agendar una reunion.\n\n# Recordatorios:\n\n* Fecha y hora actual: {{ $now }}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        256
+      ],
+      "id": "85d42154-e4cf-48c7-b585-6bedae0fb3b3",
+      "name": "AgenteCalendario"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        464
+      ],
+      "id": "9eeb5cda-52f7-4b6d-9bd8-fbda665a23b2",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para comprobar disponibilidad.",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "josefernanlab@gmail.com",
+          "mode": "list",
+          "cachedResultName": "josefernanlab@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {
+          "timezone": {
+            "__rl": true,
+            "value": "Europe/Madrid",
+            "mode": "list",
+            "cachedResultName": "Europe/Madrid"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2256,
+        448
+      ],
+      "id": "bbaeaf6e-3561-4523-8ad6-da60e85354ec",
+      "name": "ComprobarDisponibilidad",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "zQrM9CYxPcdBzCOf",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para agendar reunión.",
+        "calendar": {
+          "__rl": true,
+          "value": "josefernanlab@gmail.com",
+          "mode": "list",
+          "cachedResultName": "josefernanlab@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "josefernanlab@gmail.com",
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees1_Attendees', ``, 'string') }}"
+          ],
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "sendUpdates": "all",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2400,
+        448
+      ],
+      "id": "9ff28215-8a29-447f-90a5-86717ccd64a4",
+      "name": "AgendarReunion",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "zQrM9CYxPcdBzCOf",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Utiliza esta herramienta para las acciones de obtener un contacto, añadir uno nuevo, y modificar uno existente.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un agente encargado de gestionar una base de datos de contactos.\n\n# Objetivo:\n\nTu objetivo consiste en obtener contactos, actualizarlos, o crearlos en función de la instrucción de entrada.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que herramienta utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"CrearContacto\": usa esta herramienta para crear un nuevo contacto.\n\n* \"ObtenerContacto\": usa esta herramienta para obtener la información de un contacto.\n\n* \"ActualizarContacto\": usa esta herramienta para actualizar un contacto.\n\n# Recordatorios:\n\n* Fecha y hora actual: {{ $now }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        2560,
+        272
+      ],
+      "id": "2e785a83-46c6-45d2-86ea-0c7ff89c0218",
+      "name": "AgenteContactos"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2576,
+        464
+      ],
+      "id": "278b174d-8238-4180-9284-f3f31e0a8323",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para crear un nuevo contacto",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1yipPigR3hIYgfmUuA60WC8FBTn_KCvtOHzEWiG0qaCg",
+          "mode": "list",
+          "cachedResultName": "Base de Datos contactos",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $fromAI('Nombre_contacto', `Nombre del contacto`, 'string') }}",
+            "Correo": "={{ $fromAI('email', `Dirección de correo electrónico del contacto`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        2736,
+        528
+      ],
+      "id": "453a1dcd-a51b-4059-bf9e-b03c04476f1a",
+      "name": "CrearContacto",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NEllZjUUUGerliRw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para obtener un contacto",
+        "documentId": {
+          "__rl": true,
+          "value": "1yipPigR3hIYgfmUuA60WC8FBTn_KCvtOHzEWiG0qaCg",
+          "mode": "list",
+          "cachedResultName": "Base de Datos contactos",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Nombre",
+              "lookupValue": "={{ $fromAI('nombre_contacto', `Nombre del contacto`, 'string') ?? '' }}"
+            },
+            {
+              "lookupColumn": "Correo",
+              "lookupValue": "={{ $fromAI('email', `Dirección de correo electrónico del contacto`, 'string') ?? '' }}"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        2864,
+        528
+      ],
+      "id": "8bbbce39-5165-4810-98cb-f177f8220f70",
+      "name": "ObtenerContacto",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NEllZjUUUGerliRw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta para modificar un contacto existente",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1yipPigR3hIYgfmUuA60WC8FBTn_KCvtOHzEWiG0qaCg",
+          "mode": "list",
+          "cachedResultName": "Base de Datos contactos",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Correo": "={{ $fromAI('Correo__using_to_match_', `Dirección de correo electrónico`, 'string') }}",
+            "Nombre": "={{ $fromAI('Nombre_contacto', `Nombre del contacto`, 'string') }}"
+          },
+          "matchingColumns": [
+            "Correo"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        3008,
+        512
+      ],
+      "id": "1c34d91f-4e0e-4a9e-bff8-afa583147452",
+      "name": "ActualizarContacto",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NEllZjUUUGerliRw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        32
+      ],
+      "id": "a7d8d6b3-a59c-4ba2-a8eb-e1ebd8c7114d",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        2608,
+        32
+      ],
+      "id": "489943c8-c100-4bb9-b9f8-51a37edde120",
+      "name": "Think"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        2048,
+        800
+      ],
+      "id": "d6008530-a7a9-48c6-94da-2700a34b406d",
+      "name": "Calculator1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        2304,
+        800
+      ],
+      "id": "7ba21a13-493a-4019-b5f6-10ffa4663291",
+      "name": "Think1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.chatId }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1456,
+        176
+      ],
+      "id": "94a973a1-e426-441e-90b9-fa3b1f10b842",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "tCedPGy2SBndn93v",
+          "name": "Postgres DominIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "Documentos",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        432
+      ],
+      "id": "236001cd-1fb0-4502-82d9-2e0c84302c15",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "ZvfMjMSh9GUY7dsD",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Carga Documentos",
+        "formDescription": "Carga los documentos a tu base de datos vectorial",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Documento",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        432
+      ],
+      "id": "5a751700-e69c-4dc5-8603-a1886d298bbd",
+      "name": "On form submission",
+      "webhookId": "64efc263-abcc-44c5-a4b6-e124d32ce582"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Documento",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -464,
+        432
+      ],
+      "id": "2d066f51-fa95-44cf-b8e2-9132e662fc0f",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        656
+      ],
+      "id": "9be76a23-c3d5-4751-bea3-8275bf703cc1",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $('Extract from File').item.json.text }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $('On form submission').item.json.Documento[0].filename }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        608
+      ],
+      "id": "05926a25-2fed-4b2f-8a3f-5455aae2d1ba",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 60,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        192,
+        816
+      ],
+      "id": "62a7ca2a-d382-4b6b-9350-06fb13862e2b",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "1cg7yfnnwcgysoencjawhospkjrg9qtn"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      {\n        \"key\": \"metadata.id\",\n        \"match\": { \"value\": \"{{ $('On form submission').item.json.Documento[0].filename }}\" }\n      }\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -192,
+        432
+      ],
+      "id": "ee116fe2-2ff3-419a-9b99-9de86bca823c",
+      "name": "Borrar Documento",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        464,
+        432
+      ],
+      "id": "6b5267b5-98d5-427d-b531-f270840ec446",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "¡Documento cargado!",
+        "completionMessage": "El documento ha sido cargado correctamente",
+        "options": {
+          "formTitle": "Carga de Documento"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        672,
+        432
+      ],
+      "id": "8936c0ee-55ba-4760-9d24-352936593fe9",
+      "name": "Form",
+      "webhookId": "d75f5cbc-785e-488e-9578-b0dfd8069f22"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        928
+      ],
+      "id": "8b7a63ff-45bb-4ec1-8812-fcf91a0ada44",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Utiliza esta herramienta para responder a dudas del usuario, especialmente si se tratan de consultas acerca de leyes y normativas del ámbito legal y jurídico en España",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un agente con acceso a una base de conocimiento de leyes y normativas del ámbito legal y jurídico en España.\n\n# Objetivo:\n\nTu objetivo consiste en responder a las consultas buscando en tu base de conocimiento.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que herramienta utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"Conocimiento\": utiliza esta herramienta para obtener la información necesaria para elaborar tu respuesta.\n\n# Recordatorios:\n\n* No te inventes la respuesta, siempre tienes que usar tu herramienta \"Conocimiento\" para elaborar la respuesta.\n\n* Fecha y hora actual: {{ $now }}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        304
+      ],
+      "id": "a52e58a2-9fde-4fcc-b0b4-7e7f303d6d93",
+      "name": "AgenteConocimiento"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "temperature": 0.1,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3184,
+        528
+      ],
+      "id": "6439ac91-36d7-4256-ab17-2729dd373ed5",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Usa esta herramienta para obtener información para responder a tus consultas.",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "Documentos",
+          "mode": "list",
+          "cachedResultName": "Documentos"
+        },
+        "topK": 10,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        3408,
+        464
+      ],
+      "id": "f4ea5e8e-0e74-4ed2-a85f-13564e86c53d",
+      "name": "Conocimiento",
+      "credentials": {
+        "qdrantApi": {
+          "id": "ZvfMjMSh9GUY7dsD",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3392,
+        672
+      ],
+      "id": "1ea557e0-16d1-48a9-a652-325d3f4930b1",
+      "name": "Embeddings OpenAI2",
+      "credentials": {
+        "openAiApi": {
+          "id": "EVczDnBoLisDhMvp",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Entrada WhasApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada WhasApp": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Audio": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "Entrada Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Entrada Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada Agente": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Salida Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salida Agente": {
+      "main": [
+        [
+          {
+            "node": "Respuesta WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteEmail",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EnviarEmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteEmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ObtenerEmails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteEmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteEmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteCalendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ComprobarDisponibilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgendarReunion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteContactos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CrearContacto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ObtenerContacto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ActualizarContacto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteEmail",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteEmail",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Borrar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar Documento": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteConocimiento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteConocimiento",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conocimiento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteConocimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Conocimiento",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4efe3bcb-adea-4a1d-936a-228d89f70c23",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ba739d7c2df7c855a42c62adee2a25c78441d8a95333bf9e7fb7db62ed3feb2c"
+  },
+  "id": "QVbogAZYS0lQfneH",
+  "tags": []
+}

@@ -1,0 +1,1428 @@
+     1→{
+     2→  "name": "Milvus vs Supabase",
+     3→  "nodes": [
+     4→    {
+     5→      "parameters": {
+     6→        "rules": {
+     7→          "values": [
+     8→            {
+     9→              "conditions": {
+    10→                "options": {
+    11→                  "caseSensitive": true,
+    12→                  "leftValue": "",
+    13→                  "typeValidation": "strict",
+    14→                  "version": 2
+    15→                },
+    16→                "conditions": [
+    17→                  {
+    18→                    "leftValue": "={{ $json.fileExtension }}",
+    19→                    "rightValue": "pdf",
+    20→                    "operator": {
+    21→                      "type": "string",
+    22→                      "operation": "equals"
+    23→                    },
+    24→                    "id": "500453fe-9667-4fd4-b798-b5ff10233284"
+    25→                  }
+    26→                ],
+    27→                "combinator": "and"
+    28→              },
+    29→              "renameOutput": true,
+    30→              "outputKey": "PDF"
+    31→            },
+    32→            {
+    33→              "conditions": {
+    34→                "options": {
+    35→                  "caseSensitive": true,
+    36→                  "leftValue": "",
+    37→                  "typeValidation": "strict",
+    38→                  "version": 2
+    39→                },
+    40→                "conditions": [
+    41→                  {
+    42→                    "id": "c9fa57ad-15ff-4165-bc3b-fb0125705151",
+    43→                    "leftValue": "={{ $json.fileExtension }}",
+    44→                    "rightValue": "txt",
+    45→                    "operator": {
+    46→                      "type": "string",
+    47→                      "operation": "equals",
+    48→                      "name": "filter.operator.equals"
+    49→                    }
+    50→                  }
+    51→                ],
+    52→                "combinator": "and"
+    53→              },
+    54→              "renameOutput": true,
+    55→              "outputKey": "TXT"
+    56→            },
+    57→            {
+    58→              "conditions": {
+    59→                "options": {
+    60→                  "caseSensitive": true,
+    61→                  "leftValue": "",
+    62→                  "typeValidation": "strict",
+    63→                  "version": 2
+    64→                },
+    65→                "conditions": [
+    66→                  {
+    67→                    "id": "becdae44-3711-4f72-85e7-efcb26b93dd5",
+    68→                    "leftValue": "={{ $json.fileExtension }}",
+    69→                    "rightValue": "xlsx",
+    70→                    "operator": {
+    71→                      "type": "string",
+    72→                      "operation": "equals",
+    73→                      "name": "filter.operator.equals"
+    74→                    }
+    75→                  }
+    76→                ],
+    77→                "combinator": "and"
+    78→              },
+    79→              "renameOutput": true,
+    80→              "outputKey": "XLSX"
+    81→            }
+    82→          ]
+    83→        },
+    84→        "options": {}
+    85→      },
+    86→      "type": "n8n-nodes-base.switch",
+    87→      "typeVersion": 3.2,
+    88→      "position": [
+    89→        -460,
+    90→        -1080
+    91→      ],
+    92→      "id": "10232d47-c6aa-45b8-9150-9603d0b2ff87",
+    93→      "name": "Switch"
+    94→    },
+    95→    {
+    96→      "parameters": {
+    97→        "operation": "pdf",
+    98→        "options": {}
+    99→      },
+   100→      "type": "n8n-nodes-base.extractFromFile",
+   101→      "typeVersion": 1,
+   102→      "position": [
+   103→        -200,
+   104→        -1240
+   105→      ],
+   106→      "id": "0a551b62-16be-4eee-b1ed-39e32c34c25f",
+   107→      "name": "Extract from File"
+   108→    },
+   109→    {
+   110→      "parameters": {
+   111→        "operation": "xlsx",
+   112→        "options": {}
+   113→      },
+   114→      "type": "n8n-nodes-base.extractFromFile",
+   115→      "typeVersion": 1,
+   116→      "position": [
+   117→        -200,
+   118→        -920
+   119→      ],
+   120→      "id": "4ae03493-20f9-4005-a4c4-dc29340baec8",
+   121→      "name": "Extract from File1"
+   122→    },
+   123→    {
+   124→      "parameters": {
+   125→        "options": {}
+   126→      },
+   127→      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+   128→      "typeVersion": 1,
+   129→      "position": [
+   130→        960,
+   131→        -860
+   132→      ],
+   133→      "id": "e0860cb2-88ce-4c3b-b032-be697e18e1e8",
+   134→      "name": "Default Data Loader"
+   135→    },
+   136→    {
+   137→      "parameters": {
+   138→        "chunkSize": 800,
+   139→        "chunkOverlap": 75,
+   140→        "options": {}
+   141→      },
+   142→      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+   143→      "typeVersion": 1,
+   144→      "position": [
+   145→        1040,
+   146→        -720
+   147→      ],
+   148→      "id": "3313d749-e296-4750-9dca-d0746f2b5ce0",
+   149→      "name": "Recursive Character Text Splitter"
+   150→    },
+   151→    {
+   152→      "parameters": {
+   153→        "operation": "text",
+   154→        "options": {}
+   155→      },
+   156→      "type": "n8n-nodes-base.extractFromFile",
+   157→      "typeVersion": 1,
+   158→      "position": [
+   159→        -200,
+   160→        -1080
+   161→      ],
+   162→      "id": "0d721ee2-b445-4c1d-b811-357261af8429",
+   163→      "name": "Extract from File2"
+   164→    },
+   165→    {
+   166→      "parameters": {
+   167→        "assignments": {
+   168→          "assignments": [
+   169→            {
+   170→              "id": "0be72752-3e13-495e-8f0d-5767502cf9cf",
+   171→              "name": "text",
+   172→              "value": "={{ $json.text }}",
+   173→              "type": "string"
+   174→            }
+   175→          ]
+   176→        },
+   177→        "options": {}
+   178→      },
+   179→      "type": "n8n-nodes-base.set",
+   180→      "typeVersion": 3.4,
+   181→      "position": [
+   182→        -20,
+   183→        -1240
+   184→      ],
+   185→      "id": "a9db8a1c-b6e2-4d63-a772-8a76af094b84",
+   186→      "name": "Edit Fields1"
+   187→    },
+   188→    {
+   189→      "parameters": {
+   190→        "assignments": {
+   191→          "assignments": [
+   192→            {
+   193→              "id": "13804b01-b0c8-4eca-8f85-946e04b3e7da",
+   194→              "name": "data",
+   195→              "value": "={{ $json.data }}",
+   196→              "type": "string"
+   197→            }
+   198→          ]
+   199→        },
+   200→        "options": {}
+   201→      },
+   202→      "type": "n8n-nodes-base.set",
+   203→      "typeVersion": 3.4,
+   204→      "position": [
+   205→        -20,
+   206→        -1080
+   207→      ],
+   208→      "id": "3735c2eb-1a7a-41a0-bf61-de462ebf95c9",
+   209→      "name": "Edit Fields2"
+   210→    },
+   211→    {
+   212→      "parameters": {
+   213→        "assignments": {
+   214→          "assignments": [
+   215→            {
+   216→              "id": "160ada62-a0f7-468e-82f7-c95051e53b70",
+   217→              "name": "FICHERO",
+   218→              "value": "={{ $json.FICHERO }}",
+   219→              "type": "string"
+   220→            }
+   221→          ]
+   222→        },
+   223→        "includeOtherFields": true,
+   224→        "include": "selected",
+   225→        "includeFields": "['RESUMEN PRUEBA']",
+   226→        "options": {}
+   227→      },
+   228→      "type": "n8n-nodes-base.set",
+   229→      "typeVersion": 3.4,
+   230→      "position": [
+   231→        -20,
+   232→        -920
+   233→      ],
+   234→      "id": "3292eaad-0925-4e3c-9c71-7e406cc39796",
+   235→      "name": "Edit Fields3"
+   236→    },
+   237→    {
+   238→      "parameters": {
+   239→        "mode": "insert",
+   240→        "milvusCollection": {
+   241→          "__rl": true,
+   242→          "value": "bitcoin",
+   243→          "mode": "id"
+   244→        },
+   245→        "options": {}
+   246→      },
+   247→      "type": "@n8n/n8n-nodes-langchain.vectorStoreMilvus",
+   248→      "typeVersion": 1.1,
+   249→      "position": [
+   250→        900,
+   251→        -1080
+   252→      ],
+   253→      "id": "23d12f17-5a61-4495-a9db-9666b2f09d2d",
+   254→      "name": "Milvus Vector Store",
+   255→      "credentials": {
+   256→        "milvusApi": {
+   257→          "id": "n5ZihTOyFtFMMp5K",
+   258→          "name": "Milvus account"
+   259→        }
+   260→      }
+   261→    },
+   262→    {
+   263→      "parameters": {
+   264→        "fieldsToAggregate": {
+   265→          "fieldToAggregate": [
+   266→            {
+   267→              "fieldToAggregate": "text",
+   268→              "renameField": true,
+   269→              "outputFieldName": "pdf-extract"
+   270→            },
+   271→            {
+   272→              "fieldToAggregate": "data",
+   273→              "renameField": true,
+   274→              "outputFieldName": "txt-extract"
+   275→            },
+   276→            {
+   277→              "fieldToAggregate": "RESUMEN PRUEBA",
+   278→              "renameField": true,
+   279→              "outputFieldName": "excel-nombreprueba"
+   280→            },
+   281→            {
+   282→              "fieldToAggregate": "FICHERO",
+   283→              "renameField": true,
+   284→              "outputFieldName": "excel-ficheroprueba"
+   285→            }
+   286→          ]
+   287→        },
+   288→        "options": {}
+   289→      },
+   290→      "type": "n8n-nodes-base.aggregate",
+   291→      "typeVersion": 1,
+   292→      "position": [
+   293→        400,
+   294→        -1080
+   295→      ],
+   296→      "id": "e2ed3db5-30ff-4c66-8f8d-715618b8ff8e",
+   297→      "name": "Aggregate"
+   298→    },
+   299→    {
+   300→      "parameters": {
+   301→        "jsCode": "// 1. Array que contendrá la fusión de todos los textos\nconst mergedText = [];\n\n// 2. Iterar sobre cada item de entrada\nfor (const item of items) {\n  // 3. Object.values(item.json) devuelve un array con todos los valores (arrays) de cada campo\n  const arrays = Object.values(item.json);\n  // 4. Para cada array, desplegar sus elementos y añadirlos a mergedText\n  for (const arr of arrays) {\n    mergedText.push(...arr);\n  }\n}\n\n// 5. Devolver un único item con la clave 'text' que apunte al array fusionado\nreturn [\n  {\n    json: {\n      text: mergedText,\n    },\n  },\n];\n"
+   302→      },
+   303→      "type": "n8n-nodes-base.code",
+   304→      "typeVersion": 2,
+   305→      "position": [
+   306→        620,
+   307→        -1080
+   308→      ],
+   309→      "id": "f696095a-4cdd-4280-ace6-9f8937a113d0",
+   310→      "name": "Code"
+   311→    },
+   312→    {
+   313→      "parameters": {
+   314→        "numberInputs": 3
+   315→      },
+   316→      "type": "n8n-nodes-base.merge",
+   317→      "typeVersion": 3.1,
+   318→      "position": [
+   319→        220,
+   320→        -1080
+   321→      ],
+   322→      "id": "a9540308-b0fc-4635-8752-5702d4d13ac6",
+   323→      "name": "Merge"
+   324→    },
+   325→    {
+   326→      "parameters": {
+   327→        "pollTimes": {
+   328→          "item": [
+   329→            {
+   330→              "mode": "everyMinute"
+   331→            }
+   332→          ]
+   333→        },
+   334→        "triggerOn": "specificFolder",
+   335→        "folderToWatch": {
+   336→          "__rl": true,
+   337→          "value": "1x0c6m3Q_I_oI01TpSe1gU6eWvUCGd1TL",
+   338→          "mode": "list",
+   339→          "cachedResultName": "RAG Chatbot",
+   340→          "cachedResultUrl": "https://drive.google.com/drive/folders/1x0c6m3Q_I_oI01TpSe1gU6eWvUCGd1TL"
+   341→        },
+   342→        "event": "fileCreated",
+   343→        "options": {}
+   344→      },
+   345→      "type": "n8n-nodes-base.googleDriveTrigger",
+   346→      "typeVersion": 1,
+   347→      "position": [
+   348→        -900,
+   349→        -1080
+   350→      ],
+   351→      "id": "46c03932-4afb-4886-b19d-0910ba8593d1",
+   352→      "name": "Google Drive Trigger",
+   353→      "credentials": {
+   354→        "googleDriveOAuth2Api": {
+   355→          "id": "HCMbSJ0kwVclXV8T",
+   356→          "name": "Google Drive"
+   357→        }
+   358→      }
+   359→    },
+   360→    {
+   361→      "parameters": {
+   362→        "operation": "download",
+   363→        "fileId": {
+   364→          "__rl": true,
+   365→          "value": "={{ $json.id }}",
+   366→          "mode": "id"
+   367→        },
+   368→        "options": {}
+   369→      },
+   370→      "type": "n8n-nodes-base.googleDrive",
+   371→      "typeVersion": 3,
+   372→      "position": [
+   373→        -680,
+   374→        -1080
+   375→      ],
+   376→      "id": "b02c12d3-8e57-4a22-8ea9-bb02b7008918",
+   377→      "name": "Google Drive",
+   378→      "credentials": {
+   379→        "googleDriveOAuth2Api": {
+   380→          "id": "HCMbSJ0kwVclXV8T",
+   381→          "name": "Google Drive"
+   382→        }
+   383→      }
+   384→    },
+   385→    {
+   386→      "parameters": {
+   387→        "mode": "insert",
+   388→        "tableName": {
+   389→          "__rl": true,
+   390→          "value": "=documents",
+   391→          "mode": "id"
+   392→        },
+   393→        "options": {}
+   394→      },
+   395→      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+   396→      "typeVersion": 1,
+   397→      "position": [
+   398→        3240,
+   399→        -1100
+   400→      ],
+   401→      "id": "09f41675-cda4-4c19-98c3-f975b8056983",
+   402→      "name": "Supabase Vector Store",
+   403→      "credentials": {
+   404→        "supabaseApi": {
+   405→          "id": "Gkz1wO9Af74ybeqJ",
+   406→          "name": "Supabase account"
+   407→        }
+   408→      }
+   409→    },
+   410→    {
+   411→      "parameters": {
+   412→        "model": "text-embedding-3-large",
+   413→        "options": {}
+   414→      },
+   415→      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+   416→      "typeVersion": 1.1,
+   417→      "position": [
+   418→        3180,
+   419→        -840
+   420→      ],
+   421→      "id": "9ed2059b-96d1-4542-a0ec-6ec5c02d60f6",
+   422→      "name": "Embeddings OpenAI1",
+   423→      "credentials": {
+   424→        "openAiApi": {
+   425→          "id": "hCfiEkF3eN09aoJd",
+   426→          "name": "Pardo API Key"
+   427→        }
+   428→      }
+   429→    },
+   430→    {
+   431→      "parameters": {
+   432→        "options": {}
+   433→      },
+   434→      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+   435→      "typeVersion": 1,
+   436→      "position": [
+   437→        3380,
+   438→        -900
+   439→      ],
+   440→      "id": "ccfbb89f-c941-4223-845a-1a08431f432f",
+   441→      "name": "Default Data Loader1"
+   442→    },
+   443→    {
+   444→      "parameters": {
+   445→        "chunkSize": 800,
+   446→        "chunkOverlap": 75,
+   447→        "options": {
+   448→          "splitCode": "markdown"
+   449→        }
+   450→      },
+   451→      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+   452→      "typeVersion": 1,
+   453→      "position": [
+   454→        3480,
+   455→        -720
+   456→      ],
+   457→      "id": "9a7540b5-30ed-4976-b3b0-d24e9600fea9",
+   458→      "name": "Recursive Character Text Splitter1"
+   459→    },
+   460→    {
+   461→      "parameters": {
+   462→        "modelName": "embed-multilingual-v3.0"
+   463→      },
+   464→      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+   465→      "typeVersion": 1,
+   466→      "position": [
+   467→        760,
+   468→        -820
+   469→      ],
+   470→      "id": "b9210fc9-ae70-4b06-91d3-8b6b569dac56",
+   471→      "name": "Embeddings Cohere",
+   472→      "credentials": {
+   473→        "cohereApi": {
+   474→          "id": "t64wsdRGJD9q7mQN",
+   475→          "name": "CohereApi account"
+   476→        }
+   477→      }
+   478→    },
+   479→    {
+   480→      "parameters": {
+   481→        "options": {}
+   482→      },
+   483→      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+   484→      "typeVersion": 1.1,
+   485→      "position": [
+   486→        900,
+   487→        -120
+   488→      ],
+   489→      "id": "b18ad259-f781-4271-81f2-7f4cffee63b5",
+   490→      "name": "When chat message received",
+   491→      "webhookId": "a4257301-3fb9-4b9d-a965-1fa66f314696"
+   492→    },
+   493→    {
+   494→      "parameters": {
+   495→        "options": {}
+   496→      },
+   497→      "type": "@n8n/n8n-nodes-langchain.agent",
+   498→      "typeVersion": 1.8,
+   499→      "position": [
+   500→        1120,
+   501→        -120
+   502→      ],
+   503→      "id": "efc9fb11-59f4-43cd-a5d6-6d581b9dd70f",
+   504→      "name": "AI Agent"
+   505→    },
+   506→    {
+   507→      "parameters": {
+   508→        "model": {
+   509→          "__rl": true,
+   510→          "value": "gpt-4o",
+   511→          "mode": "list",
+   512→          "cachedResultName": "gpt-4o"
+   513→        },
+   514→        "options": {}
+   515→      },
+   516→      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+   517→      "typeVersion": 1.2,
+   518→      "position": [
+   519→        900,
+   520→        180
+   521→      ],
+   522→      "id": "2c5f322d-1efc-4ac9-96cf-d3dbfd3733fc",
+   523→      "name": "OpenAI Chat Model",
+   524→      "credentials": {
+   525→        "openAiApi": {
+   526→          "id": "hCfiEkF3eN09aoJd",
+   527→          "name": "Pardo API Key"
+   528→        }
+   529→      }
+   530→    },
+   531→    {
+   532→      "parameters": {},
+   533→      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+   534→      "typeVersion": 1.3,
+   535→      "position": [
+   536→        1100,
+   537→        200
+   538→      ],
+   539→      "id": "d0f3248f-c90f-4e15-937d-f9cb6d4897a7",
+   540→      "name": "Simple Memory"
+   541→    },
+   542→    {
+   543→      "parameters": {
+   544→        "mode": "retrieve-as-tool",
+   545→        "toolName": "database_vectorial",
+   546→        "toolDescription": "eres un agente ia que responde en base a la información recibida de una base de datos vectorial. responde siempre en español.",
+   547→        "milvusCollection": {
+   548→          "__rl": true,
+   549→          "value": "real_decreto",
+   550→          "mode": "list",
+   551→          "cachedResultName": "real_decreto"
+   552→        },
+   553→        "topK": 10
+   554→      },
+   555→      "type": "@n8n/n8n-nodes-langchain.vectorStoreMilvus",
+   556→      "typeVersion": 1.1,
+   557→      "position": [
+   558→        1640,
+   559→        100
+   560→      ],
+   561→      "id": "01733d22-f0a7-4f2b-ad83-1899e153732e",
+   562→      "name": "Milvus Vector Store1",
+   563→      "credentials": {
+   564→        "milvusApi": {
+   565→          "id": "n5ZihTOyFtFMMp5K",
+   566→          "name": "Milvus account"
+   567→        }
+   568→      }
+   569→    },
+   570→    {
+   571→      "parameters": {
+   572→        "modelName": "embed-multilingual-v3.0"
+   573→      },
+   574→      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+   575→      "typeVersion": 1,
+   576→      "position": [
+   577→        1660,
+   578→        260
+   579→      ],
+   580→      "id": "fea1c319-1c3a-4981-a6d0-bbf8ef2c61e7",
+   581→      "name": "Embeddings Cohere1",
+   582→      "credentials": {
+   583→        "cohereApi": {
+   584→          "id": "t64wsdRGJD9q7mQN",
+   585→          "name": "CohereApi account"
+   586→        }
+   587→      }
+   588→    },
+   589→    {
+   590→      "parameters": {
+   591→        "rules": {
+   592→          "values": [
+   593→            {
+   594→              "conditions": {
+   595→                "options": {
+   596→                  "caseSensitive": true,
+   597→                  "leftValue": "",
+   598→                  "typeValidation": "strict",
+   599→                  "version": 2
+   600→                },
+   601→                "conditions": [
+   602→                  {
+   603→                    "leftValue": "={{ $json.fileExtension }}",
+   604→                    "rightValue": "pdf",
+   605→                    "operator": {
+   606→                      "type": "string",
+   607→                      "operation": "equals"
+   608→                    },
+   609→                    "id": "500453fe-9667-4fd4-b798-b5ff10233284"
+   610→                  }
+   611→                ],
+   612→                "combinator": "and"
+   613→              },
+   614→              "renameOutput": true,
+   615→              "outputKey": "PDF"
+   616→            },
+   617→            {
+   618→              "conditions": {
+   619→                "options": {
+   620→                  "caseSensitive": true,
+   621→                  "leftValue": "",
+   622→                  "typeValidation": "strict",
+   623→                  "version": 2
+   624→                },
+   625→                "conditions": [
+   626→                  {
+   627→                    "id": "c9fa57ad-15ff-4165-bc3b-fb0125705151",
+   628→                    "leftValue": "={{ $json.fileExtension }}",
+   629→                    "rightValue": "txt",
+   630→                    "operator": {
+   631→                      "type": "string",
+   632→                      "operation": "equals",
+   633→                      "name": "filter.operator.equals"
+   634→                    }
+   635→                  }
+   636→                ],
+   637→                "combinator": "and"
+   638→              },
+   639→              "renameOutput": true,
+   640→              "outputKey": "TXT"
+   641→            },
+   642→            {
+   643→              "conditions": {
+   644→                "options": {
+   645→                  "caseSensitive": true,
+   646→                  "leftValue": "",
+   647→                  "typeValidation": "strict",
+   648→                  "version": 2
+   649→                },
+   650→                "conditions": [
+   651→                  {
+   652→                    "id": "becdae44-3711-4f72-85e7-efcb26b93dd5",
+   653→                    "leftValue": "={{ $json.fileExtension }}",
+   654→                    "rightValue": "xlsx",
+   655→                    "operator": {
+   656→                      "type": "string",
+   657→                      "operation": "equals",
+   658→                      "name": "filter.operator.equals"
+   659→                    }
+   660→                  }
+   661→                ],
+   662→                "combinator": "and"
+   663→              },
+   664→              "renameOutput": true,
+   665→              "outputKey": "XLSX"
+   666→            }
+   667→          ]
+   668→        },
+   669→        "options": {}
+   670→      },
+   671→      "type": "n8n-nodes-base.switch",
+   672→      "typeVersion": 3.2,
+   673→      "position": [
+   674→        1920,
+   675→        -1100
+   676→      ],
+   677→      "id": "dff7d517-5148-4eaa-bfa7-3f1a9f72a308",
+   678→      "name": "Switch2"
+   679→    },
+   680→    {
+   681→      "parameters": {
+   682→        "operation": "pdf",
+   683→        "options": {}
+   684→      },
+   685→      "type": "n8n-nodes-base.extractFromFile",
+   686→      "typeVersion": 1,
+   687→      "position": [
+   688→        2180,
+   689→        -1260
+   690→      ],
+   691→      "id": "90df2618-e72e-470f-9739-5a2eac471c27",
+   692→      "name": "Extract from File3"
+   693→    },
+   694→    {
+   695→      "parameters": {
+   696→        "operation": "xlsx",
+   697→        "options": {}
+   698→      },
+   699→      "type": "n8n-nodes-base.extractFromFile",
+   700→      "typeVersion": 1,
+   701→      "position": [
+   702→        2180,
+   703→        -940
+   704→      ],
+   705→      "id": "4969a437-cca5-4aeb-a67f-c5ce6e92eb1e",
+   706→      "name": "Extract from File6"
+   707→    },
+   708→    {
+   709→      "parameters": {
+   710→        "operation": "text",
+   711→        "options": {}
+   712→      },
+   713→      "type": "n8n-nodes-base.extractFromFile",
+   714→      "typeVersion": 1,
+   715→      "position": [
+   716→        2180,
+   717→        -1100
+   718→      ],
+   719→      "id": "39f30114-a2cd-471d-8590-7b30d88ca8e2",
+   720→      "name": "Extract from File7"
+   721→    },
+   722→    {
+   723→      "parameters": {
+   724→        "assignments": {
+   725→          "assignments": [
+   726→            {
+   727→              "id": "0be72752-3e13-495e-8f0d-5767502cf9cf",
+   728→              "name": "text",
+   729→              "value": "={{ $json.text }}",
+   730→              "type": "string"
+   731→            }
+   732→          ]
+   733→        },
+   734→        "options": {}
+   735→      },
+   736→      "type": "n8n-nodes-base.set",
+   737→      "typeVersion": 3.4,
+   738→      "position": [
+   739→        2360,
+   740→        -1260
+   741→      ],
+   742→      "id": "8b8409fd-a2a4-4cd2-940c-340c44b38011",
+   743→      "name": "Edit Fields5"
+   744→    },
+   745→    {
+   746→      "parameters": {
+   747→        "assignments": {
+   748→          "assignments": [
+   749→            {
+   750→              "id": "13804b01-b0c8-4eca-8f85-946e04b3e7da",
+   751→              "name": "data",
+   752→              "value": "={{ $json.data }}",
+   753→              "type": "string"
+   754→            }
+   755→          ]
+   756→        },
+   757→        "options": {}
+   758→      },
+   759→      "type": "n8n-nodes-base.set",
+   760→      "typeVersion": 3.4,
+   761→      "position": [
+   762→        2360,
+   763→        -1100
+   764→      ],
+   765→      "id": "869d7683-f977-4025-b8bb-51c462848344",
+   766→      "name": "Edit Fields6"
+   767→    },
+   768→    {
+   769→      "parameters": {
+   770→        "assignments": {
+   771→          "assignments": [
+   772→            {
+   773→              "id": "160ada62-a0f7-468e-82f7-c95051e53b70",
+   774→              "name": "FICHERO",
+   775→              "value": "={{ $json.FICHERO }}",
+   776→              "type": "string"
+   777→            }
+   778→          ]
+   779→        },
+   780→        "includeOtherFields": true,
+   781→        "include": "selected",
+   782→        "includeFields": "['RESUMEN PRUEBA']",
+   783→        "options": {}
+   784→      },
+   785→      "type": "n8n-nodes-base.set",
+   786→      "typeVersion": 3.4,
+   787→      "position": [
+   788→        2360,
+   789→        -940
+   790→      ],
+   791→      "id": "02d75c34-8c60-4adb-a0f5-561940324796",
+   792→      "name": "Edit Fields7"
+   793→    },
+   794→    {
+   795→      "parameters": {
+   796→        "fieldsToAggregate": {
+   797→          "fieldToAggregate": [
+   798→            {
+   799→              "fieldToAggregate": "text",
+   800→              "renameField": true,
+   801→              "outputFieldName": "pdf-extract"
+   802→            },
+   803→            {
+   804→              "fieldToAggregate": "data",
+   805→              "renameField": true,
+   806→              "outputFieldName": "txt-extract"
+   807→            },
+   808→            {
+   809→              "fieldToAggregate": "RESUMEN PRUEBA",
+   810→              "renameField": true,
+   811→              "outputFieldName": "excel-nombreprueba"
+   812→            },
+   813→            {
+   814→              "fieldToAggregate": "FICHERO",
+   815→              "renameField": true,
+   816→              "outputFieldName": "excel-ficheroprueba"
+   817→            }
+   818→          ]
+   819→        },
+   820→        "options": {}
+   821→      },
+   822→      "type": "n8n-nodes-base.aggregate",
+   823→      "typeVersion": 1,
+   824→      "position": [
+   825→        2780,
+   826→        -1100
+   827→      ],
+   828→      "id": "00478711-173f-4708-a67b-db6403909e70",
+   829→      "name": "Aggregate3"
+   830→    },
+   831→    {
+   832→      "parameters": {
+   833→        "jsCode": "// 1. Array que contendrá la fusión de todos los textos\nconst mergedText = [];\n\n// 2. Iterar sobre cada item de entrada\nfor (const item of items) {\n  // 3. Object.values(item.json) devuelve un array con todos los valores (arrays) de cada campo\n  const arrays = Object.values(item.json);\n  // 4. Para cada array, desplegar sus elementos y añadirlos a mergedText\n  for (const arr of arrays) {\n    mergedText.push(...arr);\n  }\n}\n\n// 5. Devolver un único item con la clave 'text' que apunte al array fusionado\nreturn [\n  {\n    json: {\n      text: mergedText,\n    },\n  },\n];\n"
+   834→      },
+   835→      "type": "n8n-nodes-base.code",
+   836→      "typeVersion": 2,
+   837→      "position": [
+   838→        2960,
+   839→        -1100
+   840→      ],
+   841→      "id": "6ca55c2a-acf3-4aef-9bfd-af31b5afc70d",
+   842→      "name": "Code1"
+   843→    },
+   844→    {
+   845→      "parameters": {
+   846→        "numberInputs": 3
+   847→      },
+   848→      "type": "n8n-nodes-base.merge",
+   849→      "typeVersion": 3.1,
+   850→      "position": [
+   851→        2600,
+   852→        -1100
+   853→      ],
+   854→      "id": "b862a46f-2985-490d-8aef-dbcd5e9035fb",
+   855→      "name": "Merge1"
+   856→    },
+   857→    {
+   858→      "parameters": {
+   859→        "pollTimes": {
+   860→          "item": [
+   861→            {
+   862→              "mode": "everyMinute"
+   863→            }
+   864→          ]
+   865→        },
+   866→        "triggerOn": "specificFolder",
+   867→        "folderToWatch": {
+   868→          "__rl": true,
+   869→          "value": "1x0c6m3Q_I_oI01TpSe1gU6eWvUCGd1TL",
+   870→          "mode": "list",
+   871→          "cachedResultName": "RAG Chatbot",
+   872→          "cachedResultUrl": "https://drive.google.com/drive/folders/1x0c6m3Q_I_oI01TpSe1gU6eWvUCGd1TL"
+   873→        },
+   874→        "event": "fileCreated",
+   875→        "options": {}
+   876→      },
+   877→      "type": "n8n-nodes-base.googleDriveTrigger",
+   878→      "typeVersion": 1,
+   879→      "position": [
+   880→        1520,
+   881→        -1100
+   882→      ],
+   883→      "id": "169113dd-2a28-4159-9f1e-a829a9a4fdef",
+   884→      "name": "Google Drive Trigger2",
+   885→      "credentials": {
+   886→        "googleDriveOAuth2Api": {
+   887→          "id": "HCMbSJ0kwVclXV8T",
+   888→          "name": "Google Drive"
+   889→        }
+   890→      }
+   891→    },
+   892→    {
+   893→      "parameters": {
+   894→        "operation": "download",
+   895→        "fileId": {
+   896→          "__rl": true,
+   897→          "value": "={{ $json.id }}",
+   898→          "mode": "id"
+   899→        },
+   900→        "options": {}
+   901→      },
+   902→      "type": "n8n-nodes-base.googleDrive",
+   903→      "typeVersion": 3,
+   904→      "position": [
+   905→        1720,
+   906→        -1100
+   907→      ],
+   908→      "id": "13607814-77c2-411d-8de2-295a1c5529bd",
+   909→      "name": "Google Drive2",
+   910→      "credentials": {
+   911→        "googleDriveOAuth2Api": {
+   912→          "id": "HCMbSJ0kwVclXV8T",
+   913→          "name": "Google Drive"
+   914→        }
+   915→      }
+   916→    },
+   917→    {
+   918→      "parameters": {
+   919→        "mode": "retrieve-as-tool",
+   920→        "toolName": "database_vectorial",
+   921→        "toolDescription": "eres un agente ia que responde en base a la informacion recibida de una base de datos vectorial. responde siempre en español.",
+   922→        "tableName": {
+   923→          "__rl": true,
+   924→          "value": "documents",
+   925→          "mode": "list",
+   926→          "cachedResultName": "documents"
+   927→        },
+   928→        "topK": 10,
+   929→        "options": {}
+   930→      },
+   931→      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+   932→      "typeVersion": 1.1,
+   933→      "position": [
+   934→        1320,
+   935→        100
+   936→      ],
+   937→      "id": "f90ff7d0-229c-49cd-9315-9d969b9aa1be",
+   938→      "name": "Supabase Vector Store1",
+   939→      "credentials": {
+   940→        "supabaseApi": {
+   941→          "id": "Gkz1wO9Af74ybeqJ",
+   942→          "name": "Supabase account"
+   943→        }
+   944→      }
+   945→    },
+   946→    {
+   947→      "parameters": {
+   948→        "model": "text-embedding-3-large",
+   949→        "options": {}
+   950→      },
+   951→      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+   952→      "typeVersion": 1.2,
+   953→      "position": [
+   954→        1340,
+   955→        260
+   956→      ],
+   957→      "id": "3476daf3-2a48-43d7-a779-07935d513bee",
+   958→      "name": "Embeddings OpenAI",
+   959→      "credentials": {
+   960→        "openAiApi": {
+   961→          "id": "hCfiEkF3eN09aoJd",
+   962→          "name": "Pardo API Key"
+   963→        }
+   964→      }
+   965→    },
+   966→    {
+   967→      "parameters": {
+   968→        "height": 920,
+   969→        "width": 2280,
+   970→        "color": 4
+   971→      },
+   972→      "type": "n8n-nodes-base.stickyNote",
+   973→      "typeVersion": 1,
+   974→      "position": [
+   975→        -980,
+   976→        -1380
+   977→      ],
+   978→      "id": "5448b649-73c3-4f1b-9e67-ba32505828d8",
+   979→      "name": "Sticky Note"
+   980→    },
+   981→    {
+   982→      "parameters": {
+   983→        "height": 920,
+   984→        "width": 2280,
+   985→        "color": 3
+   986→      },
+   987→      "type": "n8n-nodes-base.stickyNote",
+   988→      "typeVersion": 1,
+   989→      "position": [
+   990→        1420,
+   991→        -1380
+   992→      ],
+   993→      "id": "fd71772b-e91c-4929-a9f5-6a51b7f400c3",
+   994→      "name": "Sticky Note1"
+   995→    }
+   996→  ],
+   997→  "pinData": {},
+   998→  "connections": {
+   999→    "Switch": {
+  1000→      "main": [
+  1001→        [
+  1002→          {
+  1003→            "node": "Extract from File",
+  1004→            "type": "main",
+  1005→            "index": 0
+  1006→          }
+  1007→        ],
+  1008→        [
+  1009→          {
+  1010→            "node": "Extract from File2",
+  1011→            "type": "main",
+  1012→            "index": 0
+  1013→          }
+  1014→        ],
+  1015→        [
+  1016→          {
+  1017→            "node": "Extract from File1",
+  1018→            "type": "main",
+  1019→            "index": 0
+  1020→          }
+  1021→        ]
+  1022→      ]
+  1023→    },
+  1024→    "Extract from File": {
+  1025→      "main": [
+  1026→        [
+  1027→          {
+  1028→            "node": "Edit Fields1",
+  1029→            "type": "main",
+  1030→            "index": 0
+  1031→          }
+  1032→        ]
+  1033→      ]
+  1034→    },
+  1035→    "Extract from File1": {
+  1036→      "main": [
+  1037→        [
+  1038→          {
+  1039→            "node": "Edit Fields3",
+  1040→            "type": "main",
+  1041→            "index": 0
+  1042→          }
+  1043→        ]
+  1044→      ]
+  1045→    },
+  1046→    "Default Data Loader": {
+  1047→      "ai_document": [
+  1048→        [
+  1049→          {
+  1050→            "node": "Milvus Vector Store",
+  1051→            "type": "ai_document",
+  1052→            "index": 0
+  1053→          }
+  1054→        ]
+  1055→      ]
+  1056→    },
+  1057→    "Recursive Character Text Splitter": {
+  1058→      "ai_textSplitter": [
+  1059→        [
+  1060→          {
+  1061→            "node": "Default Data Loader",
+  1062→            "type": "ai_textSplitter",
+  1063→            "index": 0
+  1064→          }
+  1065→        ]
+  1066→      ]
+  1067→    },
+  1068→    "Extract from File2": {
+  1069→      "main": [
+  1070→        [
+  1071→          {
+  1072→            "node": "Edit Fields2",
+  1073→            "type": "main",
+  1074→            "index": 0
+  1075→          }
+  1076→        ]
+  1077→      ]
+  1078→    },
+  1079→    "Edit Fields1": {
+  1080→      "main": [
+  1081→        [
+  1082→          {
+  1083→            "node": "Merge",
+  1084→            "type": "main",
+  1085→            "index": 0
+  1086→          }
+  1087→        ]
+  1088→      ]
+  1089→    },
+  1090→    "Edit Fields2": {
+  1091→      "main": [
+  1092→        [
+  1093→          {
+  1094→            "node": "Merge",
+  1095→            "type": "main",
+  1096→            "index": 1
+  1097→          }
+  1098→        ]
+  1099→      ]
+  1100→    },
+  1101→    "Edit Fields3": {
+  1102→      "main": [
+  1103→        [
+  1104→          {
+  1105→            "node": "Merge",
+  1106→            "type": "main",
+  1107→            "index": 2
+  1108→          }
+  1109→        ]
+  1110→      ]
+  1111→    },
+  1112→    "Aggregate": {
+  1113→      "main": [
+  1114→        [
+  1115→          {
+  1116→            "node": "Code",
+  1117→            "type": "main",
+  1118→            "index": 0
+  1119→          }
+  1120→        ]
+  1121→      ]
+  1122→    },
+  1123→    "Code": {
+  1124→      "main": [
+  1125→        [
+  1126→          {
+  1127→            "node": "Milvus Vector Store",
+  1128→            "type": "main",
+  1129→            "index": 0
+  1130→          }
+  1131→        ]
+  1132→      ]
+  1133→    },
+  1134→    "Merge": {
+  1135→      "main": [
+  1136→        [
+  1137→          {
+  1138→            "node": "Aggregate",
+  1139→            "type": "main",
+  1140→            "index": 0
+  1141→          }
+  1142→        ]
+  1143→      ]
+  1144→    },
+  1145→    "Google Drive Trigger": {
+  1146→      "main": [
+  1147→        [
+  1148→          {
+  1149→            "node": "Google Drive",
+  1150→            "type": "main",
+  1151→            "index": 0
+  1152→          }
+  1153→        ]
+  1154→      ]
+  1155→    },
+  1156→    "Google Drive": {
+  1157→      "main": [
+  1158→        [
+  1159→          {
+  1160→            "node": "Switch",
+  1161→            "type": "main",
+  1162→            "index": 0
+  1163→          }
+  1164→        ]
+  1165→      ]
+  1166→    },
+  1167→    "Embeddings OpenAI1": {
+  1168→      "ai_embedding": [
+  1169→        [
+  1170→          {
+  1171→            "node": "Supabase Vector Store",
+  1172→            "type": "ai_embedding",
+  1173→            "index": 0
+  1174→          }
+  1175→        ]
+  1176→      ]
+  1177→    },
+  1178→    "Default Data Loader1": {
+  1179→      "ai_document": [
+  1180→        [
+  1181→          {
+  1182→            "node": "Supabase Vector Store",
+  1183→            "type": "ai_document",
+  1184→            "index": 0
+  1185→          }
+  1186→        ]
+  1187→      ]
+  1188→    },
+  1189→    "Recursive Character Text Splitter1": {
+  1190→      "ai_textSplitter": [
+  1191→        [
+  1192→          {
+  1193→            "node": "Default Data Loader1",
+  1194→            "type": "ai_textSplitter",
+  1195→            "index": 0
+  1196→          }
+  1197→        ]
+  1198→      ]
+  1199→    },
+  1200→    "Embeddings Cohere": {
+  1201→      "ai_embedding": [
+  1202→        [
+  1203→          {
+  1204→            "node": "Milvus Vector Store",
+  1205→            "type": "ai_embedding",
+  1206→            "index": 0
+  1207→          }
+  1208→        ]
+  1209→      ]
+  1210→    },
+  1211→    "When chat message received": {
+  1212→      "main": [
+  1213→        [
+  1214→          {
+  1215→            "node": "AI Agent",
+  1216→            "type": "main",
+  1217→            "index": 0
+  1218→          }
+  1219→        ]
+  1220→      ]
+  1221→    },
+  1222→    "OpenAI Chat Model": {
+  1223→      "ai_languageModel": [
+  1224→        [
+  1225→          {
+  1226→            "node": "AI Agent",
+  1227→            "type": "ai_languageModel",
+  1228→            "index": 0
+  1229→          }
+  1230→        ]
+  1231→      ]
+  1232→    },
+  1233→    "Simple Memory": {
+  1234→      "ai_memory": [
+  1235→        []
+  1236→      ]
+  1237→    },
+  1238→    "Milvus Vector Store1": {
+  1239→      "ai_tool": [
+  1240→        []
+  1241→      ]
+  1242→    },
+  1243→    "Embeddings Cohere1": {
+  1244→      "ai_embedding": [
+  1245→        [
+  1246→          {
+  1247→            "node": "Milvus Vector Store1",
+  1248→            "type": "ai_embedding",
+  1249→            "index": 0
+  1250→          }
+  1251→        ]
+  1252→      ]
+  1253→    },
+  1254→    "Switch2": {
+  1255→      "main": [
+  1256→        [
+  1257→          {
+  1258→            "node": "Extract from File3",
+  1259→            "type": "main",
+  1260→            "index": 0
+  1261→          }
+  1262→        ],
+  1263→        [
+  1264→          {
+  1265→            "node": "Extract from File7",
+  1266→            "type": "main",
+  1267→            "index": 0
+  1268→          }
+  1269→        ],
+  1270→        [
+  1271→          {
+  1272→            "node": "Extract from File6",
+  1273→            "type": "main",
+  1274→            "index": 0
+  1275→          }
+  1276→        ]
+  1277→      ]
+  1278→    },
+  1279→    "Extract from File3": {
+  1280→      "main": [
+  1281→        [
+  1282→          {
+  1283→            "node": "Edit Fields5",
+  1284→            "type": "main",
+  1285→            "index": 0
+  1286→          }
+  1287→        ]
+  1288→      ]
+  1289→    },
+  1290→    "Extract from File6": {
+  1291→      "main": [
+  1292→        [
+  1293→          {
+  1294→            "node": "Edit Fields7",
+  1295→            "type": "main",
+  1296→            "index": 0
+  1297→          }
+  1298→        ]
+  1299→      ]
+  1300→    },
+  1301→    "Extract from File7": {
+  1302→      "main": [
+  1303→        [
+  1304→          {
+  1305→            "node": "Edit Fields6",
+  1306→            "type": "main",
+  1307→            "index": 0
+  1308→          }
+  1309→        ]
+  1310→      ]
+  1311→    },
+  1312→    "Edit Fields5": {
+  1313→      "main": [
+  1314→        [
+  1315→          {
+  1316→            "node": "Merge1",
+  1317→            "type": "main",
+  1318→            "index": 0
+  1319→          }
+  1320→        ]
+  1321→      ]
+  1322→    },
+  1323→    "Edit Fields6": {
+  1324→      "main": [
+  1325→        [
+  1326→          {
+  1327→            "node": "Merge1",
+  1328→            "type": "main",
+  1329→            "index": 1
+  1330→          }
+  1331→        ]
+  1332→      ]
+  1333→    },
+  1334→    "Edit Fields7": {
+  1335→      "main": [
+  1336→        [
+  1337→          {
+  1338→            "node": "Merge1",
+  1339→            "type": "main",
+  1340→            "index": 2
+  1341→          }
+  1342→        ]
+  1343→      ]
+  1344→    },
+  1345→    "Aggregate3": {
+  1346→      "main": [
+  1347→        [
+  1348→          {
+  1349→            "node": "Code1",
+  1350→            "type": "main",
+  1351→            "index": 0
+  1352→          }
+  1353→        ]
+  1354→      ]
+  1355→    },
+  1356→    "Code1": {
+  1357→      "main": [
+  1358→        [
+  1359→          {
+  1360→            "node": "Supabase Vector Store",
+  1361→            "type": "main",
+  1362→            "index": 0
+  1363→          }
+  1364→        ]
+  1365→      ]
+  1366→    },
+  1367→    "Merge1": {
+  1368→      "main": [
+  1369→        [
+  1370→          {
+  1371→            "node": "Aggregate3",
+  1372→            "type": "main",
+  1373→            "index": 0
+  1374→          }
+  1375→        ]
+  1376→      ]
+  1377→    },
+  1378→    "Google Drive Trigger2": {
+  1379→      "main": [
+  1380→        [
+  1381→          {
+  1382→            "node": "Google Drive2",
+  1383→            "type": "main",
+  1384→            "index": 0
+  1385→          }
+  1386→        ]
+  1387→      ]
+  1388→    },
+  1389→    "Google Drive2": {
+  1390→      "main": [
+  1391→        [
+  1392→          {
+  1393→            "node": "Switch2",
+  1394→            "type": "main",
+  1395→            "index": 0
+  1396→          }
+  1397→        ]
+  1398→      ]
+  1399→    },
+  1400→    "Supabase Vector Store1": {
+  1401→      "ai_tool": [
+  1402→        []
+  1403→      ]
+  1404→    },
+  1405→    "Embeddings OpenAI": {
+  1406→      "ai_embedding": [
+  1407→        [
+  1408→          {
+  1409→            "node": "Supabase Vector Store1",
+  1410→            "type": "ai_embedding",
+  1411→            "index": 0
+  1412→          }
+  1413→        ]
+  1414→      ]
+  1415→    }
+  1416→  },
+  1417→  "active": false,
+  1418→  "settings": {
+  1419→    "executionOrder": "v1"
+  1420→  },
+  1421→  "versionId": "2d6f18f1-1788-40fa-9914-fad7f6d3b7da",
+  1422→  "meta": {
+  1423→    "templateCredsSetupCompleted": true,
+  1424→    "instanceId": "0f166095b1b8b10613ed6feb74af1271518bf426c33e252cf0986acc212baa71"
+  1425→  },
+  1426→  "id": "msk509usSLm5R9BA",
+  1427→  "tags": []
+  1428→}

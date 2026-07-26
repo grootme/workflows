@@ -1,0 +1,228 @@
+{
+  "name": "Leer imagen telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "file_id"
+            }
+          ]
+        }
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        260,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        460,
+        340
+      ],
+      "id": "bbe27e13-89c6-4300-bfc0-e3e279b7cc85",
+      "name": "obtener imagen",
+      "webhookId": "d777f4b2-d93d-4e2d-a977-40cf3c753732",
+      "credentials": {
+        "telegramApi": {
+          "id": "jHvbls8ATsnKOJYT",
+          "name": "Telegram KevinBelier_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n    item.binary.data.mimeType = 'image/jpeg';\n}\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        340
+      ],
+      "id": "73f5b355-d479-47d6-b854-fb5981900500",
+      "name": "Forzar jpeg"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "=Eres un analizador de imágenes de tickets.\nCon base en la imagen determina los siguientes campos:\n-Monto total\n-Fecha de compra\n-Comercio\n-Método de pago\n-Categoría de gasto\n\n\nCategorías de gastos:\n*Transporte: incluye gasolina, viajes en avión, autobus etc.\n*Cominda: incluye tickets de supermercado\n*Entretenimiento: incluye tickets de restaurantes, cine, arte, ocio\n*Ropa: incluye tickets de tiendas de ropa o que contengan artículos relacionados\n*Servicios: incluye tickets de servicios como agua, luz, renta etc\n\nResponde solo con los campos pedidos sin sugerencias ni nada más\n",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        900,
+        340
+      ],
+      "id": "bc02a737-b8a5-4615-8e76-a13127f707a9",
+      "name": "Analizar imagen",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        540
+      ],
+      "id": "9dc8a677-878f-40ed-8fc8-d76c1a96a8f7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estructura la siguiente información en un formato específico de json: {{ $json.content }}\n\nEjemplo: \n{\n  \"monto_total\": 480.00,\n  \"fecha_compra\": \"2025-05-27T14:33:26\",\n  \"comercio\": \"Servicio Casimiro Liceaga S.A. de C.V. (Mobil)\",\n  \"metodo_pago\": \"Crédito (FPM BanBajío)\",\n  \"categoria_gasto\": \"Transporte\",\n  \"detalle_producto\": \"Gasolina, producto 'EXTRA'\"\n}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1120,
+        340
+      ],
+      "id": "cf3a86cb-1c86-4c3a-bc48-332c7a752951",
+      "name": "formatear json"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"monto_total\": 480.00,\n  \"fecha_compra\": \"2025-05-27T14:33:26\",\n  \"comercio\": \"Servicio Casimiro Liceaga S.A. de C.V. (Mobil)\",\n  \"metodo_pago\": \"Crédito (FPM BanBajío)\",\n  \"categoria_gasto\": \"Transporte\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        540
+      ],
+      "id": "c4ba0c5c-eb27-4a1d-a634-68f6093be86d",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "file_id": "AgACAgEAAxkBAAN0aEfFFLIdIIhEMRG4dzxvrlcGwkUAArOtMRubPUFGV9L660UAAYQkAQADAgADeQADNgQ"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "obtener imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener imagen": {
+      "main": [
+        [
+          {
+            "node": "Forzar jpeg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forzar jpeg": {
+      "main": [
+        [
+          {
+            "node": "Analizar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analizar imagen": {
+      "main": [
+        [
+          {
+            "node": "formatear json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "formatear json",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "formatear json",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "92200dcb-234c-40df-b077-3ad9a81048f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "FhHHs1VoQRLhlCoz",
+  "tags": []
+}

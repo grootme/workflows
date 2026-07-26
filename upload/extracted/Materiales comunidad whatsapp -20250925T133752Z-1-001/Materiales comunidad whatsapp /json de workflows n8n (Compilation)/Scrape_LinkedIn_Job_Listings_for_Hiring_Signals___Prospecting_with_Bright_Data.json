@@ -1,0 +1,816 @@
+{
+  "name": "Scrape LinkedIn Job Listings for Hiring Signals & Prospecting with Bright Data",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "LinkedIn Job Data Scraper to Google Sheets\nScrape live job posts from LinkedIn via Bright Data, clean them, and send to Google Sheets. Use for:\n✅ Job Hunting — fresh, filtered roles\n✅ Sales Prospecting — find companies hiring (aka growing)\n⚙️ What's Used\nn8n Nodes: Form → HTTP Request → Wait → If → Code → Google Sheets\nExternal Tools:\n\nBright Data – Dataset API\nGoogle Sheets – Template Copy\n\n🔑 Setup – Credentials Needed\n\nBright Data API Key → Add to HTTP headers as: Authorization: Bearer YOUR_KEY\nGoogle Sheets OAuth2 → Connect account in n8n\n\n📝 Input Form – Fields\nUsed to define what job data to scrape.\nFieldDescriptionExampleLocationCity/regionNew York, BerlinKeywordRole to searchCMO, Data AnalystCountry2-letter ISO codeUS, UK, DETime RangeHow recent the jobs should be\"Past 24 hours\" or \"Last 7 days\" (recommended)Job TypeFull-time / Part-time / Contract(Optional)ExperienceEntry, Mid, Senior(Optional)RemoteFilter by remote-friendly roles(Optional)CompanyFilter by specific employer(Optional)\n🚀 Workflow Steps\n\nUser fills input form\nTrigger snapshot via Bright Data Dataset API\nWait node + polling checks when data is ready (~1–3 mins)\nCleanup step:\n\nFlattens nested fields (job_poster, base_salary, etc.)\nRemoves HTML from job descriptions\n\n\nSend to Google Sheet\n\nSheet is pre-linked, 1 job per row\nExample columns: job_title, company_name, location, salary_min, apply_link, job_description_plain\n\n\nYou use the data\n\nJob seekers → Apply fast\nSalespeople → Spot buyers & offer help\n\n\n\n💡 Pro Tips\n\nUse \"Past 24 hours\" or \"Last 7 days\" for fresher results\nLeave filters empty if unsure — Bright Data will return broader results\nUse cleaned data for:\n\nCold email personalization\nLinkedIn outreach\nBuilding ICP-based lead lists\n\n\n\n🧪 Example API Body\njson[ \n  { \n    \"location\": \"New York\", \n    \"keyword\": \"Marketing Manager\", \n    \"country\": \"US\", \n    \"time_range\": \"Past 24 hours\", \n    \"job_type\": \"Part-time\", \n    \"experience_level\": \"\", \n    \"remote\": \"\", \n    \"company\": \"\" \n  } \n]\n📄 Template & Resources\n\n📋 Google Sheet Template (Make a Copy)\n📘 Bright Data API Reference\n\n🛠️ Customize It\n\nAdd filters to HTTP Body (remote, experience_level, etc.)\nChange polling interval if Bright Data is slow\nAdd custom logic to score/prioritize listings\nSend filtered lists to CRM, Slack, etc.\n\nThis gives you a live stream of hiring signals — whether you're finding a job or pitching a service. One form. One click. Fully automated.",
+        "height": 4398,
+        "width": 1289,
+        "color": 4
+      },
+      "id": "9f55a3b5-7971-4772-96cc-91ad43616ae6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3200,
+        -40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "=======================================\n            WORKFLOW ASSISTANCE\n=======================================\nFor any questions or support, please contact:\n    Yaron@nofluff.online\n\nExplore more tips and tutorials here:\n   - YouTube: https://www.youtube.com/@YaronBeen/videos\n   - LinkedIn: https://www.linkedin.com/in/yaronbeen/\n=======================================\n",
+        "height": 320,
+        "width": 1300,
+        "color": 4
+      },
+      "id": "4fdf09f0-1ff6-4757-a5cc-a0fc9dfabe4e",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3200,
+        -380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/progress/{{ $('HTTP Request- Post API call to Bright Data').item.json.snapshot_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_BRIGHT_DATA_API_KEY>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59c1d9b8-31ca-43b1-b9b4-f44619a7362e",
+      "name": "Snapshot Progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -360,
+        60
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "content": "In this workflow, I use Google Sheets to store the results. \n\nYou can use my template to get started faster:\n\n1. [Click on this link to get the template](https://docs.google.com/spreadsheets/d/1_jbr5zBllTy_pGbogfGSvyv1_0a77I8tU-Ai7BjTAw4/edit?usp=sharing)\n2. Make a copy of the Sheets\n3. Add the URL to this node \n\n\n",
+        "height": 646,
+        "width": 195
+      },
+      "id": "e16d09bb-4b70-48e3-a763-97617f7fe9a4",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        500,
+        -180
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# 🔍 LinkedIn Jobs API – Parameter Guide\n\nUse this object to query LinkedIn job listings.  \nEach field lets you filter results based on different criteria.\n\n```json\n{\n  \"location\": \"{{ $json.Location }}\",\n  \"keyword\": \"{{ $json.Keyword }}\",\n  \"country\": \"{{ $json.Country }}\",\n  \"time_range\": \"Past 24 hours\",\n  \"job_type\": \"Part-time\",\n  \"experience_level\": \"\",\n  \"remote\": \"\",\n  \"company\": \"\"\n}\n```\n\n## 🧾 Field Explanations & Valid Options\n\n### 🗺️ location\nCity or region where the job is located.\nUse a city or region name.\n✅ Example: \"Berlin\", \"New York\"\n\n### 🧠 keyword\nJob title or search keywords.\nUse terms like role names or skills.\n✅ Example: \"Data Scientist\", \"Growth Marketing\"\n\n### 🌍 country\nCountry code in ISO 3166-1 alpha-2 format.\n✅ Example: \"US\", \"DE\", \"IL\"\n\n### ⏱️ time_range\nPosting date filter.\nLimits results based on how recently jobs were posted.\nAccepted values:\n- Any Time\n- Past 24 hours\n- Past Week\n- Past Month\n✅ Example: \"Past Week\"\n\n### 💼 job_type\nType of employment.\nUse a single value or comma-separated list.\nAccepted values:\n- Full-time\n- Part-time\n- Contract\n- Temporary\n- Internship\n- Volunteer\n- Other\n✅ Example: \"Full-time,Contract\"\n\n### 🎯 experience_level\nSeniority level of the job.\nAccepted values:\n- Internship\n- Entry level\n- Associate\n- Mid-Senior level\n- Director\n- Executive\n✅ Example: \"Mid-Senior level\"\n\n### 🌐 remote\nWorkplace type.\nAccepted values:\n- Remote\n- On-site\n- Hybrid\n- (leave blank for no preference)\n✅ Example: \"Remote\"\n\n### 🏢 company\nFilter by company name.\nOptional. Use plain text.\n✅ Example: \"Google\", \"Spotify\"\n\n## ✅ Full Example\n\n```json\n{\n  \"location\": \"New York\",\n  \"keyword\": \"UI Designer\",\n  \"country\": \"US\",\n  \"time_range\": \"Past Week\",\n  \"job_type\": \"Full-time,Contract\",\n  \"experience_level\": \"Mid-Senior level\",\n  \"remote\": \"Hybrid\",\n  \"company\": \"Spotify\"\n}\n```\n\n",
+        "height": 2240,
+        "width": 480
+      },
+      "id": "b50bb478-d259-4aa1-b4ae-ec3212d78363",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1880,
+        -380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "formTitle": "Linkedin High Intent Prospects And Job Post Hunt",
+        "formDescription": "This form lets you customize your job search / prospecting by choosing:\n\nLocation (city or region)\n\nJob title or keywords\n\nCountry code\n\nFilters like posting date, job type, experience level, and remote options\n\nYou can also optionally narrow results by company name.\n\n🧠 Tip: Leave fields blank if you want broader results.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Job Location",
+              "placeholder": "example: new york",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Keyword",
+              "placeholder": "example: CMO, AI architect",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Country (2 letters)",
+              "placeholder": "example: US,UK,IL",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bab85367-58aa-4d6b-a7b0-d2b638dfde2a",
+      "name": "On form submission - Discover Jobs",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -1500,
+        280
+      ],
+      "webhookId": "8d0269c7-d1fc-45a1-a411-19634a1e0b82",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.brightdata.com/datasets/v3/trigger",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dataset_id",
+              "value": "gd_lpfll7v5hcqtkxl6l"
+            },
+            {
+              "name": "endpoint",
+              "value": "https://yaron-nofluff.app.n8n.cloud/webhook-test/8c42463d-a631-4a17-a084-4bcbbb3bfc68"
+            },
+            {
+              "name": "notify",
+              "value": "https://yaron-nofluff.app.n8n.cloud/webhook-test/8c42463d-a631-4a17-a084-4bcbbb3bfc68"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            },
+            {
+              "name": "uncompressed_webhook",
+              "value": "true"
+            },
+            {
+              "name": "type",
+              "value": "discover_new"
+            },
+            {
+              "name": "discover_by",
+              "value": "=keyword"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_BRIGHT_DATA_API_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=[\n  {\n    \"location\": \"{{ $json['Job Location'] }}\",\n    \"keyword\": \"{{ $json.Keyword }}\",\n    \"country\": \"{{ $json['Country (2 letters)'] }}\",\n    \"time_range\": \"Past 24 hours\",\n    \"job_type\": \"Part-time\",\n    \"experience_level\": \"\",\n    \"remote\": \"\",\n    \"company\": \"\"\n  }\n] ",
+        "options": {}
+      },
+      "id": "5544be33-7072-424f-9df0-7d87c09314e4",
+      "name": "HTTP Request- Post API call to Bright Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -940,
+        320
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "id": "c7aa2b67-8db6-4855-8230-8ca0437ecb80",
+      "name": "Wait - Polling Bright Data",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        -600,
+        60
+      ],
+      "webhookId": "8005a2b3-2195-479e-badb-d90e4240e699",
+      "executeOnce": false,
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "7932282b-71bb-4bbb-ab73-4978e554de7e",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "running"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1d4cfc7-039e-46ea-ba50-066f528c1bee",
+      "name": "If - Checking status of Snapshot - if data is ready or not",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -160,
+        60
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/snapshot/{{ $json.snapshot_id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <YOUR_BRIGHT_DATA_API_KEY>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6653c05b-3cf7-40b4-8761-55fb5d366d52",
+      "name": "HTTP Request - Getting data from Bright Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        140,
+        80
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Helper function to strip HTML tags\nfunction stripHtml(html) {\n  return html\n    .replace(/<[^>]+>/g, '')    // remove all HTML tags\n    .replace(/&nbsp;/g, ' ')     // decode HTML entities\n    .replace(/&[a-z]+;/g, '')    // remove other HTML entities\n    .replace(/\\s+/g, ' ')        // normalize whitespace\n    .trim();\n}\n\nreturn items.map(item => {\n  const data = item.json;\n\n  // Flatten job_poster\n  if (data.job_poster) {\n    data.job_poster_name = data.job_poster.name || '';\n    data.job_poster_title = data.job_poster.title || '';\n    data.job_poster_url = data.job_poster.url || '';\n    delete data.job_poster;\n  }\n\n  // Flatten base_salary\n  if (data.base_salary) {\n    data.salary_min = data.base_salary.min_amount || '';\n    data.salary_max = data.base_salary.max_amount || '';\n    data.salary_currency = data.base_salary.currency || '';\n    data.salary_period = data.base_salary.payment_period || '';\n    delete data.base_salary;\n  }\n\n  // Clean up job description HTML\n  if (data.job_description_formatted) {\n    data.job_description_plain = stripHtml(data.job_description_formatted);\n  }\n\n  return { json: data };\n});\n"
+      },
+      "id": "d2fd490f-53e1-42d1-94ff-01eac286d906",
+      "name": "Code - Cleaning Up",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        420,
+        100
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1_jbr5zBllTy_pGbogfGSvyv1_0a77I8tU-Ai7BjTAw4",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_jbr5zBllTy_pGbogfGSvyv1_0a77I8tU-Ai7BjTAw4/edit?usp=drivesdk",
+          "cachedResultName": "NoFluff-N8N-Sheet-Template-Job Scraping WIth Bright Data"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_jbr5zBllTy_pGbogfGSvyv1_0a77I8tU-Ai7BjTAw4/edit#gid=0",
+          "cachedResultName": "input"
+        },
+        "columns": {
+          "value": {
+            "country_code": "={{ $json.country_code }}"
+          },
+          "schema": [
+            {
+              "id": "url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_posting_id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_posting_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_title",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "company_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_location",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_location",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_description_plain",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_description_plain",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_poster_name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_poster_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_poster_title",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_poster_title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_poster_url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_poster_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary_min",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "salary_min",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary_max",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "salary_max",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary_currency",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "salary_currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary_period",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "salary_period",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "application_availability",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "application_availability",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_posted_date",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_posted_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_logo",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "company_logo",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "country_code",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "country_code",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timestamp",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "company_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_summary",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_summary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "company_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_posted_time",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_posted_time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_num_applicants",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_num_applicants",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "discovery_input",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "discovery_input",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "apply_link",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "apply_link",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title_id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "title_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_description_formatted",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_description_formatted",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "input",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "input",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_seniority_level",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_seniority_level",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_function",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_function",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_employment_type",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_employment_type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_industries",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_industries",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_base_pay_range",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "job_base_pay_range",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "row_number"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "handlingExtraData": "insertInNewColumn"
+        }
+      },
+      "id": "1a6f9a6b-c534-41bb-9065-19cf871e7960",
+      "name": "Google Sheets - Adding All Job Posts",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        760,
+        140
+      ],
+      "typeVersion": 4.3,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "🧠 Bright Data Trigger – Customize Your Job Query\n\nThis HTTP Request sends a POST call to Bright Data to start a new dataset snapshot based on your filters.\n\n👋 If you don’t want to use the Form Trigger,\nyou can directly adjust the filters here in this node.\n\nYou can customize:\n\n\"location\" → city, region, or keyword (e.g. \"New York\", \"Remote\")\n\n\"keyword\" → job title or role (e.g. \"CMO\", \"AI Engineer\")\n\n\"country\" → 2-letter country code (e.g. \"US\", \"UK\")\n\n\"time_range\" → \"Past 24 hours\", \"Last 7 days\", etc.\n\n\"job_type\", \"experience_level\", \"remote\", \"company\" → optional filters\n\n📌 Tip:\nUse \"Past 24 hours\" or \"Last 7 days\" for the freshest results.",
+        "height": 880,
+        "width": 300
+      },
+      "id": "dbbf3391-fd7e-4738-8d4d-ab58f546525b",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1260,
+        -360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Bright Data Getting Jobs\n",
+        "height": 360,
+        "width": 940,
+        "color": 4
+      },
+      "id": "1aa3e0d6-ffb3-4320-811a-58449e94b2fb",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        -100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12067869-0249-4cd2-b9e2-8e4055a0d917",
+              "name": "",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2aa55005-9627-4274-9778-26f46d3cbd8f",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1280,
+        280
+      ],
+      "typeVersion": 3.4
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request- Post API call to Bright Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Snapshot Progress": {
+      "main": [
+        [
+          {
+            "node": "If - Checking status of Snapshot - if data is ready or not",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Cleaning Up": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Adding All Job Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - Polling Bright Data": {
+      "main": [
+        [
+          {
+            "node": "Snapshot Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission - Discover Jobs": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request- Post API call to Bright Data": {
+      "main": [
+        [
+          {
+            "node": "Wait - Polling Bright Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Getting data from Bright Data": {
+      "main": [
+        [
+          {
+            "node": "Code - Cleaning Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If - Checking status of Snapshot - if data is ready or not": {
+      "main": [
+        [
+          {
+            "node": "Wait - Polling Bright Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request - Getting data from Bright Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a33ff612-557f-490d-b979-fb8b0422688d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "XUN3zXAPePHOqVAi",
+  "tags": []
+}

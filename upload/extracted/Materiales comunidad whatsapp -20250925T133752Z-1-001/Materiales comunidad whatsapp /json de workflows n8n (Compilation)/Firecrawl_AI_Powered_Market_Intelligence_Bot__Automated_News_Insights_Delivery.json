@@ -1,0 +1,286 @@
+{
+  "name": "Firecrawl AI-Powered Market Intelligence Bot: Automated News Insights Delivery",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "b8a96cb2-c742-4248-a5df-25b50b3af590",
+      "name": "Daily Market Research Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        0,
+        580
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/crawl",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_FIRECRAWL_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "https://techcrunch.com"
+            },
+            {
+              "name": "crawl_type",
+              "value": "scrape"
+            },
+            {
+              "name": "extract_article",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f963e652-9576-43a6-981f-958f5281fe37",
+      "name": "Crawl TechCrunch (FireCrawl)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        300,
+        580
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "const keywords = ['AI', 'machine learning', 'startup', 'generative'];\nconst results = [];\n\nfor (const item of items) {\n  const title = item.json.article?.title?.toLowerCase() || '';\n  const content = item.json.article?.content?.toLowerCase() || '';\n\n  const isRelevant = keywords.some(keyword =>\n    title.includes(keyword.toLowerCase()) ||\n    content.includes(keyword.toLowerCase())\n  );\n\n  if (isRelevant) {\n    results.push(item); // keep only relevant articles\n  }\n}\n\nreturn results;\n"
+      },
+      "id": "61984dc7-1a91-4efb-b482-a19497063f44",
+      "name": "Filter Relevant Articles",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        520,
+        580
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Summarize the following article in 3 bullet points:\nTitle: {{ $json.article.title }}\ndescription: {{ $json.meta.description }}\nContent: {{ $json.article.content }}",
+        "options": {}
+      },
+      "id": "07999e4a-6c45-4fb7-a0d2-4af88ace4313",
+      "name": "Summarizer Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        860,
+        580
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "7c14214d-7ef0-49d4-8ac9-eaaffe480b39",
+      "name": "OpenAI Summarizer",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        800,
+        820
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "C08TTV0CC3E",
+          "cachedResultName": "all-nathing"
+        },
+        "text": "=🔍 AI Research Summary: \nTitle: {{ $('Filter Relevant Articles').item.json.article.title }}\nLink: {{ $('Filter Relevant Articles').item.json.url }}\nSummary: {{ $json.output }}",
+        "otherOptions": {}
+      },
+      "id": "1bbc22ce-a99f-4d92-bd92-f7a4e8a3c667",
+      "name": "Send Summary to Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        1220,
+        580
+      ],
+      "webhookId": "c2e00b18-42bd-49b7-bc4c-05d60633a7c8",
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "content": "🌐💻 2. Crawling & Filtering\nNodes:\n🌐 Crawl TechCrunch (FireCrawl) (HTTP Request)\n\n🧠 Filter Relevant Articles (Code)\n\n🔍 What these nodes do:\n🌐 Crawl TechCrunch (FireCrawl)\nUses a POST request to FireCrawl’s API\n\nInputs:\n\nurl: Target site (e.g., https://techcrunch.com)\n\ncrawl_type: \"scrape\"\n\nextract_article: true\n\nRetrieves:\n\ntitle, content, author, published_at\n\n🧠 Filter Relevant Articles\nUses a Code node to check if the article is relevant\n\nKeywords like \"AI\", \"machine learning\", \"startup\" are matched\n\nFilters only the articles that matter to your domain",
+        "height": 800,
+        "width": 440,
+        "color": 3
+      },
+      "id": "96dd7f4e-4e9c-4956-831a-ab2056e155e4",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "🤖💬 3. Summarization & Delivery\nNodes:\n🧠 Summarize Article with AI (AI Agent)\n\n🔗 OpenAI Chat (Summarizer) (OpenAI Chat Model)\n\n💬 Send Summary to Slack (Slack)\n\n📌 What happens here:\n🤖 Summarize Article with AI\nPasses the article to a GPT-4 or GPT-3.5 agent\n\nUses a prompt like:\n\n“Summarize the following article in 3 bullet points…”\n\n💡 OpenAI Chat (Summarizer)\nExecutes the actual summarization\n\nOutputs a short, clean summary ideal for fast reading\n\n💬 Send Summary to Slack\nPosts the summary to a specific Slack channel (e.g., #market-research)",
+        "height": 920,
+        "width": 640,
+        "color": 5
+      },
+      "id": "4ba193df-fa47-4f64-b4e8-24f53ba1e369",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        740,
+        40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "=======================================\n            WORKFLOW ASSISTANCE\n=======================================\nFor any questions or support, please contact:\n    Yaron@nofluff.online\n\nExplore more tips and tutorials here:\n   - YouTube: https://www.youtube.com/@YaronBeen/videos\n   - LinkedIn: https://www.linkedin.com/in/yaronbeen/\n=======================================\n",
+        "height": 320,
+        "width": 1300,
+        "color": 4
+      },
+      "id": "b7eb394b-16e1-4506-bb0c-367d91ec01b7",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1940,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Absolutely! Here's your **Market Research Automation Workflow** beautifully divided into logical sections, with clear explanations and fitting icons to help you grasp each part at a glance.\n\n---\n\n# 🚀 **n8n Market Research Automation Workflow**\n\nAutomate the process of **crawling news sites**, **filtering for relevant content**, **summarizing it with AI**, and **posting it to Slack** — all in a seamless flow.\n\n---\n\n## ⏰ 1. **Trigger & Scheduling**\n\n**Node:** `🕒 Daily Market Research Trigger`\n\n> Starts the workflow on a recurring schedule.\n\n🔧 **What it does:**\n\n* Runs every morning (or your defined time)\n* Ensures your team receives fresh updates daily\n\n📅 **Example Cron Setting:**\n\n* Every day at 8:00 AM\n\n---\n\n## 🌐💻 2. **Crawling & Filtering**\n\n### **Nodes:**\n\n* `🌐 Crawl TechCrunch (FireCrawl)` *(HTTP Request)*\n* `🧠 Filter Relevant Articles` *(Code)*\n\n### 🔍 What these nodes do:\n\n#### 🌐 **Crawl TechCrunch (FireCrawl)**\n\n* Uses a **POST** request to FireCrawl’s API\n* Inputs:\n\n  * `url`: Target site (e.g., `https://techcrunch.com`)\n  * `crawl_type`: `\"scrape\"`\n  * `extract_article`: `true`\n* Retrieves:\n\n  * `title`, `content`, `author`, `published_at`\n\n#### 🧠 **Filter Relevant Articles**\n\n* Uses a `Code` node to check if the article is relevant\n* Keywords like `\"AI\"`, `\"machine learning\"`, `\"startup\"` are matched\n* Filters only the articles that **matter to your domain**\n\n📄 **Sample Code:**\n\n```javascript\nconst keywords = ['AI', 'machine learning', 'startup', 'generative'];\nconst results = [];\n\nfor (const item of items) {\n  const title = item.json.article?.title?.toLowerCase() || '';\n  const content = item.json.article?.content?.toLowerCase() || '';\n\n  const isRelevant = keywords.some(keyword =>\n    title.includes(keyword.toLowerCase()) ||\n    content.includes(keyword.toLowerCase())\n  );\n\n  if (isRelevant) {\n    results.push(item); // keep only relevant articles\n  }\n}\n\nreturn results;\n```\n\n---\n\n## 🤖💬 3. **Summarization & Delivery**\n\n### **Nodes:**\n\n* `🧠 Summarize Article with AI` *(AI Agent)*\n* `🔗 OpenAI Chat (Summarizer)` *(OpenAI Chat Model)*\n* `💬 Send Summary to Slack` *(Slack)*\n\n### 📌 What happens here:\n\n#### 🤖 **Summarize Article with AI**\n\n* Passes the article to a GPT-4 or GPT-3.5 agent\n* Uses a prompt like:\n\n  > “Summarize the following article in 3 bullet points…”\n\n#### 💡 **OpenAI Chat (Summarizer)**\n\n* Executes the actual summarization\n* Outputs a short, clean summary ideal for fast reading\n\n#### 💬 **Send Summary to Slack**\n\n* Posts the summary to a specific Slack channel (e.g., `#market-research`)\n* Message format example:\n\n  ```\n  🔍 *Market Research Summary*\n  *Title:* OpenAI launches GPT-5\n  *Link:* https://techcrunch.com/article\n  *Summary:*\n  - GPT-5 improves reasoning\n  - Enhanced safety mechanisms\n  - Better multilingual performance\n  ```\n\n",
+        "height": 2758,
+        "width": 1289,
+        "color": 4
+      },
+      "id": "71bba204-accc-44a3-9cb7-63d51d756881",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1940,
+        360
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {
+    "Crawl TechCrunch (FireCrawl)": [
+      {
+        "json": {
+          "url": "https://techcrunch.com",
+          "meta": {
+            "description": "The latest technology news and information on startups."
+          },
+          "title": "TechCrunch - Startup and Technology News",
+          "status": "success",
+          "article": {
+            "title": "OpenAI launches GPT-5",
+            "author": "Jane Doe",
+            "content": "OpenAI has officially released GPT-5, a major upgrade with enhanced reasoning and safety improvements...",
+            "published_at": "2025-05-28T13:00:00Z"
+          },
+          "content": "<html>...</html>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Summarizer Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Summary to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Summarizer": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarizer Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Relevant Articles": {
+      "main": [
+        [
+          {
+            "node": "Summarizer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crawl TechCrunch (FireCrawl)": {
+      "main": [
+        [
+          {
+            "node": "Filter Relevant Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Market Research Trigger": {
+      "main": [
+        [
+          {
+            "node": "Crawl TechCrunch (FireCrawl)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cbd1f91b-e034-405e-a783-b44ec8110f35",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "XUN3zXAPePHOqVAi",
+  "tags": []
+}

@@ -1,0 +1,375 @@
+{
+  "name": "Chat con el chat de la comunidad",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "650b0680-eeb1-413c-9224-da0bbd5a104c",
+      "name": "Webhook",
+      "webhookId": "92c17e01-74a9-42ff-b4f8-e0c8cdb114fd"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "=Eres un agente especializado en brindar información sobre la comunidad “Vibe Free Community - Kevin Belier”.\n\nEsta comunidad está centrada en el networking y colaboración entre personas interesadas en automatización con inteligencia artificial, especialmente usando n8n. Sus miembros tienen perfiles diversos (técnicos, creativos, estratégicos, etc.), pero con alto potencial de sinergia para proyectos colaborativos o generación de negocios.\n\nFunciones principales del agente:\nRecibirás un archivo de base de conocimiento, que consiste en el historial de chat del grupo.\n\nTu objetivo es proporcionar respuestas precisas, útiles y bien argumentadas, basadas exclusivamente en esa base de conocimiento.\n\nPuedes extraer, resumir o citar fragmentos de conversaciones relevantes para respaldar tus respuestas.\n\nLineamientos de respuesta:\nSi te solicitan información sobre miembros con cierto perfil (por ejemplo, \"usuarios técnicos con experiencia en n8n\"), identifica los perfiles relevantes, justifica por qué los consideras adecuados, y proporciona información de contacto o identificadores disponibles.\n\nEstás autorizado a compartir datos de contacto contenidos en el historial, siempre que sirvan al propósito del networking dentro del grupo.\n\nAsegúrate de hacer una búsqueda exhaustiva en el historial, analizando contexto, participación y conocimientos demostrados.\n\nPrioriza la utilidad: las respuestas deben superar las expectativas del usuario, conectando información relevante de forma clara y estructurada.\n\nEste agente está diseñado para potenciar la colaboración dentro de la comunidad y acelerar conexiones estratégicas entre sus miembros mediante el uso inteligente del historial compartido."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        40,
+        0
+      ],
+      "id": "a5e5ae0e-0bbd-45bf-9f35-510b8a924400",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        220
+      ],
+      "id": "ee2e2ef2-a038-42ac-8795-898e9f235c2d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        0
+      ],
+      "id": "26cee0b4-f32a-4be9-8454-338e4647ee97",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "VibeCommunityChat_knowledgeBase",
+        "toolDescription": "Usa esta herramienta para contestar a las preguntas que hagan a cerca del chat de la comunidad Vibe Community",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "knowledgeChat",
+          "mode": "list",
+          "cachedResultName": "knowledgeChat"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        220
+      ],
+      "id": "2562f130-63b6-4966-a5ec-e546a00b748d",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "fZvijRNuAs8S5H9d",
+          "name": "Qdrant kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        600
+      ],
+      "id": "32997a15-f440-442e-b75a-47e4f8a4e72e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc33e106-1fb8-4e22-a365-e8426b427913",
+              "name": "Chat de WhatsApp con General",
+              "value": "[tu knowledge base]",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        600
+      ],
+      "id": "62d06431-7142-466c-91ce-068b25ee92b3",
+      "name": "Chat"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "knowledgeChat",
+          "mode": "list",
+          "cachedResultName": "knowledgeChat"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        600
+      ],
+      "id": "07b389ca-54b1-44fb-ad65-7f4568d13169",
+      "name": "Qdrant Vector Store1",
+      "credentials": {
+        "qdrantApi": {
+          "id": "fZvijRNuAs8S5H9d",
+          "name": "Qdrant kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        820
+      ],
+      "id": "e176eb25-413e-4379-852a-c0fba7d814cc",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "d369022b-b61f-409c-8aba-43316e1494e3",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        360,
+        960
+      ],
+      "id": "fcbf14c5-43bf-485a-ab4c-1fa23cec27f6",
+      "name": "Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        360
+      ],
+      "id": "72e44f1d-f63b-444f-b8b3-43beb9839313",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OkbJPxq5uaiKVyna",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.body.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        20,
+        240
+      ],
+      "id": "55088451-86e5-4e54-b115-935cbb6246b8",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1c7078a2-732e-455b-bd5b-e04e05592e44",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "uGFOKOliGK2h5GeL",
+  "tags": []
+}

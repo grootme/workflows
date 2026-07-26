@@ -1,0 +1,569 @@
+{
+  "name": "Agente Blogs - Marketing",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        220
+      ],
+      "id": "18211e0e-ffd2-4e77-aea7-6c2c5e651520",
+      "name": "Convert to Binary"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "TemaBlog"
+            },
+            {
+              "name": "AudienciaObjetiva"
+            },
+            {
+              "name": "chatID"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1560,
+        220
+      ],
+      "id": "62126761-e414-422c-a6da-c9ccf2acdadb",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc",
+          "mode": "list",
+          "cachedResultName": "Registro Marketing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-1GVMYyw6zomQ2aH-EwyB4gbTu_CyDTb4A0sd-tudqc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "Link": "={{ $json.webViewLink }}",
+            "Petición": "={{ $('When Executed by Another Workflow').item.json.TemaBlog }} for {{ $('When Executed by Another Workflow').item.json.AudienciaObjetiva }}",
+            "Título": "={{ $('Agente de Prompts de Imagen').item.json.output.title }}",
+            "Tipo": "Post",
+            "Publicación": "={{ $( 'Agente Publicacion Blogs') .item.json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Título",
+              "displayName": "Título",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Petición",
+              "displayName": "Petición",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publicación",
+              "displayName": "Publicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        0,
+        320
+      ],
+      "id": "37e26928-9acb-489a-a3af-80a2d9ab2863",
+      "name": "Image Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "63RgPzTSFDrHAKRK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1120,
+        500
+      ],
+      "id": "062c0fe8-56e2-40be-86da-2a0752bca1e8",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "NqIUOK3Y1Eg1Qg0e",
+          "name": "OpenAI API New 13/01/25"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"<Título creativo de 2–4 palabras para la imagen>\",\n  \"prompt\": \"<Prompt detallado y completo para la generación de la imagen>\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -940,
+        500
+      ],
+      "id": "a77fc9bb-bec8-48f9-91ee-1787b2e97d80",
+      "name": "Imagen y Titulo"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Publicación de Blog: \n{{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Descripción general\nEres un agente de IA que transforma artículos de blog en descripciones de prompts visuales para generar materiales gráficos de marketing. Estos visuales están diseñados para acompañar el artículo, ayudando a comunicar el mensaje de forma atractiva y alineada con la marca.\n\n## Objetivo\n- Leer y analizar el artículo de blog proporcionado.  \n- Identificar el mensaje principal, la idea clave o la conclusión del artículo.  \n- Crear un prompt gráfico claro y persuasivo que pueda usarse con un generador de imágenes por texto.  \n- El resultado debe ser un gráfico de estilo marketing —no una escena literal ni una foto hiperrealista— que:  \n  1. Refuerce o ilustre visualmente la idea principal del artículo  \n  2. Sea apropiado para un feed profesional de LinkedIn  \n  3. Transmita una sensación pulida, moderna y atractiva  \n\n## Instrucciones de salida\n- Genera dos campos:  \n  1. **title** (2–4 palabras)  \n  2. **prompt**  \n- Solo produce el prompt final para la imagen. No uses comillas.  \n- No repitas ni reformules el artículo de blog.  \n- No añadas explicaciones ni contenido extra.  \n- Nunca dejes campos en blanco como “Área de encabezado reservada para texto personalizable”.  \n- Incluye estadísticas numéricas cuando estén disponibles en el artículo original.  \n\n## Directrices de estilo\n- Piensa como un diseñador de marca o creativo de marketing.  \n- Los visuales pueden incluir: texto, gráficos, iconos, formas abstractas, superposiciones, ilustraciones modernas, efectos de movimiento, tipografía audaz (descrita, no renderizada) o conceptos metafóricos.  \n- Puedes sugerir disposiciones (por ejemplo, “diseño de pantalla dividida”, “encabezado con título destacado y sutil ilustración de fondo”).  \n- Asume que el prompt se ejecutará en herramientas de IA de generación de imágenes: tu descripción debe guiar esos sistemas de forma eficaz.  \n\n## Ejemplo de formato de prompt\nUn gráfico moderno de estilo plano que muestre un cerebro humano conectado a engranajes mecánicos, representando la fusión de IA y automatización. Fondo minimalista, degradados suaves y espacio para texto en sans-serif limpio en la parte superior.  \n\n#IMPORTANTE, que la imagen nunca este recortada ni nada por el estilo. Y que todo el texto este en castellano. SIEMPRE especifica en el prompt que toda la letra sea en español porfavor.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -1040,
+        220
+      ],
+      "id": "e5234301-cc1f-45bd-8dad-63bd849d1c8b",
+      "name": "Agente de Prompts de Imagen"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Agente de Prompts de Imagen').item.json.output.title }}.png",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "12ZhqwW2W9PHIdk3Sh3yytUl1PF4znayU",
+          "mode": "list",
+          "cachedResultName": "Imagenes Marketing ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/12ZhqwW2W9PHIdk3Sh3yytUl1PF4znayU"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -220,
+        320
+      ],
+      "id": "efde8136-89cd-4606-81e7-3fddd5255a05",
+      "name": "Subir",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "P6sMGoFA5ZwUppcG",
+          "name": "Google Drive account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.chatID }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -220,
+        80
+      ],
+      "id": "a6866471-a045-4971-a37f-7bdb884b4800",
+      "name": "Enviar Foto",
+      "webhookId": "8fcbda9c-8396-41f7-8f2d-39e4ae4337c7",
+      "credentials": {
+        "telegramApi": {
+          "id": "gmU2f8Y5ThiJGWmk",
+          "name": "MARKETING AGENTE"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.chatID }}",
+        "text": "={{ $('Agente Publicacion Blogs').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        80
+      ],
+      "id": "b26714f2-6e50-47d0-a027-74e411e3ceb7",
+      "name": "Enviar Blog",
+      "webhookId": "94fa70af-f2fc-4c05-8fa1-d9f55637485f",
+      "credentials": {
+        "telegramApi": {
+          "id": "gmU2f8Y5ThiJGWmk",
+          "name": "MARKETING AGENTE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tema del Blog: {{ $json.TemaBlog }}\n\nAudiencia Objetiva: {{ $json.AudienciaObjetiva }}",
+        "options": {
+          "systemMessage": "=# Descripción general\nEres un agente de IA especializado en crear artículos de blog profesionales, educativos y atractivos basados en cualquier tema proporcionado por el usuario.\n\n## Objetivos:\n- Empieza siempre realizando una búsqueda en tiempo real con la herramienta Tavily para recopilar la información más precisa y actualizada sobre el tema.  \n- El artículo de blog debe redactarse pensando en el público objetivo proporcionado.\n\nBasándote en tu investigación, genera un artículo de blog bien estructurado que:\n- Comience con una introducción atractiva e informativa que destaque la importancia del tema  \n- Mantenga un tono profesional, claro y fácil de leer  \n- Sea educativo, perspicaz y con profundidad  \n- Utilice encabezados, subencabezados y párrafos para mejorar la legibilidad  \n- Incorpore datos reales, ejemplos o estudios de caso, atribuyendo correctamente las fuentes (por ejemplo, “según [fuente]”)  \n- Use pocos emojis (solo si son muy relevantes y de forma mínima)  \n- Incluya una conclusión natural que resuma los puntos clave  \n- (Opcional pero recomendado) Sugiera próximos pasos para el lector, como artículos relacionados, recursos o consejos prácticos  \n\n## Instrucciones de salida:\n- Tu única salida debe ser el texto final del artículo de blog.  \n- No incluyas explicaciones, notas ni nada fuera del propio contenido del blog.\n\n## Ejemplo de flujo de trabajo:\n1. Recibir un tema (por ejemplo, “El retorno de la inversión de la automatización de almacenes”)  \n2. Usar Tavily para buscar y recopilar información, estudios o ejemplos recientes  \n3. Redactar un artículo de blog utilizando esa investigación  \n4. Formatearlo con una introducción atractiva, secciones estructuradas, citas de fuentes y una conclusión natural  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -1380,
+        220
+      ],
+      "id": "ea6fc499-f1b7-4743-b1cf-b010bd1247ca",
+      "name": "Agente Publicacion Blogs"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Usa esta herramienta para acceder a internet",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"api_key\": \"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\",\n    \"query\": \"{TerminoBusqueda}\",\n    \"search_depth\": \"basic\",\n    \"include_answer\": true,\n    \"topic\": \"news\",\n    \"include_raw_content\": true,\n    \"max_results\": 3\n} ",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "TerminoBusqueda",
+              "description": "Lo que el usuario ha solicitado para escribir un publicacion de Blog",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1400,
+        480
+      ],
+      "id": "065f8076-e517-4313-8386-5b69fb1d6f7a",
+      "name": "Tavily"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer TU CLAVE API AQUI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.output.prompt }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -700,
+        220
+      ],
+      "id": "711d5979-f195-4b2a-9dd6-fb65556a5a1d",
+      "name": "Generar Imagen con GPT-4o"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be08493c-7eed-4091-9cd4-6bbe4fa8c72c",
+              "name": "respuesta",
+              "value": "=Blog creado con exito, lo tienes disponible en el registro junto a la imagen!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        180,
+        80
+      ],
+      "id": "f55456c7-7fc2-4690-b040-b83c146edb88",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.7-sonnet",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1540,
+        480
+      ],
+      "id": "a4c88686-5250-4887-b77a-175a36d3525b",
+      "name": "Claude Sonnet 3.7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "a5tS5dusBZzLl5oY",
+          "name": "prueba youtube"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Agente Publicacion Blogs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Binary": {
+      "main": [
+        [
+          {
+            "node": "Enviar Foto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Subir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Prompts de Imagen",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagen y Titulo": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente de Prompts de Imagen",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Prompts de Imagen": {
+      "main": [
+        [
+          {
+            "node": "Generar Imagen con GPT-4o",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir": {
+      "main": [
+        [
+          {
+            "node": "Image Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Foto": {
+      "main": [
+        [
+          {
+            "node": "Enviar Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Publicacion Blogs": {
+      "main": [
+        [
+          {
+            "node": "Agente de Prompts de Imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Publicacion Blogs",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Imagen con GPT-4o": {
+      "main": [
+        [
+          {
+            "node": "Convert to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Blog": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet 3.7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Publicacion Blogs",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a4483b1b-5cfd-4b1f-9a56-0015aa939e22",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aac574544802a17aad902d42e8f7770e23d852adf6e8e0ac80531236fecac715"
+  },
+  "id": "GPeaWQfIlmsEDudS",
+  "tags": []
+}

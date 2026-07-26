@@ -1,0 +1,24 @@
+// Function node
+return items.map(item => {
+  // Si no hay binario, lo ignoramos
+  if (!item.binary || !item.binary.data) return item;
+
+  // Copiamos el buffer original a una nueva clave 'data'
+  // (si ya está en data simplemente lo reasignamos)
+  const original = item.binary.data;
+
+  item.binary.data = {
+    // el propio contenido base64
+    data: original.data,
+    // corregimos el mimeType
+    mimeType: 'image/jpeg',
+    // aseguramos el nombre de fichero correcto
+    fileName: original.fileName || 'file_1.jpg',
+    // opcional: mantener size si lo usas en algún sitio
+    fileSize: original.fileSize,
+    // opcional: extension
+    fileExtension: original.fileExtension || 'jpg',
+  };
+
+  return item;
+});

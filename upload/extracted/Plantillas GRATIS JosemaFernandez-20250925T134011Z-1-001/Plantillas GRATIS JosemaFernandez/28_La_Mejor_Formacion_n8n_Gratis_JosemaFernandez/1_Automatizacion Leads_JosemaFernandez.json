@@ -1,0 +1,455 @@
+{
+  "name": "#1 Automatizacion Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "BlunexAI",
+        "formDescription": "Automatiza tu empresa",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Ingresa aquí tu nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Ingresa aquí tu dirección de correo electrónico",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Número de Teléfono",
+              "placeholder": "ingresa aquí tu número de teléfono"
+            },
+            {
+              "fieldLabel": "Precio",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Básica: 1000 - 2000 $"
+                  },
+                  {
+                    "option": "Intermedia: 2000 - 4000 $"
+                  },
+                  {
+                    "option": "Avanzada: 4000 - 20.000 $"
+                  },
+                  {
+                    "option": "Consultoria (personalizada)"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Descripción detallada de la solución",
+              "fieldType": "textarea",
+              "placeholder": "Ingresa aquí una descripción detallada de la solución que necesita",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        -64
+      ],
+      "id": "c4bd61e8-44ab-4415-a8f4-9c5b23c25808",
+      "name": "On form submission",
+      "webhookId": "00df70ce-6c63-4602-8a04-d4b937014d06"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Precio }}",
+                    "rightValue": "Básica: 1000 - 2000 $",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e91dfd27-97e7-4a79-921c-ad803807d3e3"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Basica"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "51e55028-20ba-43d7-99e0-9116eafb96de",
+                    "leftValue": "={{ $json.Precio }}",
+                    "rightValue": "Intermedia: 2000 - 4000 $",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Intermedia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "20a397cd-4a6f-4dcf-9ece-967ac772cd02",
+                    "leftValue": "={{ $json.Precio }}",
+                    "rightValue": "Avanzada: 4000 - 20.000 $",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Avanzada"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -80,
+        -96
+      ],
+      "id": "595a3511-b94e-48e9-96ae-713b7a528a0d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "BlunexAI - Consultoría IA",
+        "emailType": "text",
+        "message": "=Hola {{ $json.Nombre }},\n\nMuchas gracias por contactar con nosotros.\n\nHa solicitado la siguiente automatización:\n\n{{ $json['Descripción detallada de la solución'] }}\n\nHa seleccionado una automatización básica.\n\n\nEn breves nos pondremos en contacto con usted.\n\nMuchas gracias,\n\nUn saludo",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        384,
+        -256
+      ],
+      "id": "6b444502-f5ac-4c15-9955-178d05a325a9",
+      "name": "Email Básica",
+      "webhookId": "578c4a5d-074d-4b0f-8bcf-307ebcda1324",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "BlunexAI - Consultoría IA",
+        "emailType": "text",
+        "message": "=Hola {{ $json.Nombre }},\n\nMuchas gracias por contactar con nosotros.\n\nHa solicitado la siguiente automatización:\n\n{{ $json['Descripción detallada de la solución'] }}\n\nHa seleccionado una automatización intermedia.\n\n\nNos pondremos en contacto con usted en un plazo de 24 horas.\n\nMuchas gracias,\n\nUn saludo",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        384,
+        -80
+      ],
+      "id": "852042ad-9999-47ba-9579-593f68222969",
+      "name": "Email Intermedia",
+      "webhookId": "578c4a5d-074d-4b0f-8bcf-307ebcda1324",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "BlunexAI - Consultoría IA",
+        "emailType": "text",
+        "message": "={{ $json.message.content }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        112
+      ],
+      "id": "59abd722-a791-440a-a708-9048b628e801",
+      "name": "Email Avanzada",
+      "webhookId": "578c4a5d-074d-4b0f-8bcf-307ebcda1324",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZcnoXHVEW0Mknve",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lHUOBewM43SCWJWhuHsm2wz_aeVsYGQPLda6Dcf374o",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.Nombre }}",
+            "Email": "={{ $json.Email }}",
+            "Teléfono": "={{ $json['Número de Teléfono'] }}",
+            "Precio": "={{ $json.Precio }}",
+            "Descripcion": "={{ $json['Descripción detallada de la solución'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Precio",
+              "displayName": "Precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -320,
+        -64
+      ],
+      "id": "912b1604-dbb4-438c-9e5b-3f2bbdc1fb47",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "l3JAlYfhCSkoPGTN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Redacta un email para un lead que acaba de ponerse en contacto con nosotros y tu objetivo es de confirmar que hemos recibido su formulario redactando un email personalizado.\n\nNombre del Lead: {{ $json.Nombre }}\n\nDetalle de la implementación que necesita el lead:\n{{ $json.Descripcion }}\n\n* No añadas el asunto en tu respueta.\n\n* En tu respuesta genera el contenido del email y no añadas nada más.\n\n* Empieza siempre con Hola {{ $json.Nombre }}, y finaliza con Josema Fernandez"
+            },
+            {
+              "content": "=Eres un redactor de correos electrónicos profesional. Tu objetivo es redactar un email para un lead que ha contactado con nosotros y que necesita implementar un servicio que te paso por la entrada.",
+              "role": "assistant"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        224,
+        112
+      ],
+      "id": "df244d11-2cde-4bff-a202-772097d30d66",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rRatTgE5Y050ZxO0",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Email Básica",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Intermedia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Básica": {
+      "main": [
+        []
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Avanzada": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Email Avanzada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "61f22d36-fbc7-46ed-89a2-650f98643a75",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f73766c8dff811f322680c8f9e08a80468d54b826c95e7acb37f9f1014260f9b"
+  },
+  "id": "VMKrXZbEyl9DjDmt",
+  "tags": []
+}

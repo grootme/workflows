@@ -1,0 +1,1729 @@
+{
+  "name": "Transform Podcasts into Viral TikTok Clips with Gemini AI & Auto-Posting",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "timestamp_granularities[]",
+              "value": "word"
+            },
+            {
+              "name": "model",
+              "value": "whisper-1"
+            },
+            {
+              "name": "response_format",
+              "value": "verbose_json"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data-audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7937fb71-6d52-47a9-ac97-ddfeb6e90893",
+      "name": "Audio Transcription",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2260,
+        180
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "id": "f9613fc5-005f-4886-9f00-2df4ca60f4b6",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        1080,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "id": "abe5be52-7074-4115-9ccb-42d5554d8dfb",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        1440,
+        60
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/transcript",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"audio_url\": \"{{ $json.upload_url }}\"\n}",
+        "options": {}
+      },
+      "id": "d881b93f-2429-4cfc-b01a-391769e38587",
+      "name": "Submit Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        740,
+        -460
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $node[\"Submit Job\"].json[\"id\"] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "d07921ee-9981-4eb6-9d02-6e5ae30c585f",
+      "name": "Check Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1160,
+        -460
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "0e8296de-3d44-47ee-ab04-f5d9e4e00daa",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6375bea5-d5b6-4d10-b32a-6b22ffcb3a4c",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1400,
+        -460
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5b4b58c-20d7-4c45-898d-4e6518f2fba6",
+              "name": "transcription_text",
+              "type": "string",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "id": "3e064366-ad18-42d5-bdd9-9420e95675f6",
+              "name": "word_details",
+              "type": "array",
+              "value": "={{ $json.words }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94454e4b-03b4-453e-b66e-3c399e833bf5",
+      "name": "Extract Results",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        60
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "id": "8b7013af-6179-4deb-89b5-78223f26b7b1",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        3040,
+        180
+      ],
+      "webhookId": "3648a845-4cc5-4d4a-a820-38a4f1906086",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "da50dbe5-0d78-4315-a9c4-29a36a34bff5",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "done"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2911de18-ccd2-46a9-9ce7-d4295d9cd65d",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        3500,
+        180
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-001",
+        "options": {}
+      },
+      "id": "fa226e38-eae2-4855-b712-097c57215221",
+      "name": "Google Gemini Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        3960,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"Who is the Most POWERFUL Man GLOBALLY? | PBD Podcast #pbdpodcast #power #exposed\"\n}"
+      },
+      "id": "1bb2fa87-a561-42e7-9aa0-d574f4b47d7f",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        4260,
+        320
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "formTitle": "Required Links",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "YouTube Video URL",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Copyright Free Background Video",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3bf7bb36-6679-4a84-88ea-98c6a5d10089",
+      "name": "Send the YouTube Video Links",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        480,
+        -960
+      ],
+      "webhookId": "4304503e-1200-4d7f-b062-7629b5ca0207",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "# Video Downloading and Extraction\n",
+        "height": 500,
+        "width": 3200,
+        "color": 4
+      },
+      "id": "2d9c4245-bc79-4e3a-a717-5c73fd15a839",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -1120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "audio",
+        "options": {}
+      },
+      "id": "d2a83d3c-4b5f-48d2-aed4-0a08b466909b",
+      "name": "Transcribe Podcast Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        500,
+        -460
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "id": "7cde47f6-56be-4c86-ba96-9cec366fb591",
+      "name": "Wait 1",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        960,
+        -460
+      ],
+      "webhookId": "ae60902e-1252-4bf5-a86c-3e77165ab8cd",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "content": "# Process Podcast Audio\n",
+        "height": 440,
+        "width": 1220,
+        "color": 5
+      },
+      "id": "9310b1db-a9ee-4385-98ac-7d496075c485",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Access the transcription data from the previous node\nconst transcriptData = $input.first().json.word_details; // Adjust this based on your node's output structure\n\n// Check if the data exists and is an array\nif (!transcriptData || !Array.isArray(transcriptData)) {\n  throw new Error(\"Transcription data is not an array or is undefined. Check the previous node's output.\");\n}\n\n// Map the transcript data to match your previous format\nconst formattedTranscript = transcriptData.map((word, index) => {\n  return {\n    text: word.text,   // Adjust 'text' to match your data's property name (e.g., 'word' or 'text')\n    index: index,      // Position in the array\n    start: word.start, // Start time (adjust units if needed, e.g., / 1000 for seconds)\n    end: word.end      // End time (adjust units if needed)\n  };\n});\n\n// Convert the formatted transcript to a JSON string\nconst transcriptJson = JSON.stringify(formattedTranscript);\n\n// Return the result in n8n’s expected format\nreturn [{ json: { transcriptJson: transcriptJson } }];"
+      },
+      "id": "35a62e94-576c-4636-b123-901accfd7b54",
+      "name": "Structure Transcription",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        760,
+        60
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are given a transcript array where each entry is an object with the following keys:\n- **text**: a string containing the transcript text.\n- **index**: a number.\n- **start**: the starting second.\n- **end**: the ending second.\n\n**Objective:**  \nExtract and merge highlights from the transcript. Identify segments that have high informational value, emotional impact, or key takeaways. Merge adjacent entries if they form a coherent highlight, and remove filler words while preserving meaning.\n\n**Instructions:**\n1. Analyze the transcript and extract coherent highlight segments.\n2. Merge adjacent entries if they form a coherent highlight.\n3. Remove any unnecessary filler words while retaining the essential meaning.\n4. Ensure that the total duration of all highlight segments is no more than 600 seconds.\n5. Ensure that the duration of each highlight is at least 30 seconds and no more than 120 seconds.\n6. Ensure that the segments do not overlap in time.\n\nFor each highlight, output a JSON object with exactly these keys:\n- **transcript**: the text of the highlight segment.\n- **start_index**: the starting word index (using the original value).\n- **end_index**: the ending word index (using the original value).\n\n**CRUCIAL OUTPUT FORMAT REQUIREMENTS:**\n- **Output ONLY a plain JSON array.** The final output must start with `[` and end with `]` and include nothing else.\n- **Do not include any markdown formatting, triple backticks, wrapper objects (such as an \"output\" key), or any additional text.**\n- **Do not output any extra explanation or commentary.** Your entire response must consist solely of the JSON array.\n\nFor example, the expected output format is:\n[\n  {\n    \"transcript\": \"I like this\",\n    \"start_index\": 10,\n    \"end_index\": 13\n  },\n  {\n    \"transcript\": \"It would be\",\n    \"start_index\": 16,\n    \"end_index\": 19\n  }\n]\n\nRemember: Your final response must be exactly the JSON array as specified—nothing else. No markdown fences, no extra keys, no additional text, only the JSON array.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "={{ $node[\"Structure Transcription\"].json[\"transcriptJson\"] }}"
+            }
+          ]
+        }
+      },
+      "id": "305c0bc0-be1d-40e4-ae1c-846131cb0b5d",
+      "name": "Podcast Best Moments Extraction",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        1080,
+        60
+      ],
+      "retryOnFail": true,
+      "typeVersion": 1.5,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "# Video Highlights Generation\n",
+        "height": 500,
+        "width": 1220,
+        "color": 6
+      },
+      "id": "91cb2cf2-0149-463f-8abe-c0449bf25abd",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4206c763-afdf-458b-bc41-682df756bfd7",
+      "name": "Loop Over Clips",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        1940,
+        -340
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "return $(\"Audio Transcription\").all().map(item => {\n  const words = item.json.words\n  const result = [];\n\n  for (let i = 0; i < words.length; i += 3) {\n    const chunk = words.slice(i, i + 3);\n    result.push({\n      words: chunk.map(word => word.word.charAt(0).toUpperCase() + word.word.slice(1)).join(' '),\n      start: chunk[0].start,\n      end: chunk[chunk.length - 1].end,\n    });\n  }\n\n  return {\n    json: {\n      chunks: result,\n    },\n  };\n});"
+      },
+      "id": "9e220d48-03b5-49e3-b48a-75c1c4ecf7bb",
+      "name": "Structure Transcription 2",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2520,
+        180
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.andynocode.com/api/function/video-generation/clip-video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"type\": \"clip-video\",\n    \"data\": {\n        \"clip_url\": \"{{ $('If5').item.json['download-url'] }}\",\n\"gameplay_url\": \"{{ $('If6').item.json['download-url'] }}\",\n    \"background_url\": \"{{ $('If5').item.json['download-url'] }}\",\n        \"transcripts\": {{ JSON.stringify($('Structure Transcription 2').item.json.chunks) }}\n    }\n}",
+        "options": {}
+      },
+      "id": "32b15c69-8c5e-477e-b037-b95f97f87dae",
+      "name": "Editing Clips",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2820,
+        180
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.andynocode.com/api/function/video-generation/progress/{{ $json.data.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "options": {}
+      },
+      "id": "f6f0a366-b959-41d2-872e-1be6f5153cd7",
+      "name": "Clip Ready?",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3300,
+        180
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf605d69-8ae6-4632-bbd0-d7b1cbb4eed5",
+              "name": "final-video-url",
+              "type": "string",
+              "value": "=https://api.andynocode.com{{ $json.data.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dd47276d-0c6d-4c2b-8643-7da519403bf7",
+      "name": "Structure Links",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        3780,
+        100
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analyze the following video transcript and generate a compelling TikTok title (under 60 characters, attention-grabbing) and captions (concise, engaging, highlights key moments/hooks).\nFocus on clarity, emotional appeal, and curiosity. Avoid generic phrases. Title must align with the transcript's core message or most viral moment. Output JSON format only.\n\nExample Output:\n\n```json```\n{\n  \"title\": \"Who is the Most POWERFUL Man GLOBALLY? | PBD Podcast #pbdpodcast #power #exposed\"\n}\n```json```\n   ",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "={{ $('Audio Transcription').last().json.text }}"
+            }
+          ]
+        }
+      },
+      "id": "ab6176f0-2db8-4883-babb-4bf0b0b5ee25",
+      "name": "Generate Title",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        3960,
+        100
+      ],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Structure Links').item.json['final-video-url'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "final-video"
+            }
+          }
+        }
+      },
+      "id": "c42d6d4f-a879-480d-a0f1-3ec7dfe2b7fb",
+      "name": "Download Final Clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        4400,
+        100
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $json.output.title }}"
+            },
+            {
+              "name": "user",
+              "value": "your_username"
+            },
+            {
+              "name": "platform[]",
+              "value": "tiktok"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "final-video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5547984f-5d8a-40ed-b8c4-847a346292d8",
+      "name": "Post To TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        5020,
+        300
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "id": "b22f48be-e0bf-4148-b286-12bd58eb9f8b",
+      "name": "Posting Interval",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        5360,
+        300
+      ],
+      "webhookId": "9eae2dfb-186e-44f9-918f-a5238b53641c",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "content": "# Pre-Processing Clips \n",
+        "height": 440,
+        "width": 2760,
+        "color": 4
+      },
+      "id": "01a7deb5-85b6-4df7-b207-a2c612b4330a",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2180,
+        -460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Pre-Processing Audio",
+        "height": 400,
+        "width": 560,
+        "color": 5
+      },
+      "id": "bb4cb09f-8765-4f60-a1b6-9255bed3f050",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2180,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Clip Editing",
+        "height": 400,
+        "width": 960,
+        "color": 6
+      },
+      "id": "569f7d3e-77ee-4185-b020-9991dc189c31",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2760,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Clip Preparation for Posting",
+        "height": 460,
+        "width": 880,
+        "color": 3
+      },
+      "id": "66bc2a7b-cd51-46f9-b4cc-3d40619866d3",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3740,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Posting",
+        "height": 300,
+        "width": 760
+      },
+      "id": "d7322c9b-9950-4411-883a-321ea030ac19",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4880,
+        160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# **Clip Generation**",
+        "height": 1120,
+        "width": 3440,
+        "color": 7
+      },
+      "id": "10a4dcdc-d297-409d-a1b4-0628270dbd9f",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1820,
+        -600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\n  \"transcript\": \"I like this\",\n  \"start_index\": 10,\n  \"end_index\": 13\n},{\n  \"transcript\": \"It would be\",\n  \"start_index\": 16,\n  \"end_index\": 19\n}]"
+      },
+      "id": "2344266c-2859-476c-a9ee-777bf65148a6",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1260,
+        260
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "# **Workflow Setup Step-by-Step Guide**\n\n\n### **Workflow Setup Step-by-Step Guide**\n\n**Initial Setup:**  \n1. Create an [AssemblyAI](https://www.assemblyai.com) account for Free.\n2. Create an account in [Google AI Studio](https://aistudio.google.com) for Free.\n3. Create an [Andynocode](https://www.andynocode.com) account for Free.\n4. Create an [Upload-Post](https://www.upload-post.com) account for Free\n \n\n### **Getting Started:**\n4. Go to your [Assembly AI Account](https://www.assemblyai.com/app/account) and copy your API Key.\n5. Go to the \"Transcribe Podcast Audio\", \"Submit Job\" and \"Check Status\" nodes and set up your Assembly credentials. (Process Podcast Audio section)\n\n***Name: Authorization***\n***Value: your_api_key***\n\n6. Go to the Google Gemini Chat model inside the section \"Video Highlights Generation\" and \"Clip Preparation for Posting\" and connect your credentials.\n\n***Host: https://generativelanguage.googleapis.com***\n***API Key: your_api_key***\n\n7. Go to \"Pre-Processing Audio\" section inside the \"Clip Generation and Posting\" section, and connect your Openai credentials inside the \"Audio Transcription\" node.\n\n***API Key: your_api_key***\n***Organization ID (optional): organization_id***\n***Base URL: https://api.openai.com/v1***\n\n8. Go to \"Clip Editing\" section inside the \"Clip Generation and Posting\" section, and connect your Andynocode credentials inside the \"Editing Clips\" and \"Clip Ready?\" nodes.\n\n***Name: api_key***\n***API Key: your_api_key***\n\n9. Go to \"Posting\" section inside the \"Clip Generation and Posting\" section, and connect your Upload-Post  credentials inside the \"Post To TikTok\" node.\n\n***Name: Authorization***\n***Value: Apikey your_api_key***\n\nFinally, inside the same node, in the body request you have to parse your username. It should look like:\n\n***Parameter Type: Form Data***\n***Name: user***\n***Value: your_username***\n\n7.  **The technology that powers this AI Agent incurs real operating costs to stay online.**\nThat’s why the workflow requires an active membership, priced at only **\\$29 per month**.\n\n **Activate your membership here:** [https://lemolex.gumroad.com/l/ypjdr](https://lemolex.gumroad.com/l/ypjdr)\n\nAfter activating the membership you need to set the nodes with the membership generated key: \n- Go to the membership link to get your key.\n- Copy the key (e.g 6F0E4C97-B72A4E69-A11BF6C4-AF123456) and paste it in the body parameters of \"Download Audio Stage 1\" node:\n*Name: auth-token*\n*Value:  6F0E4C97-B72A4E69-A11BF6C4-AF123456* **(example)**\n\n\n### **How To Use**\n- Find a podcast on YouTube and copy it's URL.\n- Find a cool \"attention grabbing\" video to put in the background (e.g. [Minecraft Parkour No Copyright Gameplay](https://youtu.be/XBIaqOm0RKQ?si=gre39-555aRTVsJ1) / [GTA 5 No Copyright Gameplay](https://youtu.be/z121mUPexGc?si=JGsTOI88tOxXdWYx)) and copy it's URL.\n- Start the workflow, send both URLs and effortlessly transform long-form podcast content into highly engaging, viral-ready TikTok clips\n\n\n**For further guidance, check my video or send me a message on [LinkedIn](https://www.linkedin.com/in/mateofioritorocha/)**",
+        "height": 1540,
+        "width": 620
+      },
+      "id": "14840781-5058-41c0-aede-0301f6928b4c",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        -1120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lemolex.app.n8n.cloud/webhook/74c67c3f-3883-40c2-b0ee-d67ecd1ff9fd",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "podcast_url",
+              "value": "={{ $('Send the YouTube Video Links').item.json['YouTube Video URL'] }}"
+            },
+            {
+              "name": "auth-token",
+              "value": "your-token (read setup guide)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e72716e2-e8c9-4673-9039-38747498d10c",
+      "name": "Download Audio Stage 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        920,
+        -960
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "https://lemolex.app.n8n.cloud/webhook/40a697b1-58ba-4ce6-9e52-55cb0cfebafa",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "job-id",
+              "value": "={{ $('Download Audio Stage 1').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "889d37c4-613c-4538-bfc2-d9c874c569d7",
+      "name": "Download Audio Stage 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1380,
+        -960
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "17476aa1-49ae-4697-aa41-95f00dee6875",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "finished"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c00f946a-5d94-4fa8-9ab6-e1664f57e43c",
+      "name": "If4",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1820,
+        -960
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "a715e6ff-3ef7-451b-9b2d-46ec5502bfe1",
+      "name": "Wait3",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        2880,
+        -880
+      ],
+      "webhookId": "51ec1118-740b-4b39-8056-a466ef4b0479",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{ $('If4').item.json['download-url'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "audio"
+            }
+          }
+        }
+      },
+      "id": "4fb892f0-78ca-4ee0-b0a9-eacf8ead7bf5",
+      "name": "Download Audio Stage 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3180,
+        -960
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lemolex.app.n8n.cloud/webhook/e18f63fc-e237-4f6e-b5a8-fffda04c4d8f",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "podcast_url",
+              "value": "={{ $('Send the YouTube Video Links').item.json['YouTube Video URL'] }}"
+            },
+            {
+              "name": "startSeconds",
+              "value": "={{ $json.start_index }}"
+            },
+            {
+              "name": "endSeconds",
+              "value": "={{ $json.end_index }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d1665ceb-e0e0-4947-8109-e160a2cda761",
+      "name": "Generating Main Clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2260,
+        -320
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "17476aa1-49ae-4697-aa41-95f00dee6875",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "finished"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "96c78578-acde-417c-9458-02b2079ea5e9",
+      "name": "If5",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2700,
+        -320
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "527b3532-a487-4316-8566-db5ef49ec7d7",
+      "name": "Wait4",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        3120,
+        -220
+      ],
+      "webhookId": "d9e3f283-7132-480e-a544-0df0a9a8d937",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lemolex.app.n8n.cloud/webhook/1d7e9186-e6c6-49f4-9469-21a77ab3fb37",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "background_url",
+              "value": "={{ $('Send the YouTube Video Links').item.json['Copyright Free Background Video'] }}"
+            },
+            {
+              "name": "startSeconds",
+              "value": "=3"
+            },
+            {
+              "name": "endSeconds",
+              "value": "={{ $json.interval }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b93abf84-c528-4103-b7ad-e7601d87af86",
+      "name": "Generating Background Clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3120,
+        -400
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "https://lemolex.app.n8n.cloud/webhook/40a697b1-58ba-4ce6-9e52-55cb0cfebafa",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "job-id",
+              "value": "={{ $('Generating Main Clip').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "54cf23a4-5acd-475e-9606-b000745a11ff",
+      "name": "Extracting Main Clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2480,
+        -320
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "https://lemolex.app.n8n.cloud/webhook/40a697b1-58ba-4ce6-9e52-55cb0cfebafa",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "job-id",
+              "value": "={{ $('Generating Background Clip').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2cf48f9c-96d5-4a7f-8bb1-998f860de4db",
+      "name": "Extracting Background Clip",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3380,
+        -380
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "17476aa1-49ae-4697-aa41-95f00dee6875",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "finished"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f943a07c-30a7-4cf5-a03a-2d83be52970f",
+      "name": "If6",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        3580,
+        -340
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "id": "fb267acb-fd86-4fc4-8786-42abad77c041",
+      "name": "Wait5",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        3740,
+        -240
+      ],
+      "webhookId": "20e97cfa-ebde-4090-a739-a2a7b087bdf5",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lemolex.app.n8n.cloud/webhook/8caa81c9-4322-4b79-8d69-045473776e51",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "podcast_url",
+              "value": "={{ $('Send the YouTube Video Links').item.json['YouTube Video URL'] }}"
+            },
+            {
+              "name": "startSeconds",
+              "value": "={{ $('Loop Over Clips').first().json.start_index }}"
+            },
+            {
+              "name": "endSeconds",
+              "value": "={{ $('Loop Over Clips').first().json.end_index }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "61701f1b-753d-4899-9d6a-8128604118d4",
+      "name": "Extracting Audio from Clips",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3900,
+        -360
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "https://lemolex.app.n8n.cloud/webhook/40a697b1-58ba-4ce6-9e52-55cb0cfebafa",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "job-id",
+              "value": "={{ $('Extracting Audio from Clips').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5038ecab-6910-4d7a-8abc-d1b40d6f1fc3",
+      "name": "Extracting Audio from Main Clip 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        4160,
+        -340
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "17476aa1-49ae-4697-aa41-95f00dee6875",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "finished"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dda840cc-44ed-4a30-8bcb-0d1391119b36",
+      "name": "If7",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        4360,
+        -340
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "id": "a3ec8ae5-1987-44db-8a7c-546ccc01ffb3",
+      "name": "Wait6",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        4500,
+        -220
+      ],
+      "webhookId": "8f686c54-b275-45be-9590-0f2bfed4c8c3",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{ $('If7').item.json['download-url'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data-audio"
+            }
+          }
+        }
+      },
+      "id": "199a5710-3013-4e81-bd42-29e6052227f2",
+      "name": "Download Clip Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        4760,
+        -320
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the two numbers from the incoming JSON (from the previous node)\nconst a = $('Loop Over Clips').first().json.end_index;\nconst b = $('Loop Over Clips').first().json.start_index;\n\n// Calculate the interval; if you always want a positive result, use Math.abs:\nconst interval = Math.abs(a - b) + 3;\n\n// Return a new item with your result under whatever key you like\nreturn [\n  { json: { interval } }\n];\n"
+      },
+      "id": "88cb7203-b1fb-4187-b816-aebb2a9f1163",
+      "name": "Clip Length Calculation",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2920,
+        -440
+      ],
+      "typeVersion": 2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Extract Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Structure Links",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Download Audio Stage 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Clip Length Calculation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Extracting Audio from Clips",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "node": "Download Clip Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Clip Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Download Audio Stage 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait4": {
+      "main": [
+        [
+          {
+            "node": "Extracting Main Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "Extracting Background Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait6": {
+      "main": [
+        [
+          {
+            "node": "Extracting Audio from Main Clip 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit Job": {
+      "main": [
+        [
+          {
+            "node": "Wait 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip Ready?": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editing Clips": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Title": {
+      "main": [
+        [
+          {
+            "node": "Download Final Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post To TikTok": {
+      "main": [
+        [
+          {
+            "node": "Posting Interval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Results": {
+      "main": [
+        [
+          {
+            "node": "Structure Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Clips": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Generating Main Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Links": {
+      "main": [
+        [
+          {
+            "node": "Generate Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Posting Interval": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Transcription": {
+      "main": [
+        [
+          {
+            "node": "Structure Transcription 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Clip Audio": {
+      "main": [
+        [
+          {
+            "node": "Audio Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Final Clip": {
+      "main": [
+        [
+          {
+            "node": "Post To TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Main Clip": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generating Main Clip": {
+      "main": [
+        [
+          {
+            "node": "Extracting Main Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio Stage 1": {
+      "main": [
+        [
+          {
+            "node": "Download Audio Stage 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio Stage 2": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio Stage 3": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Podcast Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clip Length Calculation": {
+      "main": [
+        [
+          {
+            "node": "Generating Background Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Transcription": {
+      "main": [
+        [
+          {
+            "node": "Podcast Best Moments Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Podcast Best Moments Extraction",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Podcast Best Moments Extraction",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Podcast Audio": {
+      "main": [
+        [
+          {
+            "node": "Submit Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Transcription 2": {
+      "main": [
+        [
+          {
+            "node": "Editing Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Title",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Background Clip": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generating Background Clip": {
+      "main": [
+        [
+          {
+            "node": "Extracting Background Clip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Audio from Clips": {
+      "main": [
+        [
+          {
+            "node": "Extracting Audio from Main Clip 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send the YouTube Video Links": {
+      "main": [
+        [
+          {
+            "node": "Download Audio Stage 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Podcast Best Moments Extraction": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracting Audio from Main Clip 2": {
+      "main": [
+        [
+          {
+            "node": "If7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d641fba-e87e-412e-9e94-8142095c059f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "XUN3zXAPePHOqVAi",
+  "tags": []
+}

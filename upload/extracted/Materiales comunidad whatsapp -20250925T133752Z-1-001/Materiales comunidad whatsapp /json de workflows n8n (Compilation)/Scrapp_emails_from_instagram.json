@@ -1,0 +1,393 @@
+{
+  "name": "Scrapp emails from instagram",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "cantidadConsultas"
+            },
+            {
+              "name": "tipoNegocio"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        40,
+        75
+      ],
+      "id": "7d8fe6d2-4aff-44cf-a984-b118530bf1e5",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        856,
+        75
+      ],
+      "id": "239a08fa-b93e-4d94-ba1e-1d9e5f7957e4",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "=https://serpapi.com/search?engine=google&q={{ $json[\"output.queries\"] }}&api_key=\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1076,
+        0
+      ],
+      "id": "73fa1023-38b1-4c63-b403-95f1da19d2ff",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28",
+          "mode": "list",
+          "cachedResultName": "Scrap import from web",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1174085852,
+          "mode": "list",
+          "cachedResultName": "IG",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Np1owYL-Xw922plKL_hJCNrcFg4PIeqQ52UW-FZlp28/edit#gid=1174085852"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "pagina": "={{ $json.pageName }}",
+            "correo": "={{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "pagina",
+              "displayName": "pagina",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1956,
+        75
+      ],
+      "id": "4427c303-2f2b-4aa6-aabb-6674ee284837",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aT0j8fwl8trvGISh",
+          "name": "kevinrivm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener datos de entrada\nconst items = $input.all();\n\n// Crear un array para guardar los correos y nombres\nconst extractedData = [];\n\nfor (const item of items) {\n  const results = item.json.organic_results || [];\n\n  for (const result of results) {\n    const text = result.snippet || '';\n    const title = result.title || '';\n    const emails = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g);\n    if (emails) {\n      for (const email of emails) {\n        extractedData.push({\n          email,\n          pageName: title\n        });\n      }\n    }\n  }\n}\n\n// Devolver todos los datos encontrados\nreturn extractedData.map(data => ({ json: data }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        0
+      ],
+      "id": "420313a3-6ad3-4d1c-98b0-e5d0161392f5",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1736,
+        0
+      ],
+      "id": "2ed09c2a-d3e4-440f-987d-2b559926b912",
+      "name": "Wait",
+      "webhookId": "20957c0c-ee00-4b5f-a456-3270b8e49a2b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nTarea:  \nGenera una lista de {{ $json.cantidadConsultas }} cadenas de búsqueda relacionadas con este tipo de negocio: {{ $json.tipoNegocio }}.\n\nInstrucciones:\n\n1. Formato de cada consulta:  \n- El formato de cada consulta debe ser: `site:instagram.com+\"<tipo_de_negocio_formateado>\"+\"@gmail.com\"`.\n- Dentro de las comillas `\"`, todos los espacios deben ser reemplazados por signos `+`.\n- Usa siempre minúsculas.\n- No uses acentos ni caracteres especiales.\n- No traduzcas el término proporcionado; respétalo tal como está en su idioma original.\n- Expande el término principal en variaciones relevantes, como servicios relacionados, sin cambiar el idioma.\n\n2. Generación de términos:\n- Crea sinónimos, servicios relacionados o especializaciones basadas en el tipo de negocio ingresado.\n- No inventes términos irreales ni genéricos.\n\n3. Formato de salida:\n- Devuelve exclusivamente un objeto JSON válido.\n- Solo debe existir un nodo llamado `\"queries\"`, cuyo valor será un arreglo que contenga todas las cadenas de búsqueda generadas.\n\nEjemplo de salida:\n\n```json\n{\n  \"queries\": [\n    \"site:instagram.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"odontologos+profesionales\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"consultorio+odontologico\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"dentistas+especialistas\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"ortodoncistas\\\"+\\\"@gmail.com\\\"\"\n  ]\n}\n```\n\nNotas importantes:\n- Asegúrate de que todos los términos sean adecuados y específicos al tipo de negocio.\n- No agregues explicaciones, encabezados u otro contenido fuera del objeto JSON solicitado.\n\n---\n\n¿Te gustaría también que te prepare un ejemplo de **Set Node** para meter estas queries en bucle? 🚀",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        260,
+        75
+      ],
+      "id": "3a292025-1374-45b2-a656-0f356c75081e",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ],
+      "id": "6784bb19-ff68-4cf5-9101-be22b0a80780",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "rprMsvriveuVeYby",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"queries\": [\n    \"site:instagram.com+\\\"clinica+dental\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"odontologos+profesionales\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"consultorio+odontologico\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"dentistas+especialistas\\\"+\\\"@gmail.com\\\"\",\n    \"site:instagram.com+\\\"ortodoncistas\\\"+\\\"@gmail.com\\\"\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        280
+      ],
+      "id": "251a8801-d59b-42ba-9b8a-f9c9b1110a5c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.queries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        636,
+        75
+      ],
+      "id": "179fb02a-12d0-4b31-8c4d-c0b029e64909",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "email",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        0
+      ],
+      "id": "dd400dad-ca56-40e2-97d7-dae26fec7eb8",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "content": "## Reemplaza con tu credencial de serpapi\nhttps://serpapi.com/search?engine=google&q={{ $json[\"output.queries\"] }}&api_key=[Tu api key]",
+        "height": 220,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -240
+      ],
+      "id": "922b38ce-eddc-4854-8f9f-b5f4891da05f",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "cantidadConsultas": "10",
+          "tipoNegocio": "dentistas"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8f6f58f1-909c-45a0-a87d-eee6f778df33",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+  },
+  "id": "U56SqDbYMxwcKWmY",
+  "tags": [
+    {
+      "createdAt": "2025-04-25T07:15:27.823Z",
+      "updatedAt": "2025-04-25T07:15:27.823Z",
+      "id": "gLFf96j4RIxjSTql",
+      "name": "lead gen"
+    }
+  ]
+}
