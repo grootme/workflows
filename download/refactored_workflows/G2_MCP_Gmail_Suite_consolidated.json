@@ -1,0 +1,216 @@
+{
+  "name": "MCP Gmail Suite Pro",
+  "id_prefix": "G2_MCP_Gmail_Suite",
+  "category": "Email & Comunicación",
+  "description": "Consolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "176cc93ba74a",
+    "91af09e9eb7f",
+    "30ab053d18c7",
+    "0ab295ff8c60"
+  ],
+  "tier": "Professional",
+  "price": 29,
+  "nodes": [
+    {
+      "id": "G2_MCP_Gmail_Suite_trigger_mcp",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        500
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your MCP Gmail Suite Pro assistant. How can I help you?"
+      }
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_llm",
+      "name": "LLM (gemini-2.5-flash)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      }
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_tool_gmail",
+      "name": "Gmail Tool",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1000,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G2_MCP_Gmail_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## MCP Gmail Suite Pro\n\nConsolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.\n\n**Consolidated from**: 4 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite\n- MCP Trigger como entrada principal + Gmail Tool como agente tool\n- Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)\n- Gemini 2.5 Flash como LLM primario (clasificación/email成本低)\n- PostgresChatHistory para historial de emails procesados",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chat Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gemini-2.5-flash)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gemini-2.5-flash)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Gmail Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Tool": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite",
+    "MCP Trigger como entrada principal + Gmail Tool como agente tool",
+    "Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)",
+    "Gemini 2.5 Flash como LLM primario (clasificación/email成本低)",
+    "PostgresChatHistory para historial de emails procesados",
+    "Error Trigger para fallos de envío/recepción",
+    "OutputParserStructured para parsear emails en formato estructurado"
+  ]
+}

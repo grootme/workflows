@@ -1,0 +1,592 @@
+{
+  "research_metadata": {
+    "task_id": "2-b",
+    "date": "2026-07-27",
+    "sources": [
+      "n8nmarkets.com homepage, pricing, sell, workflow-templates, forum pages",
+      "n8n.io/workflows page",
+      "automationworkflows.io marketplace",
+      "Reddit r/n8n thread on $100+ workflows",
+      "Medium articles on n8n workflow selling",
+      "n8n community forum on selling workflows",
+      "Web search results for pricing, commission, marketplace comparisons"
+    ]
+  },
+  "marketplace_overview": {
+    "n8nmarkets_stats": {
+      "name": "n8n Markets",
+      "url": "https://n8nmarkets.com",
+      "tagline": "The #1 n8n Workflow Marketplace to Buy, Sell & Hire Automation Experts",
+      "total_workflows_listed": "850+ (homepage), 4083 (workflow-templates page)",
+      "monthly_visitors": "significant (50,000+ automation professionals claimed)",
+      "countries_reached": "30+",
+      "languages": "30+ (auto-translated listings)",
+      "verified_experts_available": true,
+      "how_workflows_presented": {
+        "title": "Action-oriented, benefit-focused titles (e.g., 'Missed Call SMS Text-Back - AI-Powered Appointment Reply')",
+        "description": "2-3 sentence problem -> solution format. Starts with pain point, ends with outcome. Examples: 'Stop manually copying...' / 'Never miss a payment event again...'",
+        "screenshots": "Recommended 2-3 high-quality screenshots showing workflow canvas and key nodes",
+        "tags": "Category tags (CRM Integration, Lead Generation, Email Marketing, Data Processing, Social Media) + integration tags",
+        "pricing_display": "Individual price on listing page, bundle pricing for related workflows",
+        "seller_info": "Verified Seller badge, profile page, contact option",
+        "purchase_info": "Number of purchases shown (e.g., 311 purchases), reviews section, Q&A section",
+        "included_content": "n8n workflow JSON, setup guide, video tutorial, documentation",
+        "support": "30 days seller support included, money-back guarantee 14 days"
+      },
+      "pricing_distribution": {
+        "source_note": "Derived from sell page ($5-$50+ range), listing page prices ($16.85-$142.82 individual), bundle $393+, and Finnish site showing average $29-$99 per workflow",
+        "tiers": {
+          "free": "5-10% of listings (free 'lite' versions to build trust)",
+          "5_to_15_dollar": "15-20% (simple single-purpose workflows, basic integrations)",
+          "15_to_30_dollar": "25-30% (mid-complexity, multi-step workflows with error handling)",
+          "30_to_50_dollar": "20-25% (production-ready, AI-powered, multi-integration workflows)",
+          "50_to_100_dollar": "10-15% (complex AI agent workflows, enterprise-grade, multi-bundle kits)",
+          "100_plus_dollar": "5-10% (premium bundles, comprehensive automation suites)"
+        },
+        "observed_prices_from_listing_page": [
+          "$16.85",
+          "$20.54",
+          "$30.20",
+          "$43.75",
+          "$45.29",
+          "$59.00",
+          "$66.00",
+          "$68.14",
+          "$75.52",
+          "$100.87",
+          "$106.62",
+          "$134.89",
+          "$142.82"
+        ],
+        "average_workflow_price": "$29-$99",
+        "bundle_total_example": "$393.10"
+      },
+      "top_selling_categories": {
+        "lead_generation": {
+          "typical_price": "$29-$79",
+          "demand": "Very High"
+        },
+        "ai_customer_support_agents": {
+          "typical_price": "$49-$99",
+          "demand": "Very High"
+        },
+        "crm_integration": {
+          "typical_price": "$39-$79",
+          "demand": "High"
+        },
+        "email_automation": {
+          "typical_price": "$19-$49",
+          "demand": "High"
+        },
+        "social_media_repurposer": {
+          "typical_price": "$29-$69",
+          "demand": "High"
+        },
+        "ecommerce_automation": {
+          "typical_price": "$39-$89",
+          "demand": "Medium-High"
+        },
+        "finance_invoice": {
+          "typical_price": "$29-$59",
+          "demand": "Medium"
+        },
+        "data_processing_analytics": {
+          "typical_price": "$19-$49",
+          "demand": "Medium"
+        }
+      },
+      "commission_structure": {
+        "platform_commission": "10% on all sales and freelance contracts",
+        "monthly_fees": "None (free to join)",
+        "payment_provider": "Paddle (handles VAT/tax automatically)",
+        "payout_methods": "PayPal, Stripe, bank transfer",
+        "minimum_payout": "$50",
+        "hold_period": "7 days before withdrawal available",
+        "seller_requirements": "Free to list, unlimited workflow uploads, sales analytics dashboard"
+      },
+      "seller_positioning_strategies": {
+        "problem_solution_format": "Start with pain point ('Stop manually copying...'), end with outcome",
+        "production_ready_emphasis": "Add error handling and retry logic - buyers pay more for production-ready",
+        "ai_powered_labeling": "AI-powered workflows command 50-100% higher prices",
+        "free_lite_version": "Offer a free 'lite' version alongside premium to build trust",
+        "industry_specific": "Target specific industries (dentists, gyms, clinics) for higher conversion",
+        "multi_channel_notification": "Workflows covering Slack + Discord + SMS + Email + Sheets sell at premium"
+      }
+    },
+    "n8n_workflows_stats": {
+      "name": "n8n Official Workflow Templates",
+      "url": "https://n8n.io/workflows/",
+      "total_workflows": 10930,
+      "pricing": "All FREE (community-contributed templates)",
+      "categories": [
+        "Building AI agents",
+        "Security operations",
+        "Supercharge your CRM",
+        "Limitless integrations",
+        "Backend prototyping"
+      ],
+      "featured_sections": {
+        "newcomer_essentials": "Learn-by-doing starter templates",
+        "browse_by_category": "AI, SEO, Social Media, Email, Data, etc.",
+        "featured_templates": "Curated selection of trending workflows",
+        "verified_creators": "Highlighted community contributors"
+      },
+      "how_workflows_presented": {
+        "title": "Descriptive, action-oriented (e.g., 'Track SEO keyword rankings with Bright Data MCP and GPT-5.2 AI analysis')",
+        "description": "Brief 1-2 line description of what the workflow does",
+        "nodes_listed": "Key nodes shown (e.g., 'Edit Fields (Set)', 'OpenAI Chat Model', 'Telegram Trigger')",
+        "pricing": "Free - but can link to paid content via affiliates program",
+        "no_screenshots": "Minimal visual presentation, focused on node list and description"
+      },
+      "monetization": {
+        "creator_hub": "Official marketplace - requires 3 free workflows before selling paid ones",
+        "affiliate_program": "30% commission on n8n cloud referrals for 12 months",
+        "limitation": "No direct per-template pricing on n8n.io - all templates are free",
+        "strategy": "Use free templates to build credibility, then link to paid versions on own site or Gumroad"
+      }
+    },
+    "automationworkflows_io_stats": {
+      "name": "Automation Workflows",
+      "url": "https://automationworkflows.io",
+      "tagline": "The #1 Marketplace for Automation Workflows",
+      "platforms_covered": "Make.com, n8n, Zapier, and AI agents",
+      "listing_style": "Similar to n8nmarkets - detailed descriptions, AI-focused naming",
+      "notable_workflows": [
+        "Fitness Studio Front Desk Kit - AI Inquiry, No-Show & Missed-Lead",
+        "Client Onboarding Agent - Automated Welcome & Setup Emails",
+        "n8n AI RFP Grant Fit Scanner",
+        "n8n AI Support QA Scorecard Agent",
+        "n8n AI Contract Risk Summary Agent",
+        "n8n AI Local Review Response Agent",
+        "Instagram AI Comment-to-DM Lead Funnel",
+        "AI Invoice & Reminder Agent"
+      ],
+      "pricing_model": "Similar to n8nmarkets - individual and bundle pricing"
+    }
+  },
+  "pricing_distribution": {
+    "by_tier": {
+      "tier_free": {
+        "percentage_range": "5-10%",
+        "typical_content": "Simple single-integration workflows, 'lite' versions, community templates on n8n.io",
+        "purpose": "Build trust, drive traffic, establish credibility"
+      },
+      "tier_5_to_15": {
+        "percentage_range": "15-20%",
+        "typical_content": "Basic automation, single-purpose (Gmail labeler, simple webhook), 3-5 nodes",
+        "best_for": "Entry-level buyers, impulse purchases"
+      },
+      "tier_15_to_30": {
+        "percentage_range": "25-30%",
+        "typical_content": "Mid-complexity workflows, multi-step with basic error handling, 5-10 nodes",
+        "best_for": "Small business owners, specific use cases"
+      },
+      "tier_30_to_50": {
+        "percentage_range": "20-25%",
+        "typical_content": "Production-ready workflows, AI-powered single agents, multi-integration",
+        "best_for": "Business owners replacing manual processes"
+      },
+      "tier_50_to_100": {
+        "percentage_range": "10-15%",
+        "typical_content": "Complex AI agent workflows, enterprise-grade, comprehensive automation kits",
+        "best_for": "Companies automating entire business processes"
+      },
+      "tier_100_plus": {
+        "percentage_range": "5-10%",
+        "typical_content": "Premium bundles, full automation suites, industry-specific packages",
+        "best_for": "Enterprise clients, agencies"
+      }
+    },
+    "by_category": {
+      "ai_agent_workflows": {
+        "typical_price": "$49-$99",
+        "premium_price": "$99-$179",
+        "price_multiplier_vs_basic": "2-3x"
+      },
+      "crm_integration": {
+        "typical_price": "$39-$79",
+        "premium_price": "$79-$149"
+      },
+      "lead_generation": {
+        "typical_price": "$29-$69",
+        "premium_price": "$69-$129"
+      },
+      "email_automation": {
+        "typical_price": "$19-$49",
+        "premium_price": "$49-$99"
+      },
+      "social_media": {
+        "typical_price": "$29-$69",
+        "premium_price": "$69-$129"
+      },
+      "ecommerce": {
+        "typical_price": "$39-$89",
+        "premium_price": "$89-$169"
+      },
+      "rag_knowledge_base": {
+        "typical_price": "$59-$99",
+        "premium_price": "$99-$179"
+      },
+      "finance_invoicing": {
+        "typical_price": "$29-$59",
+        "premium_price": "$59-$99"
+      },
+      "hr_recruitment": {
+        "typical_price": "$49-$89",
+        "premium_price": "$89-$149"
+      },
+      "voice_ai": {
+        "typical_price": "$49-$99",
+        "premium_price": "$99-$179"
+      }
+    },
+    "competitive_comparison": {
+      "n8nmarkets": {
+        "price_range": "$5-$50+ (up to $142+ observed)",
+        "average_price": "$29-$99",
+        "commission": "10%",
+        "model": "One-time purchase, free, or name-your-price",
+        "strength": "Dedicated n8n marketplace, 850+ templates, auto-translated listings"
+      },
+      "n8n_io_community": {
+        "price_range": "Free",
+        "model": "All free, monetization via affiliate program (30% on cloud referrals)",
+        "strength": "10,930 templates, official, massive SEO reach",
+        "weakness": "No direct per-template revenue, requires 3 free before selling paid"
+      },
+      "automationworkflows_io": {
+        "price_range": "Similar to n8nmarkets",
+        "model": "Multi-platform (n8n, Make, Zapier)",
+        "strength": "Broader platform coverage, AI-focused naming conventions"
+      },
+      "gumroad": {
+        "price_range": "$15-$79 typical, up to $199 for bundles",
+        "commission": "10% fee (easiest setup) or 5% + $0.50 (handles VAT)",
+        "model": "Independent seller platform, full control over pricing",
+        "strength": "Best margins, handles VAT/tax, zero transaction fees on $39/month plan"
+      },
+      "zapier_marketplace": {
+        "price_range": "Free templates only (Zap templates)",
+        "model": "No paid template marketplace - templates drive platform subscriptions",
+        "note": "Zapier templates are free, pricing is for the platform subscription ($19.99/mo+)"
+      },
+      "make_marketplace": {
+        "price_range": "Free templates (scenario templates shared in community)",
+        "model": "Template sharing within platform, no paid marketplace",
+        "note": "Make focuses on platform subscriptions ($9-$29/mo), templates are community-shared"
+      },
+      "etsy_digital": {
+        "price_range": "$1.25-$5.00 (mass bundles, 8000+ templates for $1.25 on sale)",
+        "model": "Massive volume, very low prices, digital download",
+        "note": "Extreme low-price competition - 8000+ workflow bundle for $5 (75% off = $1.25)"
+      },
+      "fiverr_freelance": {
+        "price_range": "$50-$150 per gig (custom workflow building)",
+        "model": "Service-based, not template sales",
+        "note": "n8n automation as a service - $50 basic, $150 AI-powered"
+      },
+      "consulting_custom": {
+        "price_range": "$400-$5,000 per project (bespoke automation solutions)",
+        "model": "Custom consulting, solving real business problems",
+        "note": "Reddit: 'I sell problem solving for $2,500-$5,000' - clients don't know n8n, they pay for the solution"
+      }
+    }
+  },
+  "top_selling_examples": [
+    {
+      "name": "Missed Call SMS Text-Back - AI-Powered Appointment Reply",
+      "category": "Lead Generation / AI Agents",
+      "estimated_price": "$29-$49",
+      "description_pattern": "Pain point -> AI solution -> specific industry target. 'Automatically send a warm SMS reply when you miss a call. AI generates the message, Twilio sends it. Perfect for dentists, salons, clinics.'",
+      "why_it_sells": "Solves specific business pain (missed calls = lost revenue), AI-powered premium positioning, industry-specific targeting"
+    },
+    {
+      "name": "AI Customer Support Agent - GPT-Powered Webhook Chatbot",
+      "category": "AI Agents / CRM Integration",
+      "estimated_price": "$49-$79",
+      "description_pattern": "Deploy-in-minutes framing + escalation intelligence. 'Deploy an AI customer support agent in minutes. Handles common inquiries, knows when to escalate.'",
+      "why_it_sells": "AI agent positioning commands premium price, webhook flexibility, 'deploy in minutes' reduces adoption friction"
+    },
+    {
+      "name": "Social Media Repurposer - AI Multi-Platform Publisher",
+      "category": "Social Media / AI Content",
+      "estimated_price": "$29-$49",
+      "description_pattern": "Multi-platform value proposition. 'Stop copy-pasting content between platforms. Send one webhook with a topic or URL and this workflow does the rest.'",
+      "why_it_sells": "Clear time-saving value (multi-platform), single-input simplicity, broad appeal"
+    },
+    {
+      "name": "Stripe Payment Alerts - Slack + Discord + SMS + Email + Sheets",
+      "category": "E-Commerce / Finance / Notifications",
+      "estimated_price": "$39-$59",
+      "description_pattern": "Multi-channel coverage + specific trigger. 'Never miss a payment event again. When Stripe fires a webhook - this workflow notifies all your channels simultaneously.'",
+      "why_it_sells": "Multi-channel notification = higher perceived value, specific Stripe integration = targeted buyer pool"
+    },
+    {
+      "name": "GHL Client Onboarding Automation",
+      "category": "CRM Integration / E-Commerce",
+      "estimated_price": "$39-$69",
+      "description_pattern": "End-to-end process automation with timeline. 'When deal is won, GHL sends contract & n8n tracks everything: 24h/48h reminders, Slack alerts, welcome emails.'",
+      "why_it_sells": "Industry-specific (GHL users are paying customers), end-to-end process coverage, timeline-based shows production readiness"
+    },
+    {
+      "name": "Fitness Studio Front Desk Kit - AI Inquiry, No-Show & Missed-Lead Workflows",
+      "category": "Industry-Specific / AI Agents",
+      "estimated_price": "$49-$79 (3 workflows bundle)",
+      "description_pattern": "Kit/bundle framing + draft-only safety. '3 n8n workflows for gyms & studios: AI drafts replies to inquiries, no-shows, and missed leads. Draft-only - a human approves before anything sends.'",
+      "why_it_sells": "Bundle = higher price point, industry-specific = higher conversion, draft-only safety = trust"
+    },
+    {
+      "name": "Invoice Chaser - Auto Follow-Up & Escalation for Unpaid Invoices",
+      "category": "Finance / Email Automation",
+      "estimated_price": "$29-$49",
+      "description_pattern": "Escalation timeline + clear outcome. 'Reads your Google Sheet every morning and sends escalating follow-up emails - friendly reminder at day 1-7, firm at 8-14, final notice at 15+.'",
+      "why_it_sells": "Clear escalation logic = perceived sophistication, daily automation = production-ready, direct revenue impact"
+    },
+    {
+      "name": "Google Maps Local Service Leads - Find, Enrich & Draft Outreach Emails",
+      "category": "Lead Generation / Scraping",
+      "estimated_price": "$29-$59",
+      "description_pattern": "End-to-end lead pipeline. 'Find local businesses on Google Maps, extract their emails, and generate personalized outreach drafts in Gmail.'",
+      "why_it_sells": "Full pipeline from discovery to outreach, AI-personalized emails = premium, simplicity framing"
+    },
+    {
+      "name": "Email to Calendar + AI Meeting Prep",
+      "category": "Email / Calendar / AI Agents",
+      "estimated_price": "$29-$49",
+      "description_pattern": "Silent background automation + multi-trigger. 'This workflow runs silently every 15 minutes. When it detects a meeting confirmation, Zoom/Meet/Teams invite...'",
+      "why_it_sells": "Background automation = 'set and forget' appeal, multi-trigger detection = comprehensiveness, AI meeting prep = premium add-on"
+    },
+    {
+      "name": "WhatsApp + Telegram AI Customer Service Agent",
+      "category": "Chat / AI Agents",
+      "estimated_price": "$39-$69",
+      "description_pattern": "Multi-platform + escalation. 'Reply instantly to WhatsApp messages with AI - escalate urgencies to Telegram automatically.'",
+      "why_it_sells": "WhatsApp = massive user base, dual-platform = higher value, AI + escalation = sophisticated positioning"
+    },
+    {
+      "name": "n8n AI RFP Grant Fit Scanner",
+      "category": "AI Agents / Business Operations",
+      "estimated_price": "$49-$79",
+      "description_pattern": "Ready-to-import + structured output. 'Receives grant, tender, or RFP text and returns a structured fit score, deadline summary, requirements, missing documents, and next-action payload.'",
+      "why_it_sells": "Structured output format = professional positioning, 'ready-to-import' = zero friction, specific business operation"
+    },
+    {
+      "name": "Webhook Schema Drift Alarm",
+      "category": "Security & Ops / Developer Tools",
+      "estimated_price": "$19-$39",
+      "description_pattern": "Technical problem framing. 'A provider silently adds, removes, renames, or nests fields, and downstream n8n nodes keep running while writing bad data.'",
+      "why_it_sells": "Developer/technical audience = less price-sensitive, specific technical pain = clear value"
+    },
+    {
+      "name": "Finance YouTube Automation",
+      "category": "Social Media / Finance",
+      "estimated_price": "$39-$69",
+      "description_pattern": "Niche-specific daily content. 'A DAILY VIDEO MAKING WORKFLOW ABOUT FINANCE'",
+      "why_it_sells": "Niche-specific (finance content creators), daily automation = recurring value"
+    }
+  ],
+  "listing_best_practices": {
+    "description_template": {
+      "pattern": "PAIN_POINT -> SOLUTION -> OUTCOME -> SPECIFIC_INDUSTRIES",
+      "template": "[Stop/Never/Automatically] [specific pain point]. [This workflow] [does X, Y, Z]. [Perfect for/Result:] [specific outcome or industry].",
+      "examples": [
+        "Stop manually copying email details into your calendar. This workflow runs silently every 15 minutes and detects meeting confirmations...",
+        "Never miss a payment event again. When Stripe fires a webhook - this workflow notifies all your channels simultaneously...",
+        "Automatically send a warm SMS reply when you miss a call. AI generates the message, Twilio sends it. Perfect for dentists, salons, clinics."
+      ],
+      "key_elements": [
+        "1. Hook: Start with a verb (Stop, Never, Automatically) + specific pain point",
+        "2. Mechanism: Briefly explain what the workflow does (1-2 sentences)",
+        "3. Outcome: Quantifiable result or specific industry applicability",
+        "4. Requirements: List API credentials needed (transparency = trust)",
+        "5. What's Included: JSON file, setup guide, video tutorial, documentation",
+        "6. Support: 30 days seller support, money-back guarantee"
+      ]
+    },
+    "tag_strategy": {
+      "primary_category_tags": [
+        "CRM Integration",
+        "Lead Generation",
+        "Email Marketing",
+        "AI Agents",
+        "Social Media",
+        "E-Commerce",
+        "Data Processing",
+        "Finance",
+        "HR & Recruitment",
+        "Security & Ops"
+      ],
+      "integration_tags": [
+        "WhatsApp",
+        "Telegram",
+        "Slack",
+        "Gmail",
+        "Google Sheets",
+        "HubSpot",
+        "Stripe",
+        "OpenAI",
+        "Redis",
+        "Airtable"
+      ],
+      "ai_powered_tag": "Always include 'AI' or 'AI-Powered' or 'AI Agent' in title - commands 50-100% price premium",
+      "industry_tags": "Add industry-specific tags (Healthcare, Fitness, Legal, Real Estate) for targeted discovery",
+      "difficulty_tags": "Beginner, Intermediate, Advanced - helps buyers self-select",
+      "production_ready_tag": "Use 'Production-Ready' or 'Enterprise-Grade' for higher-priced listings"
+    },
+    "screenshot_guidance": {
+      "recommended_count": "2-3 screenshots minimum",
+      "screenshot_1": "Full workflow canvas - shows complexity and node connections",
+      "screenshot_2": "Key node configuration - shows specific settings and credentials structure",
+      "screenshot_3": "Output/result example - shows what the workflow produces",
+      "quality": "High-resolution, clean n8n canvas view, no personal data visible",
+      "annotations": "Add callout arrows/labels for key nodes (optional but effective)"
+    },
+    "positioning_tips": {
+      "production_ready_vs_template": {
+        "template": "Basic workflow JSON with minimal documentation - price $5-$15",
+        "production_ready": "Full package with error handling, retry logic, documentation, setup guide, video tutorial, 30-day support - price $29-$99",
+        "key_differentiator": "Error handling + retry logic + documentation = 3-5x price multiplier",
+        "n8nmarkets_sell_tip": "Add error handling and retry logic - buyers pay more for production-ready workflows"
+      },
+      "ai_agent_differentiation": {
+        "basic_automation": "Simple trigger -> action workflow - price $15-$30",
+        "ai_agent": "Workflow with AI decision-making, memory, escalation - price $49-$99",
+        "multi_agent": "Multiple AI agents coordinating - price $99-$179",
+        "premium_positioning": "Use 'Agent' terminology instead of 'Workflow' - Agent implies intelligence and autonomy"
+      },
+      "bundle_strategy": {
+        "single_workflow": "$19-$49",
+        "3_workflow_kit": "$49-$99 (perceived as comprehensive solution)",
+        "5_workflow_suite": "$99-$179 (complete automation package)",
+        "bundle_naming": "Use 'Kit', 'Suite', 'Pack' for bundles - implies completeness",
+        "n8nmarkets_approach": "Bundle related workflows (e.g., 'Front Desk Kit' with 3 workflows) for higher total revenue"
+      },
+      "trust_building": {
+        "free_lite_version": "Offer a free simplified version to build trust and reviews",
+        "verified_seller": "Get verified seller badge on n8nmarkets",
+        "reviews": "Respond promptly to buyer questions to earn 5-star reviews",
+        "money_back": "14-day money-back guarantee reduces purchase anxiety",
+        "support_included": "30 days seller support included - major trust signal"
+      }
+    }
+  },
+  "pricing_recommendations": {
+    "our_catalog_tiers": {
+      "starter": {
+        "price_range": "$19-$39",
+        "best_for": "Entry-level AI agent packs, single-purpose workflows",
+        "our_packages": [
+          "pkg-12: Starter AI Agent Pack ($19-$39)"
+        ],
+        "content": "1-2 simple AI workflows, basic documentation, limited support"
+      },
+      "gold": {
+        "price_range": "$39-$99",
+        "best_for": "Mid-complexity multi-integration workflows, production-ready AI agents",
+        "our_packages": [
+          "pkg-01: AI Customer Service Agent Pack ($49-$99)",
+          "pkg-03: Lead Generation & CRM Sync Pack ($49-$89)",
+          "pkg-04: E-Commerce AI Assistant Kit ($59-$99)",
+          "pkg-07: Voice AI Assistant Pack ($59-$99)",
+          "pkg-08: Booking & Appointment Automation ($49-$79)",
+          "pkg-10: Finance & Invoice Automation Kit ($59-$99)",
+          "pkg-11: GHL Client Onboarding Automation ($39-$69)"
+        ],
+        "content": "3-5 production-ready workflows, full documentation, error handling, 30-day support"
+      },
+      "premium": {
+        "price_range": "$79-$179",
+        "best_for": "Complex AI agent suites, RAG systems, multi-platform automation",
+        "our_packages": [
+          "pkg-02: Marketing Multi-Platform Automation ($79-$149)",
+          "pkg-05: HR Recruitment AI Suite ($89-$149)",
+          "pkg-06: RAG Knowledge Base Builder ($99-$179)",
+          "pkg-09: AI Video & Content Viral Pack ($99-$169)"
+        ],
+        "content": "5-8 advanced workflows, video tutorials, enterprise-grade error handling, priority support"
+      }
+    },
+    "competitive_positioning": {
+      "our_advantage": "118-workflow catalog is the largest n8n automation collection available - scale advantage over individual sellers with 1-5 workflows",
+      "pricing_philosophy": "Price based on VALUE (business problem solved) not complexity (node count). Businesses pay for outcomes, not technical sophistication.",
+      "key_insight_from_reddit": "'Nobody pays $100 for a workflow. They pay $100 to solve a business problem.' - Position every listing as a business solution, not a technical product.",
+      "premium_ai_positioning": "AI Agent workflows should use 'Agent' terminology and price 2-3x higher than basic automation. Our AI agent workflows are our highest-value assets.",
+      "bundle_vs_individual": "Sell bundles (kits/packs) as primary offering, individual workflows as secondary. Bundles generate higher total revenue and perceived value.",
+      "marketplace_strategy": "List on n8nmarkets (10% commission, built-in audience) AND Gumroad (5%+$0.50, best margins) AND automationworkflows.io (multi-platform reach)"
+    },
+    "suggested_prices_by_category": {
+      "ai_customer_service_agents": {
+        "individual": "$39-$59",
+        "kit_3_workflows": "$69-$99",
+        "our_pack_price": "$49-$99",
+        "justification": "AI agents command premium; customer service is highest-demand category"
+      },
+      "marketing_multi_platform": {
+        "individual": "$29-$49",
+        "kit_5_workflows": "$89-$149",
+        "our_pack_price": "$79-$149",
+        "justification": "Multi-platform content repurposing is top seller on n8nmarkets"
+      },
+      "lead_generation_crm": {
+        "individual": "$29-$49",
+        "kit_3_workflows": "$59-$89",
+        "our_pack_price": "$49-$89",
+        "justification": "Lead gen is #1 demand category; CRM integration adds premium"
+      },
+      "rag_knowledge_base": {
+        "individual": "$49-$79",
+        "kit_5_workflows": "$99-$179",
+        "our_pack_price": "$99-$179",
+        "justification": "RAG is most technically complex; enterprise buyers less price-sensitive"
+      },
+      "voice_ai_assistant": {
+        "individual": "$39-$69",
+        "kit_3_workflows": "$69-$99",
+        "our_pack_price": "$59-$99",
+        "justification": "Voice AI is emerging high-value category; novelty commands premium"
+      },
+      "ecommerce_ai": {
+        "individual": "$29-$49",
+        "kit_4_workflows": "$59-$99",
+        "our_pack_price": "$59-$99",
+        "justification": "E-commerce automation is proven high-demand; AI assistant = premium"
+      },
+      "hr_recruitment": {
+        "individual": "$39-$59",
+        "kit_5_workflows": "$89-$149",
+        "our_pack_price": "$89-$149",
+        "justification": "HR/recruitment workflows have clear business ROI; less price-sensitive buyers"
+      },
+      "finance_invoicing": {
+        "individual": "$19-$39",
+        "kit_3_workflows": "$49-$79",
+        "our_pack_price": "$59-$99",
+        "justification": "Invoice chasing proven seller; finance automation = direct revenue impact"
+      },
+      "booking_appointments": {
+        "individual": "$19-$39",
+        "kit_3_workflows": "$49-$79",
+        "our_pack_price": "$49-$79",
+        "justification": "Appointment automation is proven category; AI meeting prep adds value"
+      },
+      "social_media_content": {
+        "individual": "$29-$49",
+        "kit_5_workflows": "$99-$169",
+        "our_pack_price": "$99-$169",
+        "justification": "Content creation + viral video is high-demand; AI video generation = premium"
+      },
+      "ghl_onboarding": {
+        "individual": "$29-$49",
+        "kit_3_workflows": "$39-$69",
+        "our_pack_price": "$39-$69",
+        "justification": "GHL-specific = targeted niche; GoHighLevel users are paying customers"
+      },
+      "starter_ai_agent": {
+        "individual": "$9-$19",
+        "kit_2_workflows": "$19-$39",
+        "our_pack_price": "$19-$39",
+        "justification": "Entry-level pricing for trust-building; upsell to gold/premium packs"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Multi-Agent Orchestrator Template",
+  "description": "Template base para orchestrator con switch routing, sub-workflows, y tiered LLM selection.",
+  "category": "IA & Agentes",
+  "nodes": [
+    {
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "name": "Chat Trigger",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "name": "Classification LLM (mini)",
+      "config": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "name": "Route Parser",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.switch",
+      "name": "Route Switch",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "name": "Sub-Workflow A",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "name": "Sub-Workflow B",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.executeWorkflow",
+      "name": "Sub-Workflow C",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.merge",
+      "name": "Results Merge",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "name": "Response LLM (GPT-4.1)",
+      "config": {
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "name": "Orchestrator Memory",
+      "config": {}
+    }
+  ],
+  "tier": "Enterprise",
+  "price": 59
+}

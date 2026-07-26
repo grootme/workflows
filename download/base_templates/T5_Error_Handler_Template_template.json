@@ -1,0 +1,49 @@
+{
+  "name": "Error Handler Template",
+  "description": "Template base para Global Error Handler con severity routing, Slack/Email notification, Redis DLQ, y exponential backoff.",
+  "category": "Utilidades & DevOps",
+  "nodes": [
+    {
+      "type": "n8n-nodes-base.errorTrigger",
+      "name": "Error Trigger",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.set",
+      "name": "Parse Error",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.switch",
+      "name": "Severity Switch",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.slack",
+      "name": "Critical Alert Slack",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.gmail",
+      "name": "Error Email",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.googleSheets",
+      "name": "Error Log Sheet",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.redis",
+      "name": "DLQ Queue",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.wait",
+      "name": "Backoff Wait",
+      "config": {}
+    }
+  ],
+  "tier": "Starter",
+  "price": 15
+}

@@ -1,0 +1,192 @@
+{
+  "name": "MCP Contactos Suite Pro",
+  "id_prefix": "G3_MCP_Contactos_Suite",
+  "category": "MCP Tools",
+  "description": "Consolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "ff712224b2bb",
+    "bbdff9888ab7",
+    "6416cb63813a"
+  ],
+  "tier": "Professional",
+  "price": 25,
+  "nodes": [
+    {
+      "id": "G3_MCP_Contactos_Suite_trigger_mcp",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        500
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your MCP Contactos Suite Pro assistant. How can I help you?"
+      }
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_llm",
+      "name": "LLM (gemini-2.5-flash)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      }
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G3_MCP_Contactos_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## MCP Contactos Suite Pro\n\nConsolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.\n\n**Consolidated from**: 3 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Unificar 3 variantes Contactos en 1 MCP Contactos Suite\n- MCP Trigger + googleSheetsTool como base de datos contactos\n- Gemini 2.5 Flash para búsqueda/classificación de contactos\n- PostgresChatHistory para contexto conversacional\n- Añadir sub-workflow para CRUD operations en contactos",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chat Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gemini-2.5-flash)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gemini-2.5-flash)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Unificar 3 variantes Contactos en 1 MCP Contactos Suite",
+    "MCP Trigger + googleSheetsTool como base de datos contactos",
+    "Gemini 2.5 Flash para búsqueda/classificación de contactos",
+    "PostgresChatHistory para contexto conversacional",
+    "Añadir sub-workflow para CRUD operations en contactos"
+  ]
+}

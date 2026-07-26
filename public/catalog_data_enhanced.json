@@ -15145,5 +15145,5136 @@
       "tasks": "Listar en n8nmarkets.com, proposals para verticals, marketing launch",
       "deliverable": "Marketplace live"
     }
-  ]
+  ],
+  "phase1_refactoring": {
+    "phase1_summary": {
+      "phase": "Phase 1 - Refactoring Urgente",
+      "date": "2026-07-26T23:40:24.043815",
+      "status": "completed",
+      "original_stats": {
+        "total_workflows": 118,
+        "duplications": 14,
+        "similarities": 41,
+        "unique_workflow_ids_in_duplicates": 22,
+        "unique_workflow_ids_in_similarities": 51
+      },
+      "consolidated_stats": {
+        "consolidation_groups": 13,
+        "total_original_workflows_merged": 54,
+        "mcp_server_templates": 6,
+        "base_templates": 6,
+        "marketplace_catalog_items": 25,
+        "total_catalog_value": 977,
+        "bundle_savings": {
+          "MCP_Tools_Bundle": {
+            "items": [
+              "G1_MCP_Calendar_Suite",
+              "G2_MCP_Gmail_Suite",
+              "G3_MCP_Contactos_Suite"
+            ],
+            "individual_total": 89,
+            "bundle_price": 69,
+            "savings": "22%"
+          },
+          "Marketing_Suite_Bundle": {
+            "items": [
+              "G5_Marketing_MultiAgent_Suite",
+              "G7_Imagenes_Citas_Suite",
+              "G8_Video_Viral_Suite"
+            ],
+            "individual_total": 187,
+            "bundle_price": 149,
+            "savings": "20%"
+          },
+          "ECommerce_Suite_Bundle": {
+            "items": [
+              "G4_Ecommerce_Agent_Suite",
+              "MCP_ECommerce_Server"
+            ],
+            "individual_total": 120,
+            "bundle_price": 99,
+            "savings": "17%"
+          },
+          "Full_Catalog_Bundle": {
+            "items": "All 13 consolidated workflows + 6 MCP servers",
+            "individual_total": 600,
+            "bundle_price": 399,
+            "savings": "33%"
+          }
+        }
+      },
+      "refactoring_improvements": {
+        "duplicates_eliminated": "14 → 0 (all merged into consolidation groups)",
+        "similarities_consolidated": "41 → 13 production-ready workflows",
+        "error_handling_added": "Global Error Handler linked to ALL workflows",
+        "persistent_memory": "PostgresChatHistory replacing BufferWindowMemory in production",
+        "tiered_llm": "Cost optimization 60-80% via tiered model selection",
+        "mcp_servers": "6 new MCP server templates for client integration",
+        "base_templates": "6 starter templates for rapid development",
+        "architectural_patterns": "6 patterns applied (Error Trigger, Sub-Workflow, Tiered LLM, MCP, Circuit Breaker, Idempotency)"
+      },
+      "marketplace_readiness": {
+        "production_ready_items": 25,
+        "total_price_range": "$15 - $89",
+        "average_price": 39.08,
+        "recommended_platforms": [
+          "n8nmarkets.com (10% commission)",
+          "Gumroad (5%+$0.50)",
+          "automationworkflows.io"
+        ],
+        "competitive_positioning": "AI Agent terminology + Production-Ready + Error Handling + Persistent Memory"
+      }
+    },
+    "consolidation_groups": {
+      "G1_MCP_Calendar_Suite": {
+        "title": "MCP Calendar Suite Pro",
+        "category": "Calendario & Agenda",
+        "description": "Consolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.",
+        "original_workflows": [
+          "MCP_Calendario_Voz_Josema_Fernandez (4 copias exactas, 5 nodos)",
+          "MCP Calendar (2 copias, 7 nodos)",
+          "Agente_Calendario_Josema_Fernandez (7 nodos)",
+          "Agente Calendario (9 nodos)"
+        ],
+        "workflow_ids": [
+          "34a2018e30a1",
+          "b3f7944567ea",
+          "bcc58f943518",
+          "aeb23378d1a4",
+          "c3b2fcc3fa90",
+          "595b39a05bf5",
+          "b0531fcce43c"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 18,
+        "tier": "Professional",
+        "price": 35,
+        "refactoring_notes": [
+          "Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger",
+          "MCP Calendar duplicado → unificar en el mismo workflow con branch logic",
+          "Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal",
+          "Añadir Error Trigger Workflow para handling global",
+          "Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+          "Memoria: PostgresChatHistory para persistencia entre sesiones",
+          "Añadir googleCalendarTool como tool del agente",
+          "Voice support: usar mcpTrigger + WhatsAppTrigger para entrada voz/texto"
+        ]
+      },
+      "G2_MCP_Gmail_Suite": {
+        "title": "MCP Gmail Suite Pro",
+        "category": "Email & Comunicación",
+        "description": "Consolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.",
+        "original_workflows": [
+          "MCP_Gmail_Voz_Josema_Fernandez (2 copias exactas, 6 nodos)",
+          "MCP Gmail (2 copias, 2-6 nodos)"
+        ],
+        "workflow_ids": [
+          "176cc93ba74a",
+          "91af09e9eb7f",
+          "30ab053d18c7",
+          "0ab295ff8c60"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 14,
+        "tier": "Professional",
+        "price": 29,
+        "refactoring_notes": [
+          "Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite",
+          "MCP Trigger como entrada principal + Gmail Tool como agente tool",
+          "Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)",
+          "Gemini 2.5 Flash como LLM primario (clasificación/email成本低)",
+          "PostgresChatHistory para historial de emails procesados",
+          "Error Trigger para fallos de envío/recepción",
+          "OutputParserStructured para parsear emails en formato estructurado"
+        ]
+      },
+      "G3_MCP_Contactos_Suite": {
+        "title": "MCP Contactos Suite Pro",
+        "category": "MCP Tools",
+        "description": "Consolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.",
+        "original_workflows": [
+          "MCP_Contactos_Voz_Josema_Fernandez (2 copias exactas, 2 nodos)",
+          "MCP Contactos (6 nodos)"
+        ],
+        "workflow_ids": [
+          "ff712224b2bb",
+          "bbdff9888ab7",
+          "6416cb63813a"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 12,
+        "tier": "Professional",
+        "price": 25,
+        "refactoring_notes": [
+          "Unificar 3 variantes Contactos en 1 MCP Contactos Suite",
+          "MCP Trigger + googleSheetsTool como base de datos contactos",
+          "Gemini 2.5 Flash para búsqueda/classificación de contactos",
+          "PostgresChatHistory para contexto conversacional",
+          "Añadir sub-workflow para CRUD operations en contactos"
+        ]
+      },
+      "G4_Ecommerce_Agent_Suite": {
+        "title": "E-Commerce AI Agent Suite",
+        "category": "E-Commerce & Ventas",
+        "description": "Consolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.",
+        "original_workflows": [
+          "Agente_Ecommerce_v1 (54 nodos)",
+          "Agente_Ecommerce_v2 (47 nodos)",
+          "Agente_Ecommerce_v3 (54 nodos)",
+          "Agente eCommerce (5 nodos)",
+          "Shopify (64 nodos)",
+          "Automatizacion_Nano_Banana (12 nodos)",
+          "APP_Nano_Banana (8 nodos)"
+        ],
+        "workflow_ids": [
+          "06a21f4cfdb6",
+          "8ec0b17a7a3d",
+          "3df672ef2aa0",
+          "5dcb639d5a8f",
+          "274162eed799",
+          "75dc9920251e",
+          "1b63c935bcd3"
+        ],
+        "consolidation_action": "create_modular_suite",
+        "target_nodes": "3 sub-workflows + 1 orchestrator",
+        "tier": "Enterprise",
+        "price": 75,
+        "refactoring_notes": [
+          "v1/v2/v3 → consolidar en 1 E-Commerce Agent principal (mejor de v3 como base)",
+          "Shopify → convertir a sub-workflow Shopify Integration",
+          "Nano Banana → convertir a sub-workflow E-Commerce Nano Platform",
+          "Orchestrator: E-Commerce Suite Master con switch para routing",
+          "GPT-4.1 como LLM principal (razonamiento complejo para e-commerce)",
+          "GPT-4o-mini como tool model (clasificación de productos, routing)",
+          "Memoria: PostgresChatHistory + PGVector para productos catalog RAG",
+          "shopifyTool + wooCommerceTool + googleSheetsTool como tools",
+          "Error Trigger global + Circuit Breaker para API calls",
+          "Idempotency keys en todas las operaciones de checkout"
+        ]
+      },
+      "G5_Marketing_MultiAgent_Suite": {
+        "title": "Marketing Multi-Agent Suite",
+        "category": "Marketing & Leads",
+        "description": "Consolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.",
+        "original_workflows": [
+          "Agente Blogs - Marketing (14 nodos)",
+          "Agente LinkedIn - Marketing (14 nodos)",
+          "Agente Videos - Marketing (26 nodos)",
+          "Buscador Imagenes - Marketing (11 nodos)",
+          "Creador Imagenes - Marketing (9 nodos)",
+          "Sistema Multi-Agentes Marketing (15 nodos)",
+          "Multiagente MCP (12 nodos)"
+        ],
+        "workflow_ids": [
+          "a79082d0d756",
+          "47512a6d55f7",
+          "46e23bfdcbaf",
+          "9203f7427ad2",
+          "ea958cb10748",
+          "2330870731d8",
+          "391059fe9a6f"
+        ],
+        "consolidation_action": "create_modular_suite",
+        "target_nodes": "1 orchestrator + 5 sub-workflows",
+        "tier": "Enterprise",
+        "price": 89,
+        "refactoring_notes": [
+          "Orchestrator: Marketing Agent Master con switch por tipo (blog/linkedin/video/images)",
+          "Sub-workflow: Blog Content Agent (generación de artículos)",
+          "Sub-workflow: LinkedIn Agent (posts + networking)",
+          "Sub-workflow: Video Agent (scripts + descriptions)",
+          "Sub-workflow: Image Agent (search + creation con DALL-E/Flux)",
+          "GPT-4.1 como orchestrator LLM (razonamiento para routing)",
+          "Gemini 2.5 Flash como sub-agent LLM (contenido generation económico)",
+          "Memoria: PostgresChatHistory para contexto de marca",
+          "RAG: vectorStoreQdrant para contenido histórico de marketing",
+          "MCP Trigger + Chat Trigger para entrada",
+          "Error handling: retry con exponential backoff en API calls"
+        ]
+      },
+      "G6_Asistente_Platform": {
+        "title": "Asistente AI Platform (Modular)",
+        "category": "IA & Agentes",
+        "description": "Consolidación: Asistente personal + Asistente Abogado + Asistente Teléfono + Asistente_de_Voz_Transcribir + Asistente_de_Voz_MCP. Resultado: plataforma modular con sub-workflows por especialidad.",
+        "original_workflows": [
+          "Asistente personal (19 nodos)",
+          "Asistente Abogado (18 nodos)",
+          "Asistente Teléfono (9 nodos)",
+          "Asistente_de_Voz_Transcribir (20 nodos)",
+          "Asistente_de_Voz_MCP (9 nodos)"
+        ],
+        "workflow_ids": [
+          "0e3832fb0e5c",
+          "8c6ee9193c7b",
+          "e2b364912ce7",
+          "8b7aa89b835f",
+          "2b89027b0fa3"
+        ],
+        "consolidation_action": "create_modular_suite",
+        "target_nodes": "1 orchestrator + 4 sub-workflows",
+        "tier": "Enterprise",
+        "price": 69,
+        "refactoring_notes": [
+          "Orchestrator: Asistente Platform Master",
+          "Sub-workflow: Asistente General (personal tasks)",
+          "Sub-workflow: Asistente Legal (abogado especializado)",
+          "Sub-workflow: Asistente Voice (teléfono + transcripción)",
+          "Sub-workflow: Asistente MCP (con tools MCP externos)",
+          "Tiered model: GPT-4.1 para legal (razonamiento complejo) + Gemini Flash para general",
+          "Memoria: PostgresChatHistory + Mem0 para personalización",
+          "Voice: Whisper para transcripción + TTS para respuesta",
+          "MCP integration: conectar a MCP servers externos"
+        ]
+      },
+      "G7_Imagenes_Citas_Suite": {
+        "title": "AI Image & Quote Generator Suite",
+        "category": "Social Media & Contenido",
+        "description": "Consolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.",
+        "original_workflows": [
+          "Crear imágenes con citas (con asistente) (2 copias exactas, 16 nodos)",
+          "Crear imágenes con citas backup BIEN (27 nodos)",
+          "Crear imágenes con citas backup (25 nodos)"
+        ],
+        "workflow_ids": [
+          "1f1125544e38",
+          "c87d94a61f22",
+          "73c5f5a89e86",
+          "7422dd1111a7"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 22,
+        "tier": "Professional",
+        "price": 39,
+        "refactoring_notes": [
+          "Consolidar 4 variantes → 1 workflow production-ready",
+          "Usar la versión 'backup BIEN' como base (27 nodos, más completa)",
+          "Añadir template system: Google Sheets con templates de quotes",
+          "Gemini 2.5 Flash para quote generation (cost-effective)",
+          "DALL-E 3 / OpenAI Image para image generation",
+          "Añadir error handling para API rate limits",
+          "Output: Google Drive + Social Media posting"
+        ]
+      },
+      "G8_Video_Viral_Suite": {
+        "title": "AI Video Content Suite",
+        "category": "Voz & Transcripción",
+        "description": "Consolidación: 2 copias 'Crear videos virales' (99.67%) + 2 video generators similares (68.81%). Resultado: suite de video con sub-workflows.",
+        "original_workflows": [
+          "Crear videos virales (2 copias, 29-30 nodos)",
+          "AI-Powered Short-Form Video Generator (41 nodos)",
+          "Fully Automated AI Video Generation (51 nodos)"
+        ],
+        "workflow_ids": [
+          "524aacfb973a",
+          "fced4db3afef",
+          "df8ddb2be603",
+          "7ab103416427"
+        ],
+        "consolidation_action": "create_modular_suite",
+        "target_nodes": "1 orchestrator + 2 sub-workflows",
+        "tier": "Enterprise",
+        "price": 59,
+        "refactoring_notes": [
+          "Consolidar videos virales (2 copias) → 1 base workflow",
+          "Short-Form Video Generator → sub-workflow de short content",
+          "Full Video Generator → sub-workflow de long-form content",
+          "Orchestrator con Switch para tipo de video",
+          "ElevenLabs para voiceover + Kling/Flux para visuals",
+          "GPT-4.1 para script generation (razonamiento narrativo)",
+          "Gemini Flash para descriptions/metadata (cost-effective)",
+          "PostgresChatHistory para estilo preferencias",
+          "Multi-platform publishing: YouTube + TikTok + Instagram"
+        ]
+      },
+      "G9_Social_Scraper_Suite": {
+        "title": "Universal Social Scraper Suite",
+        "category": "Scraping & Extracción",
+        "description": "Consolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.",
+        "original_workflows": [
+          "Scrapp emails from instagram/linkedin/x/facebook (2 copias exactas, 11 nodos)",
+          "Scrapp emails from instagram (12 nodos)"
+        ],
+        "workflow_ids": [
+          "5513f449bb5f",
+          "604d375f8acf",
+          "754f3cd768f1"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 15,
+        "tier": "Professional",
+        "price": 35,
+        "refactoring_notes": [
+          "Consolidar 3 variantes → 1 Universal Social Scraper",
+          "Switch para platform selection (Instagram/LinkedIn/X/Facebook)",
+          "Gemini 2.5 Flash para data extraction/classification",
+          "HTTP Request con rate limiting + exponential backoff",
+          "Output: Google Sheets + CRM (HubSpot/Airtable)",
+          "Error handling: Circuit Breaker para API failures",
+          "Rate limit management: Wait node entre requests"
+        ]
+      },
+      "G10_HR_AI_Agent": {
+        "title": "HR AI Agent Pro",
+        "category": "RRHH & Selección",
+        "description": "Consolidación: 2 workflows de CV analysis (80.57% similar). Resultado: agente HR completo con RAG de posiciones + evaluation scoring.",
+        "original_workflows": [
+          "AI Automated HR Workflow for CV Analysis (18 nodos)",
+          "Automated Resume Review System (17 nodos)"
+        ],
+        "workflow_ids": [
+          "d960e85c73a0",
+          "bd9e057fb0e3"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 22,
+        "tier": "Professional",
+        "price": 45,
+        "refactoring_notes": [
+          "Consolidar 2 HR workflows → 1 HR Agent Pro",
+          "GPT-4.1 como LLM principal (razonamiento para evaluación)",
+          "RAG: vectorStoreQdrant para base de conocimiento de posiciones",
+          "OutputParserStructured para scoring consistente de candidatos",
+          "Google Sheets integration para tracking de candidates",
+          "Email automation para notificaciones a candidatos",
+          "Sub-workflow para background check automation"
+        ]
+      },
+      "G11_WhatsApp_AI_Agent": {
+        "title": "WhatsApp AI Agent Pro",
+        "category": "Chat & Mensajería",
+        "description": "Consolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.",
+        "original_workflows": [
+          "Agente IA WhatsApp (12 nodos)",
+          "Agente IA WhatsApp (44 nodos)",
+          "#5 Agente IA Atencion al cliente (9 nodos)",
+          "#6 Agente IA Atencion al cliente Telegram (16 nodos)"
+        ],
+        "workflow_ids": [
+          "8d012c5a9e10",
+          "92f53949f559",
+          "e3d48ca3d3db",
+          "43e4890e8c50"
+        ],
+        "consolidation_action": "create_modular_suite",
+        "target_nodes": "1 orchestrator + 2 sub-workflows",
+        "tier": "Professional",
+        "price": 49,
+        "refactoring_notes": [
+          "Consolidar WhatsApp variants → 1 WhatsApp Agent Pro",
+          "Orchestrator con switch: WhatsApp / Telegram",
+          "GPT-4.1 como LLM (atención al cliente requiere calidad)",
+          "Gemini Flash para routing/clasificación de queries",
+          "PostgresChatHistory para historial de clientes",
+          "googleSheetsTool para CRM integration",
+          "Error handling + fallback a humano cuando no puede resolver"
+        ]
+      },
+      "G12_Flowise_RAG_Suite": {
+        "title": "Flowise RAG Agent Suite",
+        "category": "RAG & Vector Store",
+        "description": "Consolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.",
+        "original_workflows": [
+          "Flujo_Flowise_Agente_Peluqueria (2 nodos)",
+          "flujo Flowise RAG Flowise Agents (2 nodos)"
+        ],
+        "workflow_ids": [
+          "b4dbc8e367f7",
+          "3030196a92bc"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 8,
+        "tier": "Starter",
+        "price": 19,
+        "refactoring_notes": [
+          "Consolidar 2 Flowise variants → 1 Flowise RAG Template",
+          "Convertir a n8n native (LangChain nodes) para mayor flexibilidad",
+          "vectorStoreQdrant para RAG storage",
+          "Gemini 2.5 Flash embeddings + chat model",
+          "Template parametrizable por industry (peluquería, legal, etc)"
+        ]
+      },
+      "G13_Error_Handler": {
+        "title": "Global Error Handler Workflow",
+        "category": "Utilidades & DevOps",
+        "description": "Consolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.",
+        "original_workflows": [
+          "Error (3 nodos) - 2 copias exactas"
+        ],
+        "workflow_ids": [
+          "b9ea33351132",
+          "9c0a189558b9"
+        ],
+        "consolidation_action": "merge_all_into_one",
+        "target_nodes": 8,
+        "tier": "Starter",
+        "price": 15,
+        "refactoring_notes": [
+          "Consolidar → 1 Global Error Handler production-ready",
+          "Error Trigger como entrada",
+          "Switch para severity levels (warning/error/critical)",
+          "Slack/Email notification por severity",
+          "Redis para retry queue (DLQ - Dead Letter Queue)",
+          "Logging a Google Sheets para audit trail",
+          "Exponential backoff en retries",
+          "ESTE WORKFLOW DEBE SER LINKADO como Error Workflow en TODOS los demás"
+        ]
+      }
+    },
+    "consolidated_workflows": {
+      "G1_MCP_Calendar_Suite": {
+        "name": "MCP Calendar Suite Pro",
+        "id_prefix": "G1_MCP_Calendar_Suite",
+        "category": "Calendario & Agenda",
+        "description": "Consolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "34a2018e30a1",
+          "b3f7944567ea",
+          "bcc58f943518",
+          "aeb23378d1a4",
+          "c3b2fcc3fa90",
+          "595b39a05bf5",
+          "b0531fcce43c"
+        ],
+        "tier": "Professional",
+        "price": 35,
+        "nodes": [
+          {
+            "id": "G1_MCP_Calendar_Suite_trigger_mcp",
+            "name": "MCP Trigger",
+            "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              500
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your MCP Calendar Suite Pro assistant. How can I help you?"
+            }
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_llm",
+            "name": "LLM (gemini-2.5-flash)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gemini-2.5-flash"
+            }
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_tool_calendar",
+            "name": "Google Calendar Tool",
+            "type": "n8n-nodes-base.googleCalendarTool",
+            "position": [
+              1000,
+              200
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G1_MCP_Calendar_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## MCP Calendar Suite Pro\n\nConsolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.\n\n**Consolidated from**: 7 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger\n- MCP Calendar duplicado → unificar en el mismo workflow con branch logic\n- Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal\n- Añadir Error Trigger Workflow para handling global\n- Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "MCP Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Chat Trigger",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gemini-2.5-flash)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gemini-2.5-flash)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Google Calendar Tool",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Google Calendar Tool": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger",
+          "MCP Calendar duplicado → unificar en el mismo workflow con branch logic",
+          "Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal",
+          "Añadir Error Trigger Workflow para handling global",
+          "Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+          "Memoria: PostgresChatHistory para persistencia entre sesiones",
+          "Añadir googleCalendarTool como tool del agente",
+          "Voice support: usar mcpTrigger + WhatsAppTrigger para entrada voz/texto"
+        ]
+      },
+      "G2_MCP_Gmail_Suite": {
+        "name": "MCP Gmail Suite Pro",
+        "id_prefix": "G2_MCP_Gmail_Suite",
+        "category": "Email & Comunicación",
+        "description": "Consolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "176cc93ba74a",
+          "91af09e9eb7f",
+          "30ab053d18c7",
+          "0ab295ff8c60"
+        ],
+        "tier": "Professional",
+        "price": 29,
+        "nodes": [
+          {
+            "id": "G2_MCP_Gmail_Suite_trigger_mcp",
+            "name": "MCP Trigger",
+            "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              500
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your MCP Gmail Suite Pro assistant. How can I help you?"
+            }
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_llm",
+            "name": "LLM (gemini-2.5-flash)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gemini-2.5-flash"
+            }
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_tool_gmail",
+            "name": "Gmail Tool",
+            "type": "n8n-nodes-base.gmailTool",
+            "position": [
+              1000,
+              200
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G2_MCP_Gmail_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## MCP Gmail Suite Pro\n\nConsolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.\n\n**Consolidated from**: 4 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite\n- MCP Trigger como entrada principal + Gmail Tool como agente tool\n- Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)\n- Gemini 2.5 Flash como LLM primario (clasificación/email成本低)\n- PostgresChatHistory para historial de emails procesados",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "MCP Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Chat Trigger",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gemini-2.5-flash)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gemini-2.5-flash)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Gmail Tool",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Gmail Tool": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite",
+          "MCP Trigger como entrada principal + Gmail Tool como agente tool",
+          "Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)",
+          "Gemini 2.5 Flash como LLM primario (clasificación/email成本低)",
+          "PostgresChatHistory para historial de emails procesados",
+          "Error Trigger para fallos de envío/recepción",
+          "OutputParserStructured para parsear emails en formato estructurado"
+        ]
+      },
+      "G3_MCP_Contactos_Suite": {
+        "name": "MCP Contactos Suite Pro",
+        "id_prefix": "G3_MCP_Contactos_Suite",
+        "category": "MCP Tools",
+        "description": "Consolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "ff712224b2bb",
+          "bbdff9888ab7",
+          "6416cb63813a"
+        ],
+        "tier": "Professional",
+        "price": 25,
+        "nodes": [
+          {
+            "id": "G3_MCP_Contactos_Suite_trigger_mcp",
+            "name": "MCP Trigger",
+            "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              500
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your MCP Contactos Suite Pro assistant. How can I help you?"
+            }
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_llm",
+            "name": "LLM (gemini-2.5-flash)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gemini-2.5-flash"
+            }
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G3_MCP_Contactos_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## MCP Contactos Suite Pro\n\nConsolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.\n\n**Consolidated from**: 3 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Unificar 3 variantes Contactos en 1 MCP Contactos Suite\n- MCP Trigger + googleSheetsTool como base de datos contactos\n- Gemini 2.5 Flash para búsqueda/classificación de contactos\n- PostgresChatHistory para contexto conversacional\n- Añadir sub-workflow para CRUD operations en contactos",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "MCP Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Chat Trigger",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gemini-2.5-flash)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gemini-2.5-flash)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Unificar 3 variantes Contactos en 1 MCP Contactos Suite",
+          "MCP Trigger + googleSheetsTool como base de datos contactos",
+          "Gemini 2.5 Flash para búsqueda/classificación de contactos",
+          "PostgresChatHistory para contexto conversacional",
+          "Añadir sub-workflow para CRUD operations en contactos"
+        ]
+      },
+      "G4_Ecommerce_Agent_Suite": {
+        "name": "E-Commerce AI Agent Suite",
+        "id_prefix": "G4_Ecommerce_Agent_Suite",
+        "category": "E-Commerce & Ventas",
+        "description": "Consolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.",
+        "consolidation_action": "create_modular_suite",
+        "original_workflow_ids": [
+          "06a21f4cfdb6",
+          "8ec0b17a7a3d",
+          "3df672ef2aa0",
+          "5dcb639d5a8f",
+          "274162eed799",
+          "75dc9920251e",
+          "1b63c935bcd3"
+        ],
+        "tier": "Enterprise",
+        "price": 75,
+        "nodes": [
+          {
+            "id": "G4_Ecommerce_Agent_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your E-Commerce AI Agent Suite. What would you like to do today?"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_classify_llm",
+            "name": "Classification LLM (GPT-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              500,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_classify_parser",
+            "name": "Route Classification Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              500,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_route_switch",
+            "name": "Route Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+              750,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_sub_wf_1",
+            "name": "Execute Sub-Workflow 1",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              300
+            ],
+            "parameters": {
+              "workflowId": "SUB_G4_Ecommerce_Agent_Suite_1"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_sub_wf_2",
+            "name": "Execute Sub-Workflow 2",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              500
+            ],
+            "parameters": {
+              "workflowId": "SUB_G4_Ecommerce_Agent_Suite_2"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_sub_wf_3",
+            "name": "Execute Sub-Workflow 3",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              700
+            ],
+            "parameters": {
+              "workflowId": "SUB_G4_Ecommerce_Agent_Suite_3"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_merge",
+            "name": "Results Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_response_llm",
+            "name": "Response LLM (GPT-4.1)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              1500,
+              300
+            ],
+            "parameters": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_memory",
+            "name": "Orchestrator Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              1500,
+              500
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G4_Ecommerce_Agent_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## E-Commerce AI Agent Suite\n\nConsolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Classification LLM (GPT-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Classification LLM (GPT-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Route Classification Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Classification Parser": {
+            "main": [
+              [
+                {
+                  "node": "Route Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Switch": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 1": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 2",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 2": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 3",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 3": {
+            "main": [
+              [
+                {
+                  "node": "Results Merge",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Results Merge": {
+            "main": [
+              [
+                {
+                  "node": "Response LLM (GPT-4.1)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Response LLM (GPT-4.1)": {
+            "main": [
+              [
+                {
+                  "node": "Orchestrator Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "v1/v2/v3 → consolidar en 1 E-Commerce Agent principal (mejor de v3 como base)",
+          "Shopify → convertir a sub-workflow Shopify Integration",
+          "Nano Banana → convertir a sub-workflow E-Commerce Nano Platform",
+          "Orchestrator: E-Commerce Suite Master con switch para routing",
+          "GPT-4.1 como LLM principal (razonamiento complejo para e-commerce)",
+          "GPT-4o-mini como tool model (clasificación de productos, routing)",
+          "Memoria: PostgresChatHistory + PGVector para productos catalog RAG",
+          "shopifyTool + wooCommerceTool + googleSheetsTool como tools",
+          "Error Trigger global + Circuit Breaker para API calls",
+          "Idempotency keys en todas las operaciones de checkout"
+        ]
+      },
+      "G5_Marketing_MultiAgent_Suite": {
+        "name": "Marketing Multi-Agent Suite",
+        "id_prefix": "G5_Marketing_MultiAgent_Suite",
+        "category": "Marketing & Leads",
+        "description": "Consolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.",
+        "consolidation_action": "create_modular_suite",
+        "original_workflow_ids": [
+          "a79082d0d756",
+          "47512a6d55f7",
+          "46e23bfdcbaf",
+          "9203f7427ad2",
+          "ea958cb10748",
+          "2330870731d8",
+          "391059fe9a6f"
+        ],
+        "tier": "Enterprise",
+        "price": 89,
+        "nodes": [
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your Marketing Multi-Agent Suite. What would you like to do today?"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_classify_llm",
+            "name": "Classification LLM (GPT-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              500,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_classify_parser",
+            "name": "Route Classification Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              500,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_route_switch",
+            "name": "Route Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+              750,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_sub_wf_1",
+            "name": "Execute Sub-Workflow 1",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              300
+            ],
+            "parameters": {
+              "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_1"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_sub_wf_2",
+            "name": "Execute Sub-Workflow 2",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              500
+            ],
+            "parameters": {
+              "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_2"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_sub_wf_3",
+            "name": "Execute Sub-Workflow 3",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              700
+            ],
+            "parameters": {
+              "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_3"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_merge",
+            "name": "Results Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_response_llm",
+            "name": "Response LLM (GPT-4.1)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              1500,
+              300
+            ],
+            "parameters": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_memory",
+            "name": "Orchestrator Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              1500,
+              500
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G5_Marketing_MultiAgent_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## Marketing Multi-Agent Suite\n\nConsolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Classification LLM (GPT-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Classification LLM (GPT-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Route Classification Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Classification Parser": {
+            "main": [
+              [
+                {
+                  "node": "Route Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Switch": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 1": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 2",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 2": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 3",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 3": {
+            "main": [
+              [
+                {
+                  "node": "Results Merge",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Results Merge": {
+            "main": [
+              [
+                {
+                  "node": "Response LLM (GPT-4.1)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Response LLM (GPT-4.1)": {
+            "main": [
+              [
+                {
+                  "node": "Orchestrator Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Orchestrator: Marketing Agent Master con switch por tipo (blog/linkedin/video/images)",
+          "Sub-workflow: Blog Content Agent (generación de artículos)",
+          "Sub-workflow: LinkedIn Agent (posts + networking)",
+          "Sub-workflow: Video Agent (scripts + descriptions)",
+          "Sub-workflow: Image Agent (search + creation con DALL-E/Flux)",
+          "GPT-4.1 como orchestrator LLM (razonamiento para routing)",
+          "Gemini 2.5 Flash como sub-agent LLM (contenido generation económico)",
+          "Memoria: PostgresChatHistory para contexto de marca",
+          "RAG: vectorStoreQdrant para contenido histórico de marketing",
+          "MCP Trigger + Chat Trigger para entrada",
+          "Error handling: retry con exponential backoff en API calls"
+        ]
+      },
+      "G6_Asistente_Platform": {
+        "name": "Asistente AI Platform (Modular)",
+        "id_prefix": "G6_Asistente_Platform",
+        "category": "IA & Agentes",
+        "description": "Consolidación: Asistente personal + Asistente Abogado + Asistente Teléfono + Asistente_de_Voz_Transcribir + Asistente_de_Voz_MCP. Resultado: plataforma modular con sub-workflows por especialidad.",
+        "consolidation_action": "create_modular_suite",
+        "original_workflow_ids": [
+          "0e3832fb0e5c",
+          "8c6ee9193c7b",
+          "e2b364912ce7",
+          "8b7aa89b835f",
+          "2b89027b0fa3"
+        ],
+        "tier": "Enterprise",
+        "price": 69,
+        "nodes": [
+          {
+            "id": "G6_Asistente_Platform_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your Asistente AI Platform (Modular). What would you like to do today?"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_classify_llm",
+            "name": "Classification LLM (GPT-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              500,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_classify_parser",
+            "name": "Route Classification Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              500,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G6_Asistente_Platform_route_switch",
+            "name": "Route Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+              750,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G6_Asistente_Platform_sub_wf_1",
+            "name": "Execute Sub-Workflow 1",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              300
+            ],
+            "parameters": {
+              "workflowId": "SUB_G6_Asistente_Platform_1"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_sub_wf_2",
+            "name": "Execute Sub-Workflow 2",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              500
+            ],
+            "parameters": {
+              "workflowId": "SUB_G6_Asistente_Platform_2"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_sub_wf_3",
+            "name": "Execute Sub-Workflow 3",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              700
+            ],
+            "parameters": {
+              "workflowId": "SUB_G6_Asistente_Platform_3"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_merge",
+            "name": "Results Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G6_Asistente_Platform_response_llm",
+            "name": "Response LLM (GPT-4.1)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              1500,
+              300
+            ],
+            "parameters": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_memory",
+            "name": "Orchestrator Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              1500,
+              500
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G6_Asistente_Platform_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## Asistente AI Platform (Modular)\n\nConsolidación: Asistente personal + Asistente Abogado + Asistente Teléfono + Asistente_de_Voz_Transcribir + Asistente_de_Voz_MCP. Resultado: plataforma modular con sub-workflows por especialidad.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Classification LLM (GPT-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Classification LLM (GPT-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Route Classification Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Classification Parser": {
+            "main": [
+              [
+                {
+                  "node": "Route Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Switch": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 1": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 2",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 2": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 3",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 3": {
+            "main": [
+              [
+                {
+                  "node": "Results Merge",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Results Merge": {
+            "main": [
+              [
+                {
+                  "node": "Response LLM (GPT-4.1)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Response LLM (GPT-4.1)": {
+            "main": [
+              [
+                {
+                  "node": "Orchestrator Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Orchestrator: Asistente Platform Master",
+          "Sub-workflow: Asistente General (personal tasks)",
+          "Sub-workflow: Asistente Legal (abogado especializado)",
+          "Sub-workflow: Asistente Voice (teléfono + transcripción)",
+          "Sub-workflow: Asistente MCP (con tools MCP externos)",
+          "Tiered model: GPT-4.1 para legal (razonamiento complejo) + Gemini Flash para general",
+          "Memoria: PostgresChatHistory + Mem0 para personalización",
+          "Voice: Whisper para transcripción + TTS para respuesta",
+          "MCP integration: conectar a MCP servers externos"
+        ]
+      },
+      "G7_Imagenes_Citas_Suite": {
+        "name": "AI Image & Quote Generator Suite",
+        "id_prefix": "G7_Imagenes_Citas_Suite",
+        "category": "Social Media & Contenido",
+        "description": "Consolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "1f1125544e38",
+          "c87d94a61f22",
+          "73c5f5a89e86",
+          "7422dd1111a7"
+        ],
+        "tier": "Professional",
+        "price": 39,
+        "nodes": [
+          {
+            "id": "G7_Imagenes_Citas_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_llm",
+            "name": "LLM (gpt-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G7_Imagenes_Citas_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## AI Image & Quote Generator Suite\n\nConsolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.\n\n**Consolidated from**: 4 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 4 variantes → 1 workflow production-ready\n- Usar la versión 'backup BIEN' como base (27 nodos, más completa)\n- Añadir template system: Google Sheets con templates de quotes\n- Gemini 2.5 Flash para quote generation (cost-effective)\n- DALL-E 3 / OpenAI Image para image generation",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gpt-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gpt-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar 4 variantes → 1 workflow production-ready",
+          "Usar la versión 'backup BIEN' como base (27 nodos, más completa)",
+          "Añadir template system: Google Sheets con templates de quotes",
+          "Gemini 2.5 Flash para quote generation (cost-effective)",
+          "DALL-E 3 / OpenAI Image para image generation",
+          "Añadir error handling para API rate limits",
+          "Output: Google Drive + Social Media posting"
+        ]
+      },
+      "G8_Video_Viral_Suite": {
+        "name": "AI Video Content Suite",
+        "id_prefix": "G8_Video_Viral_Suite",
+        "category": "Voz & Transcripción",
+        "description": "Consolidación: 2 copias 'Crear videos virales' (99.67%) + 2 video generators similares (68.81%). Resultado: suite de video con sub-workflows.",
+        "consolidation_action": "create_modular_suite",
+        "original_workflow_ids": [
+          "524aacfb973a",
+          "fced4db3afef",
+          "df8ddb2be603",
+          "7ab103416427"
+        ],
+        "tier": "Enterprise",
+        "price": 59,
+        "nodes": [
+          {
+            "id": "G8_Video_Viral_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your AI Video Content Suite. What would you like to do today?"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_classify_llm",
+            "name": "Classification LLM (GPT-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              500,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_classify_parser",
+            "name": "Route Classification Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              500,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G8_Video_Viral_Suite_route_switch",
+            "name": "Route Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+              750,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G8_Video_Viral_Suite_sub_wf_1",
+            "name": "Execute Sub-Workflow 1",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              300
+            ],
+            "parameters": {
+              "workflowId": "SUB_G8_Video_Viral_Suite_1"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_sub_wf_2",
+            "name": "Execute Sub-Workflow 2",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              500
+            ],
+            "parameters": {
+              "workflowId": "SUB_G8_Video_Viral_Suite_2"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_sub_wf_3",
+            "name": "Execute Sub-Workflow 3",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              700
+            ],
+            "parameters": {
+              "workflowId": "SUB_G8_Video_Viral_Suite_3"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_merge",
+            "name": "Results Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G8_Video_Viral_Suite_response_llm",
+            "name": "Response LLM (GPT-4.1)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              1500,
+              300
+            ],
+            "parameters": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_memory",
+            "name": "Orchestrator Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              1500,
+              500
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G8_Video_Viral_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## AI Video Content Suite\n\nConsolidación: 2 copias 'Crear videos virales' (99.67%) + 2 video generators similares (68.81%). Resultado: suite de video con sub-workflows.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Classification LLM (GPT-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Classification LLM (GPT-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Route Classification Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Classification Parser": {
+            "main": [
+              [
+                {
+                  "node": "Route Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Switch": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 1": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 2",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 2": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 3",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 3": {
+            "main": [
+              [
+                {
+                  "node": "Results Merge",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Results Merge": {
+            "main": [
+              [
+                {
+                  "node": "Response LLM (GPT-4.1)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Response LLM (GPT-4.1)": {
+            "main": [
+              [
+                {
+                  "node": "Orchestrator Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar videos virales (2 copias) → 1 base workflow",
+          "Short-Form Video Generator → sub-workflow de short content",
+          "Full Video Generator → sub-workflow de long-form content",
+          "Orchestrator con Switch para tipo de video",
+          "ElevenLabs para voiceover + Kling/Flux para visuals",
+          "GPT-4.1 para script generation (razonamiento narrativo)",
+          "Gemini Flash para descriptions/metadata (cost-effective)",
+          "PostgresChatHistory para estilo preferencias",
+          "Multi-platform publishing: YouTube + TikTok + Instagram"
+        ]
+      },
+      "G9_Social_Scraper_Suite": {
+        "name": "Universal Social Scraper Suite",
+        "id_prefix": "G9_Social_Scraper_Suite",
+        "category": "Scraping & Extracción",
+        "description": "Consolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "5513f449bb5f",
+          "604d375f8acf",
+          "754f3cd768f1"
+        ],
+        "tier": "Professional",
+        "price": 35,
+        "nodes": [
+          {
+            "id": "G9_Social_Scraper_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_llm",
+            "name": "LLM (gemini-2.5-flash)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gemini-2.5-flash"
+            }
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_tool_http",
+            "name": "HTTP Request Tool",
+            "type": "n8n-nodes-base.httpRequestTool",
+            "position": [
+              1000,
+              200
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G9_Social_Scraper_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## Universal Social Scraper Suite\n\nConsolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.\n\n**Consolidated from**: 3 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 3 variantes → 1 Universal Social Scraper\n- Switch para platform selection (Instagram/LinkedIn/X/Facebook)\n- Gemini 2.5 Flash para data extraction/classification\n- HTTP Request con rate limiting + exponential backoff\n- Output: Google Sheets + CRM (HubSpot/Airtable)",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gemini-2.5-flash)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gemini-2.5-flash)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "HTTP Request Tool",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "HTTP Request Tool": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar 3 variantes → 1 Universal Social Scraper",
+          "Switch para platform selection (Instagram/LinkedIn/X/Facebook)",
+          "Gemini 2.5 Flash para data extraction/classification",
+          "HTTP Request con rate limiting + exponential backoff",
+          "Output: Google Sheets + CRM (HubSpot/Airtable)",
+          "Error handling: Circuit Breaker para API failures",
+          "Rate limit management: Wait node entre requests"
+        ]
+      },
+      "G10_HR_AI_Agent": {
+        "name": "HR AI Agent Pro",
+        "id_prefix": "G10_HR_AI_Agent",
+        "category": "RRHH & Selección",
+        "description": "Consolidación: 2 workflows de CV analysis (80.57% similar). Resultado: agente HR completo con RAG de posiciones + evaluation scoring.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "d960e85c73a0",
+          "bd9e057fb0e3"
+        ],
+        "tier": "Professional",
+        "price": 45,
+        "nodes": [
+          {
+            "id": "G10_HR_AI_Agent_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G10_HR_AI_Agent_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G10_HR_AI_Agent_llm",
+            "name": "LLM (gpt-4o)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o"
+            }
+          },
+          {
+            "id": "G10_HR_AI_Agent_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G10_HR_AI_Agent_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G10_HR_AI_Agent_tool_sheets",
+            "name": "Google Sheets Tool",
+            "type": "n8n-nodes-base.googleSheetsTool",
+            "position": [
+              1000,
+              200
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G10_HR_AI_Agent_tool_email",
+            "name": "Email Send Tool",
+            "type": "n8n-nodes-base.emailSendTool",
+            "position": [
+              1000,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G10_HR_AI_Agent_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G10_HR_AI_Agent_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## HR AI Agent Pro\n\nConsolidación: 2 workflows de CV analysis (80.57% similar). Resultado: agente HR completo con RAG de posiciones + evaluation scoring.\n\n**Consolidated from**: 2 original workflows\n**LLM**: gpt-4o\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 2 HR workflows → 1 HR Agent Pro\n- GPT-4.1 como LLM principal (razonamiento para evaluación)\n- RAG: vectorStoreQdrant para base de conocimiento de posiciones\n- OutputParserStructured para scoring consistente de candidatos\n- Google Sheets integration para tracking de candidates",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gpt-4o)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gpt-4o)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Google Sheets Tool",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Google Sheets Tool": {
+            "main": [
+              [
+                {
+                  "node": "Email Send Tool",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Email Send Tool": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar 2 HR workflows → 1 HR Agent Pro",
+          "GPT-4.1 como LLM principal (razonamiento para evaluación)",
+          "RAG: vectorStoreQdrant para base de conocimiento de posiciones",
+          "OutputParserStructured para scoring consistente de candidatos",
+          "Google Sheets integration para tracking de candidates",
+          "Email automation para notificaciones a candidatos",
+          "Sub-workflow para background check automation"
+        ]
+      },
+      "G11_WhatsApp_AI_Agent": {
+        "name": "WhatsApp AI Agent Pro",
+        "id_prefix": "G11_WhatsApp_AI_Agent",
+        "category": "Chat & Mensajería",
+        "description": "Consolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.",
+        "consolidation_action": "create_modular_suite",
+        "original_workflow_ids": [
+          "8d012c5a9e10",
+          "92f53949f559",
+          "e3d48ca3d3db",
+          "43e4890e8c50"
+        ],
+        "tier": "Professional",
+        "price": 49,
+        "nodes": [
+          {
+            "id": "G11_WhatsApp_AI_Agent_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {
+              "initialMessages": "Hello! I'm your WhatsApp AI Agent Pro. What would you like to do today?"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_classify_llm",
+            "name": "Classification LLM (GPT-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              500,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_classify_parser",
+            "name": "Route Classification Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              500,
+              400
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_route_switch",
+            "name": "Route Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+              750,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_sub_wf_1",
+            "name": "Execute Sub-Workflow 1",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              300
+            ],
+            "parameters": {
+              "workflowId": "SUB_G11_WhatsApp_AI_Agent_1"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_sub_wf_2",
+            "name": "Execute Sub-Workflow 2",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              500
+            ],
+            "parameters": {
+              "workflowId": "SUB_G11_WhatsApp_AI_Agent_2"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_sub_wf_3",
+            "name": "Execute Sub-Workflow 3",
+            "type": "n8n-nodes-base.executeWorkflow",
+            "position": [
+              1000,
+              700
+            ],
+            "parameters": {
+              "workflowId": "SUB_G11_WhatsApp_AI_Agent_3"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_merge",
+            "name": "Results Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_response_llm",
+            "name": "Response LLM (GPT-4.1)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              1500,
+              300
+            ],
+            "parameters": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_memory",
+            "name": "Orchestrator Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              1500,
+              500
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G11_WhatsApp_AI_Agent_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## WhatsApp AI Agent Pro\n\nConsolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "Classification LLM (GPT-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Classification LLM (GPT-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Route Classification Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Classification Parser": {
+            "main": [
+              [
+                {
+                  "node": "Route Switch",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Route Switch": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 1",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 1": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 2",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 2": {
+            "main": [
+              [
+                {
+                  "node": "Execute Sub-Workflow 3",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Execute Sub-Workflow 3": {
+            "main": [
+              [
+                {
+                  "node": "Results Merge",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Results Merge": {
+            "main": [
+              [
+                {
+                  "node": "Response LLM (GPT-4.1)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Response LLM (GPT-4.1)": {
+            "main": [
+              [
+                {
+                  "node": "Orchestrator Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar WhatsApp variants → 1 WhatsApp Agent Pro",
+          "Orchestrator con switch: WhatsApp / Telegram",
+          "GPT-4.1 como LLM (atención al cliente requiere calidad)",
+          "Gemini Flash para routing/clasificación de queries",
+          "PostgresChatHistory para historial de clientes",
+          "googleSheetsTool para CRM integration",
+          "Error handling + fallback a humano cuando no puede resolver"
+        ]
+      },
+      "G12_Flowise_RAG_Suite": {
+        "name": "Flowise RAG Agent Suite",
+        "id_prefix": "G12_Flowise_RAG_Suite",
+        "category": "RAG & Vector Store",
+        "description": "Consolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "b4dbc8e367f7",
+          "3030196a92bc"
+        ],
+        "tier": "Starter",
+        "price": 19,
+        "nodes": [
+          {
+            "id": "G12_Flowise_RAG_Suite_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_llm",
+            "name": "LLM (gpt-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G12_Flowise_RAG_Suite_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## Flowise RAG Agent Suite\n\nConsolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.\n\n**Consolidated from**: 2 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 2 Flowise variants → 1 Flowise RAG Template\n- Convertir a n8n native (LangChain nodes) para mayor flexibilidad\n- vectorStoreQdrant para RAG storage\n- Gemini 2.5 Flash embeddings + chat model\n- Template parametrizable por industry (peluquería, legal, etc)",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gpt-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gpt-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar 2 Flowise variants → 1 Flowise RAG Template",
+          "Convertir a n8n native (LangChain nodes) para mayor flexibilidad",
+          "vectorStoreQdrant para RAG storage",
+          "Gemini 2.5 Flash embeddings + chat model",
+          "Template parametrizable por industry (peluquería, legal, etc)"
+        ]
+      },
+      "G13_Error_Handler": {
+        "name": "Global Error Handler Workflow",
+        "id_prefix": "G13_Error_Handler",
+        "category": "Utilidades & DevOps",
+        "description": "Consolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.",
+        "consolidation_action": "merge_all_into_one",
+        "original_workflow_ids": [
+          "b9ea33351132",
+          "9c0a189558b9"
+        ],
+        "tier": "Starter",
+        "price": 15,
+        "nodes": [
+          {
+            "id": "G13_Error_Handler_trigger_chat",
+            "name": "Chat Trigger",
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "position": [
+              250,
+              300
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G13_Error_Handler_agent",
+            "name": "AI Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+              500,
+              300
+            ],
+            "parameters": {
+              "hasMemory": true,
+              "text": "={{ $json.message }}"
+            }
+          },
+          {
+            "id": "G13_Error_Handler_llm",
+            "name": "LLM (gpt-4o-mini)",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+              750,
+              200
+            ],
+            "parameters": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "id": "G13_Error_Handler_memory",
+            "name": "Persistent Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "position": [
+              750,
+              400
+            ],
+            "parameters": {
+              "sessionId": "={{ $json.sessionId }}"
+            }
+          },
+          {
+            "id": "G13_Error_Handler_output_parser",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+              750,
+              600
+            ],
+            "parameters": {}
+          },
+          {
+            "id": "G13_Error_Handler_error_set",
+            "name": "Error Fallback Response",
+            "type": "n8n-nodes-base.set",
+            "position": [
+              1250,
+              300
+            ],
+            "parameters": {
+              "value": "I encountered an error processing your request. Let me try a different approach."
+            }
+          },
+          {
+            "id": "G13_Error_Handler_doc_note",
+            "name": "📋 Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+              50,
+              100
+            ],
+            "parameters": {
+              "content": "## Global Error Handler Workflow\n\nConsolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.\n\n**Consolidated from**: 2 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar → 1 Global Error Handler production-ready\n- Error Trigger como entrada\n- Switch para severity levels (warning/error/critical)\n- Slack/Email notification por severity\n- Redis para retry queue (DLQ - Dead Letter Queue)",
+              "width": 200,
+              "height": 150
+            }
+          }
+        ],
+        "connections": {
+          "Chat Trigger": {
+            "main": [
+              [
+                {
+                  "node": "AI Agent",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "AI Agent": {
+            "main": [
+              [
+                {
+                  "node": "LLM (gpt-4o-mini)",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "LLM (gpt-4o-mini)": {
+            "main": [
+              [
+                {
+                  "node": "Persistent Memory",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Persistent Memory": {
+            "main": [
+              [
+                {
+                  "node": "Structured Output Parser",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          },
+          "Structured Output Parser": {
+            "main": [
+              [
+                {
+                  "node": "Error Fallback Response",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        },
+        "settings": {
+          "errorWorkflow": "G13_Error_Handler",
+          "saveManualExecutions": true,
+          "callerPolicy": "workflowsFromSameOwner",
+          "executionOrder": "v1"
+        },
+        "refactoring_applied": [
+          "Consolidar → 1 Global Error Handler production-ready",
+          "Error Trigger como entrada",
+          "Switch para severity levels (warning/error/critical)",
+          "Slack/Email notification por severity",
+          "Redis para retry queue (DLQ - Dead Letter Queue)",
+          "Logging a Google Sheets para audit trail",
+          "Exponential backoff en retries",
+          "ESTE WORKFLOW DEBE SER LINKADO como Error Workflow en TODOS los demás"
+        ]
+      }
+    },
+    "model_strategy": {
+      "orchestrator_complex": {
+        "model": "GPT-4.1",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "reason": "Best reasoning for routing, multi-tool orchestration, complex decisions",
+        "input_price_1M": 2.0,
+        "output_price_1M": 8.0
+      },
+      "agent_primary": {
+        "model": "GPT-4o",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "reason": "Most reliable for n8n agent tasks, good structured output, tool calling",
+        "input_price_1M": 2.5,
+        "output_price_1M": 10.0
+      },
+      "agent_cost_effective": {
+        "model": "gemini-2.5-flash",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "reason": "Best price/quality ratio: $0.15/$0.60 per 1M tokens, 8/10 quality, 9/10 speed",
+        "input_price_1M": 0.15,
+        "output_price_1M": 0.6
+      },
+      "classification_routing": {
+        "model": "GPT-4o-mini",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "reason": "Cheapest reliable model for classification, routing, simple extraction",
+        "input_price_1M": 0.15,
+        "output_price_1M": 0.6
+      },
+      "fast_inference": {
+        "model": "llama-3.3-70b",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatGroq",
+        "reason": "Fastest inference via Groq for real-time chat responses",
+        "input_price_1M": 0.075,
+        "output_price_1M": 0.3
+      },
+      "legal_specialized": {
+        "model": "claude-sonnet-4",
+        "n8n_node": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+        "reason": "Best reasoning quality for legal/complex analysis (10/10 quality)",
+        "input_price_1M": 3.0,
+        "output_price_1M": 15.0
+      }
+    },
+    "memory_strategy": {
+      "short_chat_testing": {
+        "solution": "BufferWindowMemory",
+        "n8n_node": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "best_for": "Testing, short conversations (<10 messages)",
+        "cost": "Free (in-memory)",
+        "limitations": "No persistence, lost on workflow restart"
+      },
+      "production_chat": {
+        "solution": "PostgresChatHistory",
+        "n8n_node": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "best_for": "Production agents with persistent conversation history",
+        "cost": "PostgreSQL hosting ($5-20/mo)",
+        "limitations": "Requires PostgreSQL instance"
+      },
+      "enterprise_knowledge": {
+        "solution": "Zep + Mem0 (Hybrid)",
+        "n8n_node": "HTTP Request to Zep/Mem0 API",
+        "best_for": "Enterprise long-term memory, personalization, knowledge graphs",
+        "cost": "Zep Cloud $0.04/session, Mem0 free tier + $0.01/memory",
+        "limitations": "External dependency, API latency"
+      },
+      "hybrid_n8n_pattern": {
+        "solution": "PostgresChat + PGVector (Dual-layer)",
+        "n8n_node": "@n8n/n8n-nodes-langchain.memoryPostgresChat + vectorStorePGVector",
+        "best_for": "Best n8n community pattern: chat memory + RAG in same DB",
+        "cost": "PostgreSQL + PGVector extension ($5-20/mo)",
+        "limitations": "Requires PGVector setup"
+      }
+    },
+    "architectural_patterns": {
+      "P1_Global_Error_Trigger": {
+        "name": "Global Error Trigger Pattern",
+        "description": "Every workflow links to a Global Error Handler workflow. On failure, errors are classified by severity, routed to appropriate channels (Slack/Email), and queued for retry with exponential backoff.",
+        "implementation": [
+          "Create dedicated Error Handler workflow (G13_Error_Handler)",
+          "In every workflow: Settings → Error Workflow → link to Error Handler",
+          "Error Handler: Error Trigger → Switch(severity) → Slack/Email/Redis Queue",
+          "Critical errors: immediate Slack + Email notification",
+          "Warnings: logged to Google Sheets for review",
+          "Retries: Redis queue with exponential backoff (1min, 5min, 15min)"
+        ],
+        "nodes_required": [
+          "n8n-nodes-base.errorTrigger",
+          "n8n-nodes-base.switch",
+          "n8n-nodes-base.slack",
+          "n8n-nodes-base.gmail",
+          "n8n-nodes-base.redis",
+          "n8n-nodes-base.wait"
+        ]
+      },
+      "P2_Sub_Workflow_Modularization": {
+        "name": "Sub-Workflow Modularization Pattern",
+        "description": "Complex workflows are split into orchestrator + sub-workflows. Orchestrator handles routing and context, sub-workflows handle domain-specific tasks. This enables reuse, independent testing, and versioning.",
+        "implementation": [
+          "Orchestrator: Chat/MCP Trigger → Switch(routing) → Execute Workflow per domain",
+          "Sub-workflows: Execute Workflow Trigger → domain logic → Return data",
+          "Each sub-workflow versioned: v1, v2, etc. with backwards compatibility",
+          "Orchestrator passes context via Execute Workflow input parameters",
+          "Sub-workflows return structured output via Set node"
+        ],
+        "nodes_required": [
+          "n8n-nodes-base.executeWorkflow",
+          "n8n-nodes-base.executeWorkflowTrigger",
+          "n8n-nodes-base.switch",
+          "n8n-nodes-base.set"
+        ]
+      },
+      "P3_Tiered_LLM_Routing": {
+        "name": "Tiered LLM Routing Pattern",
+        "description": "Use different LLM models based on task complexity. Classification/routing → cheap model (Gemini Flash/GPT-4o-mini). Complex reasoning → quality model (GPT-4.1/Claude Sonnet). This reduces costs by 60-80% while maintaining quality.",
+        "implementation": [
+          "Switch node classifies task complexity (simple/medium/complex)",
+          "Simple tasks → Gemini 2.5 Flash ($0.15/$0.60 per 1M)",
+          "Medium tasks → GPT-4o ($2.50/$10 per 1M)",
+          "Complex tasks → GPT-4.1 ($2/$8 per 1M) or Claude Sonnet ($3/$15)",
+          "Classification itself uses GPT-4o-mini ($0.15/$0.60)",
+          "Estimated savings: 60-80% on LLM costs vs using GPT-4o for everything"
+        ],
+        "nodes_required": [
+          "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+          "n8n-nodes-base.switch",
+          "@n8n/n8n-nodes-langchain.outputParserStructured"
+        ]
+      },
+      "P4_MCP_Server_Integration": {
+        "name": "MCP Server Integration Pattern",
+        "description": "n8n v2.14+ supports MCP as both client and server. Expose workflows as MCP tools for external AI agents, and consume external MCP servers as tools in n8n agents.",
+        "implementation": [
+          "mcpTrigger node: expose workflow as MCP tool for Claude/GPT/other agents",
+          "mcpClientTool node: connect to external MCP servers (PostgreSQL, Puppeteer, Notion, etc.)",
+          "Each MCP tool has structured input schema (JSON Schema)",
+          "MCP tools return structured output for agent consumption",
+          "Combine MCP tools with LangChain Agent for multi-tool orchestration"
+        ],
+        "nodes_required": [
+          "@n8n/n8n-nodes-langchain.mcpTrigger",
+          "@n8n/n8n-nodes-langchain.mcpClientTool",
+          "@n8n/n8n-nodes-langchain.agent"
+        ]
+      },
+      "P5_Circuit_Breaker": {
+        "name": "Circuit Breaker Pattern",
+        "description": "For external API calls (Shopify, Gmail, etc.), implement circuit breaker logic. After N consecutive failures, stop attempting calls for a cooldown period, then test with a single request before resuming.",
+        "implementation": [
+          "Redis node: store failure count per API endpoint",
+          "IF node: check if circuit is open (failure_count > threshold)",
+          "If open: return cached response or error message, skip API call",
+          "If closed: make API call, on success reset count, on failure increment",
+          "Wait node: cooldown period before retry (5min, 15min, 1hr)"
+        ],
+        "nodes_required": [
+          "n8n-nodes-base.redis",
+          "n8n-nodes-base.if",
+          "n8n-nodes-base.wait",
+          "n8n-nodes-base.httpRequest"
+        ]
+      },
+      "P6_Idempotency_Keys": {
+        "name": "Idempotency Keys Pattern",
+        "description": "For operations that modify state (checkout, email send, data creation), use idempotency keys to prevent duplicate executions on retry.",
+        "implementation": [
+          "Generate unique idempotency key: hash(trigger_data + timestamp)",
+          "Redis: check if key exists before executing",
+          "If exists: return cached result (already processed)",
+          "If not exists: execute operation, store result in Redis with TTL",
+          "TTL: 24h for most operations, longer for permanent records"
+        ],
+        "nodes_required": [
+          "n8n-nodes-base.redis",
+          "n8n-nodes-base.code",
+          "n8n-nodes-base.set"
+        ]
+      }
+    },
+    "mcp_server_templates": {
+      "MCP_Calendar_Server": {
+        "name": "MCP Calendar Server",
+        "description": "MCP server exposing calendar operations (create/read/update/delete events) for AI agent consumption. Built on n8n mcpTrigger.",
+        "tools": [
+          "create_event",
+          "list_events",
+          "find_free_time",
+          "update_event",
+          "cancel_event"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Google Calendar API",
+        "target_clients": "Claude, GPT, Gemini agents via MCP protocol",
+        "price_standalone": 25
+      },
+      "MCP_Gmail_Server": {
+        "name": "MCP Gmail Server",
+        "description": "MCP server exposing Gmail operations (send/read/search/classify emails) for AI agents.",
+        "tools": [
+          "send_email",
+          "search_emails",
+          "classify_email",
+          "draft_reply",
+          "forward_email"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Gmail API",
+        "target_clients": "Any MCP-compatible AI agent",
+        "price_standalone": 29
+      },
+      "MCP_Contacts_Server": {
+        "name": "MCP Contacts Server",
+        "description": "MCP server for contact management (CRUD + search + enrichment) via Google Sheets/Supabase.",
+        "tools": [
+          "search_contacts",
+          "add_contact",
+          "update_contact",
+          "delete_contact",
+          "enrich_contact"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Google Sheets / Supabase",
+        "target_clients": "AI agents needing contact data",
+        "price_standalone": 25
+      },
+      "MCP_ECommerce_Server": {
+        "name": "MCP E-Commerce Server",
+        "description": "MCP server exposing product catalog, inventory, and order operations for e-commerce AI agents.",
+        "tools": [
+          "search_products",
+          "check_inventory",
+          "create_order",
+          "update_order",
+          "get_customer_history"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Shopify / WooCommerce API",
+        "target_clients": "E-commerce AI assistants",
+        "price_standalone": 45
+      },
+      "MCP_HR_Server": {
+        "name": "MCP HR Server",
+        "description": "MCP server for HR operations (candidate search, CV analysis, interview scheduling, scoring).",
+        "tools": [
+          "analyze_cv",
+          "schedule_interview",
+          "score_candidate",
+          "search_positions",
+          "generate_offer"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Google Sheets + Gmail + Calendar",
+        "target_clients": "HR AI assistants",
+        "price_standalone": 35
+      },
+      "MCP_Knowledge_Base_Server": {
+        "name": "MCP Knowledge Base Server",
+        "description": "MCP server exposing RAG knowledge base for any domain. Configurable vector store + embeddings.",
+        "tools": [
+          "search_knowledge",
+          "add_document",
+          "update_document",
+          "get_context",
+          "summarize_topic"
+        ],
+        "n8n_trigger": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "integration": "Qdrant/Supabase/PGVector + OpenAI/Gemini embeddings",
+        "target_clients": "Any AI agent needing domain knowledge",
+        "price_standalone": 39
+      }
+    },
+    "base_templates": {
+      "T1_Single_Agent_Chat": {
+        "name": "Single Agent Chat Template",
+        "description": "Template base para crear un agente AI con chat trigger, LLM, memoria, y tools. Production-ready con error handling.",
+        "category": "IA & Agentes",
+        "nodes": [
+          {
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "name": "Chat Trigger",
+            "config": {
+              "initialMessages": "Hello! I'm your AI assistant. How can I help you today?"
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "name": "AI Agent",
+            "config": {
+              "hasMemory": true
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "name": "LLM Model",
+            "config": {
+              "model": "gpt-4o",
+              "options": {
+                "temperature": 0.7
+              }
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            "name": "Memory",
+            "config": {
+              "sessionId": "={{ $json.sessionId }}",
+              "windowSize": 10
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "name": "Output Parser",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.set",
+            "name": "Error Response",
+            "config": {
+              "value": "I encountered an error. Let me try again."
+            }
+          }
+        ],
+        "tier": "Starter",
+        "price": 19
+      },
+      "T2_Agent_MCP_Tool": {
+        "name": "Agent with MCP Tools Template",
+        "description": "Template base para agente AI con MCP trigger + MCP client tools. Ideal para crear servidores MCP para clientes.",
+        "category": "MCP Tools",
+        "nodes": [
+          {
+            "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+            "name": "MCP Trigger",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "name": "MCP Agent",
+            "config": {
+              "hasMemory": true
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "name": "LLM",
+            "config": {
+              "model": "gpt-4o"
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+            "name": "External MCP Tool",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "name": "Persistent Memory",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "name": "Structured Output",
+            "config": {}
+          }
+        ],
+        "tier": "Professional",
+        "price": 35
+      },
+      "T3_RAG_Agent_Template": {
+        "name": "RAG Agent Template",
+        "description": "Template base para agente RAG con vector store, embeddings, document loader, y retrieval chain.",
+        "category": "RAG & Vector Store",
+        "nodes": [
+          {
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "name": "Chat Trigger",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "name": "RAG Agent",
+            "config": {
+              "hasMemory": true
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "name": "LLM (Gemini Flash)",
+            "config": {
+              "model": "gemini-2.5-flash"
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+            "name": "Vector Store",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+            "name": "Embeddings",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "name": "Chat Memory",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+            "name": "Retriever",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+            "name": "Data Loader",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+            "name": "Text Splitter",
+            "config": {}
+          }
+        ],
+        "tier": "Professional",
+        "price": 39
+      },
+      "T4_Multi_Agent_Orchestrator": {
+        "name": "Multi-Agent Orchestrator Template",
+        "description": "Template base para orchestrator con switch routing, sub-workflows, y tiered LLM selection.",
+        "category": "IA & Agentes",
+        "nodes": [
+          {
+            "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+            "name": "Chat Trigger",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "name": "Classification LLM (mini)",
+            "config": {
+              "model": "gpt-4o-mini"
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "name": "Route Parser",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.switch",
+            "name": "Route Switch",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Sub-Workflow A",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Sub-Workflow B",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.executeWorkflow",
+            "name": "Sub-Workflow C",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.merge",
+            "name": "Results Merge",
+            "config": {}
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "name": "Response LLM (GPT-4.1)",
+            "config": {
+              "model": "gpt-4.1"
+            }
+          },
+          {
+            "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+            "name": "Orchestrator Memory",
+            "config": {}
+          }
+        ],
+        "tier": "Enterprise",
+        "price": 59
+      },
+      "T5_Error_Handler_Template": {
+        "name": "Error Handler Template",
+        "description": "Template base para Global Error Handler con severity routing, Slack/Email notification, Redis DLQ, y exponential backoff.",
+        "category": "Utilidades & DevOps",
+        "nodes": [
+          {
+            "type": "n8n-nodes-base.errorTrigger",
+            "name": "Error Trigger",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.set",
+            "name": "Parse Error",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.switch",
+            "name": "Severity Switch",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.slack",
+            "name": "Critical Alert Slack",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.gmail",
+            "name": "Error Email",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.googleSheets",
+            "name": "Error Log Sheet",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.redis",
+            "name": "DLQ Queue",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.wait",
+            "name": "Backoff Wait",
+            "config": {}
+          }
+        ],
+        "tier": "Starter",
+        "price": 15
+      },
+      "T6_MCP_Server_Template": {
+        "name": "MCP Server Template",
+        "description": "Template base para crear MCP servers para clientes. Incluye mcpTrigger, structured input schema, tool logic, y structured output.",
+        "category": "MCP Tools",
+        "nodes": [
+          {
+            "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+            "name": "MCP Trigger",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.set",
+            "name": "Parse Input",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.switch",
+            "name": "Tool Router",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.httpRequest",
+            "name": "API Call",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.code",
+            "name": "Transform Response",
+            "config": {}
+          },
+          {
+            "type": "n8n-nodes-base.respondToWebhook",
+            "name": "MCP Response",
+            "config": {}
+          }
+        ],
+        "tier": "Professional",
+        "price": 29
+      }
+    },
+    "pricing_strategy": {
+      "philosophy": "Position as business SOLUTIONS, not technical workflows. AI Agent terminology commands 2-3x premium.",
+      "tiers": {
+        "Starter": {
+          "range": "$15 - $29",
+          "target": "Simple single-purpose workflows, basic integrations",
+          "positioning": "Entry point for small businesses. Quick setup, immediate value.",
+          "examples": [
+            "Single Agent Chat",
+            "Error Handler",
+            "Flowise RAG Template"
+          ],
+          "commission_n8nmarkets": "10%",
+          "commission_gumroad": "5% + $0.50"
+        },
+        "Professional": {
+          "range": "$29 - $59",
+          "target": "Production-ready workflows with error handling, persistent memory, 2-3 integrations",
+          "positioning": "Reliable automation that runs without intervention. Includes support.",
+          "examples": [
+            "MCP Calendar Suite",
+            "MCP Gmail Suite",
+            "WhatsApp Agent Pro",
+            "HR Agent Pro"
+          ],
+          "commission_n8nmarkets": "10%",
+          "commission_gumroad": "5% + $0.50"
+        },
+        "Enterprise": {
+          "range": "$59 - $99",
+          "target": "Multi-agent suites, RAG, sub-workflows, MCP integration, comprehensive error handling",
+          "positioning": "Complete business solution. Multiple agents working together. Full documentation + video tutorial.",
+          "examples": [
+            "E-Commerce Suite",
+            "Marketing Multi-Agent Suite",
+            "Asistente Platform",
+            "Video Content Suite"
+          ],
+          "commission_n8nmarkets": "10%",
+          "commission_gumroad": "5% + $0.50"
+        },
+        "Custom": {
+          "range": "$99 - $200+",
+          "target": "Custom MCP server development, proprietary integrations, ongoing support",
+          "positioning": "Tailored solution with dedicated support contract. Includes deployment assistance.",
+          "examples": [
+            "Custom MCP Server for client CRM",
+            "Industry-specific AI agent suite"
+          ],
+          "commission_n8nmarkets": "10%",
+          "commission_gumroad": "5% + $0.50"
+        }
+      },
+      "bundle_strategy": {
+        "MCP_Tools_Bundle": {
+          "items": [
+            "G1_MCP_Calendar_Suite",
+            "G2_MCP_Gmail_Suite",
+            "G3_MCP_Contactos_Suite"
+          ],
+          "individual_total": 89,
+          "bundle_price": 69,
+          "savings": "22%"
+        },
+        "Marketing_Suite_Bundle": {
+          "items": [
+            "G5_Marketing_MultiAgent_Suite",
+            "G7_Imagenes_Citas_Suite",
+            "G8_Video_Viral_Suite"
+          ],
+          "individual_total": 187,
+          "bundle_price": 149,
+          "savings": "20%"
+        },
+        "ECommerce_Suite_Bundle": {
+          "items": [
+            "G4_Ecommerce_Agent_Suite",
+            "MCP_ECommerce_Server"
+          ],
+          "individual_total": 120,
+          "bundle_price": 99,
+          "savings": "17%"
+        },
+        "Full_Catalog_Bundle": {
+          "items": "All 13 consolidated workflows + 6 MCP servers",
+          "individual_total": 600,
+          "bundle_price": 399,
+          "savings": "33%"
+        }
+      },
+      "listing_best_practices": {
+        "title_format": "AI Agent [Function] - [Business Outcome] (e.g., 'AI Agent Calendar Pro - Never Miss an Appointment')",
+        "description_format": "Problem → Solution → Outcome → Technical Details",
+        "tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "MCP Compatible",
+          "Category-Specific"
+        ],
+        "screenshots": "2-3 high-quality: workflow canvas + key nodes + example output",
+        "includes": "JSON workflow + Setup Guide + Video Tutorial + 30-day support",
+        "differentiator": "Built-in error handling + persistent memory + tiered LLM optimization"
+      }
+    },
+    "marketplace_catalog": [
+      {
+        "id": "G1_MCP_Calendar_Suite",
+        "title": "MCP Calendar Suite Pro",
+        "category": "Calendario & Agenda",
+        "tier": "Professional",
+        "price": 35,
+        "description_short": "Consolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Result...",
+        "description_full": "Consolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 7,
+        "nodes_count": 9,
+        "refactoring_applied": [
+          "Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger",
+          "MCP Calendar duplicado → unificar en el mismo workflow con branch logic",
+          "Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal",
+          "Añadir Error Trigger Workflow para handling global",
+          "Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+          "Memoria: PostgresChatHistory para persistencia entre sesiones",
+          "Añadir googleCalendarTool como tool del agente",
+          "Voice support: usar mcpTrigger + WhatsAppTrigger para entrada voz/texto"
+        ],
+        "marketplace_title": "MCP Calendar AI Agent Suite Pro",
+        "marketplace_description": "Stop missing appointments and wasting time manually managing your calendar.\n\nMCP Calendar Suite Pro is a production-ready n8n AI workflow that automates this process end-to-end.\n\nSave 2+ hours/week, never miss appointments, voice-enabled booking.\n\nBuilt with: Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Calendar",
+          "Appointments",
+          "Voice Booking",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": true
+      },
+      {
+        "id": "G2_MCP_Gmail_Suite",
+        "title": "MCP Gmail Suite Pro",
+        "category": "Email & Comunicación",
+        "tier": "Professional",
+        "price": 29,
+        "description_short": "Consolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, ...",
+        "description_full": "Consolidación de MCP_Gmail_Voz (2 copias exactas) + MCP Gmail (2 copias, 93.33% similar). Resultado: workflow unificado con MCP trigger, voice input, gmail tools, y structured output.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 4,
+        "nodes_count": 9,
+        "refactoring_applied": [
+          "Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite",
+          "MCP Trigger como entrada principal + Gmail Tool como agente tool",
+          "Añadir gmailTool + gmailTrigger para dual input (MCP + Email trigger)",
+          "Gemini 2.5 Flash como LLM primario (clasificación/email成本低)",
+          "PostgresChatHistory para historial de emails procesados",
+          "Error Trigger para fallos de envío/recepción",
+          "OutputParserStructured para parsear emails en formato estructurado"
+        ],
+        "marketplace_title": "MCP Gmail AI Agent Suite Pro",
+        "marketplace_description": "Stop drowning in emails and spending hours on email management.\n\nMCP Gmail Suite Pro is a production-ready n8n AI workflow that automates this process end-to-end.\n\nProcess 50+ emails/day automatically, never miss important messages.\n\nBuilt with: Unificar 4 variantes Gmail en 1 workflow MCP Gmail Suite. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Gmail",
+          "Email Automation",
+          "MCP Gmail",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": true
+      },
+      {
+        "id": "G3_MCP_Contactos_Suite",
+        "title": "MCP Contactos Suite Pro",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 25,
+        "description_short": "Consolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP....",
+        "description_full": "Consolidación de MCP_Contactos_Voz (2 copias exactas) + MCP Contactos (6 nodos). Workflow unificado para gestión de contactos vía MCP.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 3,
+        "nodes_count": 8,
+        "refactoring_applied": [
+          "Unificar 3 variantes Contactos en 1 MCP Contactos Suite",
+          "MCP Trigger + googleSheetsTool como base de datos contactos",
+          "Gemini 2.5 Flash para búsqueda/classificación de contactos",
+          "PostgresChatHistory para contexto conversacional",
+          "Añadir sub-workflow para CRUD operations en contactos"
+        ],
+        "marketplace_title": "MCP Contactos AI Agent Suite Pro",
+        "marketplace_description": "Stop building MCP tool integrations from scratch for every client.\n\nMCP Contactos Suite Pro is a production-ready n8n AI workflow that automates this process end-to-end.\n\nGive any AI agent instant access to your business tools via MCP protocol.\n\nBuilt with: Unificar 3 variantes Contactos en 1 MCP Contactos Suite. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "MCP Server",
+          "AI Integration",
+          "Tool Protocol",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": true
+      },
+      {
+        "id": "G4_Ecommerce_Agent_Suite",
+        "title": "E-Commerce AI Agent Suite",
+        "category": "E-Commerce & Ventas",
+        "tier": "Enterprise",
+        "price": 75,
+        "description_short": "Consolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: s...",
+        "description_full": "Consolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.",
+        "consolidation_type": "create_modular_suite",
+        "original_workflows_count": 7,
+        "nodes_count": 11,
+        "refactoring_applied": [
+          "v1/v2/v3 → consolidar en 1 E-Commerce Agent principal (mejor de v3 como base)",
+          "Shopify → convertir a sub-workflow Shopify Integration",
+          "Nano Banana → convertir a sub-workflow E-Commerce Nano Platform",
+          "Orchestrator: E-Commerce Suite Master con switch para routing",
+          "GPT-4.1 como LLM principal (razonamiento complejo para e-commerce)",
+          "GPT-4o-mini como tool model (clasificación de productos, routing)",
+          "Memoria: PostgresChatHistory + PGVector para productos catalog RAG",
+          "shopifyTool + wooCommerceTool + googleSheetsTool como tools",
+          "Error Trigger global + Circuit Breaker para API calls",
+          "Idempotency keys en todas las operaciones de checkout"
+        ],
+        "marketplace_title": "E-Commerce AI Agent AI Agent Suite",
+        "marketplace_description": "Stop losing sales because your customers can't get instant answers about products and orders.\n\nE-Commerce AI Agent Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\n24/7 product assistance, instant order queries, 30% more conversions.\n\nBuilt with: v1/v2/v3 → consolidar en 1 E-Commerce Agent principal (mejor de v3 como base). Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "E-Commerce",
+          "Shopify",
+          "Product Assistant",
+          "Enterprise Grade",
+          "Multi-Agent"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G5_Marketing_MultiAgent_Suite",
+        "title": "Marketing Multi-Agent Suite",
+        "category": "Marketing & Leads",
+        "tier": "Enterprise",
+        "price": 89,
+        "description_short": "Consolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP...",
+        "description_full": "Consolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.",
+        "consolidation_type": "create_modular_suite",
+        "original_workflows_count": 7,
+        "nodes_count": 11,
+        "refactoring_applied": [
+          "Orchestrator: Marketing Agent Master con switch por tipo (blog/linkedin/video/images)",
+          "Sub-workflow: Blog Content Agent (generación de artículos)",
+          "Sub-workflow: LinkedIn Agent (posts + networking)",
+          "Sub-workflow: Video Agent (scripts + descriptions)",
+          "Sub-workflow: Image Agent (search + creation con DALL-E/Flux)",
+          "GPT-4.1 como orchestrator LLM (razonamiento para routing)",
+          "Gemini 2.5 Flash como sub-agent LLM (contenido generation económico)",
+          "Memoria: PostgresChatHistory para contexto de marca",
+          "RAG: vectorStoreQdrant para contenido histórico de marketing",
+          "MCP Trigger + Chat Trigger para entrada",
+          "Error handling: retry con exponential backoff en API calls"
+        ],
+        "marketplace_title": "Marketing Multi-Agent AI Agent Suite",
+        "marketplace_description": "Stop spending hours creating content for every platform manually.\n\nMarketing Multi-Agent Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\nGenerate content for 5+ platforms simultaneously, 10x content output.\n\nBuilt with: Orchestrator: Marketing Agent Master con switch por tipo (blog/linkedin/video/images). Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Content Marketing",
+          "Multi-Agent",
+          "Social Media",
+          "Enterprise Grade",
+          "Multi-Agent"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G6_Asistente_Platform",
+        "title": "Asistente AI Platform (Modular)",
+        "category": "IA & Agentes",
+        "tier": "Enterprise",
+        "price": 69,
+        "description_short": "Consolidación: Asistente personal + Asistente Abogado + Asistente Teléfono + Asistente_de_Voz_Transcribir + Asistente_de_Voz_MCP. Resultado: plataform...",
+        "description_full": "Consolidación: Asistente personal + Asistente Abogado + Asistente Teléfono + Asistente_de_Voz_Transcribir + Asistente_de_Voz_MCP. Resultado: plataforma modular con sub-workflows por especialidad.",
+        "consolidation_type": "create_modular_suite",
+        "original_workflows_count": 5,
+        "nodes_count": 11,
+        "refactoring_applied": [
+          "Orchestrator: Asistente Platform Master",
+          "Sub-workflow: Asistente General (personal tasks)",
+          "Sub-workflow: Asistente Legal (abogado especializado)",
+          "Sub-workflow: Asistente Voice (teléfono + transcripción)",
+          "Sub-workflow: Asistente MCP (con tools MCP externos)",
+          "Tiered model: GPT-4.1 para legal (razonamiento complejo) + Gemini Flash para general",
+          "Memoria: PostgresChatHistory + Mem0 para personalización",
+          "Voice: Whisper para transcripción + TTS para respuesta",
+          "MCP integration: conectar a MCP servers externos"
+        ],
+        "marketplace_title": "AI Agent - Asistente AI Platform (Modular)",
+        "marketplace_description": "Stop building AI assistants from scratch every time.\n\nAsistente AI Platform (Modular) is a production-ready n8n AI workflow that automates this process end-to-end.\n\nDeploy custom AI assistants in minutes, not days.\n\nBuilt with: Orchestrator: Asistente Platform Master. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "AI Assistant",
+          "LangChain",
+          "Multi-Agent",
+          "Enterprise Grade",
+          "Multi-Agent"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G7_Imagenes_Citas_Suite",
+        "title": "AI Image & Quote Generator Suite",
+        "category": "Social Media & Contenido",
+        "tier": "Professional",
+        "price": 39,
+        "description_short": "Consolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template ...",
+        "description_full": "Consolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 4,
+        "nodes_count": 7,
+        "refactoring_applied": [
+          "Consolidar 4 variantes → 1 workflow production-ready",
+          "Usar la versión 'backup BIEN' como base (27 nodos, más completa)",
+          "Añadir template system: Google Sheets con templates de quotes",
+          "Gemini 2.5 Flash para quote generation (cost-effective)",
+          "DALL-E 3 / OpenAI Image para image generation",
+          "Añadir error handling para API rate limits",
+          "Output: Google Drive + Social Media posting"
+        ],
+        "marketplace_title": "AI Image & Quote Generator AI Agent Suite",
+        "marketplace_description": "Stop creating social media content without AI-powered quote and image generation.\n\nAI Image & Quote Generator Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\nGenerate viral images with quotes in seconds, not hours.\n\nBuilt with: Consolidar 4 variantes → 1 workflow production-ready. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Content Creation",
+          "Image Generation",
+          "Quotes",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G8_Video_Viral_Suite",
+        "title": "AI Video Content Suite",
+        "category": "Voz & Transcripción",
+        "tier": "Enterprise",
+        "price": 59,
+        "description_short": "Consolidación: 2 copias 'Crear videos virales' (99.67%) + 2 video generators similares (68.81%). Resultado: suite de video con sub-workflows....",
+        "description_full": "Consolidación: 2 copias 'Crear videos virales' (99.67%) + 2 video generators similares (68.81%). Resultado: suite de video con sub-workflows.",
+        "consolidation_type": "create_modular_suite",
+        "original_workflows_count": 4,
+        "nodes_count": 11,
+        "refactoring_applied": [
+          "Consolidar videos virales (2 copias) → 1 base workflow",
+          "Short-Form Video Generator → sub-workflow de short content",
+          "Full Video Generator → sub-workflow de long-form content",
+          "Orchestrator con Switch para tipo de video",
+          "ElevenLabs para voiceover + Kling/Flux para visuals",
+          "GPT-4.1 para script generation (razonamiento narrativo)",
+          "Gemini Flash para descriptions/metadata (cost-effective)",
+          "PostgresChatHistory para estilo preferencias",
+          "Multi-platform publishing: YouTube + TikTok + Instagram"
+        ],
+        "marketplace_title": "AI Video Content AI Agent Suite",
+        "marketplace_description": "Stop manually creating and editing videos for every platform.\n\nAI Video Content Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\nCreate platform-ready videos with AI voiceover and visuals automatically.\n\nBuilt with: Consolidar videos virales (2 copias) → 1 base workflow. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Video",
+          "Voiceover",
+          "Multi-Platform",
+          "Enterprise Grade",
+          "Multi-Agent"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G9_Social_Scraper_Suite",
+        "title": "Universal Social Scraper Suite",
+        "category": "Scraping & Extracción",
+        "tier": "Professional",
+        "price": 35,
+        "description_short": "Consolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modul...",
+        "description_full": "Consolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 3,
+        "nodes_count": 8,
+        "refactoring_applied": [
+          "Consolidar 3 variantes → 1 Universal Social Scraper",
+          "Switch para platform selection (Instagram/LinkedIn/X/Facebook)",
+          "Gemini 2.5 Flash para data extraction/classification",
+          "HTTP Request con rate limiting + exponential backoff",
+          "Output: Google Sheets + CRM (HubSpot/Airtable)",
+          "Error handling: Circuit Breaker para API failures",
+          "Rate limit management: Wait node entre requests"
+        ],
+        "marketplace_title": "Universal Social Scraper AI Agent Suite",
+        "marketplace_description": "Stop manually copying contact data from social media profiles.\n\nUniversal Social Scraper Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\nExtract 500+ contacts/hour from 4 social platforms automatically.\n\nBuilt with: Consolidar 3 variantes → 1 Universal Social Scraper. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Web Scraping",
+          "Lead Extraction",
+          "Social Data",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G10_HR_AI_Agent",
+        "title": "HR AI Agent Pro",
+        "category": "RRHH & Selección",
+        "tier": "Professional",
+        "price": 45,
+        "description_short": "Consolidación: 2 workflows de CV analysis (80.57% similar). Resultado: agente HR completo con RAG de posiciones + evaluation scoring....",
+        "description_full": "Consolidación: 2 workflows de CV analysis (80.57% similar). Resultado: agente HR completo con RAG de posiciones + evaluation scoring.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 2,
+        "nodes_count": 9,
+        "refactoring_applied": [
+          "Consolidar 2 HR workflows → 1 HR Agent Pro",
+          "GPT-4.1 como LLM principal (razonamiento para evaluación)",
+          "RAG: vectorStoreQdrant para base de conocimiento de posiciones",
+          "OutputParserStructured para scoring consistente de candidatos",
+          "Google Sheets integration para tracking de candidates",
+          "Email automation para notificaciones a candidatos",
+          "Sub-workflow para background check automation"
+        ],
+        "marketplace_title": "HR AI Agent AI Agent Pro",
+        "marketplace_description": "Stop spending hours reviewing resumes manually when you have 100+ candidates.\n\nHR AI Agent Pro is a production-ready n8n AI workflow that automates this process end-to-end.\n\nEvaluate 100+ resumes in 1 hour with consistent AI scoring.\n\nBuilt with: Consolidar 2 HR workflows → 1 HR Agent Pro. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "HR",
+          "Recruitment",
+          "CV Analysis",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G11_WhatsApp_AI_Agent",
+        "title": "WhatsApp AI Agent Pro",
+        "category": "Chat & Mensajería",
+        "tier": "Professional",
+        "price": 49,
+        "description_short": "Consolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp product...",
+        "description_full": "Consolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.",
+        "consolidation_type": "create_modular_suite",
+        "original_workflows_count": 4,
+        "nodes_count": 11,
+        "refactoring_applied": [
+          "Consolidar WhatsApp variants → 1 WhatsApp Agent Pro",
+          "Orchestrator con switch: WhatsApp / Telegram",
+          "GPT-4.1 como LLM (atención al cliente requiere calidad)",
+          "Gemini Flash para routing/clasificación de queries",
+          "PostgresChatHistory para historial de clientes",
+          "googleSheetsTool para CRM integration",
+          "Error handling + fallback a humano cuando no puede resolver"
+        ],
+        "marketplace_title": "WhatsApp AI Agent AI Agent Pro",
+        "marketplace_description": "Stop leaving customers waiting for responses on WhatsApp and Telegram.\n\nWhatsApp AI Agent Pro is a production-ready n8n AI workflow that automates this process end-to-end.\n\nInstant customer responses 24/7, 90% query resolution without human intervention.\n\nBuilt with: Consolidar WhatsApp variants → 1 WhatsApp Agent Pro. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "WhatsApp",
+          "Telegram",
+          "Customer Service",
+          "Business Ready"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G12_Flowise_RAG_Suite",
+        "title": "Flowise RAG Agent Suite",
+        "category": "RAG & Vector Store",
+        "tier": "Starter",
+        "price": 19,
+        "description_short": "Consolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready....",
+        "description_full": "Consolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 2,
+        "nodes_count": 7,
+        "refactoring_applied": [
+          "Consolidar 2 Flowise variants → 1 Flowise RAG Template",
+          "Convertir a n8n native (LangChain nodes) para mayor flexibilidad",
+          "vectorStoreQdrant para RAG storage",
+          "Gemini 2.5 Flash embeddings + chat model",
+          "Template parametrizable por industry (peluquería, legal, etc)"
+        ],
+        "marketplace_title": "Flowise RAG Agent AI Agent Suite",
+        "marketplace_description": "Stop building RAG pipelines from scratch for every knowledge base.\n\nFlowise RAG Agent Suite is a production-ready n8n AI workflow that automates this process end-to-end.\n\nDeploy domain-specific knowledge bases in minutes with production-ready RAG.\n\nBuilt with: Consolidar 2 Flowise variants → 1 Flowise RAG Template. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "RAG",
+          "Knowledge Base",
+          "Vector Store",
+          "Beginner Friendly"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "G13_Error_Handler",
+        "title": "Global Error Handler Workflow",
+        "category": "Utilidades & DevOps",
+        "tier": "Starter",
+        "price": 15,
+        "description_short": "Consolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows....",
+        "description_full": "Consolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.",
+        "consolidation_type": "merge_all_into_one",
+        "original_workflows_count": 2,
+        "nodes_count": 7,
+        "refactoring_applied": [
+          "Consolidar → 1 Global Error Handler production-ready",
+          "Error Trigger como entrada",
+          "Switch para severity levels (warning/error/critical)",
+          "Slack/Email notification por severity",
+          "Redis para retry queue (DLQ - Dead Letter Queue)",
+          "Logging a Google Sheets para audit trail",
+          "Exponential backoff en retries",
+          "ESTE WORKFLOW DEBE SER LINKADO como Error Workflow en TODOS los demás"
+        ],
+        "marketplace_title": "AI Agent - Global Error Handler Workflow",
+        "marketplace_description": "Stop debugging workflow failures without proper error tracking and notification.\n\nGlobal Error Handler Workflow is a production-ready n8n AI workflow that automates this process end-to-end.\n\nGet instant alerts on failures, automatic retries, full audit trail.\n\nBuilt with: Consolidar → 1 Global Error Handler production-ready. Includes error handling, persistent memory, and structured output.",
+        "marketplace_tags": [
+          "AI Agent",
+          "Production-Ready",
+          "Error Handling",
+          "Error Handling",
+          "Monitoring",
+          "DevOps",
+          "Beginner Friendly"
+        ],
+        "includes": [
+          "n8n workflow JSON",
+          "Setup guide (PDF)",
+          "Video tutorial (5 min)",
+          "30-day email support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": true,
+        "mcp_compatible": false
+      },
+      {
+        "id": "MCP_Calendar_Server",
+        "title": "MCP Calendar Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 25,
+        "description_short": "MCP server exposing calendar operations (create/read/update/delete events) for AI agent consumption. Built on n8n mcpTrigger....",
+        "description_full": "MCP server exposing calendar operations (create/read/update/delete events) for AI agent consumption. Built on n8n mcpTrigger.",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP Calendar Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing create_event, list_events, find_free_time, update_event, cancel_event operations. Integrates with Google Calendar API. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Google Calendar API"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "MCP_Gmail_Server",
+        "title": "MCP Gmail Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 29,
+        "description_short": "MCP server exposing Gmail operations (send/read/search/classify emails) for AI agents....",
+        "description_full": "MCP server exposing Gmail operations (send/read/search/classify emails) for AI agents.",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP Gmail Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing send_email, search_emails, classify_email, draft_reply, forward_email operations. Integrates with Gmail API. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Gmail API"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "MCP_Contacts_Server",
+        "title": "MCP Contacts Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 25,
+        "description_short": "MCP server for contact management (CRUD + search + enrichment) via Google Sheets/Supabase....",
+        "description_full": "MCP server for contact management (CRUD + search + enrichment) via Google Sheets/Supabase.",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP Contacts Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing search_contacts, add_contact, update_contact, delete_contact, enrich_contact operations. Integrates with Google Sheets / Supabase. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Google Sheets / Supabase"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "MCP_ECommerce_Server",
+        "title": "MCP E-Commerce Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 45,
+        "description_short": "MCP server exposing product catalog, inventory, and order operations for e-commerce AI agents....",
+        "description_full": "MCP server exposing product catalog, inventory, and order operations for e-commerce AI agents.",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP E-Commerce Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing search_products, check_inventory, create_order, update_order, get_customer_history operations. Integrates with Shopify / WooCommerce API. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Shopify / WooCommerce API"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "MCP_HR_Server",
+        "title": "MCP HR Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 35,
+        "description_short": "MCP server for HR operations (candidate search, CV analysis, interview scheduling, scoring)....",
+        "description_full": "MCP server for HR operations (candidate search, CV analysis, interview scheduling, scoring).",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP HR Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing analyze_cv, schedule_interview, score_candidate, search_positions, generate_offer operations. Integrates with Google Sheets + Gmail + Calendar. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Google Sheets + Gmail + Calendar"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "MCP_Knowledge_Base_Server",
+        "title": "MCP Knowledge Base Server",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 39,
+        "description_short": "MCP server exposing RAG knowledge base for any domain. Configurable vector store + embeddings....",
+        "description_full": "MCP server exposing RAG knowledge base for any domain. Configurable vector store + embeddings.",
+        "consolidation_type": "new_mcp_server",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "MCP Trigger structured input",
+          "Tool routing via Switch",
+          "API integration",
+          "Structured output response"
+        ],
+        "marketplace_title": "MCP Server - MCP Knowledge Base Server | AI Agent Integration",
+        "marketplace_description": "Production-ready MCP server exposing search_knowledge, add_document, update_document, get_context, summarize_topic operations. Integrates with Qdrant/Supabase/PGVector + OpenAI/Gemini embeddings. Compatible with Claude, GPT, Gemini agents via MCP protocol.",
+        "marketplace_tags": [
+          "MCP Server",
+          "AI Agent Integration",
+          "Production-Ready",
+          "Qdrant/Supabase/PGVector + OpenAI/Gemini embeddings"
+        ],
+        "includes": [
+          "MCP server workflow JSON",
+          "MCP schema definition",
+          "Setup guide",
+          "Client integration examples",
+          "30-day support"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "T1_Single_Agent_Chat",
+        "title": "Template: Single Agent Chat Template",
+        "category": "IA & Agentes",
+        "tier": "Starter",
+        "price": 19,
+        "description_short": "Template base para crear un agente AI con chat trigger, LLM, memoria, y tools. Production-ready con error handling....",
+        "description_full": "Template base para crear un agente AI con chat trigger, LLM, memoria, y tools. Production-ready con error handling.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - Single Agent Chat Template | Start Building Faster",
+        "marketplace_description": "Template base para crear un agente AI con chat trigger, LLM, memoria, y tools. Production-ready con error handling.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "IA & Agentes",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": false
+      },
+      {
+        "id": "T2_Agent_MCP_Tool",
+        "title": "Template: Agent with MCP Tools Template",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 35,
+        "description_short": "Template base para agente AI con MCP trigger + MCP client tools. Ideal para crear servidores MCP para clientes....",
+        "description_full": "Template base para agente AI con MCP trigger + MCP client tools. Ideal para crear servidores MCP para clientes.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - Agent with MCP Tools Template | Start Building Faster",
+        "marketplace_description": "Template base para agente AI con MCP trigger + MCP client tools. Ideal para crear servidores MCP para clientes.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "MCP Tools",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      },
+      {
+        "id": "T3_RAG_Agent_Template",
+        "title": "Template: RAG Agent Template",
+        "category": "RAG & Vector Store",
+        "tier": "Professional",
+        "price": 39,
+        "description_short": "Template base para agente RAG con vector store, embeddings, document loader, y retrieval chain....",
+        "description_full": "Template base para agente RAG con vector store, embeddings, document loader, y retrieval chain.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 9,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - RAG Agent Template | Start Building Faster",
+        "marketplace_description": "Template base para agente RAG con vector store, embeddings, document loader, y retrieval chain.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "RAG & Vector Store",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": false
+      },
+      {
+        "id": "T4_Multi_Agent_Orchestrator",
+        "title": "Template: Multi-Agent Orchestrator Template",
+        "category": "IA & Agentes",
+        "tier": "Enterprise",
+        "price": 59,
+        "description_short": "Template base para orchestrator con switch routing, sub-workflows, y tiered LLM selection....",
+        "description_full": "Template base para orchestrator con switch routing, sub-workflows, y tiered LLM selection.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 10,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - Multi-Agent Orchestrator Template | Start Building Faster",
+        "marketplace_description": "Template base para orchestrator con switch routing, sub-workflows, y tiered LLM selection.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "IA & Agentes",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": false
+      },
+      {
+        "id": "T5_Error_Handler_Template",
+        "title": "Template: Error Handler Template",
+        "category": "Utilidades & DevOps",
+        "tier": "Starter",
+        "price": 15,
+        "description_short": "Template base para Global Error Handler con severity routing, Slack/Email notification, Redis DLQ, y exponential backoff....",
+        "description_full": "Template base para Global Error Handler con severity routing, Slack/Email notification, Redis DLQ, y exponential backoff.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 8,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - Error Handler Template | Start Building Faster",
+        "marketplace_description": "Template base para Global Error Handler con severity routing, Slack/Email notification, Redis DLQ, y exponential backoff.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "Utilidades & DevOps",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": false
+      },
+      {
+        "id": "T6_MCP_Server_Template",
+        "title": "Template: MCP Server Template",
+        "category": "MCP Tools",
+        "tier": "Professional",
+        "price": 29,
+        "description_short": "Template base para crear MCP servers para clientes. Incluye mcpTrigger, structured input schema, tool logic, y structured output....",
+        "description_full": "Template base para crear MCP servers para clientes. Incluye mcpTrigger, structured input schema, tool logic, y structured output.",
+        "consolidation_type": "base_template",
+        "original_workflows_count": 0,
+        "nodes_count": 6,
+        "refactoring_applied": [
+          "Production-ready base structure",
+          "Error handling included",
+          "Best-practice memory selection",
+          "Documentation sticky notes"
+        ],
+        "marketplace_title": "n8n Template - MCP Server Template | Start Building Faster",
+        "marketplace_description": "Template base para crear MCP servers para clientes. Incluye mcpTrigger, structured input schema, tool logic, y structured output.",
+        "marketplace_tags": [
+          "Template",
+          "Starter Kit",
+          "MCP Tools",
+          "Production-Ready"
+        ],
+        "includes": [
+          "Template workflow JSON",
+          "Customization guide",
+          "Best practices documentation"
+        ],
+        "n8nmarkets_commission": "10%",
+        "gumroad_commission": "5% + $0.50",
+        "production_ready": true,
+        "error_handling": true,
+        "persistent_memory": false,
+        "mcp_compatible": true
+      }
+    ],
+    "cognitive_capital": {
+      "concept": "Build a shared knowledge base (capital cognitivo) that all agents can reference, ensuring consistency and reducing redundant LLM calls.",
+      "architecture": {
+        "vector_store": "Qdrant (best production performance, native n8n node)",
+        "embeddings": "Gemini 2.5 Flash embeddings ($0.15/1M input - cheapest quality option)",
+        "chat_memory": "PostgresChatHistory (persistent, n8n native node)",
+        "document_loader": "Default Data Loader + Recursive Text Splitter",
+        "ingestion_pipeline": "Schedule Trigger → Google Drive → Extract → Split → Embed → Store"
+      },
+      "knowledge_domains": [
+        {
+          "domain": "Company FAQ & Policies",
+          "source": "Google Docs / PDFs",
+          "update_frequency": "Weekly",
+          "use_in": [
+            "G6_Asistente_Platform",
+            "G11_WhatsApp_AI_Agent"
+          ]
+        },
+        {
+          "domain": "Product Catalog & Inventory",
+          "source": "Shopify API / Google Sheets",
+          "update_frequency": "Daily",
+          "use_in": [
+            "G4_Ecommerce_Agent_Suite"
+          ]
+        },
+        {
+          "domain": "Legal Knowledge Base",
+          "source": "Legislation PDFs / Legal databases",
+          "update_frequency": "Monthly",
+          "use_in": [
+            "G6_Asistente_Platform (Legal sub)"
+          ]
+        },
+        {
+          "domain": "Marketing Content Archive",
+          "source": "Blog posts / Social media history",
+          "update_frequency": "Weekly",
+          "use_in": [
+            "G5_Marketing_MultiAgent_Suite"
+          ]
+        },
+        {
+          "domain": "HR Position Descriptions",
+          "source": "Google Sheets / Job postings",
+          "update_frequency": "As needed",
+          "use_in": [
+            "G10_HR_AI_Agent"
+          ]
+        }
+      ],
+      "implementation_steps": [
+        "1. Deploy Qdrant instance (Docker: docker run -p 6333:6333 qdrant/qdrant)",
+        "2. Create ingestion workflow: Schedule Trigger → Extract → Split → Embed → Qdrant Upsert",
+        "3. Create RAG retrieval workflow: Query → Embed → Qdrant Search → Context → LLM Response",
+        "4. Link all agent workflows to RAG retrieval as sub-workflow or tool",
+        "5. Implement incremental updates (only new/changed documents)",
+        "6. Monitor Qdrant health and collection sizes"
+      ]
+    }
+  }
 }

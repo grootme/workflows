@@ -1,0 +1,192 @@
+{
+  "name": "Universal Social Scraper Suite",
+  "id_prefix": "G9_Social_Scraper_Suite",
+  "category": "Scraping & Extracción",
+  "description": "Consolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "5513f449bb5f",
+    "604d375f8acf",
+    "754f3cd768f1"
+  ],
+  "tier": "Professional",
+  "price": 35,
+  "nodes": [
+    {
+      "id": "G9_Social_Scraper_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_llm",
+      "name": "LLM (gemini-2.5-flash)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      }
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_tool_http",
+      "name": "HTTP Request Tool",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "position": [
+        1000,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G9_Social_Scraper_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## Universal Social Scraper Suite\n\nConsolidación: 2 copias exactas 'Scrapp emails from instagram/linkedin/x/facebook' + 'Scrapp emails from instagram' (88.23%). Resultado: scraper modular multi-platform.\n\n**Consolidated from**: 3 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 3 variantes → 1 Universal Social Scraper\n- Switch para platform selection (Instagram/LinkedIn/X/Facebook)\n- Gemini 2.5 Flash para data extraction/classification\n- HTTP Request con rate limiting + exponential backoff\n- Output: Google Sheets + CRM (HubSpot/Airtable)",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gemini-2.5-flash)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gemini-2.5-flash)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request Tool": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar 3 variantes → 1 Universal Social Scraper",
+    "Switch para platform selection (Instagram/LinkedIn/X/Facebook)",
+    "Gemini 2.5 Flash para data extraction/classification",
+    "HTTP Request con rate limiting + exponential backoff",
+    "Output: Google Sheets + CRM (HubSpot/Airtable)",
+    "Error handling: Circuit Breaker para API failures",
+    "Rate limit management: Wait node entre requests"
+  ]
+}

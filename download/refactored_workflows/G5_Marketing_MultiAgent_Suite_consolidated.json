@@ -1,0 +1,268 @@
+{
+  "name": "Marketing Multi-Agent Suite",
+  "id_prefix": "G5_Marketing_MultiAgent_Suite",
+  "category": "Marketing & Leads",
+  "description": "Consolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.",
+  "consolidation_action": "create_modular_suite",
+  "original_workflow_ids": [
+    "a79082d0d756",
+    "47512a6d55f7",
+    "46e23bfdcbaf",
+    "9203f7427ad2",
+    "ea958cb10748",
+    "2330870731d8",
+    "391059fe9a6f"
+  ],
+  "tier": "Enterprise",
+  "price": 89,
+  "nodes": [
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your Marketing Multi-Agent Suite. What would you like to do today?"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_classify_llm",
+      "name": "Classification LLM (GPT-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        500,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_classify_parser",
+      "name": "Route Classification Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        500,
+        400
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_route_switch",
+      "name": "Route Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        750,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_sub_wf_1",
+      "name": "Execute Sub-Workflow 1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_1"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_sub_wf_2",
+      "name": "Execute Sub-Workflow 2",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        500
+      ],
+      "parameters": {
+        "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_2"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_sub_wf_3",
+      "name": "Execute Sub-Workflow 3",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        700
+      ],
+      "parameters": {
+        "workflowId": "SUB_G5_Marketing_MultiAgent_Suite_3"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_merge",
+      "name": "Results Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_response_llm",
+      "name": "Response LLM (GPT-4.1)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1500,
+        300
+      ],
+      "parameters": {
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_memory",
+      "name": "Orchestrator Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        1500,
+        500
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G5_Marketing_MultiAgent_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## Marketing Multi-Agent Suite\n\nConsolidación: Agente Blogs/LinkedIn/Videos/Buscador/Creador Imagenes (5 agentes similares 66-76%) + Sistema Multi-Agentes Marketing + Multiagente MCP. Resultado: suite de marketing con agente orchestrator + sub-workflows especializados.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Classification LLM (GPT-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification LLM (GPT-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Route Classification Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Classification Parser": {
+      "main": [
+        [
+          {
+            "node": "Route Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Switch": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 1": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 2": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 3": {
+      "main": [
+        [
+          {
+            "node": "Results Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Results Merge": {
+      "main": [
+        [
+          {
+            "node": "Response LLM (GPT-4.1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response LLM (GPT-4.1)": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Orchestrator: Marketing Agent Master con switch por tipo (blog/linkedin/video/images)",
+    "Sub-workflow: Blog Content Agent (generación de artículos)",
+    "Sub-workflow: LinkedIn Agent (posts + networking)",
+    "Sub-workflow: Video Agent (scripts + descriptions)",
+    "Sub-workflow: Image Agent (search + creation con DALL-E/Flux)",
+    "GPT-4.1 como orchestrator LLM (razonamiento para routing)",
+    "Gemini 2.5 Flash como sub-agent LLM (contenido generation económico)",
+    "Memoria: PostgresChatHistory para contexto de marca",
+    "RAG: vectorStoreQdrant para contenido histórico de marketing",
+    "MCP Trigger + Chat Trigger para entrada",
+    "Error handling: retry con exponential backoff en API calls"
+  ]
+}

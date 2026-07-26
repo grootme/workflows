@@ -1,0 +1,43 @@
+{
+  "name": "Agent with MCP Tools Template",
+  "description": "Template base para agente AI con MCP trigger + MCP client tools. Ideal para crear servidores MCP para clientes.",
+  "category": "MCP Tools",
+  "nodes": [
+    {
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "name": "MCP Trigger",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "name": "MCP Agent",
+      "config": {
+        "hasMemory": true
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "name": "LLM",
+      "config": {
+        "model": "gpt-4o"
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "name": "External MCP Tool",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "name": "Persistent Memory",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "name": "Structured Output",
+      "config": {}
+    }
+  ],
+  "tier": "Professional",
+  "price": 35
+}

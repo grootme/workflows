@@ -1,0 +1,53 @@
+{
+  "name": "Single Agent Chat Template",
+  "description": "Template base para crear un agente AI con chat trigger, LLM, memoria, y tools. Production-ready con error handling.",
+  "category": "IA & Agentes",
+  "nodes": [
+    {
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "name": "Chat Trigger",
+      "config": {
+        "initialMessages": "Hello! I'm your AI assistant. How can I help you today?"
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "name": "AI Agent",
+      "config": {
+        "hasMemory": true
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "name": "LLM Model",
+      "config": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "name": "Memory",
+      "config": {
+        "sessionId": "={{ $json.sessionId }}",
+        "windowSize": 10
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "name": "Output Parser",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.set",
+      "name": "Error Response",
+      "config": {
+        "value": "I encountered an error. Let me try again."
+      }
+    }
+  ],
+  "tier": "Starter",
+  "price": 19
+}

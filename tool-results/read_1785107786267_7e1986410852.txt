@@ -1,0 +1,659 @@
+     1→#!/usr/bin/env python3
+     2→"""
+     3→Analyze all n8n workflow JSON files to:
+     4→1. Parse metadata (name, nodes, connections, tags)
+     5→2. Extract node types and categorize workflows
+     6→3. Identify duplications and similarities
+     7→4. Generate consolidated catalog with best practices
+     8→5. Output results as JSON for the web app
+     9→"""
+    10→
+    11→import json
+    12→import os
+    13→import glob
+    14→import hashlib
+    15→import re
+    16→from collections import defaultdict
+    17→from difflib import SequenceMatcher
+    18→
+    19→UPLOAD_DIR = "/home/z/my-project/upload"
+    20→OUTPUT_DIR = "/home/z/my-project/download"
+    21→SCRIPTS_DIR = "/home/z/my-project/scripts"
+    22→
+    23→def normalize_name(name):
+    24→    """Normalize workflow name for comparison"""
+    25→    if not name:
+    26→        return ""
+    27→    # Remove common suffixes/prefixes
+    28→    name = re.sub(r'_Josema_Fernandez$', '', name)
+    29→    name = re.sub(r'_JosemaFernandez$', '', name)
+    30→    name = re.sub(r'__Josema_Fernandez$', '', name)
+    31→    name = re.sub(r'\s*\(\d+\)\s*$', '', name)
+    32→    name = re.sub(r'_v\d+$', '', name)
+    33→    name = name.strip().lower()
+    34→    # Replace underscores and special chars with spaces
+    35→    name = re.sub(r'[_\-\s]+', ' ', name)
+    36→    return name
+    37→
+    38→def get_node_types(nodes):
+    39→    """Extract unique node types from a workflow"""
+    40→    if not nodes:
+    41→        return []
+    42→    types = []
+    43→    for node in nodes:
+    44→        if isinstance(node, dict) and 'type' in node:
+    45→            types.append(node['type'])
+    46→    return sorted(set(types))
+    47→
+    48→def get_node_names(nodes):
+    49→    """Extract node names"""
+    50→    if not nodes:
+    51→        return []
+    52→    names = []
+    53→    for node in nodes:
+    54→        if isinstance(node, dict) and 'name' in node:
+    55→            names.append(node['name'])
+    56→    return names
+    57→
+    58→def get_connection_count(connections):
+    59→    """Count total connections in a workflow"""
+    60→    if not connections or not isinstance(connections, dict):
+    61→        return 0
+    62→    count = 0
+    63→    for source, targets in connections.items():
+    64→        if isinstance(targets, dict):
+    65→            for target_list in targets.values():
+    66→                if isinstance(target_list, list):
+    67→                    for conn in target_list:
+    68→                        if isinstance(conn, list):
+    69→                            count += len(conn)
+    70→                        else:
+    71→                            count += 1
+    72→        elif isinstance(targets, list):
+    73→            count += len(targets)
+    74→    return count
+    75→
+    76→def categorize_workflow(node_types, name):
+    77→    """Categorize workflow based on node types and name"""
+    78→    categories = []
+    79→    name_lower = name.lower() if name else ""
+    80→    
+    81→    # Category detection based on node types
+    82→    type_set = set(node_types)
+    83→    
+    84→    # AI/LLM related
+    85→    ai_types = {'n8n-nodes-base.openAi', '@n8n/n8n-nodes-langchain.lmChatOpenAi',
+    86→                '@n8n/n8n-nodes-langchain.lmChatAnthropic', 'n8n-nodes-base.googleGemini',
+    87→                '@n8n/n8n-nodes-langchain.agent', '@n8n/n8n-nodes-langchain.tool',
+    88→                '@n8n/n8n-nodes-langchain.memoryBufferWindow'}
+    89→    if type_set.intersection(ai_types) or any(kw in name_lower for kw in ['ai', 'ia', 'agent', 'gpt', 'openai', 'llm', 'gemini', 'claude']):
+    90→        categories.append('IA & Agentes')
+    91→    
+    92→    # RAG related
+    93→    if any(kw in name_lower for kw in ['rag', 'vector', 'embedding', 'qdrant', 'milvus', 'knowledge', 'reranker', 'cohere']):
+    94→        categories.append('RAG & Vector Store')
+    95→    
+    96→    # Chat/Messaging
+    97→    chat_types = {'n8n-nodes-base.telegram', 'n8n-nodes-base.telegramTrigger',
+    98→                  'n8n-nodes-base.slack', 'n8n-nodes-base.slackTrigger',
+    99→                  'n8n-nodes-base.discord', 'n8n-nodes-base.whatsApp'}
+   100→    if type_set.intersection(chat_types) or any(kw in name_lower for kw in ['chat', 'telegram', 'whatsapp', 'slack', 'chatbot', 'chatwoot', 'bot']):
+   101→        categories.append('Chat & Mensajería')
+   102→    
+   103→    # Email
+   104→    email_types = {'n8n-nodes-base.emailSend', 'n8n-nodes-base.emailRead',
+   105→                   'n8n-nodes-base.gmail', 'n8n-nodes-base.gmailTrigger',
+   106→                   'n8n-nodes-base.gmailRead', 'n8n-nodes-base.gmailSend'}
+   107→    if type_set.intersection(email_types) or any(kw in name_lower for kw in ['email', 'gmail', 'correo', 'newsletter']):
+   108→        categories.append('Email & Comunicación')
+   109→    
+   110→    # Social Media
+   111→    if any(kw in name_lower for kw in ['social', 'linkedin', 'instagram', 'tiktok', 'youtube', 'facebook', 'twitter', 'x', 'post', 'video', 'media']):
+   112→        categories.append('Social Media & Contenido')
+   113→    
+   114→    # E-Commerce
+   115→    if any(kw in name_lower for kw in ['shopify', 'ecommerce', 'e-commerce', 'producto', 'venta', 'store', 'banana', 'nano']):
+   116→        categories.append('E-Commerce & Ventas')
+   117→    
+   118→    # Marketing
+   119→    if any(kw in name_lower for kw in ['marketing', 'leads', 'seo', 'scrap', 'scraper', 'scrapp', 'branding', 'blog']):
+   120→        categories.append('Marketing & Leads')
+   121→    
+   122→    # HR/Recruitment
+   123→    if any(kw in name_lower for kw in ['hr', 'resume', 'cv', 'candidate', 'recruitment', 'interview', 'screening', 'onboarding', 'employee']):
+   124→        categories.append('RRHH & Selección')
+   125→    
+   126→    # Calendar/Scheduling
+   127→    if any(kw in name_lower for kw in ['calendar', 'calendario', 'agenda', 'scheduling', 'agendamiento', 'appointment']):
+   128→        categories.append('Calendario & Agenda')
+   129→    
+   130→    # Voice/Transcription
+   131→    if any(kw in name_lower for kw in ['voz', 'voice', 'transcripcion', 'transcription', 'elevenlabs', 'audio']):
+   132→        categories.append('Voz & Transcripción')
+   133→    
+   134→    # Scraping/Data extraction
+   135→    scraping_types = {'n8n-nodes-base.httpRequest', '@n8n/n8n-nodes-langchain.toolHttpRequest'}
+   136→    if any(kw in name_lower for kw in ['scrap', 'extract', 'scrapp', 'scrape', 'firecrawl', 'apify', 'bright data']):
+   137→        categories.append('Scraping & Extracción')
+   138→    
+   139→    # Documents/PDF
+   140→    if any(kw in name_lower for kw in ['pdf', 'documento', 'document', 'cotizacion', 'report']):
+   141→        categories.append('Documentos & PDF')
+   142→    
+   143→    # Database
+   144→    db_types = {'n8n-nodes-base.postgres', 'n8n-nodes-base.mongoDb', 'n8n-nodes-base.supabase',
+   145→               'n8n-nodes-base.mysql', 'n8n-nodes-base.redis'}
+   146→    if type_set.intersection(db_types) or any(kw in name_lower for kw in ['supabase', 'sql', 'database', 'mongo', 'redis', 'postgres']):
+   147→        categories.append('Base de Datos')
+   148→    
+   149→    # MCP
+   150→    if any(kw in name_lower for kw in ['mcp']):
+   151→        categories.append('MCP Tools')
+   152→    
+   153→    # Flowise
+   154→    if any(kw in name_lower for kw in ['flowise']):
+   155→        categories.append('Flowise Integration')
+   156→    
+   157→    # Dashboard
+   158→    if any(kw in name_lower for kw in ['dashboard', 'table', 'data']):
+   159→        categories.append('Dashboard & Datos')
+   160→    
+   161→    # Automation/Utility
+   162→    if any(kw in name_lower for kw in ['trucos', 'trick', 'error', 'backup', 'github', 'respaldar']):
+   163→        categories.append('Utilidades & DevOps')
+   164→    
+   165→    if not categories:
+   166→        categories.append('General')
+   167→    
+   168→    return categories
+   169→
+   170→def compute_similarity(wf1, wf2):
+   171→    """Compute similarity score between two workflows"""
+   172→    score = 0
+   173→    max_score = 100
+   174→    
+   175→    # Name similarity (30 points)
+   176→    name1 = normalize_name(wf1.get('name', '') or os.path.basename(wf1.get('file_path', '')))
+   177→    name2 = normalize_name(wf2.get('name', '') or os.path.basename(wf2.get('file_path', '')))
+   178→    name_sim = SequenceMatcher(None, name1, name2).ratio()
+   179→    score += name_sim * 30
+   180→    
+   181→    # Node type overlap (40 points)
+   182→    types1 = set(wf1.get('node_types', []))
+   183→    types2 = set(wf2.get('node_types', []))
+   184→    if types1 and types2:
+   185→        overlap = types1.intersection(types2)
+   186→        union = types1.union(types2)
+   187→        jaccard = len(overlap) / len(union) if union else 0
+   188→        score += jaccard * 40
+   189→    
+   190→    # Category overlap (20 points)
+   191→    cats1 = set(wf1.get('categories', []))
+   192→    cats2 = set(wf2.get('categories', []))
+   193→    if cats1 and cats2:
+   194→        cat_overlap = cats1.intersection(cats2)
+   195→        cat_union = cats1.union(cats2)
+   196→        cat_jaccard = len(cat_overlap) / len(cat_union) if cat_union else 0
+   197→        score += cat_jaccard * 20
+   198→    
+   199→    # Node count similarity (10 points)
+   200→    nc1 = wf1.get('node_count', 0)
+   201→    nc2 = wf2.get('node_count', 0)
+   202→    if nc1 and nc2:
+   203→        count_sim = 1 - abs(nc1 - nc2) / max(nc1, nc2)
+   204→        score += count_sim * 10
+   205→    
+   206→    return round(score, 2)
+   207→
+   208→def find_duplications(workflows):
+   209→    """Find potential duplications and similarities"""
+   210→    duplications = []
+   211→    similarities = []
+   212→    
+   213→    # Group by normalized name first
+   214→    name_groups = defaultdict(list)
+   215→    for wf in workflows:
+   216→        norm_name = normalize_name(wf.get('name', '') or os.path.basename(wf.get('file_path', '')))
+   217→        name_groups[norm_name].append(wf)
+   218→    
+   219→    # Exact name matches -> duplications
+   220→    for norm_name, group in name_groups.items():
+   221→        if len(group) > 1:
+   222→            # Check if they're actual duplicates (same node types)
+   223→            for i in range(len(group)):
+   224→                for j in range(i+1, len(group)):
+   225→                    sim = compute_similarity(group[i], group[j])
+   226→                    if sim >= 70:
+   227→                        duplications.append({
+   228→                            'workflow_1': group[i]['id'],
+   229→                            'workflow_2': group[j]['id'],
+   230→                            'name_1': group[i].get('name', ''),
+   231→                            'name_2': group[j].get('name', ''),
+   232→                            'similarity': sim,
+   233→                            'type': 'duplicate',
+   234→                            'reason': f'Nombres muy similares: "{group[i].get("name","")}" y "{group[j].get("name","")}"'
+   235→                        })
+   236→                    elif sim >= 40:
+   237→                        similarities.append({
+   238→                            'workflow_1': group[i]['id'],
+   239→                            'workflow_2': group[j]['id'],
+   240→                            'name_1': group[i].get('name', ''),
+   241→                            'name_2': group[j].get('name', ''),
+   242→                            'similarity': sim,
+   243→                            'type': 'similar',
+   244→                            'reason': f'Funcionalidad similar con nombres parecidos'
+   245→                        })
+   246→    
+   247→    # Cross-group similarity check (sample based for efficiency)
+   248→    all_ids = list(range(len(workflows)))
+   249→    # Check workflows within same category
+   250→    category_groups = defaultdict(list)
+   251→    for wf in workflows:
+   252→        for cat in wf.get('categories', []):
+   253→            category_groups[cat].append(wf)
+   254→    
+   255→    for cat, cat_wfs in category_groups.items():
+   256→        for i in range(len(cat_wfs)):
+   257→            for j in range(i+1, len(cat_wfs)):
+   258→                norm1 = normalize_name(cat_wfs[i].get('name', '') or '')
+   259→                norm2 = normalize_name(cat_wfs[j].get('name', '') or '')
+   260→                # Skip if already found as duplicate
+   261→                if norm1 == norm2:
+   262→                    continue
+   263→                sim = compute_similarity(cat_wfs[i], cat_wfs[j])
+   264→                if sim >= 60 and not any(
+   265→                    (d['workflow_1'] == cat_wfs[i]['id'] and d['workflow_2'] == cat_wfs[j]['id']) or
+   266→                    (d['workflow_1'] == cat_wfs[j]['id'] and d['workflow_2'] == cat_wfs[i]['id'])
+   267→                    for d in duplications + similarities
+   268→                ):
+   269→                    similarities.append({
+   270→                        'workflow_1': cat_wfs[i]['id'],
+   271→                        'workflow_2': cat_wfs[j]['id'],
+   272→                        'name_1': cat_wfs[i].get('name', ''),
+   273→                        'name_2': cat_wfs[j].get('name', ''),
+   274→                        'similarity': sim,
+   275→                        'type': 'similar',
+   276→                        'reason': f'Misma categoría "{cat}" con {sim}% de similitud'
+   277→                    })
+   278→    
+   279→    return duplications, similarities
+   280→
+   281→def analyze_best_practices(workflows):
+   282→    """Identify best practices and anti-patterns"""
+   283→    practices = {
+   284→        'good': [],
+   285→        'warnings': [],
+   286→        'recommendations': []
+   287→    }
+   288→    
+   289→    # Analyze node usage patterns
+   290→    all_node_types = defaultdict(int)
+   291→    for wf in workflows:
+   292→        for nt in wf.get('node_types', []):
+   293→            all_node_types[nt] += 1
+   294→    
+   295→    # Good practices detected
+   296→    error_handler_count = sum(1 for wf in workflows if 'n8n-nodes-base.errorTrigger' in wf.get('node_types', []) or 
+   297→                              'n8n-nodes-base.if' in wf.get('node_types', []))
+   298→    
+   299→    has_sticky_notes = sum(1 for wf in workflows if any(
+   300→        n.get('type') == 'n8n-nodes-base.stickyNote' for n in (wf.get('raw_nodes') or [])
+   301→    ))
+   302→    
+   303→    # Check for common patterns
+   304→    mcp_usage = sum(1 for wf in workflows if any('mcp' in nt.lower() for nt in wf.get('node_types', [])))
+   305→    langchain_usage = sum(1 for wf in workflows if any('langchain' in nt.lower() for nt in wf.get('node_types', [])))
+   306→    
+   307→    practices['good'].append({
+   308→        'title': 'Uso de LangChain nodes',
+   309→        'description': f'{langchain_usage} workflows utilizan nodes LangChain de n8n para agentes IA, lo cual es la práctica recomendada para construir agentes con memoria y herramientas.',
+   310→        'impact': 'high'
+   311→    })
+   312→    
+   313→    practices['good'].append({
+   314→        'title': 'Uso de MCP (Model Context Protocol)',
+   315→        'description': f'{mcp_usage} workflows implementan MCP para conectar agentes con herramientas externas (Calendar, Gmail, Contactos). MCP es el estándar emergente para integración de agentes.',
+   316→        'impact': 'medium'
+   317→    })
+   318→    
+   319→    practices['good'].append({
+   320→        'title': 'Notas Sticky en workflows',
+   321→        'description': f'{has_sticky_notes} workflows incluyen notas sticky para documentación visual, facilitando la comprensión del flujo.',
+   322→        'impact': 'low'
+   323→    })
+   324→    
+   325→    # Warnings/Anti-patterns
+   326→    duplicate_count = 0  # Will be filled after duplication analysis
+   327→    
+   328→    workflows_no_name = sum(1 for wf in workflows if not wf.get('name') or wf.get('name') == '')
+   329→    large_workflows = sum(1 for wf in workflows if wf.get('node_count', 0) > 30)
+   330→    
+   331→    practices['warnings'].append({
+   332→        'title': 'Workflows sin nombre descriptivo',
+   333→        'description': f'{workflows_no_name} workflows carecen de nombre descriptivo, lo que dificulta su identificación y mantenimiento.',
+   334→        'impact': 'medium'
+   335→    })
+   336→    
+   337→    practices['warnings'].append({
+   338→        'title': 'Workflows muy complejos',
+   339→        'description': f'{large_workflows} workflows tienen más de 30 nodos. Workflows complejos son más difíciles de mantener y depurar. Considerar dividir en sub-workflows.',
+   340→        'impact': 'high'
+   341→    })
+   342→    
+   343→    # Recommendations
+   344→    practices['recommendations'].append({
+   345→        'title': 'Consolidar automatizaciones duplicadas',
+   346→        'description': 'Identificar y merge workflows con funcionalidad similar en una versión consolidada y parametrizable, reduciendo mantenimiento y errores.',
+   347→        'impact': 'critical'
+   348→    })
+   349→    
+   350→    practices['recommendations'].append({
+   351→        'title': 'Implementar Error Handling',
+   352→        'description': f'Agregar nodos de Error Trigger y manejo de errores en workflows críticos. Solo {error_handler_count} workflows tienen manejo de errores explícito.',
+   353→        'impact': 'high'
+   354→    })
+   355→    
+   356→    practices['recommendations'].append({
+   357→        'title': 'Usar Sub-workflows',
+   358→        'description': 'Para workflows con más de 20 nodos, considerar usar Execute Workflow nodes para modularizar lógica reutilizable.',
+   359→        'impact': 'medium'
+   360→    })
+   361→    
+   362→    practices['recommendations'].append({
+   363→        'title': 'Documentar con Sticky Notes',
+   364→        'description': 'Agregar notas sticky en cada workflow para describir su propósito, inputs, outputs, y decisiones clave de diseño.',
+   365→        'impact': 'low'
+   366→    })
+   367→    
+   368→    practices['recommendations'].append({
+   369→        'title': 'Versionar workflows',
+   370→        'description': 'Implementar un sistema de versiones para workflows (v1, v2, etc.) y mantener un changelog. Evitar múltiples versiones similares como se observa en los eCommerce agents.',
+   371→        'impact': 'medium'
+   372→    })
+   373→    
+   374→    practices['recommendations'].append({
+   375→        'title': 'Usar credenciales centralizadas',
+   376→        'description': 'Definir credenciales globales en n8n y reutilizarlas, evitando hardcodear API keys en nodos individuales.',
+   377→        'impact': 'critical'
+   378→    })
+   379→    
+   380→    practices['recommendations'].append({
+   381→        'title': 'Implementar testing automático',
+   382→        'description': 'Crear workflows de test que validen outputs esperados antes de activar automatizaciones en producción.',
+   383→        'impact': 'high'
+   384→    })
+   385→    
+   386→    return practices
+   387→
+   388→def parse_workflow_json(filepath):
+   389→    """Parse a single n8n workflow JSON file"""
+   390→    try:
+   391→        with open(filepath, 'r', encoding='utf-8') as f:
+   392→            data = json.load(f)
+   393→    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+   394→        try:
+   395→            with open(filepath, 'r', encoding='latin-1') as f:
+   396→                data = json.load(f)
+   397→        except:
+   398→            return None
+   399→    
+   400→    # Handle different n8n JSON formats
+   401→    nodes = data.get('nodes', [])
+   402→    connections = data.get('connections', {})
+   403→    name = data.get('name', '') or os.path.splitext(os.path.basename(filepath))[0]
+   404→    
+   405→    # Some workflows have different structures
+   406→    if not nodes and 'workflow' in data:
+   407→        inner = data['workflow']
+   408→        nodes = inner.get('nodes', [])
+   409→        connections = inner.get('connections', {})
+   410→        name = inner.get('name', name)
+   411→    
+   412→    node_types = get_node_types(nodes)
+   413→    node_names = get_node_names(nodes)
+   414→    node_count = len(nodes) if nodes else 0
+   415→    connection_count = get_connection_count(connections)
+   416→    
+   417→    # Extract tags
+   418→    tags = data.get('tags', [])
+   419→    if isinstance(tags, list):
+   420→        tag_names = [t.get('name', str(t)) if isinstance(t, dict) else str(t) for t in tags]
+   421→    else:
+   422→        tag_names = []
+   423→    
+   424→    # Extract source folder to determine origin
+   425→    path_parts = filepath.split('/')
+   426→    source = 'unknown'
+   427→    if 'Materiales comunidad whatsapp' in filepath:
+   428→        source = 'Materiales Comunidad WhatsApp'
+   429→    elif 'Plantillas GRATIS JosemaFernandez' in filepath:
+   430→        source = 'Plantillas JosemaFernandez'
+   431→    elif 'Sistema Agentes Marketing' in filepath:
+   432→        source = 'Sistema Agentes Marketing - Víctor Pérez'
+   433→    elif 'upload' in path_parts and filepath.endswith('.json'):
+   434→        # Root level files
+   435→        basename = os.path.basename(filepath)
+   436→        if basename == 'n8n.json':
+   437→            source = 'n8n (archivo root)'
+   438→        elif basename == 'Milvus_vs_Supabase.json':
+   439→            source = 'Milvus vs Supabase'
+   440→        elif basename == 'My_workflow_8.json':
+   441→            source = 'My Workflow 8'
+   442→    
+   443→    # Get specific folder category
+   444→    folder_category = ''
+   445→    for part in path_parts:
+   446→        if part not in ['upload', 'extracted', 'json de workflows n8n (Compilation)'] and len(part) > 3:
+   447→            if part != os.path.basename(filepath).replace('.json', ''):
+   448→                folder_category = part
+   449→    
+   450→    categories = categorize_workflow(node_types, name)
+   451→    
+   452→    # Create unique ID based on filepath hash
+   453→    wf_id = hashlib.md5(filepath.encode()).hexdigest()[:12]
+   454→    
+   455→    # Extract active status
+   456→    active = data.get('active', False)
+   457→    
+   458→    # Extract settings
+   459→    settings = data.get('settings', {})
+   460→    
+   461→    # Extract description/comments from sticky notes
+   462→    descriptions = []
+   463→    for node in (nodes or []):
+   464→        if isinstance(node, dict) and node.get('type') == 'n8n-nodes-base.stickyNote':
+   465→            content = node.get('parameters', {}).get('content', '')
+   466→            if content:
+   467→                descriptions.append(content)
+   468→    
+   469→    workflow = {
+   470→        'id': wf_id,
+   471→        'name': name,
+   472→        'file_path': filepath,
+   473→        'file_name': os.path.basename(filepath),
+   474→        'source': source,
+   475→        'folder_category': folder_category,
+   476→        'node_count': node_count,
+   477→        'connection_count': connection_count,
+   478→        'node_types': node_types,
+   479→        'node_names': node_names,
+   480→        'categories': categories,
+   481→        'tags': tag_names,
+   482→        'active': active,
+   483→        'descriptions': descriptions,
+   484→        'raw_nodes': nodes,  # Keep for further analysis
+   485→    }
+   486→    
+   487→    return workflow
+   488→
+   489→def main():
+   490→    print("=" * 60)
+   491→    print("ANÁLISIS DE CATÁLOGO DE AUTOMATIZACIONES n8n")
+   492→    print("=" * 60)
+   493→    
+   494→    # Collect all JSON files
+   495→    all_json_files = []
+   496→    
+   497→    # Root level files
+   498→    for f in glob.glob(os.path.join(UPLOAD_DIR, "*.json")):
+   499→        all_json_files.append(f)
+   500→    
+   501→    # Extracted files
+   502→    for f in glob.glob(os.path.join(UPLOAD_DIR, "extracted", "**", "*.json"), recursive=True):
+   503→        all_json_files.append(f)
+   504→    
+   505→    print(f"\nTotal archivos JSON encontrados: {len(all_json_files)}")
+   506→    
+   507→    # Parse all workflows
+   508→    workflows = []
+   509→    errors = []
+   510→    for filepath in all_json_files:
+   511→        wf = parse_workflow_json(filepath)
+   512→        if wf:
+   513→            workflows.append(wf)
+   514→        else:
+   515→            errors.append(filepath)
+   516→    
+   517→    print(f"Workflows parseados exitosamente: {len(workflows)}")
+   518→    print(f"Errores de parseo: {len(errors)}")
+   519→    
+   520→    # Find duplications and similarities
+   521→    print("\nBuscando duplicaciones y similitudes...")
+   522→    duplications, similarities = find_duplications(workflows)
+   523→    
+   524→    print(f"Duplicaciones encontradas: {len(duplications)}")
+   525→    print(f"Similitudes encontradas: {len(similarities)}")
+   526→    
+   527→    # Analyze best practices
+   528→    print("\nAnalizando buenas prácticas...")
+   529→    practices = analyze_best_practices(workflows)
+   530→    
+   531→    # Update practices with duplication info
+   532→    practices['warnings'].append({
+   533→        'title': 'Workflows duplicados',
+   534→        'description': f'Se encontraron {len(duplications)} duplicaciones exactas y {len(similarities)} similitudes entre workflows. Esto genera mantenimiento redundante y inconsistencias.',
+   535→        'impact': 'critical'
+   536→    })
+   537→    
+   538→    # Generate statistics
+   539→    stats = {
+   540→        'total_workflows': len(workflows),
+   541→        'total_node_types': len(set(nt for wf in workflows for nt in wf.get('node_types', []))),
+   542→        'avg_node_count': round(sum(wf.get('node_count', 0) for wf in workflows) / len(workflows), 1) if workflows else 0,
+   543→        'max_node_count': max(wf.get('node_count', 0) for wf in workflows) if workflows else 0,
+   544→        'min_node_count': min(wf.get('node_count', 0) for wf in workflows) if workflows else 0,
+   545→        'duplications_count': len(duplications),
+   546→        'similarities_count': len(similarities),
+   547→        'categories_distribution': defaultdict(int),
+   548→        'sources_distribution': defaultdict(int),
+   549→        'node_type_frequency': defaultdict(int),
+   550→        'top_node_types': [],
+   551→    }
+   552→    
+   553→    for wf in workflows:
+   554→        for cat in wf.get('categories', []):
+   555→            stats['categories_distribution'][cat] += 1
+   556→        stats['sources_distribution'][wf.get('source', 'unknown')] += 1
+   557→        for nt in wf.get('node_types', []):
+   558→            stats['node_type_frequency'][nt] += 1
+   559→    
+   560→    # Top node types
+   561→    sorted_types = sorted(stats['node_type_frequency'].items(), key=lambda x: x[1], reverse=True)
+   562→    stats['top_node_types'] = [{'type': t, 'count': c} for t, c in sorted_types[:20]]
+   563→    
+   564→    # Convert defaultdicts to regular dicts
+   565→    stats['categories_distribution'] = dict(stats['categories_distribution'])
+   566→    stats['sources_distribution'] = dict(stats['sources_distribution'])
+   567→    stats['node_type_frequency'] = dict(stats['node_type_frequency'])
+   568→    
+   569→    # Create consolidated catalog - group by category
+   570→    catalog_by_category = defaultdict(list)
+   571→    for wf in workflows:
+   572→        primary_cat = wf.get('categories', ['General'])[0]
+   573→        wf_copy = {k: v for k, v in wf.items() if k != 'raw_nodes'}
+   574→        catalog_by_category[primary_cat].append(wf_copy)
+   575→    
+   576→    # Create consolidation suggestions
+   577→    consolidation_suggestions = []
+   578→    
+   579→    # Group similar workflows for consolidation
+   580→    processed_pairs = set()
+   581→    for sim in similarities + duplications:
+   582→        pair_key = (sim['workflow_1'], sim['workflow_2'])
+   583→        if pair_key in processed_pairs:
+   584→            continue
+   585→        processed_pairs.add(pair_key)
+   586→        
+   587→        # Find the workflows
+   588→        wf1 = next((w for w in workflows if w['id'] == sim['workflow_1']), None)
+   589→        wf2 = next((w for w in workflows if w['id'] == sim['workflow_2']), None)
+   590→        
+   591→        if wf1 and wf2:
+   592→            suggestion = {
+   593→                'group_name': normalize_name(wf1.get('name', '')),
+   594→                'workflows': [
+   595→                    {'id': wf1['id'], 'name': wf1.get('name', ''), 'source': wf1.get('source', ''), 'node_count': wf1.get('node_count', 0)},
+   596→                    {'id': wf2['id'], 'name': wf2.get('name', ''), 'source': wf2.get('source', ''), 'node_count': wf2.get('node_count', 0)},
+   597→                ],
+   598→                'similarity': sim['similarity'],
+   599→                'type': sim['type'],
+   600→                'suggestion': f'Consolidar en un workflow parametrizado que cubra ambas funcionalidades',
+   601→                'categories': list(set(wf1.get('categories', []) + wf2.get('categories', [])))
+   602→            }
+   603→            consolidation_suggestions.append(suggestion)
+   604→    
+   605→    # Build final output
+   606→    output = {
+   607→        'metadata': {
+   608→            'analysis_date': '2026-07-27',
+   609→            'total_files_analyzed': len(all_json_files),
+   610→            'total_workflows_parsed': len(workflows),
+   611→            'parse_errors': len(errors),
+   612→        },
+   613→        'stats': stats,
+   614→        'workflows': [{k: v for k, v in wf.items() if k != 'raw_nodes'} for wf in workflows],
+   615→        'catalog_by_category': dict(catalog_by_category),
+   616→        'duplications': duplications,
+   617→        'similarities': similarities,
+   618→        'consolidation_suggestions': consolidation_suggestions,
+   619→        'best_practices': practices,
+   620→    }
+   621→    
+   622→    # Save output
+   623→    output_path = os.path.join(OUTPUT_DIR, 'automation_catalog_analysis.json')
+   624→    with open(output_path, 'w', encoding='utf-8') as f:
+   625→        json.dump(output, f, ensure_ascii=False, indent=2)
+   626→    
+   627→    print(f"\n✅ Análisis guardado en: {output_path}")
+   628→    print(f"\n--- RESUMEN ---")
+   629→    print(f"Total workflows: {len(workflows)}")
+   630→    print(f"Duplicaciones: {len(duplications)}")
+   631→    print(f"Similitudes: {len(similarities)}")
+   632→    print(f"Sugerencias de consolidación: {len(consolidation_suggestions)}")
+   633→    print(f"Categorías: {len(stats['categories_distribution'])}")
+   634→    
+   635→    print("\n--- DISTRIBUCIÓN POR CATEGORÍA ---")
+   636→    for cat, count in sorted(stats['categories_distribution'].items(), key=lambda x: x[1], reverse=True):
+   637→        print(f"  {cat}: {count} workflows")
+   638→    
+   639→    print("\n--- DISTRIBUCIÓN POR FUENTE ---")
+   640→    for source, count in sorted(stats['sources_distribution'].items(), key=lambda x: x[1], reverse=True):
+   641→        print(f"  {source}: {count} workflows")
+   642→    
+   643→    print("\n--- TOP 10 NODE TYPES ---")
+   644→    for item in stats['top_node_types'][:10]:
+   645→        print(f"  {item['type']}: {item['count']} usos")
+   646→    
+   647→    print("\n--- DUPLICACIONES ---")
+   648→    for d in duplications[:10]:
+   649→        print(f"  [{d['type']}] {d['name_1']} <-> {d['name_2']} (sim: {d['similarity']}%)")
+   650→    
+   651→    print("\n--- SIMILITUDES ---")
+   652→    for s in similarities[:10]:
+   653→        print(f"  [{s['type']}] {s['name_1']} <-> {s['name_2']} (sim: {s['similarity']}%)")
+   654→    
+   655→    return output
+   656→
+   657→if __name__ == '__main__':
+   658→    result = main()
+   659→

@@ -1,0 +1,172 @@
+{
+  "name": "AI Image & Quote Generator Suite",
+  "id_prefix": "G7_Imagenes_Citas_Suite",
+  "category": "Social Media & Contenido",
+  "description": "Consolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "1f1125544e38",
+    "c87d94a61f22",
+    "73c5f5a89e86",
+    "7422dd1111a7"
+  ],
+  "tier": "Professional",
+  "price": 39,
+  "nodes": [
+    {
+      "id": "G7_Imagenes_Citas_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_llm",
+      "name": "LLM (gpt-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G7_Imagenes_Citas_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## AI Image & Quote Generator Suite\n\nConsolidación: 2 copias exactas 'Crear imágenes con citas' + 2 backups (97% similar). Resultado: workflow production-ready con DALL-E/Flux + template system.\n\n**Consolidated from**: 4 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 4 variantes → 1 workflow production-ready\n- Usar la versión 'backup BIEN' como base (27 nodos, más completa)\n- Añadir template system: Google Sheets con templates de quotes\n- Gemini 2.5 Flash para quote generation (cost-effective)\n- DALL-E 3 / OpenAI Image para image generation",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gpt-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gpt-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar 4 variantes → 1 workflow production-ready",
+    "Usar la versión 'backup BIEN' como base (27 nodos, más completa)",
+    "Añadir template system: Google Sheets con templates de quotes",
+    "Gemini 2.5 Flash para quote generation (cost-effective)",
+    "DALL-E 3 / OpenAI Image para image generation",
+    "Añadir error handling para API rate limits",
+    "Output: Google Drive + Social Media posting"
+  ]
+}

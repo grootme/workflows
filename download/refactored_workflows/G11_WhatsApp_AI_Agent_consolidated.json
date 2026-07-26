@@ -1,0 +1,261 @@
+{
+  "name": "WhatsApp AI Agent Pro",
+  "id_prefix": "G11_WhatsApp_AI_Agent",
+  "category": "Chat & Mensajería",
+  "description": "Consolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.",
+  "consolidation_action": "create_modular_suite",
+  "original_workflow_ids": [
+    "8d012c5a9e10",
+    "92f53949f559",
+    "e3d48ca3d3db",
+    "43e4890e8c50"
+  ],
+  "tier": "Professional",
+  "price": 49,
+  "nodes": [
+    {
+      "id": "G11_WhatsApp_AI_Agent_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your WhatsApp AI Agent Pro. What would you like to do today?"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_classify_llm",
+      "name": "Classification LLM (GPT-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        500,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_classify_parser",
+      "name": "Route Classification Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        500,
+        400
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_route_switch",
+      "name": "Route Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        750,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_sub_wf_1",
+      "name": "Execute Sub-Workflow 1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "workflowId": "SUB_G11_WhatsApp_AI_Agent_1"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_sub_wf_2",
+      "name": "Execute Sub-Workflow 2",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        500
+      ],
+      "parameters": {
+        "workflowId": "SUB_G11_WhatsApp_AI_Agent_2"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_sub_wf_3",
+      "name": "Execute Sub-Workflow 3",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        700
+      ],
+      "parameters": {
+        "workflowId": "SUB_G11_WhatsApp_AI_Agent_3"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_merge",
+      "name": "Results Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_response_llm",
+      "name": "Response LLM (GPT-4.1)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1500,
+        300
+      ],
+      "parameters": {
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_memory",
+      "name": "Orchestrator Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        1500,
+        500
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G11_WhatsApp_AI_Agent_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## WhatsApp AI Agent Pro\n\nConsolidación: 2 'Agente IA WhatsApp' variants (65.53% similar) + Atencion al cliente + Atencion Telegram (62.64%). Resultado: agente WhatsApp production-ready.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Classification LLM (GPT-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification LLM (GPT-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Route Classification Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Classification Parser": {
+      "main": [
+        [
+          {
+            "node": "Route Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Switch": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 1": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 2": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 3": {
+      "main": [
+        [
+          {
+            "node": "Results Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Results Merge": {
+      "main": [
+        [
+          {
+            "node": "Response LLM (GPT-4.1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response LLM (GPT-4.1)": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar WhatsApp variants → 1 WhatsApp Agent Pro",
+    "Orchestrator con switch: WhatsApp / Telegram",
+    "GPT-4.1 como LLM (atención al cliente requiere calidad)",
+    "Gemini Flash para routing/clasificación de queries",
+    "PostgresChatHistory para historial de clientes",
+    "googleSheetsTool para CRM integration",
+    "Error handling + fallback a humano cuando no puede resolver"
+  ]
+}

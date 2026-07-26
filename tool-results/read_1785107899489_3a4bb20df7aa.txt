@@ -1,0 +1,461 @@
+     1→{
+     2→  "code": 200,
+     3→  "data": {
+     4→    "description": "The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.",
+     5→    "external": {
+     6→      "alternate": {
+     7→        "https://n8nmarkets.com/bg/en/templates": {
+     8→          "hreflang": "bg"
+     9→        },
+    10→        "https://n8nmarkets.com/bs/en/templates": {
+    11→          "hreflang": "bs"
+    12→        },
+    13→        "https://n8nmarkets.com/cs/en/templates": {
+    14→          "hreflang": "cs"
+    15→        },
+    16→        "https://n8nmarkets.com/da/en/templates": {
+    17→          "hreflang": "da"
+    18→        },
+    19→        "https://n8nmarkets.com/de/en/templates": {
+    20→          "hreflang": "de"
+    21→        },
+    22→        "https://n8nmarkets.com/el/en/templates": {
+    23→          "hreflang": "el"
+    24→        },
+    25→        "https://n8nmarkets.com/en/en/templates": {
+    26→          "hreflang": "x-default"
+    27→        },
+    28→        "https://n8nmarkets.com/es/en/templates": {
+    29→          "hreflang": "es"
+    30→        },
+    31→        "https://n8nmarkets.com/et/en/templates": {
+    32→          "hreflang": "et"
+    33→        },
+    34→        "https://n8nmarkets.com/fi/en/templates": {
+    35→          "hreflang": "fi"
+    36→        },
+    37→        "https://n8nmarkets.com/fr/en/templates": {
+    38→          "hreflang": "fr"
+    39→        },
+    40→        "https://n8nmarkets.com/hr/en/templates": {
+    41→          "hreflang": "hr"
+    42→        },
+    43→        "https://n8nmarkets.com/hu/en/templates": {
+    44→          "hreflang": "hu"
+    45→        },
+    46→        "https://n8nmarkets.com/it/en/templates": {
+    47→          "hreflang": "it"
+    48→        },
+    49→        "https://n8nmarkets.com/lt/en/templates": {
+    50→          "hreflang": "lt"
+    51→        },
+    52→        "https://n8nmarkets.com/lv/en/templates": {
+    53→          "hreflang": "lv"
+    54→        },
+    55→        "https://n8nmarkets.com/mk/en/templates": {
+    56→          "hreflang": "mk"
+    57→        },
+    58→        "https://n8nmarkets.com/mt/en/templates": {
+    59→          "hreflang": "mt"
+    60→        },
+    61→        "https://n8nmarkets.com/nl/en/templates": {
+    62→          "hreflang": "nl"
+    63→        },
+    64→        "https://n8nmarkets.com/no/en/templates": {
+    65→          "hreflang": "no"
+    66→        },
+    67→        "https://n8nmarkets.com/pl/en/templates": {
+    68→          "hreflang": "pl"
+    69→        },
+    70→        "https://n8nmarkets.com/pt/en/templates": {
+    71→          "hreflang": "pt"
+    72→        },
+    73→        "https://n8nmarkets.com/ro/en/templates": {
+    74→          "hreflang": "ro"
+    75→        },
+    76→        "https://n8nmarkets.com/sk/en/templates": {
+    77→          "hreflang": "sk"
+    78→        },
+    79→        "https://n8nmarkets.com/sl/en/templates": {
+    80→          "hreflang": "sl"
+    81→        },
+    82→        "https://n8nmarkets.com/sq/en/templates": {
+    83→          "hreflang": "sq"
+    84→        },
+    85→        "https://n8nmarkets.com/sr/en/templates": {
+    86→          "hreflang": "sr"
+    87→        },
+    88→        "https://n8nmarkets.com/sv/en/templates": {
+    89→          "hreflang": "sv"
+    90→        },
+    91→        "https://n8nmarkets.com/tr/en/templates": {
+    92→          "hreflang": "tr"
+    93→        },
+    94→        "https://n8nmarkets.com/uk/en/templates": {
+    95→          "hreflang": "uk"
+    96→        }
+    97→      },
+    98→      "canonical": {
+    99→        "https://n8nmarkets.com/en/en/templates": {}
+   100→      },
+   101→      "dns-prefetch": {
+   102→        "https://fonts.googleapis.com/": {},
+   103→        "https://fonts.gstatic.com/": {},
+   104→        "https://kkufdxsfvcomcqwlpqox.supabase.co/": {},
+   105→        "https://n8niostorageaccount.blob.core.windows.net/": {},
+   106→        "https://www.googletagmanager.com/": {}
+   107→      },
+   108→      "icon": {
+   109→        "https://n8nmarkets.com/favicon.ico": {
+   110→          "type": "image/x-icon"
+   111→        }
+   112→      },
+   113→      "manifest": {
+   114→        "https://n8nmarkets.com/manifest.json": {}
+   115→      },
+   116→      "modulepreload": {
+   117→        "https://n8nmarkets.com/assets/BlogPage-sP7tjzir.js": {
+   118→          "as": "script",
+   119→          "crossorigin": ""
+   120→        },
+   121→        "https://n8nmarkets.com/assets/CartDrawer-DPEfHmRW.js": {
+   122→          "as": "script",
+   123→          "crossorigin": ""
+   124→        },
+   125→        "https://n8nmarkets.com/assets/CartNavButton-D5IBibgY.js": {
+   126→          "as": "script",
+   127→          "crossorigin": ""
+   128→        },
+   129→        "https://n8nmarkets.com/assets/CommandPalette-D-P81a2n.js": {
+   130→          "as": "script",
+   131→          "crossorigin": ""
+   132→        },
+   133→        "https://n8nmarkets.com/assets/DynamicPage-G4a48pDa.js": {
+   134→          "as": "script",
+   135→          "crossorigin": ""
+   136→        },
+   137→        "https://n8nmarkets.com/assets/ExternalResources-YAv6dyD-.js": {
+   138→          "as": "script",
+   139→          "crossorigin": ""
+   140→        },
+   141→        "https://n8nmarkets.com/assets/HomeFooter-cbedRqxK.js": {
+   142→          "as": "script",
+   143→          "crossorigin": ""
+   144→        },
+   145→        "https://n8nmarkets.com/assets/HomeNavbar-DhYoGE6-.js": {
+   146→          "as": "script",
+   147→          "crossorigin": ""
+   148→        },
+   149→        "https://n8nmarkets.com/assets/MobileBottomNav-C5MFffJ5.js": {
+   150→          "as": "script",
+   151→          "crossorigin": ""
+   152→        },
+   153→        "https://n8nmarkets.com/assets/NotFound-Bv5foPFs.js": {
+   154→          "as": "script",
+   155→          "crossorigin": ""
+   156→        },
+   157→        "https://n8nmarkets.com/assets/arrow-left-Gzot5n2F.js": {
+   158→          "as": "script",
+   159→          "crossorigin": ""
+   160→        },
+   161→        "https://n8nmarkets.com/assets/arrow-right-Ct9Nef2S.js": {
+   162→          "as": "script",
+   163→          "crossorigin": ""
+   164→        },
+   165→        "https://n8nmarkets.com/assets/avatar-CfpVZ3HU.js": {
+   166→          "as": "script",
+   167→          "crossorigin": ""
+   168→        },
+   169→        "https://n8nmarkets.com/assets/badge-mHEgxRAA.js": {
+   170→          "as": "script",
+   171→          "crossorigin": ""
+   172→        },
+   173→        "https://n8nmarkets.com/assets/book-open-JGB1VW25.js": {
+   174→          "as": "script",
+   175→          "crossorigin": ""
+   176→        },
+   177→        "https://n8nmarkets.com/assets/briefcase-dwpgSFw0.js": {
+   178→          "as": "script",
+   179→          "crossorigin": ""
+   180→        },
+   181→        "https://n8nmarkets.com/assets/button-CkabfwLB.js": {
+   182→          "as": "script",
+   183→          "crossorigin": ""
+   184→        },
+   185→        "https://n8nmarkets.com/assets/cartStore-D511Su0I.js": {
+   186→          "as": "script",
+   187→          "crossorigin": ""
+   188→        },
+   189→        "https://n8nmarkets.com/assets/chart-column-BdmpUvW7.js": {
+   190→          "as": "script",
+   191→          "crossorigin": ""
+   192→        },
+   193→        "https://n8nmarkets.com/assets/chevron-down-B24vy1cE.js": {
+   194→          "as": "script",
+   195→          "crossorigin": ""
+   196→        },
+   197→        "https://n8nmarkets.com/assets/chevron-right-B66HWob0.js": {
+   198→          "as": "script",
+   199→          "crossorigin": ""
+   200→        },
+   201→        "https://n8nmarkets.com/assets/circle-check-DYIF6RqS.js": {
+   202→          "as": "script",
+   203→          "crossorigin": ""
+   204→        },
+   205→        "https://n8nmarkets.com/assets/circle-help-f4g7hHpC.js": {
+   206→          "as": "script",
+   207→          "crossorigin": ""
+   208→        },
+   209→        "https://n8nmarkets.com/assets/clock-Chie0JjB.js": {
+   210→          "as": "script",
+   211→          "crossorigin": ""
+   212→        },
+   213→        "https://n8nmarkets.com/assets/currencyStore-xA1hKIrQ.js": {
+   214→          "as": "script",
+   215→          "crossorigin": ""
+   216→        },
+   217→        "https://n8nmarkets.com/assets/dialog-CzNqqkUt.js": {
+   218→          "as": "script",
+   219→          "crossorigin": ""
+   220→        },
+   221→        "https://n8nmarkets.com/assets/external-link-CdmQU3wR.js": {
+   222→          "as": "script",
+   223→          "crossorigin": ""
+   224→        },
+   225→        "https://n8nmarkets.com/assets/file-text-BTmZwi-H.js": {
+   226→          "as": "script",
+   227→          "crossorigin": ""
+   228→        },
+   229→        "https://n8nmarkets.com/assets/globe-nXYdMFLY.js": {
+   230→          "as": "script",
+   231→          "crossorigin": ""
+   232→        },
+   233→        "https://n8nmarkets.com/assets/house-CYOZbJ_-.js": {
+   234→          "as": "script",
+   235→          "crossorigin": ""
+   236→        },
+   237→        "https://n8nmarkets.com/assets/input-DbH46jVG.js": {
+   238→          "as": "script",
+   239→          "crossorigin": ""
+   240→        },
+   241→        "https://n8nmarkets.com/assets/link-DXUcJeKP.js": {
+   242→          "as": "script",
+   243→          "crossorigin": ""
+   244→        },
+   245→        "https://n8nmarkets.com/assets/list-CL7iAVh2.js": {
+   246→          "as": "script",
+   247→          "crossorigin": ""
+   248→        },
+   249→        "https://n8nmarkets.com/assets/menu-NL0O9QfQ.js": {
+   250→          "as": "script",
+   251→          "crossorigin": ""
+   252→        },
+   253→        "https://n8nmarkets.com/assets/middleware-WYGlAF-S.js": {
+   254→          "as": "script",
+   255→          "crossorigin": ""
+   256→        },
+   257→        "https://n8nmarkets.com/assets/n8nmarkets-logo-DZcD-Ebd.js": {
+   258→          "as": "script",
+   259→          "crossorigin": ""
+   260→        },
+   261→        "https://n8nmarkets.com/assets/sanitizeHtml-sXODs40o.js": {
+   262→          "as": "script",
+   263→          "crossorigin": ""
+   264→        },
+   265→        "https://n8nmarkets.com/assets/search-DXLYSCdx.js": {
+   266→          "as": "script",
+   267→          "crossorigin": ""
+   268→        },
+   269→        "https://n8nmarkets.com/assets/seoLinkMappings-CckGjOAj.js": {
+   270→          "as": "script",
+   271→          "crossorigin": ""
+   272→        },
+   273→        "https://n8nmarkets.com/assets/seoPages-B0OoXh1Z.js": {
+   274→          "as": "script",
+   275→          "crossorigin": ""
+   276→        },
+   277→        "https://n8nmarkets.com/assets/sheet-DxKohHTp.js": {
+   278→          "as": "script",
+   279→          "crossorigin": ""
+   280→        },
+   281→        "https://n8nmarkets.com/assets/shopping-bag-2JRuJf5e.js": {
+   282→          "as": "script",
+   283→          "crossorigin": ""
+   284→        },
+   285→        "https://n8nmarkets.com/assets/shopping-cart-407lTNIi.js": {
+   286→          "as": "script",
+   287→          "crossorigin": ""
+   288→        },
+   289→        "https://n8nmarkets.com/assets/sparkles-CPHHkyAv.js": {
+   290→          "as": "script",
+   291→          "crossorigin": ""
+   292→        },
+   293→        "https://n8nmarkets.com/assets/star-BWp1o_RO.js": {
+   294→          "as": "script",
+   295→          "crossorigin": ""
+   296→        },
+   297→        "https://n8nmarkets.com/assets/tag-By1q9jpQ.js": {
+   298→          "as": "script",
+   299→          "crossorigin": ""
+   300→        },
+   301→        "https://n8nmarkets.com/assets/trash-2-CppX63Kp.js": {
+   302→          "as": "script",
+   303→          "crossorigin": ""
+   304→        },
+   305→        "https://n8nmarkets.com/assets/trending-up-BNYK4gSc.js": {
+   306→          "as": "script",
+   307→          "crossorigin": ""
+   308→        },
+   309→        "https://n8nmarkets.com/assets/useLocalizedPath-DWNpaaN8.js": {
+   310→          "as": "script",
+   311→          "crossorigin": ""
+   312→        },
+   313→        "https://n8nmarkets.com/assets/useSEO-V-wMI6Qv.js": {
+   314→          "as": "script",
+   315→          "crossorigin": ""
+   316→        },
+   317→        "https://n8nmarkets.com/assets/users-CsssUxHb.js": {
+   318→          "as": "script",
+   319→          "crossorigin": ""
+   320→        },
+   321→        "https://n8nmarkets.com/assets/vendor-i18n-SEpaVoeb.js": {
+   322→          "crossorigin": ""
+   323→        },
+   324→        "https://n8nmarkets.com/assets/vendor-motion-D2HxnSX1.js": {
+   325→          "as": "script",
+   326→          "crossorigin": ""
+   327→        },
+   328→        "https://n8nmarkets.com/assets/vendor-query-quxdh91L.js": {
+   329→          "crossorigin": ""
+   330→        },
+   331→        "https://n8nmarkets.com/assets/vendor-react-DYVZ6PD-.js": {
+   332→          "crossorigin": ""
+   333→        },
+   334→        "https://n8nmarkets.com/assets/vendor-supabase-zKGmgmEq.js": {
+   335→          "crossorigin": ""
+   336→        },
+   337→        "https://n8nmarkets.com/assets/vendor-ui-CkTZ1Xhz.js": {
+   338→          "crossorigin": ""
+   339→        }
+   340→      },
+   341→      "preconnect": {
+   342→        "https://fonts.googleapis.com/": {},
+   343→        "https://fonts.gstatic.com/": {
+   344→          "crossorigin": ""
+   345→        },
+   346→        "https://kkufdxsfvcomcqwlpqox.supabase.co/": {
+   347→          "crossorigin": ""
+   348→        }
+   349→      },
+   350→      "preload": {
+   351→        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap": {
+   352→          "as": "style"
+   353→        }
+   354→      }
+   355→    },
+   356→    "html": "<html lang=\"en\" dir=\"ltr\"><head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>404 — Page Not Found | n8n Markets</title>\n    <meta name=\"description\" content=\"The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.\">\n    <meta name=\"robots\" content=\"noindex, follow\">\n    <meta name=\"author\" content=\"n8n Markets\">\n    <meta name=\"publisher\" content=\"n8n Markets\">\n    <meta name=\"format-detection\" content=\"telephone=no\">\n    <link rel=\"canonical\" href=\"https://n8nmarkets.com/en/en/templates\">\n    <link rel=\"manifest\" href=\"/manifest.json\">\n    <meta name=\"theme-color\" content=\"#0f9b6e\">\n    <meta name=\"google-site-verification\" content=\"HBf7XJxtNKJB3ibt7Hu5AsaW382nb7rFbN8TbfIUzj8\">\n    <meta name=\"msvalidate.01\" content=\"2F15104FBA762D91189A5B012455D9F9\">\n    <meta name=\"yandex-verification\" content=\"8e304931d5979220\">\n    <meta name=\"p:domain_verify\" content=\"f64dab264394c9fd781514ba96bf64b0\">\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\">\n    <link rel=\"shortcut icon\" href=\"/favicon.ico\" type=\"image/x-icon\">\n\n    <!-- Preconnect to critical origins -->\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin=\"\">\n    <link rel=\"preconnect\" href=\"https://kkufdxsfvcomcqwlpqox.supabase.co\" crossorigin=\"\">\n    <link rel=\"dns-prefetch\" href=\"https://fonts.googleapis.com\">\n    <link rel=\"dns-prefetch\" href=\"https://fonts.gstatic.com\">\n    <link rel=\"dns-prefetch\" href=\"https://kkufdxsfvcomcqwlpqox.supabase.co\">\n    <link rel=\"dns-prefetch\" href=\"https://www.googletagmanager.com\">\n    <link rel=\"dns-prefetch\" href=\"https://n8niostorageaccount.blob.core.windows.net\">\n\n    <!-- Single non-blocking Google Fonts request for both families (halves font requests + DNS handshakes) -->\n    <link rel=\"preload\" as=\"style\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap\">\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap\" media=\"all\" onload=\"this.media='all'\">\n    <noscript>\n      <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap\" />\n    </noscript>\n\n    <!-- Open Graph (dynamically overridden by useSEO hook) -->\n    \n    \n    <meta property=\"og:type\" content=\"website\">\n    <meta property=\"og:url\" content=\"https://n8nmarkets.com/en/en/templates\">\n    <meta property=\"og:image\" content=\"https://n8nmarkets.com/og-image.png\">\n    <meta property=\"og:image:width\" content=\"1200\">\n    <meta property=\"og:image:height\" content=\"630\">\n    <meta property=\"og:image:alt\" content=\"404 — Page Not Found | n8n Markets — n8n Markets\">\n    <meta property=\"og:site_name\" content=\"n8n Markets\">\n    <meta property=\"og:locale\" content=\"en_US\">\n\n    <!-- Twitter -->\n    <meta name=\"twitter:card\" content=\"summary_large_image\">\n    <meta name=\"twitter:site\" content=\"@n8nmarkets\">\n    \n    \n    <meta name=\"twitter:image\" content=\"https://n8nmarkets.com/og-image.png\">\n    <meta name=\"twitter:image:alt\" content=\"404 — Page Not Found | n8n Markets — n8n Markets\">\n\n    <!-- JSON-LD (Organization + WebSite with sitelinks search) — provided dynamically by useSEO hook on the homepage; this static fallback is for non-JS crawlers and uses the same ?q= search param to stay consistent. -->\n    <script type=\"application/ld+json\">\n    {\n      \"@context\": \"https://schema.org\",\n      \"@graph\": [\n        {\n          \"@type\": \"Organization\",\n          \"@id\": \"https://n8nmarkets.com/#organization\",\n          \"name\": \"n8n Markets\",\n          \"url\": \"https://n8nmarkets.com/\",\n          \"logo\": \"https://n8nmarkets.com/og-image.png\",\n          \"description\": \"The leading marketplace to buy, sell, and hire experts for n8n workflows.\"\n        },\n        {\n          \"@type\": \"WebSite\",\n          \"@id\": \"https://n8nmarkets.com/#website\",\n          \"name\": \"n8n Markets\",\n          \"url\": \"https://n8nmarkets.com/\",\n          \"publisher\": { \"@id\": \"https://n8nmarkets.com/#organization\" },\n          \"potentialAction\": {\n            \"@type\": \"SearchAction\",\n            \"target\": \"https://n8nmarkets.com/en/workflow-templates?q={search_term_string}\",\n            \"query-input\": \"required name=search_term_string\"\n          }\n        }\n      ]\n    }\n    </script>\n    <meta property=\"og:title\" content=\"404 — Page Not Found | n8n Markets\">\n  <meta name=\"twitter:title\" content=\"404 — Page Not Found | n8n Markets\">\n  <meta property=\"og:description\" content=\"The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.\">\n  <meta name=\"twitter:description\" content=\"The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.\">\n  <script type=\"module\" crossorigin=\"\" src=\"/assets/index-DDSmeKnP.js\"></script>\n  <link rel=\"modulepreload\" crossorigin=\"\" href=\"/assets/vendor-react-DYVZ6PD-.js\">\n  <link rel=\"modulepreload\" crossorigin=\"\" href=\"/assets/vendor-ui-CkTZ1Xhz.js\">\n  <link rel=\"modulepreload\" crossorigin=\"\" href=\"/assets/vendor-query-quxdh91L.js\">\n  <link rel=\"modulepreload\" crossorigin=\"\" href=\"/assets/vendor-supabase-zKGmgmEq.js\">\n  <link rel=\"modulepreload\" crossorigin=\"\" href=\"/assets/vendor-i18n-SEpaVoeb.js\">\n  <link rel=\"stylesheet\" crossorigin=\"\" href=\"/assets/index-CI0GNTeL.css\">\n<style type=\"text/css\">:where(html[dir=\"ltr\"]),:where([data-sonner-toaster][dir=\"ltr\"]){--toast-icon-margin-start: -3px;--toast-icon-margin-end: 4px;--toast-svg-margin-start: -1px;--toast-svg-margin-end: 0px;--toast-button-margin-start: auto;--toast-button-margin-end: 0;--toast-close-button-start: 0;--toast-close-button-end: unset;--toast-close-button-transform: translate(-35%, -35%)}:where(html[dir=\"rtl\"]),:where([data-sonner-toaster][dir=\"rtl\"]){--toast-icon-margin-start: 4px;--toast-icon-margin-end: -3px;--toast-svg-margin-start: 0px;--toast-svg-margin-end: -1px;--toast-button-margin-start: 0;--toast-button-margin-end: auto;--toast-close-button-start: unset;--toast-close-button-end: 0;--toast-close-button-transform: translate(35%, -35%)}:where([data-sonner-toaster]){position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1: hsl(0, 0%, 99%);--gray2: hsl(0, 0%, 97.3%);--gray3: hsl(0, 0%, 95.1%);--gray4: hsl(0, 0%, 93%);--gray5: hsl(0, 0%, 90.9%);--gray6: hsl(0, 0%, 88.7%);--gray7: hsl(0, 0%, 85.8%);--gray8: hsl(0, 0%, 78%);--gray9: hsl(0, 0%, 56.1%);--gray10: hsl(0, 0%, 52.3%);--gray11: hsl(0, 0%, 43.5%);--gray12: hsl(0, 0%, 9%);--border-radius: 8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:none;z-index:999999999;transition:transform .4s ease}:where([data-sonner-toaster][data-lifted=\"true\"]){transform:translateY(-10px)}@media (hover: none) and (pointer: coarse){:where([data-sonner-toaster][data-lifted=\"true\"]){transform:none}}:where([data-sonner-toaster][data-x-position=\"right\"]){right:var(--offset-right)}:where([data-sonner-toaster][data-x-position=\"left\"]){left:var(--offset-left)}:where([data-sonner-toaster][data-x-position=\"center\"]){left:50%;transform:translate(-50%)}:where([data-sonner-toaster][data-y-position=\"top\"]){top:var(--offset-top)}:where([data-sonner-toaster][data-y-position=\"bottom\"]){bottom:var(--offset-bottom)}:where([data-sonner-toast]){--y: translateY(100%);--lift-amount: calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);filter:blur(0);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:none;overflow-wrap:anywhere}:where([data-sonner-toast][data-styled=\"true\"]){padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px #0000001a;width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}:where([data-sonner-toast]:focus-visible){box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast][data-y-position=\"top\"]){top:0;--y: translateY(-100%);--lift: 1;--lift-amount: calc(1 * var(--gap))}:where([data-sonner-toast][data-y-position=\"bottom\"]){bottom:0;--y: translateY(100%);--lift: -1;--lift-amount: calc(var(--lift) * var(--gap))}:where([data-sonner-toast]) :where([data-description]){font-weight:400;line-height:1.4;color:inherit}:where([data-sonner-toast]) :where([data-title]){font-weight:500;line-height:1.5;color:inherit}:where([data-sonner-toast]) :where([data-icon]){display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}:where([data-sonner-toast][data-promise=\"true\"]) :where([data-icon])>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}:where([data-sonner-toast]) :where([data-icon])>*{flex-shrink:0}:where([data-sonner-toast]) :where([data-icon]) svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}:where([data-sonner-toast]) :where([data-content]){display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;cursor:pointer;outline:none;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}:where([data-sonner-toast]) :where([data-button]):focus-visible{box-shadow:0 0 0 2px #0006}:where([data-sonner-toast]) :where([data-button]):first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}:where([data-sonner-toast]) :where([data-cancel]){color:var(--normal-text);background:rgba(0,0,0,.08)}:where([data-sonner-toast][data-theme=\"dark\"]) :where([data-cancel]){background:rgba(255,255,255,.3)}:where([data-sonner-toast]) :where([data-close-button]){position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast] [data-close-button]{background:var(--gray1)}:where([data-sonner-toast]) :where([data-close-button]):focus-visible{box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast]) :where([data-disabled=\"true\"]){cursor:not-allowed}:where([data-sonner-toast]):hover :where([data-close-button]):hover{background:var(--gray2);border-color:var(--gray5)}:where([data-sonner-toast][data-swiping=\"true\"]):before{content:\"\";position:absolute;left:-50%;right:-50%;height:100%;z-index:-1}:where([data-sonner-toast][data-y-position=\"top\"][data-swiping=\"true\"]):before{bottom:50%;transform:scaleY(3) translateY(50%)}:where([data-sonner-toast][data-y-position=\"bottom\"][data-swiping=\"true\"]):before{top:50%;transform:scaleY(3) translateY(-50%)}:where([data-sonner-toast][data-swiping=\"false\"][data-removed=\"true\"]):before{content:\"\";position:absolute;inset:0;transform:scaleY(2)}:where([data-sonner-toast]):after{content:\"\";position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}:where([data-sonner-toast][data-mounted=\"true\"]){--y: translateY(0);opacity:1}:where([data-sonner-toast][data-expanded=\"false\"][data-front=\"false\"]){--scale: var(--toasts-before) * .05 + 1;--y: translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}:where([data-sonner-toast])>*{transition:opacity .4s}:where([data-sonner-toast][data-expanded=\"false\"][data-front=\"false\"][data-styled=\"true\"])>*{opacity:0}:where([data-sonner-toast][data-visible=\"false\"]){opacity:0;pointer-events:none}:where([data-sonner-toast][data-mounted=\"true\"][data-expanded=\"true\"]){--y: translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}:where([data-sonner-toast][data-removed=\"true\"][data-front=\"true\"][data-swipe-out=\"false\"]){--y: translateY(calc(var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed=\"true\"][data-front=\"false\"][data-swipe-out=\"false\"][data-expanded=\"true\"]){--y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed=\"true\"][data-front=\"false\"][data-swipe-out=\"false\"][data-expanded=\"false\"]){--y: translateY(40%);opacity:0;transition:transform .5s,opacity .2s}:where([data-sonner-toast][data-removed=\"true\"][data-front=\"false\"]):before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y, 0px)) translate(var(--swipe-amount-x, 0px));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width: 600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-theme=light]{--normal-bg: #fff;--normal-border: var(--gray4);--normal-text: var(--gray12);--success-bg: hsl(143, 85%, 96%);--success-border: hsl(145, 92%, 91%);--success-text: hsl(140, 100%, 27%);--info-bg: hsl(208, 100%, 97%);--info-border: hsl(221, 91%, 91%);--info-text: hsl(210, 92%, 45%);--warning-bg: hsl(49, 100%, 97%);--warning-border: hsl(49, 91%, 91%);--warning-text: hsl(31, 92%, 45%);--error-bg: hsl(359, 100%, 97%);--error-border: hsl(359, 100%, 94%);--error-text: hsl(360, 100%, 45%)}[data-sonner-toaster][data-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg: #000;--normal-border: hsl(0, 0%, 20%);--normal-text: var(--gray1)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg: #fff;--normal-border: var(--gray3);--normal-text: var(--gray12)}[data-sonner-toaster][data-theme=dark]{--normal-bg: #000;--normal-bg-hover: hsl(0, 0%, 12%);--normal-border: hsl(0, 0%, 20%);--normal-border-hover: hsl(0, 0%, 25%);--normal-text: var(--gray1);--success-bg: hsl(150, 100%, 6%);--success-border: hsl(147, 100%, 12%);--success-text: hsl(150, 86%, 65%);--info-bg: hsl(215, 100%, 6%);--info-border: hsl(223, 100%, 12%);--info-text: hsl(216, 87%, 65%);--warning-bg: hsl(64, 100%, 6%);--warning-border: hsl(60, 100%, 12%);--warning-text: hsl(46, 87%, 65%);--error-bg: hsl(358, 76%, 10%);--error-border: hsl(357, 89%, 16%);--error-text: hsl(358, 100%, 81%)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success],[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info],[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning],[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error],[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size: 16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:nth-child(1){animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}to{opacity:.15}}@media (prefers-reduced-motion){[data-sonner-toast],[data-sonner-toast]>*,.sonner-loading-bar{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}\n</style><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/MobileBottomNav-C5MFffJ5.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/useLocalizedPath-DWNpaaN8.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/house-CYOZbJ_-.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/shopping-bag-2JRuJf5e.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/chart-column-BdmpUvW7.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/users-CsssUxHb.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/CartDrawer-DPEfHmRW.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/sheet-DxKohHTp.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/button-CkabfwLB.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/input-DbH46jVG.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/cartStore-D511Su0I.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/middleware-WYGlAF-S.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/currencyStore-xA1hKIrQ.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/shopping-cart-407lTNIi.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/trash-2-CppX63Kp.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/tag-By1q9jpQ.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/arrow-right-Ct9Nef2S.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/CommandPalette-D-P81a2n.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/dialog-CzNqqkUt.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/search-DXLYSCdx.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/badge-mHEgxRAA.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/sparkles-CPHHkyAv.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/file-text-BTmZwi-H.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/briefcase-dwpgSFw0.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/book-open-JGB1VW25.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/DynamicPage-G4a48pDa.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/seoPages-B0OoXh1Z.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/useSEO-V-wMI6Qv.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/HomeNavbar-DhYoGE6-.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/CartNavButton-D5IBibgY.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/avatar-CfpVZ3HU.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/n8nmarkets-logo-DZcD-Ebd.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/menu-NL0O9QfQ.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/chevron-down-B24vy1cE.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/HomeFooter-cbedRqxK.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/globe-nXYdMFLY.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/BlogPage-sP7tjzir.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/NotFound-Bv5foPFs.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/circle-help-f4g7hHpC.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/seoLinkMappings-CckGjOAj.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/chevron-right-B66HWob0.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/ExternalResources-YAv6dyD-.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/external-link-CdmQU3wR.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/sanitizeHtml-sXODs40o.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/arrow-left-Gzot5n2F.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/clock-Chie0JjB.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/vendor-motion-D2HxnSX1.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/link-DXUcJeKP.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/list-CL7iAVh2.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/star-BWp1o_RO.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/trending-up-BNYK4gSc.js\"><link rel=\"modulepreload\" as=\"script\" crossorigin=\"\" href=\"/assets/circle-check-DYIF6RqS.js\"><script type=\"application/ld+json\" data-breadcrumb-ld=\"true\">{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https://n8nmarkets.com/en/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Templates\",\"item\":\"https://n8nmarkets.com/en/templates\"}]}</script><meta property=\"og:locale:alternate:es\" content=\"es_ES\"><meta property=\"og:locale:alternate:fr\" content=\"fr_FR\"><meta property=\"og:locale:alternate:pt\" content=\"pt_PT\"><meta property=\"og:locale:alternate:de\" content=\"de_DE\"><meta property=\"og:locale:alternate:it\" content=\"it_IT\"><meta property=\"og:locale:alternate:nl\" content=\"nl_NL\"><meta property=\"og:locale:alternate:pl\" content=\"pl_PL\"><meta property=\"og:locale:alternate:sv\" content=\"sv_SE\"><meta property=\"og:locale:alternate:da\" content=\"da_DK\"><meta property=\"og:locale:alternate:no\" content=\"nb_NO\"><meta property=\"og:locale:alternate:fi\" content=\"fi_FI\"><meta property=\"og:locale:alternate:cs\" content=\"cs_CZ\"><meta property=\"og:locale:alternate:hu\" content=\"hu_HU\"><meta property=\"og:locale:alternate:ro\" content=\"ro_RO\"><meta property=\"og:locale:alternate:bg\" content=\"bg_BG\"><meta property=\"og:locale:alternate:hr\" content=\"hr_HR\"><meta property=\"og:locale:alternate:sk\" content=\"sk_SK\"><meta property=\"og:locale:alternate:sl\" content=\"sl_SI\"><meta property=\"og:locale:alternate:lt\" content=\"lt_LT\"><meta property=\"og:locale:alternate:lv\" content=\"lv_LV\"><meta property=\"og:locale:alternate:et\" content=\"et_EE\"><meta property=\"og:locale:alternate:el\" content=\"el_GR\"><meta property=\"og:locale:alternate:tr\" content=\"tr_TR\"><meta property=\"og:locale:alternate:uk\" content=\"uk_UA\"><meta property=\"og:locale:alternate:sr\" content=\"sr_RS\"><meta property=\"og:locale:alternate:bs\" content=\"bs_BA\"><meta property=\"og:locale:alternate:mk\" content=\"mk_MK\"><meta property=\"og:locale:alternate:sq\" content=\"sq_AL\"><meta property=\"og:locale:alternate:mt\" content=\"mt_MT\"><meta property=\"og:locale:alternate\" content=\"es_ES\"><meta property=\"og:locale:alternate\" content=\"fr_FR\"><meta property=\"og:locale:alternate\" content=\"pt_PT\"><meta property=\"og:locale:alternate\" content=\"de_DE\"><meta property=\"og:locale:alternate\" content=\"it_IT\"><meta property=\"og:locale:alternate\" content=\"nl_NL\"><meta property=\"og:locale:alternate\" content=\"pl_PL\"><meta property=\"og:locale:alternate\" content=\"sv_SE\"><meta property=\"og:locale:alternate\" content=\"da_DK\"><meta property=\"og:locale:alternate\" content=\"nb_NO\"><meta property=\"og:locale:alternate\" content=\"fi_FI\"><meta property=\"og:locale:alternate\" content=\"cs_CZ\"><meta property=\"og:locale:alternate\" content=\"hu_HU\"><meta property=\"og:locale:alternate\" content=\"ro_RO\"><meta property=\"og:locale:alternate\" content=\"bg_BG\"><meta property=\"og:locale:alternate\" content=\"hr_HR\"><meta property=\"og:locale:alternate\" content=\"sk_SK\"><meta property=\"og:locale:alternate\" content=\"sl_SI\"><meta property=\"og:locale:alternate\" content=\"lt_LT\"><meta property=\"og:locale:alternate\" content=\"lv_LV\"><meta property=\"og:locale:alternate\" content=\"et_EE\"><meta property=\"og:locale:alternate\" content=\"el_GR\"><meta property=\"og:locale:alternate\" content=\"tr_TR\"><meta property=\"og:locale:alternate\" content=\"uk_UA\"><meta property=\"og:locale:alternate\" content=\"sr_RS\"><meta property=\"og:locale:alternate\" content=\"bs_BA\"><meta property=\"og:locale:alternate\" content=\"mk_MK\"><meta property=\"og:locale:alternate\" content=\"sq_AL\"><meta property=\"og:locale:alternate\" content=\"mt_MT\"><link rel=\"alternate\" hreflang=\"en\" href=\"https://n8nmarkets.com/en/en/templates\"><link rel=\"alternate\" hreflang=\"es\" href=\"https://n8nmarkets.com/es/en/templates\"><link rel=\"alternate\" hreflang=\"fr\" href=\"https://n8nmarkets.com/fr/en/templates\"><link rel=\"alternate\" hreflang=\"pt\" href=\"https://n8nmarkets.com/pt/en/templates\"><link rel=\"alternate\" hreflang=\"de\" href=\"https://n8nmarkets.com/de/en/templates\"><link rel=\"alternate\" hreflang=\"it\" href=\"https://n8nmarkets.com/it/en/templates\"><link rel=\"alternate\" hreflang=\"nl\" href=\"https://n8nmarkets.com/nl/en/templates\"><link rel=\"alternate\" hreflang=\"pl\" href=\"https://n8nmarkets.com/pl/en/templates\"><link rel=\"alternate\" hreflang=\"sv\" href=\"https://n8nmarkets.com/sv/en/templates\"><link rel=\"alternate\" hreflang=\"da\" href=\"https://n8nmarkets.com/da/en/templates\"><link rel=\"alternate\" hreflang=\"no\" href=\"https://n8nmarkets.com/no/en/templates\"><link rel=\"alternate\" hreflang=\"fi\" href=\"https://n8nmarkets.com/fi/en/templates\"><link rel=\"alternate\" hreflang=\"cs\" href=\"https://n8nmarkets.com/cs/en/templates\"><link rel=\"alternate\" hreflang=\"hu\" href=\"https://n8nmarkets.com/hu/en/templates\"><link rel=\"alternate\" hreflang=\"ro\" href=\"https://n8nmarkets.com/ro/en/templates\"><link rel=\"alternate\" hreflang=\"bg\" href=\"https://n8nmarkets.com/bg/en/templates\"><link rel=\"alternate\" hreflang=\"hr\" href=\"https://n8nmarkets.com/hr/en/templates\"><link rel=\"alternate\" hreflang=\"sk\" href=\"https://n8nmarkets.com/sk/en/templates\"><link rel=\"alternate\" hreflang=\"sl\" href=\"https://n8nmarkets.com/sl/en/templates\"><link rel=\"alternate\" hreflang=\"lt\" href=\"https://n8nmarkets.com/lt/en/templates\"><link rel=\"alternate\" hreflang=\"lv\" href=\"https://n8nmarkets.com/lv/en/templates\"><link rel=\"alternate\" hreflang=\"et\" href=\"https://n8nmarkets.com/et/en/templates\"><link rel=\"alternate\" hreflang=\"el\" href=\"https://n8nmarkets.com/el/en/templates\"><link rel=\"alternate\" hreflang=\"tr\" href=\"https://n8nmarkets.com/tr/en/templates\"><link rel=\"alternate\" hreflang=\"uk\" href=\"https://n8nmarkets.com/uk/en/templates\"><link rel=\"alternate\" hreflang=\"sr\" href=\"https://n8nmarkets.com/sr/en/templates\"><link rel=\"alternate\" hreflang=\"bs\" href=\"https://n8nmarkets.com/bs/en/templates\"><link rel=\"alternate\" hreflang=\"mk\" href=\"https://n8nmarkets.com/mk/en/templates\"><link rel=\"alternate\" hreflang=\"sq\" href=\"https://n8nmarkets.com/sq/en/templates\"><link rel=\"alternate\" hreflang=\"mt\" href=\"https://n8nmarkets.com/mt/en/templates\"><link rel=\"alternate\" hreflang=\"x-default\" href=\"https://n8nmarkets.com/en/en/templates\"><script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-SE921BG9VZ\"></script></head>\n  <body>\n    <div id=\"root\"><div role=\"region\" aria-label=\"Notifications (F8)\" tabindex=\"-1\" style=\"pointer-events: none;\"><ol tabindex=\"-1\" class=\"fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]\"></ol></div><section aria-label=\"Notifications alt+T\" tabindex=\"-1\" aria-live=\"polite\" aria-relevant=\"additions text\" aria-atomic=\"false\"></section><nav class=\"fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur-md md:hidden\" aria-label=\"Mobile navigation\"><div class=\"flex h-14 items-center justify-around\"><a class=\"flex flex-col items-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors text-muted-foreground\" aria-label=\"Home\" href=\"/en/\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-house h-5 w-5\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"></path><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"></path></svg>Home</a><a class=\"flex flex-col items-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors text-muted-foreground\" aria-label=\"Market\" href=\"/en/workflow-templates\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-shopping-bag h-5 w-5\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z\"></path><path d=\"M3 6h18\"></path><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg>Market</a><a class=\"flex flex-col items-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors text-muted-foreground\" aria-label=\"Jobs\" href=\"/en/jobs\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chart-column h-5 w-5\"><path d=\"M3 3v16a2 2 0 0 0 2 2h16\"></path><path d=\"M18 17V9\"></path><path d=\"M13 17V5\"></path><path d=\"M8 17v-3\"></path></svg>Jobs</a><a class=\"flex flex-col items-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors text-muted-foreground\" aria-label=\"Experts\" href=\"/en/automation-experts\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-users h-5 w-5\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"></path></svg>Experts</a></div></nav><div class=\"flex min-h-screen flex-col bg-background\"><header><nav class=\"fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur-md transition-shadow duration-300 shadow-none\" role=\"navigation\" aria-label=\"Main navigation\"><div class=\"container flex h-16 items-center justify-between\"><div class=\"flex items-center gap-6\"><a class=\"flex items-center py-2\" href=\"/en/\"><img src=\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMjIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsb2dvR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMzNEQzOTk7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzA1OTY2OTtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDwhLS0gQnJhbmQgdGV4dCAtLT4KICA8dGV4dCB4PSIwIiB5PSIxNyIgZm9udC1mYW1pbHk9IidJbnRlcicsICdTRiBQcm8gRGlzcGxheScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMDU5NjY5IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPm44bjwvdGV4dD4KICA8dGV4dCB4PSIzNiIgeT0iMTciIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnU0YgUHJvIERpc3BsYXknLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFGMjkzNyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5NYXJrZXRzPC90ZXh0PgogIDwhLS0gVGFnbGluZSAtLT4KICA8dGV4dCB4PSIwIiB5PSIzMyIgZm9udC1mYW1pbHk9IidJbnRlcicsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI1MDAiIGZpbGw9IiM5Q0EzQUYiIGxldHRlci1zcGFjaW5nPSIxLjIiPkFVVE9NQVRJT04gTUFERSBFQVNZPC90ZXh0PgogIDwhLS0gRGVjb3JhdGl2ZSBkb3RzIC0tPgogIDxjaXJjbGUgY3g9IjExOCIgY3k9IjEwIiByPSIyLjUiIGZpbGw9IiMxMEI5ODEiIG9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjEyOCIgY3k9IjciIHI9IjEuOCIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC4zNSIvPgogIDxjaXJjbGUgY3g9IjEzNiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMTBCOTgxIiBvcGFjaXR5PSIwLjQiLz4KICA8bGluZSB4MT0iMTE4IiB5MT0iMTAiIHgyPSIxMjgiIHkyPSI3IiBzdHJva2U9IiMxMEI5ODEiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4yNSIvPgogIDxsaW5lIHgxPSIxMjgiIHkxPSI3IiB4Mj0iMTM2IiB5Mj0iMTIiIHN0cm9rZT0iIzEwQjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjI1Ii8+Cjwvc3ZnPg==\" alt=\"n8n Markets — #1 n8n workflow automation marketplace\" title=\"n8n Markets\" class=\"h-10 w-auto min-w-[140px]\"></a><div class=\"hidden items-center md:flex\" data-tour=\"marketplace\"><div class=\"relative\"><button class=\"inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-ring rounded-md\" aria-expanded=\"false\" aria-haspopup=\"true\">Marketplace<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down h-3.5 w-3.5 transition-transform duration-200\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"></path></svg></button></div><div class=\"relative\"><button class=\"inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-ring rounded-md\" aria-expanded=\"false\" aria-haspopup=\"true\">Hire Expert<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down h-3.5 w-3.5 transition-transform duration-200\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"></path></svg></button></div><div class=\"relative\"><button class=\"inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-ring rounded-md\" aria-expanded=\"false\" aria-haspopup=\"true\">Resources<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down h-3.5 w-3.5 transition-transform duration-200\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"></path></svg></button></div></div></div><div class=\"flex items-center gap-2 sm:gap-3\"><button class=\"hidden items-center gap-2 rounded-full border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:flex focus-ring\" data-tour=\"search\" aria-label=\"Open search (⌘K)\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search h-3.5 w-3.5\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg><span>Search workflows...</span><kbd class=\"pointer-events-none ml-2 inline-flex h-5 select-none items-center gap-0.5 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground\">⌘K</kbd></button><button class=\"flex items-center justify-center h-9 w-9 rounded-full border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden focus-ring\" aria-label=\"Search\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search h-4 w-4\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg></button><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10 relative\" aria-label=\"Cart (0 items)\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-shopping-cart h-5 w-5\"><circle cx=\"8\" cy=\"21\" r=\"1\"></circle><circle cx=\"19\" cy=\"21\" r=\"1\"></circle><path d=\"M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12\"></path></svg></button><a class=\"items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border bg-background hover:text-accent-foreground h-10 px-4 py-2 hidden rounded-full border-primary text-primary hover:bg-primary/5 sm:inline-flex\" href=\"/en/login\">Login</a><a class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 rounded-full bg-gradient-to-r from-primary to-primary/80 px-4 sm:px-6 font-semibold shadow-md hover:shadow-lg text-xs sm:text-sm\" href=\"/en/register\">Start for Free</a><button class=\"flex items-center justify-center h-9 w-9 rounded-lg border bg-muted/50 text-foreground md:hidden focus-ring\" aria-label=\"Open menu\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-menu h-5 w-5\"><line x1=\"4\" x2=\"20\" y1=\"12\" y2=\"12\"></line><line x1=\"4\" x2=\"20\" y1=\"6\" y2=\"6\"></line><line x1=\"4\" x2=\"20\" y1=\"18\" y2=\"18\"></line></svg></button></div></div></nav></header><main class=\"flex-1 pt-16\"><section class=\"container flex flex-col items-center px-4 pt-20 pb-12 sm:pt-28 sm:pb-16 text-center\"><h1 class=\"text-[8rem] sm:text-[11rem] font-black tracking-tighter leading-none bg-gradient-to-b from-foreground via-foreground/50 to-foreground/10 bg-clip-text text-transparent select-none\">404</h1><h2 class=\"mt-4 text-xl sm:text-2xl font-bold text-foreground\">This page doesn't exist</h2><p class=\"mt-2 text-sm text-muted-foreground max-w-md leading-relaxed\">The page <code class=\"rounded bg-muted border px-1.5 py-0.5 text-xs font-mono text-foreground/80\">/en/templates</code> may have been moved or deleted.</p><form class=\"mt-8 flex w-full max-w-lg gap-2\"><div class=\"relative flex-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg><input class=\"flex w-full border px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-12 pl-10 rounded-xl border-border/60 bg-background\" placeholder=\"Search workflows, experts, or articles...\" value=\"\"></div><button class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-xl px-6 font-semibold\" type=\"submit\">Search</button></form><div class=\"mt-4 flex flex-wrap items-center justify-center gap-1.5\"><span class=\"text-xs text-muted-foreground mr-1\">Try:</span><button class=\"rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary\">Lead generation</button><button class=\"rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary\">CRM integration</button><button class=\"rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary\">Email automation</button><button class=\"rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary\">Shopify workflows</button><button class=\"rounded-full border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary\">AI content creation</button></div></section><section class=\"container px-4 pb-16 sm:pb-20\"><h3 class=\"text-center text-sm font-medium text-muted-foreground mb-6\">Or go to one of these pages</h3><div class=\"mx-auto grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3\"><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/workflow-templates\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-shopping-bag h-4.5 w-4.5\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z\"></path><path d=\"M3 6h18\"></path><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">Browse Workflows<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">500+ ready-made n8n automation templates</p></div></a><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/automation-experts\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-users h-4.5 w-4.5\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">Hire an Expert<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">Vetted n8n freelancers for custom builds</p></div></a><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/learn-automation\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-book-open h-4.5 w-4.5\"><path d=\"M12 7v14\"></path><path d=\"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">Learn Automation<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">Free courses and step-by-step tutorials</p></div></a><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/blog\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-file-text h-4.5 w-4.5\"><path d=\"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z\"></path><path d=\"M14 2v4a2 2 0 0 0 2 2h4\"></path><path d=\"M10 9H8\"></path><path d=\"M16 13H8\"></path><path d=\"M16 17H8\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">Read the Blog<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">Tips, case studies, and platform updates</p></div></a><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/faq\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-help h-4.5 w-4.5\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><path d=\"M12 17h.01\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">FAQ &amp; Support<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">Answers to common questions</p></div></a><a class=\"group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5\" href=\"/en/\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-house h-4.5 w-4.5\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"></path><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"></path></svg></div><div class=\"min-w-0\"><h4 class=\"flex items-center gap-1 text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors\">Homepage<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></h4><p class=\"text-xs text-muted-foreground line-clamp-1\">Back to the n8n Markets homepage</p></div></a></div></section></main><footer class=\"border-t bg-foreground text-background relative overflow-hidden\" role=\"contentinfo\"><div class=\"absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]\"></div><div class=\"container px-4 py-12 sm:py-16 relative\"><div class=\"grid grid-cols-2 gap-8 sm:gap-10 md:grid-cols-4\"><div class=\"col-span-2 md:col-span-1\"><a class=\"mb-5 flex items-center\" href=\"/en/\"><img src=\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMjIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsb2dvR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMzNEQzOTk7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzA1OTY2OTtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDwhLS0gQnJhbmQgdGV4dCAtLT4KICA8dGV4dCB4PSIwIiB5PSIxNyIgZm9udC1mYW1pbHk9IidJbnRlcicsICdTRiBQcm8gRGlzcGxheScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMDU5NjY5IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPm44bjwvdGV4dD4KICA8dGV4dCB4PSIzNiIgeT0iMTciIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnU0YgUHJvIERpc3BsYXknLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFGMjkzNyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5NYXJrZXRzPC90ZXh0PgogIDwhLS0gVGFnbGluZSAtLT4KICA8dGV4dCB4PSIwIiB5PSIzMyIgZm9udC1mYW1pbHk9IidJbnRlcicsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI1MDAiIGZpbGw9IiM5Q0EzQUYiIGxldHRlci1zcGFjaW5nPSIxLjIiPkFVVE9NQVRJT04gTUFERSBFQVNZPC90ZXh0PgogIDwhLS0gRGVjb3JhdGl2ZSBkb3RzIC0tPgogIDxjaXJjbGUgY3g9IjExOCIgY3k9IjEwIiByPSIyLjUiIGZpbGw9IiMxMEI5ODEiIG9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjEyOCIgY3k9IjciIHI9IjEuOCIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC4zNSIvPgogIDxjaXJjbGUgY3g9IjEzNiIgY3k9IjEyIiByPSIyIiBmaWxsPSIjMTBCOTgxIiBvcGFjaXR5PSIwLjQiLz4KICA8bGluZSB4MT0iMTE4IiB5MT0iMTAiIHgyPSIxMjgiIHkyPSI3IiBzdHJva2U9IiMxMEI5ODEiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4yNSIvPgogIDxsaW5lIHgxPSIxMjgiIHkxPSI3IiB4Mj0iMTM2IiB5Mj0iMTIiIHN0cm9rZT0iIzEwQjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjI1Ii8+Cjwvc3ZnPg==\" alt=\"n8n Markets — n8n workflow automation marketplace logo\" title=\"n8n Markets\" class=\"h-10 w-auto brightness-0 invert\"></a><p class=\"mb-6 text-sm text-background/60 leading-relaxed max-w-[260px]\">The world's largest marketplace for n8n automation blueprints, workflows, and freelance services.</p><div class=\"flex gap-2.5\"><a href=\"https://x.com/n8nmarkets\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Twitter / X\" class=\"flex h-10 w-10 items-center justify-center rounded-full bg-background/10 text-background/60 hover:bg-background/20 hover:text-background transition-all duration-200 hover:-translate-y-0.5\"><svg class=\"h-4 w-4\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z\"></path></svg></a><a href=\"https://www.linkedin.com/company/n8nmarkets\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"LinkedIn\" class=\"flex h-10 w-10 items-center justify-center rounded-full bg-background/10 text-background/60 hover:bg-background/20 hover:text-background transition-all duration-200 hover:-translate-y-0.5\"><svg class=\"h-4 w-4\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z\"></path></svg></a><a href=\"https://github.com/n8nmarkets\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"GitHub\" class=\"flex h-10 w-10 items-center justify-center rounded-full bg-background/10 text-background/60 hover:bg-background/20 hover:text-background transition-all duration-200 hover:-translate-y-0.5\"><svg class=\"h-4 w-4\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12\"></path></svg></a></div></div><div><h4 class=\"mb-4 font-semibold text-sm uppercase tracking-wider text-background/80\">Marketplace</h4><nav aria-label=\"Marketplace links\"><ul class=\"space-y-3 text-sm text-background/60\"><li><a class=\"hover:text-background transition-colors\" href=\"/en/workflow-templates\">Browse Workflows</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/workflow-templates\">New Arrivals</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/leaderboard\">Top Sellers</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/workflow-templates\">Categories</a></li></ul></nav></div><div><h4 class=\"mb-4 font-semibold text-sm uppercase tracking-wider text-background/80\">Service</h4><nav aria-label=\"Service links\"><ul class=\"space-y-3 text-sm text-background/60\"><li><a class=\"hover:text-background transition-colors\" href=\"/en/automation-experts\">Hire Experts</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/automation-experts\">Freelancer Directory</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/jobs\">Find Jobs</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/register\">Become a Seller</a></li></ul></nav></div><div><h4 class=\"mb-4 font-semibold text-sm uppercase tracking-wider text-background/80\">Community</h4><nav aria-label=\"Community links\"><ul class=\"space-y-3 text-sm text-background/60\"><li><a class=\"hover:text-background transition-colors\" href=\"/en/blog\">Blog</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/forum\">Forum</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/learn-automation\">Learn Automation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/about\">About Us</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/pricing\">Pricing</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/faq\">FAQ</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/terms\">Terms of Service</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/privacy\">Privacy Policy</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/refund-policy\">Refund Policy</a></li><li><a href=\"/sitemap.xml\" target=\"_blank\" rel=\"noopener\" class=\"hover:text-background transition-colors\">Sitemap</a></li></ul></nav></div></div><div class=\"mt-10 border-t border-background/10 pt-8\"><h4 class=\"mb-4 font-semibold text-sm uppercase tracking-wider text-background/80\">Popular Resources</h4><nav aria-label=\"Popular automation resources\"><ul class=\"grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3 md:grid-cols-4 text-sm text-background/60\"><li><a class=\"hover:text-background transition-colors\" href=\"/en/n8n-vs-zapier\">n8n vs Zapier</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/n8n-vs-make\">n8n vs Make</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/best-automation-tools\">Best Automation Tools</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/zapier-alternative\">Zapier Alternative</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/ai-workflow-automation-n8n\">AI Workflow Automation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/lead-generation-automation-n8n\">Lead Generation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/n8n-hubspot-integration\">HubSpot Integration</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/n8n-slack-integration\">Slack Integration</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/email-marketing-automation-n8n\">Email Automation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/crm-automation-n8n\">CRM Automation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/ecommerce-automation-n8n\">Ecommerce Automation</a></li><li><a class=\"hover:text-background transition-colors\" href=\"/en/resources/link-building\">Partner Resources</a></li></ul></nav></div></div><div class=\"border-t border-background/10\"><div class=\"container px-4 py-6\"><div class=\"flex flex-wrap items-center justify-center gap-4 mb-5\"><a href=\"https://startupfa.me/s/n8n-markets?utm_source=n8nmarkets.com\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"n8n Markets - Featured on Startup Fame\" class=\"inline-block transition-opacity hover:opacity-80\"><img src=\"https://startupfa.me/badges/featured-badge-small.webp\" alt=\"n8n Markets - Featured on Startup Fame\" width=\"224\" height=\"36\" loading=\"lazy\" class=\"h-9 w-auto max-w-full\"></a><a href=\"https://www.producthunt.com/products/n8nmarkets?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-n8nmarkets\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"inline-block transition-opacity hover:opacity-80\"><img alt=\"n8n Markets - Marketplace for n8n workflows and automation experts | Product Hunt\" width=\"250\" height=\"54\" src=\"https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1119791&amp;theme=light&amp;t=1775856167169\" loading=\"lazy\" class=\"h-10 w-auto max-w-full\"></a></div><div class=\"flex flex-col items-center justify-between gap-4 text-xs text-background/40 sm:flex-row\"><span class=\"text-center sm:text-left\">© 2026 n8n Markets. All rights reserved.</span><div class=\"relative\"><button class=\"inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors border-background/20 text-background/60 hover:bg-background/10 hover:text-background\" aria-label=\"Change language\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-globe h-3.5 w-3.5\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"></path><path d=\"M2 12h20\"></path></svg><span class=\"hidden sm:inline\">🇺🇸</span></button></div></div></div></div></footer></div></div>\n    <script>\n      // Defer ALL third-party scripts until after page is interactive\n      window.addEventListener('load', function() {\n        // Google Analytics — deferred\n        setTimeout(function() {\n          var g = document.createElement('script');\n          g.async = true;\n          g.src = 'https://www.googletagmanager.com/gtag/js?id=G-SE921BG9VZ';\n          g.onload = function() {\n            window.dataLayer = window.dataLayer || [];\n            function gtag(){window.dataLayer.push(arguments);}\n            gtag('js', new Date());\n            gtag('config', 'G-SE921BG9VZ');\n          };\n          document.head.appendChild(g);\n        }, 1500);\n\n        // Ahrefs — deferred\n        setTimeout(function() {\n          var a = document.createElement('script');\n          a.async = true;\n          a.src = 'https://analytics.ahrefs.com/analytics.js';\n          a.setAttribute('data-key', '91Tg1YS6bXLZN1S/DgQMdA');\n          document.head.appendChild(a);\n        }, 2500);\n\n\n        // Google AdSense — deferred\n        setTimeout(function() {\n          var ad = document.createElement('script');\n          ad.async = true;\n          ad.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4028487616511997';\n          ad.crossOrigin = 'anonymous';\n          document.head.appendChild(ad);\n        }, 3500);\n\n        // Paddle — deferred\n        setTimeout(function() {\n          var s = document.createElement('script');\n          s.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';\n          s.async = true;\n          document.body.appendChild(s);\n        }, 4000);\n      });\n    </script>\n  \n</body></html>",
+   357→    "httpStatus": 200,
+   358→    "httpStatusText": "OK",
+   359→    "metadata": {
+   360→      "author": "n8n Markets",
+   361→      "description": "The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.",
+   362→      "format-detection": "telephone=no",
+   363→      "google-site-verification": "HBf7XJxtNKJB3ibt7Hu5AsaW382nb7rFbN8TbfIUzj8",
+   364→      "lang": "en",
+   365→      "msvalidate.01": "2F15104FBA762D91189A5B012455D9F9",
+   366→      "og:description": "The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.",
+   367→      "og:image": "https://n8nmarkets.com/og-image.png",
+   368→      "og:image:alt": "404 — Page Not Found | n8n Markets — n8n Markets",
+   369→      "og:image:height": "630",
+   370→      "og:image:width": "1200",
+   371→      "og:locale": "en_US",
+   372→      "og:locale:alternate": [
+   373→        "es_ES",
+   374→        "fr_FR",
+   375→        "pt_PT",
+   376→        "de_DE",
+   377→        "it_IT",
+   378→        "nl_NL",
+   379→        "pl_PL",
+   380→        "sv_SE",
+   381→        "da_DK",
+   382→        "nb_NO",
+   383→        "fi_FI",
+   384→        "cs_CZ",
+   385→        "hu_HU",
+   386→        "ro_RO",
+   387→        "bg_BG",
+   388→        "hr_HR",
+   389→        "sk_SK",
+   390→        "sl_SI",
+   391→        "lt_LT",
+   392→        "lv_LV",
+   393→        "et_EE",
+   394→        "el_GR",
+   395→        "tr_TR",
+   396→        "uk_UA",
+   397→        "sr_RS",
+   398→        "bs_BA",
+   399→        "mk_MK",
+   400→        "sq_AL",
+   401→        "mt_MT"
+   402→      ],
+   403→      "og:locale:alternate:bg": "bg_BG",
+   404→      "og:locale:alternate:bs": "bs_BA",
+   405→      "og:locale:alternate:cs": "cs_CZ",
+   406→      "og:locale:alternate:da": "da_DK",
+   407→      "og:locale:alternate:de": "de_DE",
+   408→      "og:locale:alternate:el": "el_GR",
+   409→      "og:locale:alternate:es": "es_ES",
+   410→      "og:locale:alternate:et": "et_EE",
+   411→      "og:locale:alternate:fi": "fi_FI",
+   412→      "og:locale:alternate:fr": "fr_FR",
+   413→      "og:locale:alternate:hr": "hr_HR",
+   414→      "og:locale:alternate:hu": "hu_HU",
+   415→      "og:locale:alternate:it": "it_IT",
+   416→      "og:locale:alternate:lt": "lt_LT",
+   417→      "og:locale:alternate:lv": "lv_LV",
+   418→      "og:locale:alternate:mk": "mk_MK",
+   419→      "og:locale:alternate:mt": "mt_MT",
+   420→      "og:locale:alternate:nl": "nl_NL",
+   421→      "og:locale:alternate:no": "nb_NO",
+   422→      "og:locale:alternate:pl": "pl_PL",
+   423→      "og:locale:alternate:pt": "pt_PT",
+   424→      "og:locale:alternate:ro": "ro_RO",
+   425→      "og:locale:alternate:sk": "sk_SK",
+   426→      "og:locale:alternate:sl": "sl_SI",
+   427→      "og:locale:alternate:sq": "sq_AL",
+   428→      "og:locale:alternate:sr": "sr_RS",
+   429→      "og:locale:alternate:sv": "sv_SE",
+   430→      "og:locale:alternate:tr": "tr_TR",
+   431→      "og:locale:alternate:uk": "uk_UA",
+   432→      "og:site_name": "n8n Markets",
+   433→      "og:title": "404 — Page Not Found | n8n Markets",
+   434→      "og:type": "website",
+   435→      "og:url": "https://n8nmarkets.com/en/en/templates",
+   436→      "p:domain_verify": "f64dab264394c9fd781514ba96bf64b0",
+   437→      "publisher": "n8n Markets",
+   438→      "robots": "noindex, follow",
+   439→      "theme-color": "#0f9b6e",
+   440→      "twitter:card": "summary_large_image",
+   441→      "twitter:description": "The page you're looking for doesn't exist. Browse automation workflows, hire experts, or search n8n Markets.",
+   442→      "twitter:image": "https://n8nmarkets.com/og-image.png",
+   443→      "twitter:image:alt": "404 — Page Not Found | n8n Markets — n8n Markets",
+   444→      "twitter:site": "@n8nmarkets",
+   445→      "twitter:title": "404 — Page Not Found | n8n Markets",
+   446→      "viewport": "width=device-width, initial-scale=1.0",
+   447→      "yandex-verification": "8e304931d5979220"
+   448→    },
+   449→    "title": "404 — Page Not Found | n8n Markets",
+   450→    "url": "https://n8nmarkets.com/en/templates",
+   451→    "usage": {
+   452→      "tokens": 21954
+   453→    }
+   454→  },
+   455→  "meta": {
+   456→    "usage": {
+   457→      "tokens": 21954
+   458→    }
+   459→  },
+   460→  "status": 20000
+   461→}

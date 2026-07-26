@@ -1,0 +1,171 @@
+{
+  "name": "Global Error Handler Workflow",
+  "id_prefix": "G13_Error_Handler",
+  "category": "Utilidades & DevOps",
+  "description": "Consolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "b9ea33351132",
+    "9c0a189558b9"
+  ],
+  "tier": "Starter",
+  "price": 15,
+  "nodes": [
+    {
+      "id": "G13_Error_Handler_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G13_Error_Handler_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G13_Error_Handler_llm",
+      "name": "LLM (gpt-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G13_Error_Handler_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G13_Error_Handler_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G13_Error_Handler_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G13_Error_Handler_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## Global Error Handler Workflow\n\nConsolidación: 2 workflows 'Error' exactos. Resultado: error handler production-ready para usar como Global Error Trigger en todos los workflows.\n\n**Consolidated from**: 2 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar → 1 Global Error Handler production-ready\n- Error Trigger como entrada\n- Switch para severity levels (warning/error/critical)\n- Slack/Email notification por severity\n- Redis para retry queue (DLQ - Dead Letter Queue)",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gpt-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gpt-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar → 1 Global Error Handler production-ready",
+    "Error Trigger como entrada",
+    "Switch para severity levels (warning/error/critical)",
+    "Slack/Email notification por severity",
+    "Redis para retry queue (DLQ - Dead Letter Queue)",
+    "Logging a Google Sheets para audit trail",
+    "Exponential backoff en retries",
+    "ESTE WORKFLOW DEBE SER LINKADO como Error Workflow en TODOS los demás"
+  ]
+}

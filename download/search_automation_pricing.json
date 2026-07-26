@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.intuz.com/blog/make-vs-n8n-vs-zapier-detailed-comparison",
+    "name": "Make vs n8n vs Zapier - Detailed Guide [2026]",
+    "snippet": "Jun 30, 2026 — For a 10-step workflow running 10,000 times/month, n8n can cut costs by 80–90% versus Zapier . All three platforms added native AI capabilities ... Read more",
+    "host_name": "www.intuz.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.n8n.io/make-vs-zapier",
+    "name": "Make vs Zapier – And why n8n is the best alternative",
+    "snippet": "May 22, 2024 — Key takeaway: Make is generally more affordable for complex workflows , while Zapier's pricing can increase quickly as your automations grow. Read more",
+    "host_name": "blog.n8n.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tech-insider.org/n8n-vs-zapier-2026",
+    "name": "n8n vs Zapier 2026: 90% Cost Gap and 400 vs  - Tech Insider",
+    "snippet": "Apr 10, 2026 — For a 10-step workflow processing 5,000 runs per month, Zapier charges for 50,000 tasks while n8n charges for 5,000 executions. Pricing ... Read more",
+    "host_name": "tech-insider.org",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/1fu7vbe/n8n_vs_make_vs_zapier_vs_relay_discussion",
+    "name": "n8n vs make vs zapier vs relay [Discussion]",
+    "snippet": "I'd use n8n for flexibility , Make for visual no-code workflows and Zapier for simple automations. Zite fits earlier in the process by helping ... Read more",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://parseur.com/blog/zapier-n8n-make",
+    "name": "Zapier vs Make vs n8n - Which Automation Tool Is Best?",
+    "snippet": "Sep 16, 2025 — Zapier is costly at scale, Make is affordable, and n8n is free if self-hosted. Starter: $20/month — 5,000 executions, Pro: $50/month — 20,000 ...",
+    "host_name": "parseur.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=MjIngZJHjBc",
+    "name": "1 Automation Built On 3 Different Platforms (n8n vs Make vs",
+    "snippet": "In this video we build a youtube transcript automation using zapier , Automation Built On 3 Different Platforms ( n8n vs Make vs Zapier )",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://genesysgrowth.com/blog/zapier-ai-vs-make-com-ai-vs-n8n-ai",
+    "name": "Zapier AI vs Make.com AI vs n8n AI – A Complete Guide for",
+    "snippet": "Feb 4, 2026 — Zapier charges per task and Make.com per operation, n8n's execution-based model means multi-step workflows can cost substantially more on ...",
+    "host_name": "genesysgrowth.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://puffersoft.com/n8n-vs-zapier-vs-make-automation-2026",
+    "name": "Best Automation Tool For Business 2026 - N8N",
+    "snippet": "Jul 17, 2026 — Compare n8n vs Zapier vs Make in 2026 . Discover pricing, integrations, AI features, and which workflow automation tool fits your business.",
+    "host_name": "puffersoft.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://automationatlas.io/guides/zapier-vs-make-vs-n8n-comparison",
+    "name": "Zapier vs Make vs n8n: Pricing & Features Tested (2026",
+    "snippet": "A detailed comparison of Zapier, Make, and n8n across pricing, features, ease of use, integrations, self-hosting capabilities, and suitability for different team sizes and technical requirements.",
+    "host_name": "automationatlas.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.aicentralresources.com/blog/zapier-vs-make-vs-n8n-2026-pricing-math-ai-agents-who-actually-wins",
+    "name": "Zapier vs Make vs n8n (2026): Pricing Math, AI Agents & Who",
+    "snippet": "Real task-math, 2026 platform updates (n8n 2.0, Zapier Agents, Make's Maia), and honest head-to-head scenarios. Which automation platform fits your team — Zapier, Make, or n8n?",
+    "host_name": "www.aicentralresources.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

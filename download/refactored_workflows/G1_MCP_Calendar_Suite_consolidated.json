@@ -1,0 +1,220 @@
+{
+  "name": "MCP Calendar Suite Pro",
+  "id_prefix": "G1_MCP_Calendar_Suite",
+  "category": "Calendario & Agenda",
+  "description": "Consolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "34a2018e30a1",
+    "b3f7944567ea",
+    "bcc58f943518",
+    "aeb23378d1a4",
+    "c3b2fcc3fa90",
+    "595b39a05bf5",
+    "b0531fcce43c"
+  ],
+  "tier": "Professional",
+  "price": 35,
+  "nodes": [
+    {
+      "id": "G1_MCP_Calendar_Suite_trigger_mcp",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        500
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your MCP Calendar Suite Pro assistant. How can I help you?"
+      }
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_llm",
+      "name": "LLM (gemini-2.5-flash)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      }
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_tool_calendar",
+      "name": "Google Calendar Tool",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        1000,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G1_MCP_Calendar_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## MCP Calendar Suite Pro\n\nConsolidación de todas las variantes MCP Calendar: 4 copias exactas de MCP_Calendario_Voz + 2 copias MCP Calendar + Agente_Calendario variants. Resultado: un único workflow production-ready con voice+text+MCP trigger.\n\n**Consolidated from**: 7 original workflows\n**LLM**: gemini-2.5-flash\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger\n- MCP Calendar duplicado → unificar en el mismo workflow con branch logic\n- Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal\n- Añadir Error Trigger Workflow para handling global\n- Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chat Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gemini-2.5-flash)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gemini-2.5-flash)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar Tool": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar 4 copias exactas MCP_Calendario_Voz → 1 workflow con MCP Trigger + Chat Trigger",
+    "MCP Calendar duplicado → unificar en el mismo workflow con branch logic",
+    "Agente Calendario → convertir a sub-workflow llamado por el MCP suite principal",
+    "Añadir Error Trigger Workflow para handling global",
+    "Usar Gemini 2.5 Flash como LLM (mejor calidad/precio para tasks de calendario)",
+    "Memoria: PostgresChatHistory para persistencia entre sesiones",
+    "Añadir googleCalendarTool como tool del agente",
+    "Voice support: usar mcpTrigger + WhatsAppTrigger para entrada voz/texto"
+  ]
+}

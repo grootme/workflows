@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=qqtx3C252yA",
+    "name": "Finding EBAY + Amazon Price Gaps (N8N Tutorial)",
+    "snippet": "Using n8n, we'll create a workflow that collects price data, calculates statistical outliers, and sends alerts directly to your inbox when ...",
+    "host_name": "www.youtube.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.n8nmarkets.com/en/sell",
+    "name": "Sell Your n8n Workflows — Earn Passive Income",
+    "snippet": "List your n8n automation workflows on the marketplace. Choose your pricing — free, one-time purchase ($5–$50+), or name-your- price . You have full control over ...",
+    "host_name": "www.n8nmarkets.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Yesk297I5O8",
+    "name": "Amazingly SIMPLE Stock Market Analysis! (n8n)",
+    "snippet": "This AI agent reads stock charts like a Wall Street pro and you can build it without any code.",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8n.io/workflows/837-track-changes-of-product-prices",
+    "name": "Track changes of product prices | n8n workflow template",
+    "snippet": "This workflow automatically tracks changes on specific websites , typically in e-commerce where you want to get information about price changes. Read more",
+    "host_name": "n8n.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/1m60adb/who_the_hell_is_buying_n8n_workflows_for_100_be",
+    "name": "Who the hell is buying n8n workflows for $100+? Be honest",
+    "snippet": "people are flipping n8n workflows for hundreds — even thousands — of dollars . with n8n you can build a single workflow to solve a single ...",
+    "host_name": "www.reddit.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=I-XSwa79YYU",
+    "name": "I Built a No-Code AI Trading Agent in MINUTES - Here's How",
+    "snippet": "Learn how to build a powerful *n8n stock analysis workflow * from scratch! In this tutorial, we'll walk through automating data collection, ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@rentierdigital/how-to-actually-sell-n8n-make-workflows-in-2025-and-stop-being-broke-5a88e5fe0beb",
+    "name": "How to Sell n8n Workflows and Make Money in 2026",
+    "snippet": "Pricing Sweet Spot: 29−79 for single workflows , 99−199 for bundles. Pricing Structure: Single Use: $499 one-time Agency License: $1,999 one- ...",
+    "host_name": "medium.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://levelup.gitconnected.com/how-i-automated-stock-analysis-using-n8n-ai-and-real-market-data-fd7419f3a663",
+    "name": "How I Automated Stock Analysis Using n8n, AI, and Real",
+    "snippet": "Jan 5, 2026 — Learn how to automate stock analysis using n8n , AI, and real-time market data to spot opportunities and save hours of manual work.",
+    "host_name": "levelup.gitconnected.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=I7m1bhROmnk&vl=en-US",
+    "name": "How I Price N8N AI Agents & Workflows In My $20000/mo+",
+    "snippet": "I'm going to share with you my exact pricing structure and also this AI agent pricing calculator that I created that shows you exactly how much your automation should cost.",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8nmarkets.com/en",
+    "name": "n8n Workflows Marketplace — 850+ Templates & Experts",
+    "snippet": "Buy 850+ ready-to-deploy n8n workflow templates or hire vetted automation experts. Save 100+ hours, deploy in minutes. Trusted by 8,000+ pros. Start free.",
+    "host_name": "n8nmarkets.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

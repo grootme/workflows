@@ -1,0 +1,58 @@
+{
+  "name": "RAG Agent Template",
+  "description": "Template base para agente RAG con vector store, embeddings, document loader, y retrieval chain.",
+  "category": "RAG & Vector Store",
+  "nodes": [
+    {
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "name": "Chat Trigger",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "name": "RAG Agent",
+      "config": {
+        "hasMemory": true
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "LLM (Gemini Flash)",
+      "config": {
+        "model": "gemini-2.5-flash"
+      }
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "name": "Vector Store",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "name": "Embeddings",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "name": "Chat Memory",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "name": "Retriever",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "name": "Data Loader",
+      "config": {}
+    },
+    {
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "name": "Text Splitter",
+      "config": {}
+    }
+  ],
+  "tier": "Professional",
+  "price": 39
+}

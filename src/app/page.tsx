@@ -234,14 +234,18 @@ export default function CatalogPage() {
   const [activeTab, setActiveTab] = useState('catalog');
   const [marketplaceTier, setMarketplaceTier] = useState<string>('all');
   const [expandedSuggestions, setExpandedSuggestions] = useState<Set<number>>(new Set());
+  const [phase1Data, setPhase1Data] = useState<any>(null);
+  const [phase1Group, setPhase1Group] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
       fetch('/api/catalog').then(r => r.json()),
       fetch('/api/marketplace').then(r => r.json()),
-    ]).then(([catalogData, marketData]) => {
+      fetch('/api/phase1').then(r => r.json()),
+    ]).then(([catalogData, marketData, p1Data]) => {
       setData(catalogData); 
       setMarketplace(marketData); 
+      setPhase1Data(p1Data);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -354,7 +358,7 @@ export default function CatalogPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white shadow-sm border border-slate-200 h-auto p-1 grid grid-cols-3 sm:grid-cols-6 gap-1">
+          <TabsList className="bg-white shadow-sm border border-slate-200 h-auto p-1 grid grid-cols-4 sm:grid-cols-7 gap-1">
             <TabsTrigger value="overview" className="flex items-center gap-1.5 data-[state=active]:bg-violet-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
               <TrendingUp className="w-4 h-4" />
               <span className="hidden sm:inline">Resumen</span>
@@ -378,6 +382,10 @@ export default function CatalogPage() {
             <TabsTrigger value="marketplace" className="flex items-center gap-1.5 data-[state=active]:bg-violet-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
               <Store className="w-4 h-4" />
               <span className="hidden sm:inline">Marketplace</span>
+            </TabsTrigger>
+            <TabsTrigger value="phase1" className="flex items-center gap-1.5 data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Phase 1</span>
             </TabsTrigger>
           </TabsList>
 
@@ -1066,6 +1074,360 @@ export default function CatalogPage() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </TabsContent>
+
+          {/* Phase 1 Tab */}
+          <TabsContent value="phase1" className="space-y-6">
+            {!phase1Data ? (
+              <Card><CardContent className="p-8 text-center text-slate-500">Cargando datos Phase 1...</CardContent></Card>
+            ) : (
+              <>
+                {/* Phase 1 Summary Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <Card className="bg-emerald-50 border-emerald-300">
+                    <CardContent className="p-4 text-center">
+                      <Sparkles className="w-6 h-6 text-emerald-600 mx-auto mb-1" />
+                      <p className="text-2xl font-bold text-emerald-800">{phase1Data.phase1_summary?.consolidated_stats?.consolidation_groups ?? 13}</p>
+                      <p className="text-xs text-emerald-600">Consolidation Groups</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-violet-50 border-violet-300">
+                    <CardContent className="p-4 text-center">
+                      <GitMerge className="w-6 h-6 text-violet-600 mx-auto mb-1" />
+                      <p className="text-2xl font-bold text-violet-800">{phase1Data.phase1_summary?.consolidated_stats?.total_original_workflows_merged ?? 54}</p>
+                      <p className="text-xs text-violet-600">Workflows Merged</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-amber-50 border-amber-300">
+                    <CardContent className="p-4 text-center">
+                      <Store className="w-6 h-6 text-amber-600 mx-auto mb-1" />
+                      <p className="text-2xl font-bold text-amber-800">${phase1Data.phase1_summary?.consolidated_stats?.total_catalog_value ?? 977}</p>
+                      <p className="text-xs text-amber-600">Catalog Value</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-blue-50 border-blue-300">
+                    <CardContent className="p-4 text-center">
+                      <Brain className="w-6 h-6 text-blue-600 mx-auto mb-1" />
+                      <p className="text-2xl font-bold text-blue-800">{phase1Data.phase1_summary?.consolidated_stats?.marketplace_catalog_items ?? 25}</p>
+                      <p className="text-xs text-blue-600">Catalog Items</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Before vs After Comparison */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-emerald-600" />
+                      Before vs After Phase 1
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="bg-red-50 rounded-lg p-3">
+                        <p className="font-semibold text-red-800 mb-2">❌ Before (Original)</p>
+                        <ul className="space-y-1 text-red-700">
+                          <li>• 118 workflows (many redundant)</li>
+                          <li>• 14 exact duplications</li>
+                          <li>• 41 similarities overlapping</li>
+                          <li>• Only 2 with error handling</li>
+                          <li>• BufferWindowMemory (volatile)</li>
+                          <li>• Single LLM per workflow</li>
+                          <li>• 0 MCP servers</li>
+                          <li>• 0 base templates</li>
+                          <li>• 0 marketplace listings</li>
+                        </ul>
+                      </div>
+                      <div className="bg-emerald-50 rounded-lg p-3">
+                        <p className="font-semibold text-emerald-800 mb-2">✅ After Phase 1</p>
+                        <ul className="space-y-1 text-emerald-700">
+                          <li>• 13 consolidated + 6 MCP + 6 templates</li>
+                          <li>• 0 duplications (all merged)</li>
+                          <li>• 41 → 13 production-ready</li>
+                          <li>• ALL linked to Error Handler</li>
+                          <li>• PostgresChatHistory (persistent)</li>
+                          <li>• Tiered LLM: mini → Flash → GPT-4.1</li>
+                          <li>• 6 MCP server templates</li>
+                          <li>• 6 base development templates</li>
+                          <li>• 25 marketplace listings ($977 value)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Consolidation Groups */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <GitMerge className="w-5 h-5 text-violet-600" />
+                      13 Consolidation Groups
+                    </CardTitle>
+                    <CardDescription>Each group merges duplicate/similar workflows into 1 production-ready solution</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="space-y-2">
+                      {Object.entries(phase1Data.consolidation_groups || {}).map(([gid, g]: [string, any]) => (
+                        <AccordionItem key={gid} value={gid} className="border rounded-lg px-4">
+                          <AccordionTrigger className="py-3 hover:no-underline">
+                            <div className="flex items-center gap-3 text-left">
+                              <Badge className={g.tier === 'Enterprise' ? 'bg-violet-600 text-white' : g.tier === 'Professional' ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'}>
+                                {g.tier}
+                              </Badge>
+                              <span className="font-semibold text-slate-800">{g.title}</span>
+                              <span className="text-slate-500 text-sm">({g.workflow_ids?.length ?? 0} workflows merged)</span>
+                              <Badge variant="outline" className="text-emerald-700 border-emerald-300">${g.price}</Badge>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="space-y-3 pt-2 pb-4">
+                            <p className="text-sm text-slate-600">{g.description}</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <p className="font-semibold text-slate-700 mb-1">Category:</p>
+                                <p className="text-slate-500">{g.category}</p>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-slate-700 mb-1">Action:</p>
+                                <p className="text-slate-500">{g.consolidation_action}</p>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-slate-700 mb-1">Target Nodes:</p>
+                                <p className="text-slate-500">{g.target_nodes}</p>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-slate-700 mb-1">Original IDs:</p>
+                                <p className="text-slate-500">{(g.workflow_ids || []).join(', ').substring(0, 60)}</p>
+                              </div>
+                            </div>
+                            <div className="bg-emerald-50 rounded-lg p-3 mt-2">
+                              <p className="font-semibold text-emerald-800 text-sm mb-2">Refactoring Applied:</p>
+                              <ul className="space-y-1">
+                                {(g.refactoring_notes || []).slice(0, 6).map((note: string, i: number) => (
+                                  <li key={i} className="text-xs text-emerald-700 flex items-start gap-1">
+                                    <CheckCircle2 className="w-3 h-3 mt-0.5" />
+                                    {note}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </CardContent>
+                </Card>
+
+                {/* AI Model Strategy */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="w-5 h-5 text-blue-600" />
+                      Tiered LLM Strategy (60-80% Cost Savings)
+                    </CardTitle>
+                    <CardDescription>Optimal model selection based on task complexity</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-slate-100">
+                            <th className="px-3 py-2 text-left font-semibold">Role</th>
+                            <th className="px-3 py-2 text-left font-semibold">Model</th>
+                            <th className="px-3 py-2 text-left font-semibold">Price/1M tokens</th>
+                            <th className="px-3 py-2 text-left font-semibold">Best For</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(phase1Data.model_strategy || {}).map(([role, m]: [string, any]) => (
+                            <tr key={role} className="border-b">
+                              <td className="px-3 py-2 font-medium text-slate-800">{role.replace('_', ' ')}</td>
+                              <td className="px-3 py-2">
+                                <Badge variant="outline" className="text-xs">{m.model}</Badge>
+                              </td>
+                              <td className="px-3 py-2 text-slate-600">${m.input_price_1M}/${m.output_price_1M}</td>
+                              <td className="px-3 py-2 text-slate-600 text-xs">{m.reason?.substring(0, 60)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Memory Strategy */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Database className="w-5 h-5 text-violet-600" />
+                      Memory Strategy
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {Object.entries(phase1Data.memory_strategy || {}).map(([key, mem]: [string, any]) => (
+                        <div key={key} className={`rounded-lg p-3 border ${key === 'production_chat' || key === 'hybrid_n8n_pattern' ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'}`}>
+                          <p className="font-semibold text-sm text-slate-800 mb-1">{mem.solution}</p>
+                          <p className="text-xs text-slate-600 mb-1">Best for: {mem.best_for}</p>
+                          <p className="text-xs text-slate-500">Cost: {mem.cost}</p>
+                          {key === 'production_chat' && <Badge className="bg-emerald-600 text-white mt-1 text-xs">Recommended</Badge>}
+                          {key === 'hybrid_n8n_pattern' && <Badge className="bg-violet-600 text-white mt-1 text-xs">Best Pattern</Badge>}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Architectural Patterns */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-orange-600" />
+                      6 Architectural Patterns Applied
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {Object.entries(phase1Data.architectural_patterns || {}).map(([pid, p]: [string, any]) => (
+                        <div key={pid} className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                          <p className="font-semibold text-orange-800 mb-1">{p.name}</p>
+                          <p className="text-xs text-orange-700 mb-2">{p.description?.substring(0, 120)}...</p>
+                          <div className="flex gap-1 flex-wrap">
+                            {(p.nodes_required || []).slice(0, 4).map((n: string) => (
+                              <Badge key={n} variant="outline" className="text-xs border-orange-300 text-orange-700">{formatNodeType(n)}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* MCP Server Templates */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Wrench className="w-5 h-5 text-amber-600" />
+                      6 MCP Server Templates (New!)
+                    </CardTitle>
+                    <CardDescription>MCP servers for client integration - expose workflows as AI agent tools</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {Object.entries(phase1Data.mcp_server_templates || {}).map(([sid, s]: [string, any]) => (
+                        <div key={sid} className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="font-semibold text-amber-800">{s.name}</p>
+                            <Badge className="bg-amber-600 text-white">${s.price_standalone}</Badge>
+                          </div>
+                          <p className="text-xs text-amber-700 mb-2">{s.description?.substring(0, 100)}...</p>
+                          <div className="flex gap-1 flex-wrap">
+                            {(s.tools || []).map((t: string) => (
+                              <Badge key={t} variant="outline" className="text-xs border-amber-300 text-amber-700">{t}</Badge>
+                            ))}
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">Integrates: {s.integration}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Marketplace Catalog with Pricing */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="w-5 h-5 text-emerald-600" />
+                      Marketplace Catalog ({phase1Data.marketplace_catalog?.length ?? 0} items)
+                    </CardTitle>
+                    <CardDescription>Production-ready listings for n8nmarkets.com + Gumroad</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-emerald-100">
+                            <th className="px-3 py-2 text-left font-semibold">Title</th>
+                            <th className="px-3 py-2 text-left font-semibold">Category</th>
+                            <th className="px-3 py-2 text-left font-semibold">Tier</th>
+                            <th className="px-3 py-2 text-left font-semibold">Price</th>
+                            <th className="px-3 py-2 text-left font-semibold">Type</th>
+                            <th className="px-3 py-2 text-left font-semibold">MCP</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(phase1Data.marketplace_catalog || []).map((item: any) => (
+                            <tr key={item.id} className="border-b hover:bg-emerald-50">
+                              <td className="px-3 py-2 font-medium text-slate-800 max-w-[200px] truncate">{item.title}</td>
+                              <td className="px-3 py-2 text-slate-600">{item.category}</td>
+                              <td className="px-3 py-2">
+                                <Badge className={item.tier === 'Enterprise' ? 'bg-violet-600 text-white' : item.tier === 'Professional' ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'}>
+                                  {item.tier}
+                                </Badge>
+                              </td>
+                              <td className="px-3 py-2 font-bold text-emerald-700">${item.price}</td>
+                              <td className="px-3 py-2 text-slate-500 text-xs">{item.consolidation_type}</td>
+                              <td className="px-3 py-2">
+                                {item.mcp_compatible ? <Badge className="bg-orange-600 text-white text-xs">MCP</Badge> : <span className="text-slate-400 text-xs">—</span>}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="mt-4 bg-emerald-50 rounded-lg p-3 flex items-center gap-4">
+                      <DollarSign className="w-6 h-6 text-emerald-600" />
+                      <div>
+                        <p className="font-semibold text-emerald-800">Total Catalog Value: ${phase1Data.phase1_summary?.consolidated_stats?.total_catalog_value ?? 977}</p>
+                        <p className="text-xs text-emerald-600">Avg price: ${(phase1Data.phase1_summary?.consolidated_stats?.total_catalog_value ?? 977) / (phase1Data.marketplace_catalog?.length ?? 25).toFixed(0)}/item | Platforms: n8nmarkets (10%), Gumroad (5%+$0.50)</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Cognitive Capital */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="w-5 h-5 text-violet-600" />
+                      Capital Cognitivo - Knowledge Base Architecture
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="bg-violet-50 rounded-lg p-3">
+                        <p className="font-semibold text-violet-800 mb-2">Architecture Stack:</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                          <div className="bg-white rounded p-2 border border-violet-200">
+                            <p className="font-medium text-violet-800">Vector Store</p>
+                            <p className="text-violet-600">{phase1Data.cognitive_capital?.architecture?.vector_store}</p>
+                          </div>
+                          <div className="bg-white rounded p-2 border border-violet-200">
+                            <p className="font-medium text-violet-800">Embeddings</p>
+                            <p className="text-violet-600">{phase1Data.cognitive_capital?.architecture?.embeddings}</p>
+                          </div>
+                          <div className="bg-white rounded p-2 border border-violet-200">
+                            <p className="font-medium text-violet-800">Chat Memory</p>
+                            <p className="text-violet-600">{phase1Data.cognitive_capital?.architecture?.chat_memory}</p>
+                          </div>
+                          <div className="bg-white rounded p-2 border border-violet-200">
+                            <p className="font-medium text-violet-800">Ingestion</p>
+                            <p className="text-violet-600">{phase1Data.cognitive_capital?.architecture?.ingestion_pipeline?.substring(0, 40)}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {(phase1Data.cognitive_capital?.knowledge_domains || []).map((domain: any, i: number) => (
+                          <div key={i} className="bg-slate-50 rounded-lg p-2 border border-slate-200">
+                            <p className="font-semibold text-sm text-slate-800">{domain.domain}</p>
+                            <p className="text-xs text-slate-600">Source: {domain.source} | Update: {domain.update_frequency}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

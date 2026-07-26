@@ -1,0 +1,168 @@
+{
+  "name": "Flowise RAG Agent Suite",
+  "id_prefix": "G12_Flowise_RAG_Suite",
+  "category": "RAG & Vector Store",
+  "description": "Consolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.",
+  "consolidation_action": "merge_all_into_one",
+  "original_workflow_ids": [
+    "b4dbc8e367f7",
+    "3030196a92bc"
+  ],
+  "tier": "Starter",
+  "price": 19,
+  "nodes": [
+    {
+      "id": "G12_Flowise_RAG_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      }
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_llm",
+      "name": "LLM (gpt-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        750,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_memory",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        750,
+        400
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_output_parser",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        750,
+        600
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_error_set",
+      "name": "Error Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {
+        "value": "I encountered an error processing your request. Let me try a different approach."
+      }
+    },
+    {
+      "id": "G12_Flowise_RAG_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## Flowise RAG Agent Suite\n\nConsolidación: 2 Flowise workflows (81.43% similar) - Peluquería + RAG Agents. Resultado: template RAG production-ready.\n\n**Consolidated from**: 2 original workflows\n**LLM**: gpt-4o-mini\n**Memory**: PostgresChatHistory (persistent)\n**Error Workflow**: G13_Error_Handler\n\n### Refactoring Applied:\n- Consolidar 2 Flowise variants → 1 Flowise RAG Template\n- Convertir a n8n native (LangChain nodes) para mayor flexibilidad\n- vectorStoreQdrant para RAG storage\n- Gemini 2.5 Flash embeddings + chat model\n- Template parametrizable por industry (peluquería, legal, etc)",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "LLM (gpt-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM (gpt-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Persistent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Memory": {
+      "main": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "main": [
+        [
+          {
+            "node": "Error Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "Consolidar 2 Flowise variants → 1 Flowise RAG Template",
+    "Convertir a n8n native (LangChain nodes) para mayor flexibilidad",
+    "vectorStoreQdrant para RAG storage",
+    "Gemini 2.5 Flash embeddings + chat model",
+    "Template parametrizable por industry (peluquería, legal, etc)"
+  ]
+}

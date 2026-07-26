@@ -1,0 +1,665 @@
+{
+  "metadata": {
+    "task_id": "2-a",
+    "title": "AI Models & Memory Research Report",
+    "generated_at": "2026-07-26T23:22:10Z",
+    "sources_count": 30,
+    "research_method": "web_search + web_reader + data_synthesis"
+  },
+  "models_comparison": [
+    {
+      "model": "GPT-4o-mini",
+      "provider": "OpenAI",
+      "input_price_1M": 0.15,
+      "output_price_1M": 0.6,
+      "quality_score_1_10": 7,
+      "speed_score_1_10": 9,
+      "best_for": [
+        "classification",
+        "simple agent tasks",
+        "bulk processing",
+        "chat fallback"
+      ],
+      "n8n_node_type": "OpenAI Model",
+      "notes": "Best value small model. Replaced GPT-3.5-turbo. Excellent for high-volume low-complexity tasks. Best price/quality ratio for simple agent steps."
+    },
+    {
+      "model": "GPT-4o",
+      "provider": "OpenAI",
+      "input_price_1M": 2.5,
+      "output_price_1M": 10.0,
+      "quality_score_1_10": 9,
+      "speed_score_1_10": 7,
+      "best_for": [
+        "complex agent reasoning",
+        "structured data extraction",
+        "multi-tool agent orchestration",
+        "content creation"
+      ],
+      "n8n_node_type": "OpenAI Model",
+      "notes": "Most consistent and reliable for n8n workflows per community consensus. Handles structured data and tool calling well. Good as primary agent LLM."
+    },
+    {
+      "model": "GPT-4.1",
+      "provider": "OpenAI",
+      "input_price_1M": 2.0,
+      "output_price_1M": 8.0,
+      "quality_score_1_10": 9,
+      "speed_score_1_10": 8,
+      "best_for": [
+        "agent orchestration",
+        "coding tasks",
+        "long-context processing"
+      ],
+      "n8n_node_type": "OpenAI Model",
+      "notes": "Newer model (2025-2026), improved over GPT-4o at lower cost. 1M token context window. Excellent for agent workflows."
+    },
+    {
+      "model": "Claude 3.5 Haiku",
+      "provider": "Anthropic",
+      "input_price_1M": 1.0,
+      "output_price_1M": 5.0,
+      "quality_score_1_10": 7,
+      "speed_score_1_10": 9,
+      "best_for": [
+        "fast classification",
+        "simple chat",
+        "classification pipelines",
+        "budget agent tasks"
+      ],
+      "n8n_node_type": "Anthropic Model (Chat)",
+      "notes": "Comparable to GPT-4o-mini in quality. Strong JSON/tool use. Popular for n8n classification tasks. Claude Haiku 4.5 now at $1/$5."
+    },
+    {
+      "model": "Claude 3.5/4 Sonnet",
+      "provider": "Anthropic",
+      "input_price_1M": 3.0,
+      "output_price_1M": 15.0,
+      "quality_score_1_10": 10,
+      "speed_score_1_10": 7,
+      "best_for": [
+        "complex reasoning agents",
+        "coding assistants",
+        "multi-step workflows",
+        "RAG with reasoning"
+      ],
+      "n8n_node_type": "Anthropic Model (Chat)",
+      "notes": "Top-tier coding and reasoning quality. Best for reasoning-heavy agent steps. Claude Code is best coding agent. Recommended as primary n8n agent LLM for quality."
+    },
+    {
+      "model": "Gemini 2.0 Flash",
+      "provider": "Google",
+      "input_price_1M": 0.1,
+      "output_price_1M": 0.4,
+      "quality_score_1_10": 7,
+      "speed_score_1_10": 10,
+      "best_for": [
+        "high-volume processing",
+        "fast classification",
+        "free-tier prototyping",
+        "budget RAG"
+      ],
+      "n8n_node_type": "Google Gemini Model",
+      "notes": "Cheapest managed API. Free on Google AI Studio. Best for prototyping and bulk tasks. Flash-Lite at $0.02/$0.40 even cheaper."
+    },
+    {
+      "model": "Gemini 2.5 Flash",
+      "provider": "Google",
+      "input_price_1M": 0.15,
+      "output_price_1M": 0.6,
+      "quality_score_1_10": 8,
+      "speed_score_1_10": 9,
+      "best_for": [
+        "balanced agent tasks",
+        "RAG retrieval",
+        "multi-modal processing",
+        "cost-effective production"
+      ],
+      "n8n_node_type": "Google Gemini Model",
+      "notes": "Improved reasoning over 2.0 Flash. Best price/quality ratio for production agents. Free on AI Studio for prototyping."
+    },
+    {
+      "model": "DeepSeek V3",
+      "provider": "DeepSeek",
+      "input_price_1M": 0.028,
+      "output_price_1M": 0.14,
+      "quality_score_1_10": 8,
+      "speed_score_1_10": 6,
+      "best_for": [
+        "cost-sensitive production",
+        "bulk text processing",
+        "reasoning tasks",
+        "open-source alternative"
+      ],
+      "n8n_node_type": "OpenAI-compatible API (via OpenRouter or direct)",
+      "notes": "Cheapest frontier-quality model. ~80% cheaper than GPT-4o-mini. Strong reasoning. V3.2-exp available. Excellent for cost-sensitive agent deployments."
+    },
+    {
+      "model": "Llama 3.3 70B (via Groq)",
+      "provider": "Meta/Groq",
+      "input_price_1M": 0.075,
+      "output_price_1M": 0.3,
+      "quality_score_1_10": 7,
+      "speed_score_1_10": 10,
+      "best_for": [
+        "ultra-fast inference",
+        "real-time chat",
+        "classification at scale",
+        "free-tier via Groq"
+      ],
+      "n8n_node_type": "OpenAI-compatible API (Groq endpoint)",
+      "notes": "Groq LPU delivers fastest inference. Llama 3.3 70B is best free model for n8n per community. Speed unbeatable. Limited context window."
+    },
+    {
+      "model": "Mistral Large",
+      "provider": "Mistral AI",
+      "input_price_1M": 0.5,
+      "output_price_1M": 1.5,
+      "quality_score_1_10": 8,
+      "speed_score_1_10": 7,
+      "best_for": [
+        "European compliance",
+        "structured output",
+        "moderate-cost agents",
+        "function calling"
+      ],
+      "n8n_node_type": "Mistral Model or OpenAI-compatible",
+      "notes": "Good function calling support. Mistral Small at $0.10/$0.30 for budget tasks. Nemo at $0.03/$0.06 for cheapest option."
+    },
+    {
+      "model": "Llama 3 8B (via Groq)",
+      "provider": "Meta/Groq",
+      "input_price_1M": 0.03,
+      "output_price_1M": 0.08,
+      "quality_score_1_10": 5,
+      "speed_score_1_10": 10,
+      "best_for": [
+        "ultra-cheap classification",
+        "simple routing",
+        "fast prototyping"
+      ],
+      "n8n_node_type": "OpenAI-compatible API (Groq endpoint)",
+      "notes": "Lowest verified output-token price. Best for simple classification/routing. Quality limited for complex tasks."
+    }
+  ],
+  "recommended_n8n_agent_configurations": {
+    "best_quality": {
+      "primary": "Claude 3.5 Sonnet",
+      "fallback": "GPT-4o",
+      "simple_tasks": "Claude 3.5 Haiku"
+    },
+    "best_value": {
+      "primary": "Gemini 2.5 Flash",
+      "fallback": "DeepSeek V3",
+      "simple_tasks": "GPT-4o-mini"
+    },
+    "best_speed": {
+      "primary": "Llama 3.3 70B (Groq)",
+      "fallback": "Gemini 2.0 Flash",
+      "simple_tasks": "Llama 3 8B (Groq)"
+    },
+    "best_for_agents": {
+      "primary": "GPT-4.1 or Claude Sonnet",
+      "tool_calling": "GPT-4o",
+      "routing": "GPT-4o-mini or Haiku"
+    }
+  },
+  "memory_solutions": [
+    {
+      "name": "Window Buffer Memory (n8n built-in)",
+      "type": "short-term",
+      "pros": [
+        "Zero setup",
+        "Built into n8n Agent node",
+        "Fast",
+        "No external dependencies"
+      ],
+      "cons": [
+        "Dies when session ends",
+        "Limited context window",
+        "No persistence",
+        "Memory loss between conversations"
+      ],
+      "n8n_node": "@n8n/n8n-langchain.lLangChainMemoryBufferWindow",
+      "best_for": "Testing, prototyping, short single-session chats"
+    },
+    {
+      "name": "Postgres Chat Memory",
+      "type": "persistent-short-term",
+      "pros": [
+        "Production-ready persistence",
+        "Native n8n node",
+        "Session-based retrieval",
+        "Works with Supabase",
+        "SQL queryable"
+      ],
+      "cons": [
+        "Not optimized for vector similarity search",
+        "Requires Postgres instance",
+        "Session key management issues reported",
+        "Limited semantic search"
+      ],
+      "n8n_node": "@n8n/n8n-langchain.lLangChainMemoryPostgresChat",
+      "best_for": "Production chat bots, persistent session memory, most common n8n production setup"
+    },
+    {
+      "name": "Redis Chat Memory",
+      "type": "persistent-short-term",
+      "pros": [
+        "Very fast retrieval",
+        "In-memory speed",
+        "Session-based",
+        "Production-grade persistence"
+      ],
+      "cons": [
+        "Requires Redis infrastructure",
+        "Performance issues reported with large contexts",
+        "More complex setup than Postgres",
+        "No semantic search"
+      ],
+      "n8n_node": "@n8n/n8n-langchain.lLangChainMemoryRedisChat",
+      "best_for": "High-speed chat, real-time agents, when speed is critical"
+    },
+    {
+      "name": "Zep Memory",
+      "type": "long-term-knowledge-graph",
+      "pros": [
+        "Knowledge graph with temporal relations",
+        "Sub-200ms retrieval",
+        "SOC 2 compliant",
+        "Enterprise-grade",
+        "Auto-summarization",
+        "Structured memory extraction"
+      ],
+      "cons": [
+        "Requires Zep server infrastructure",
+        "More complex setup",
+        "Higher cost for cloud version",
+        "Steeper learning curve"
+      ],
+      "n8n_node": "HTTP Request node (Zep API) or custom LangChain integration",
+      "best_for": "Enterprise agents, long conversations, persistent knowledge across sessions, temporal reasoning"
+    },
+    {
+      "name": "Mem0",
+      "type": "long-term-extract-retrieve",
+      "pros": [
+        "55k GitHub stars (most popular)",
+        "Extract-and-retrieve pattern",
+        "Token-efficient",
+        "Auto-deduplication (ADD/UPDATE/DELETE/NOOP)",
+        "Easy API",
+        "Open-source option"
+      ],
+      "cons": [
+        "No bi-temporal knowledge graph",
+        "Less structured than Zep",
+        "Community edition limited",
+        "Needs separate deployment"
+      ],
+      "n8n_node": "HTTP Request node (Mem0 API) or community node",
+      "best_for": "Personal agents, long-term fact extraction, simple persistent memory, fastest adoption path"
+    },
+    {
+      "name": "Dual-Layer Postgres + PGVector (Hybrid)",
+      "type": "hybrid-long-term",
+      "pros": [
+        "Combines structured SQL + vector search",
+        "Uses existing Postgres",
+        "Single infrastructure",
+        "Production-ready",
+        "Cost-effective"
+      ],
+      "cons": [
+        "PGVector not as fast as dedicated vector DBs",
+        "Complex implementation",
+        "Requires custom n8n workflow design",
+        "Maintenance overhead"
+      ],
+      "n8n_node": "Custom workflow combining PostgresChatMemory + PGVector tool",
+      "best_for": "Production agents needing both chat memory + knowledge retrieval, best n8n community pattern"
+    }
+  ],
+  "mcp_servers": [
+    {
+      "name": "n8n MCP Server (Official)",
+      "description": "Official MCP server for n8n - allows AI assistants to create, update, and manage n8n workflows via natural language",
+      "url": "https://github.com/n8n-io/n8n-mcp-server",
+      "n8n_integration": "Native since v2.14 - can create/update workflows via MCP"
+    },
+    {
+      "name": "PostgreSQL MCP Server",
+      "description": "Direct SQL query access to PostgreSQL databases for AI agents",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+      "n8n_integration": "Docker deployment, stdio transport, can be used as MCP tool in agent node"
+    },
+    {
+      "name": "Puppeteer MCP Server",
+      "description": "Browser automation - navigate, click, screenshot, extract data from web pages",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
+      "n8n_integration": "Docker deployment, enables web scraping/automation as agent tool"
+    },
+    {
+      "name": "Notion MCP Server",
+      "description": "Search, create, update Notion pages and databases via AI agents",
+      "url": "https://github.com/makenotion/notion-mcp-server",
+      "n8n_integration": "Remote server, connect via n8n MCP Client tool"
+    },
+    {
+      "name": "Stripe MCP Server",
+      "description": "Access Stripe API for payment, subscription, and customer management",
+      "url": "https://github.com/stripe/stripe-mcp",
+      "n8n_integration": "Official Stripe server, remote transport, finance automation"
+    },
+    {
+      "name": "Supabase MCP Server",
+      "description": "Manage Supabase projects, databases, and run SQL queries",
+      "url": "https://github.com/supabase-community/supabase-mcp-server",
+      "n8n_integration": "Connects to Supabase projects, enables data operations as agent tool"
+    },
+    {
+      "name": "Pinecone MCP Server",
+      "description": "Manage Pinecone vector indexes for RAG and semantic search",
+      "url": "https://github.com/pinecone-io/pinecone-mcp-server",
+      "n8n_integration": "Vector store management as agent tool for knowledge retrieval"
+    },
+    {
+      "name": "Sentry MCP Server",
+      "description": "Access Sentry issues, errors, and performance data for debugging",
+      "url": "https://github.com/getsentry/sentry-mcp-server",
+      "n8n_integration": "Official Sentry server, monitoring/debugging automation"
+    },
+    {
+      "name": "OpenAPI MCP Server",
+      "description": "Generic MCP server that wraps any OpenAPI spec into MCP tools",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/openapi",
+      "n8n_integration": "Enables connecting ANY API with OpenAPI spec to n8n agents"
+    },
+    {
+      "name": "Vectara MCP Server",
+      "description": "RAG-as-a-service with built-in retrieval and summarization",
+      "url": "https://github.com/vectara/vectara-mcp-server",
+      "n8n_integration": "Knowledge retrieval tool for n8n agent nodes"
+    },
+    {
+      "name": "Filesystem MCP Server",
+      "description": "Read, write, and search files on the local filesystem",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+      "n8n_integration": "Docker deployment, file operations as agent tool"
+    },
+    {
+      "name": "GitHub MCP Server",
+      "description": "Access GitHub repos, issues, PRs, and code search",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/github",
+      "n8n_integration": "Code management and search as agent tool"
+    },
+    {
+      "name": "Google Drive MCP Server",
+      "description": "Search, read, and manage Google Drive files",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/google-drive",
+      "n8n_integration": "Document access and management for agents"
+    },
+    {
+      "name": "Slack MCP Server",
+      "description": "Send messages, read channels, manage Slack workspace",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/slack",
+      "n8n_integration": "Communication automation via agent tools"
+    },
+    {
+      "name": "Memory MCP Server",
+      "description": "Knowledge graph-based persistent memory for AI agents",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory",
+      "n8n_integration": "Lightweight persistent memory alternative for agent tools"
+    }
+  ],
+  "mcp_best_practices": {
+    "creating_custom_servers": [
+      "Use TypeScript SDK (@modelcontextprotocol/sdk) for official compliance",
+      "Define tools with clear input/output schemas (Zod validation)",
+      "Support both stdio (local) and HTTP/SSE (remote) transports",
+      "Dockerize for consistent deployment and security isolation",
+      "Implement proper error handling and rate limiting",
+      "Use environment variables for credentials, never hardcode secrets",
+      "Test with MCP Inspector tool before deploying",
+      "Follow MCP specification for tool naming conventions"
+    ],
+    "n8n_integration": [
+      "Use n8n MCP Client Tool node (native since 2025) to connect to MCP servers",
+      "MCP Community Node available for extended functionality",
+      "Remote MCP servers preferred for production (accessible over network)",
+      "n8n v2.14+ can create/update workflows via MCP",
+      "Chain MCP tools with n8n Agent node for autonomous workflows",
+      "Use Docker for self-hosted MCP servers to avoid permission issues"
+    ],
+    "security": [
+      "Only use Official or Verified MCP servers - avoid untrusted code",
+      "Run MCP servers in Docker containers for security isolation",
+      "MCP stdio transport inherits user permissions - dangerous for untrusted servers",
+      "Audit server code before deployment",
+      "Use remote transport (HTTP/SSE) for production deployments"
+    ]
+  },
+  "knowledge_base": {
+    "best_practices": [
+      "Use layered KB design: ingestion → hybrid retrieval → reranking → evaluation → governed semantic layer",
+      "Implement freshness policies for document updates",
+      "Label data with timestamps and metadata for temporal relevance",
+      "Use chunking strategy: 500-1000 tokens per chunk with overlap of 50-100 tokens",
+      "Separate knowledge base content from chat memory (different storage patterns)",
+      "Implement hybrid retrieval: combine keyword search + vector similarity",
+      "Add reranking step after initial retrieval to improve relevance",
+      "Regularly update indexed data and remove stale documents",
+      "Use GraphRAG when relationships between facts are important",
+      "Design content for machine readability, not just human readability"
+    ],
+    "vector_stores_comparison": [
+      {
+        "name": "PGVector / Supabase",
+        "type": "Extension-based",
+        "pros": [
+          "Simplest setup if you already use Postgres",
+          "No new infrastructure",
+          "SQL queryable",
+          "Supabase managed option",
+          "Good for small-medium scale"
+        ],
+        "cons": [
+          "Not as fast as dedicated vector DBs",
+          "Limited to ~100k vectors efficiently",
+          "Fewer index types",
+          "No GPU acceleration"
+        ],
+        "n8n_integration": "Native n8n PGVector node + Supabase vector store tool",
+        "best_for": "Simple RAG, small knowledge bases, Postgres-native deployments"
+      },
+      {
+        "name": "Qdrant",
+        "type": "Dedicated vector DB",
+        "pros": [
+          "Fastest open-source (Rust-based)",
+          "10-25% faster than Weaviate/Milvus",
+          "Excellent filtering",
+          "Low memory usage",
+          "Docker deployment"
+        ],
+        "cons": [
+          "Requires separate deployment",
+          "Less mature ecosystem than Milvus",
+          "Smaller community"
+        ],
+        "n8n_integration": "Native n8n Qdrant vector store node + Qdrant as tool subnode",
+        "best_for": "Real-time workloads, high-throughput production, speed-critical applications"
+      },
+      {
+        "name": "Milvus / Zilliz Cloud",
+        "type": "Dedicated vector DB",
+        "pros": [
+          "44k+ GitHub stars (most popular)",
+          "GPU acceleration support",
+          "Best for billion-scale vectors",
+          "Cloud-managed option (Zilliz)",
+          "Enterprise features"
+        ],
+        "cons": [
+          "Complex setup for self-hosted",
+          "Heavier infrastructure",
+          "Higher memory requirements"
+        ],
+        "n8n_integration": "Native n8n Milvus vector store node",
+        "best_for": "Large-scale deployments, billion-scale vectors, GPU-accelerated search"
+      },
+      {
+        "name": "Pinecone",
+        "type": "Managed vector DB",
+        "pros": [
+          "Fully managed (zero ops)",
+          "Easy setup",
+          "Good performance",
+          "Built-in metadata filtering",
+          "Enterprise-ready"
+        ],
+        "cons": [
+          "Closed source",
+          "Higher cost at scale",
+          "Limited control",
+          "Vendor lock-in"
+        ],
+        "n8n_integration": "Native n8n Pinecone vector store node + MCP server",
+        "best_for": "Teams wanting zero-ops, quick RAG setup, managed infrastructure"
+      },
+      {
+        "name": "Weaviate",
+        "type": "Dedicated vector DB",
+        "pros": [
+          "GraphQL API",
+          "Modular architecture",
+          "Built-in vectorization modules",
+          "Hybrid search (BM25 + vector)",
+          "Multi-modal support"
+        ],
+        "cons": [
+          "Higher memory usage",
+          "More complex configuration",
+          "Slower than Qdrant"
+        ],
+        "n8n_integration": "Native n8n Weaviate vector store node",
+        "best_for": "Hybrid search needs, GraphQL-based applications, built-in vectorization"
+      },
+      {
+        "name": "ChromaDB",
+        "type": "Embedded vector DB",
+        "pros": [
+          "Lightweight embedded option",
+          "Python-native",
+          "Easy prototyping",
+          "Zero infrastructure for dev"
+        ],
+        "cons": [
+          "Not production-grade",
+          "Limited scalability",
+          "No clustering",
+          "Python-only ecosystem"
+        ],
+        "n8n_integration": "LangChain Chroma integration via custom code",
+        "best_for": "Prototyping, development, small personal projects"
+      }
+    ],
+    "ingestion_approach": {
+      "steps": [
+        "1. Document collection: Gather PDFs, web pages, APIs, databases, internal docs",
+        "2. Preprocessing: Clean, normalize, remove boilerplate, extract metadata",
+        "3. Chunking: Split into 500-1000 token chunks with 50-100 token overlap",
+        "4. Embedding: Use embedding model (OpenAI text-embedding-3-small, Cohere, or local)",
+        "5. Vector storage: Store embeddings + metadata in chosen vector store",
+        "6. Indexing: Create appropriate indexes (HNSW, IVF_FLAT, etc.)",
+        "7. Retrieval pipeline: Query → vector search → reranking → context assembly",
+        "8. Evaluation: Measure retrieval quality (precision, recall, MRR)",
+        "9. Maintenance: Update stale docs, re-index periodically, monitor performance"
+      ],
+      "recommended_embedding_models": [
+        {
+          "name": "OpenAI text-embedding-3-small",
+          "cost": "$0.02/1M tokens",
+          "dimensions": 1536,
+          "best_for": "General purpose, good quality/cost ratio"
+        },
+        {
+          "name": "OpenAI text-embedding-3-large",
+          "cost": "$0.13/1M tokens",
+          "dimensions": 3072,
+          "best_for": "Maximum quality, when accuracy is critical"
+        },
+        {
+          "name": "Cohere embed-v3",
+          "cost": "$0.10/1M tokens",
+          "dimensions": 1024,
+          "best_for": "Multilingual, search-optimized"
+        },
+        {
+          "name": "Nomic embed-text (local)",
+          "cost": "Free (local)",
+          "dimensions": 768,
+          "best_for": "Budget deployments, self-hosted"
+        },
+        {
+          "name": "Gemini text-embedding-004",
+          "cost": "Free (AI Studio)",
+          "dimensions": 768,
+          "best_for": "Free prototyping, Google ecosystem"
+        }
+      ],
+      "n8n_workflow_pattern": "Webhook/Trigger → Document Fetch → Preprocess (Code node) → Embed (Embedding node) → Store (Vector Store node) → Agent node with Vector Store as tool"
+    }
+  },
+  "key_insights": {
+    "models": [
+      "LLM API prices dropped ~80% from 2025 to 2026 - best time to build agent workflows",
+      "No single 'best' model - use tiered approach: cheap model for routing, quality model for complex tasks",
+      "n8n community consensus: GPT-4o most reliable for general agent tasks, Claude Sonnet best for reasoning",
+      "Gemini 2.5 Flash offers best price/quality ratio for production agents",
+      "DeepSeek V3 is cheapest frontier-quality option but has slower latency",
+      "Groq provides fastest inference but limited to open-source models",
+      "For n8n LangChain agent: use GPT-4.1 or Claude Sonnet as primary, GPT-4o-mini/Haiku for simple steps"
+    ],
+    "memory": [
+      "Built-in Window Buffer Memory is only for testing - dies on session end",
+      "PostgresChatMemory is most common production choice in n8n community",
+      "Dual-layer Postgres + PGVector pattern is emerging as best n8n hybrid approach",
+      "Mem0 (55k GitHub stars) is most popular external memory - easy API",
+      "Zep provides enterprise-grade knowledge graphs with temporal relations",
+      "For client work: start with PostgresChatMemory, upgrade to Mem0/Zep for long-term needs"
+    ],
+    "mcp": [
+      "n8n v2.14+ supports native MCP integration - can create/update workflows",
+      "20+ production-ready MCP servers available for developers",
+      "OpenAPI MCP server enables connecting ANY API to n8n agents",
+      "Security warning: only use Official/Verified MCP servers, Dockerize untrusted ones",
+      "MCP ecosystem exploding but many servers are unmaintained hobby projects",
+      "Custom MCP servers: use TypeScript SDK, Dockerize, support remote transport"
+    ],
+    "knowledge_base": [
+      "Layered KB design (ingestion → retrieval → reranking → evaluation) is 2025-2026 best practice",
+      "PGVector/Supabase simplest for small-medium RAG in n8n",
+      "Qdrant best for production speed requirements",
+      "Milvus best for large-scale (billion+ vector) deployments",
+      "Hybrid retrieval (keyword + vector) significantly improves relevance",
+      "n8n has native vector store tool subnodes for Pinecone, Qdrant, Milvus, Supabase, Weaviate, PGVector"
+    ]
+  },
+  "price_quality_rankings": {
+    "best_price_quality_ratio": [
+      "1. DeepSeek V3 ($0.028/$0.14) - frontier quality at commodity pricing",
+      "2. Gemini 2.5 Flash ($0.15/$0.60) - best managed API price/quality",
+      "3. GPT-4o-mini ($0.15/$0.60) - reliable small model, great ecosystem",
+      "4. Llama 3.3 70B/Groq ($0.075/$0.30) - fastest inference, open-source",
+      "5. Claude 3.5 Haiku ($1/$5) - Anthropic quality at moderate cost"
+    ],
+    "best_for_n8n_agents": [
+      "1. GPT-4.1 or Claude Sonnet - primary agent LLM (best reasoning)",
+      "2. GPT-4o - reliable general-purpose, best tool calling",
+      "3. Gemini 2.5 Flash - budget production agent",
+      "4. DeepSeek V3 - cheapest frontier quality",
+      "5. GPT-4o-mini/Haiku - routing/classification steps"
+    ]
+  }
+}

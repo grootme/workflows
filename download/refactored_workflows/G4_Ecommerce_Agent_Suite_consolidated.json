@@ -1,0 +1,267 @@
+{
+  "name": "E-Commerce AI Agent Suite",
+  "id_prefix": "G4_Ecommerce_Agent_Suite",
+  "category": "E-Commerce & Ventas",
+  "description": "Consolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.",
+  "consolidation_action": "create_modular_suite",
+  "original_workflow_ids": [
+    "06a21f4cfdb6",
+    "8ec0b17a7a3d",
+    "3df672ef2aa0",
+    "5dcb639d5a8f",
+    "274162eed799",
+    "75dc9920251e",
+    "1b63c935bcd3"
+  ],
+  "tier": "Enterprise",
+  "price": 75,
+  "nodes": [
+    {
+      "id": "G4_Ecommerce_Agent_Suite_trigger_chat",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "initialMessages": "Hello! I'm your E-Commerce AI Agent Suite. What would you like to do today?"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_classify_llm",
+      "name": "Classification LLM (GPT-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        500,
+        200
+      ],
+      "parameters": {
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_classify_parser",
+      "name": "Route Classification Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        500,
+        400
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_route_switch",
+      "name": "Route Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        750,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_sub_wf_1",
+      "name": "Execute Sub-Workflow 1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "workflowId": "SUB_G4_Ecommerce_Agent_Suite_1"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_sub_wf_2",
+      "name": "Execute Sub-Workflow 2",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        500
+      ],
+      "parameters": {
+        "workflowId": "SUB_G4_Ecommerce_Agent_Suite_2"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_sub_wf_3",
+      "name": "Execute Sub-Workflow 3",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        1000,
+        700
+      ],
+      "parameters": {
+        "workflowId": "SUB_G4_Ecommerce_Agent_Suite_3"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_merge",
+      "name": "Results Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1250,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_response_llm",
+      "name": "Response LLM (GPT-4.1)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1500,
+        300
+      ],
+      "parameters": {
+        "model": "gpt-4.1"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_memory",
+      "name": "Orchestrator Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "position": [
+        1500,
+        500
+      ],
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      }
+    },
+    {
+      "id": "G4_Ecommerce_Agent_Suite_doc_note",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        50,
+        100
+      ],
+      "parameters": {
+        "content": "## E-Commerce AI Agent Suite\n\nConsolidación urgente: Agente_Ecommerce v1/v2/v3 (3 versiones 87-92% similares) + Agente eCommerce + Shopify + Nano Banana (2 variantes). Resultado: suite modular de e-commerce con sub-workflows.\n\n**Architecture**: Orchestrator + Sub-Workflows\n**Classification LLM**: GPT-4o-mini (cheap routing)\n**Response LLM**: GPT-4.1 (quality responses)\n**Memory**: PostgresChatHistory\n**Error Workflow**: G13_Error_Handler\n\n### Pattern: Multi-Agent Orchestrator with Tiered LLM",
+        "width": 200,
+        "height": 150
+      }
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Classification LLM (GPT-4o-mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification LLM (GPT-4o-mini)": {
+      "main": [
+        [
+          {
+            "node": "Route Classification Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Classification Parser": {
+      "main": [
+        [
+          {
+            "node": "Route Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Switch": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 1": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 2": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub-Workflow 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub-Workflow 3": {
+      "main": [
+        [
+          {
+            "node": "Results Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Results Merge": {
+      "main": [
+        [
+          {
+            "node": "Response LLM (GPT-4.1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response LLM (GPT-4.1)": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "errorWorkflow": "G13_Error_Handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v1"
+  },
+  "refactoring_applied": [
+    "v1/v2/v3 → consolidar en 1 E-Commerce Agent principal (mejor de v3 como base)",
+    "Shopify → convertir a sub-workflow Shopify Integration",
+    "Nano Banana → convertir a sub-workflow E-Commerce Nano Platform",
+    "Orchestrator: E-Commerce Suite Master con switch para routing",
+    "GPT-4.1 como LLM principal (razonamiento complejo para e-commerce)",
+    "GPT-4o-mini como tool model (clasificación de productos, routing)",
+    "Memoria: PostgresChatHistory + PGVector para productos catalog RAG",
+    "shopifyTool + wooCommerceTool + googleSheetsTool como tools",
+    "Error Trigger global + Circuit Breaker para API calls",
+    "Idempotency keys en todas las operaciones de checkout"
+  ]
+}

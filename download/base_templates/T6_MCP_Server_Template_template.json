@@ -1,0 +1,39 @@
+{
+  "name": "MCP Server Template",
+  "description": "Template base para crear MCP servers para clientes. Incluye mcpTrigger, structured input schema, tool logic, y structured output.",
+  "category": "MCP Tools",
+  "nodes": [
+    {
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "name": "MCP Trigger",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.set",
+      "name": "Parse Input",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.switch",
+      "name": "Tool Router",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "API Call",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.code",
+      "name": "Transform Response",
+      "config": {}
+    },
+    {
+      "type": "n8n-nodes-base.respondToWebhook",
+      "name": "MCP Response",
+      "config": {}
+    }
+  ],
+  "tier": "Professional",
+  "price": 29
+}
