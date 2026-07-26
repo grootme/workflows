@@ -46,6 +46,7 @@ import {
   Calendar, Mic, Database, FileText, Wrench, Layers,
   Filter, ChevronDown, ChevronUp, Brain, Workflow, Zap,
   ArrowRight, ExternalLink, TrendingUp, Package, Shield,
+  Store, DollarSign, Clock, Star, Users, Sparkles,
 } from 'lucide-react';
 
 interface Workflow {
@@ -185,21 +186,64 @@ function formatNodeType(type: string): string {
   return type;
 }
 
+interface MarketplacePackage {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  short_description: string;
+  categories: string[];
+  source_workflows: string[];
+  consolidated_from_duplicates: string[];
+  use_cases: string[];
+  integrations: string[];
+  nodes_count: number;
+  complexity: string;
+  price_tier: string;
+  price_range: string;
+  roi_estimate: string;
+  setup_time: string;
+  demo_available: boolean;
+  best_practices_applied: string[];
+}
+
+interface MarketplaceData {
+  metadata: { catalog_name: string; version: string; total_packages: number; date: string; }; 
+  packages: MarketplacePackage[];
+  price_tiers: Record<string, { range: string; description: string; color: string }>;
+  consolidation_summary: { total_duplicates_eliminated: number; total_similarities_consolidated: number; original_workflows: number; consolidated_packages: number; reduction_ratio: string; key_consolidations: string[]; }; 
+  competitive_analysis: any;
+  n8n_io_categories: Record<string, { count: number; top_use_cases: string[] }>;
+}
+
+const TIER_COLORS: Record<string, { bg: string; border: string; text: string; badge: string }> = {
+  starter: { bg: 'bg-emerald-50', border: 'border-emerald-300', text: 'text-emerald-800', badge: 'bg-emerald-600 text-white' },
+  gold: { bg: 'bg-amber-50', border: 'border-amber-300', text: 'text-amber-800', badge: 'bg-amber-600 text-white' },
+  premium: { bg: 'bg-violet-50', border: 'border-violet-300', text: 'text-violet-800', badge: 'bg-violet-600 text-white' },
+};
+
 export default function CatalogPage() {
   const [data, setData] = useState<CatalogData | null>(null);
+  const [marketplace, setMarketplace] = useState<MarketplaceData | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSource, setSelectedSource] = useState<string>('all');
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<MarketplacePackage | null>(null);
   const [activeTab, setActiveTab] = useState('catalog');
+  const [marketplaceTier, setMarketplaceTier] = useState<string>('all');
   const [expandedSuggestions, setExpandedSuggestions] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    fetch('/api/catalog')
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false); })
-      .catch(() => setLoading(false));
+    Promise.all([
+      fetch('/api/catalog').then(r => r.json()),
+      fetch('/api/marketplace').then(r => r.json()),
+    ]).then(([catalogData, marketData]) => {
+      setData(catalogData); 
+      setMarketplace(marketData); 
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
   const filteredWorkflows = useMemo(() => {
@@ -310,7 +354,7 @@ export default function CatalogPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white shadow-sm border border-slate-200 h-auto p-1 grid grid-cols-2 sm:grid-cols-5 gap-1">
+          <TabsList className="bg-white shadow-sm border border-slate-200 h-auto p-1 grid grid-cols-3 sm:grid-cols-6 gap-1">
             <TabsTrigger value="overview" className="flex items-center gap-1.5 data-[state=active]:bg-violet-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
               <TrendingUp className="w-4 h-4" />
               <span className="hidden sm:inline">Resumen</span>
@@ -330,6 +374,10 @@ export default function CatalogPage() {
             <TabsTrigger value="practices" className="flex items-center gap-1.5 data-[state=active]:bg-violet-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
               <Lightbulb className="w-4 h-4" />
               <span className="hidden sm:inline">Prácticas</span>
+            </TabsTrigger>
+            <TabsTrigger value="marketplace" className="flex items-center gap-1.5 data-[state=active]:bg-violet-600 data-[state=active]:text-white text-xs sm:text-sm px-3 py-2">
+              <Store className="w-4 h-4" />
+              <span className="hidden sm:inline">Marketplace</span>
             </TabsTrigger>
           </TabsList>
 
@@ -806,6 +854,224 @@ export default function CatalogPage() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Marketplace Tab */}
+          <TabsContent value="marketplace" className="space-y-6">
+            {marketplace && (
+              <>
+                {/* Header Banner */}
+                <Alert className="border-violet-300 bg-gradient-to-r from-violet-50 to-indigo-50">
+                  <Store className="h-4 w-4 text-violet-600" />
+                  <AlertTitle className="text-violet-900 font-semibold">
+                    {marketplace.metadata.catalog_name} — {marketplace.metadata.total_packages} Packs Disponibles
+                  </AlertTitle>
+                  <AlertDescription className="text-violet-700">
+                    De {marketplace.consolidation_summary.original_workflows} workflows originales → {marketplace.consolidation_summary.consolidated_packages} packs consolidados ({marketplace.consolidation_summary.reduction_ratio} reducción).
+                    Inspirado en n8nmarkets.com (850+ templates) y n8n.io/workflows (10,930+ community workflows).
+                  </AlertDescription>
+                </Alert>
+
+                {/* Consolidation Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+                    <CardContent className="pt-5 pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-red-600">Duplicados Eliminados</p>
+                          <p className="text-2xl font-bold text-red-800">{marketplace.consolidation_summary.total_duplicates_eliminated}</p>
+                        </div>
+                        <Copy className="w-6 h-6 text-red-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+                    <CardContent className="pt-5 pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-amber-600">Similares Consolidados</p>
+                          <p className="text-2xl font-bold text-amber-800">{marketplace.consolidation_summary.total_similarities_consolidated}</p>
+                        </div>
+                        <GitMerge className="w-6 h-6 text-amber-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200">
+                    <CardContent className="pt-5 pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-violet-600">Reducción</p>
+                          <p className="text-2xl font-bold text-violet-800">{marketplace.consolidation_summary.reduction_ratio}</p>
+                        </div>
+                        <TrendingUp className="w-6 h-6 text-violet-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+                    <CardContent className="pt-5 pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-emerald-600">Packs para Clientes</p>
+                          <p className="text-2xl font-bold text-emerald-800">{marketplace.metadata.total_packages}</p>
+                        </div>
+                        <Store className="w-6 h-6 text-emerald-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Key Consolidations */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-violet-500" />
+                      Consolidaciones Clave Realizadas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {marketplace.consolidation_summary.key_consolidations.map((c, i) => (
+                        <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-slate-50 border border-slate-200">
+                          <ArrowRight className="w-4 h-4 text-violet-500" />
+                          <p className="text-sm">{c}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Price Tier Legend */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <DollarSign className="w-5 h-5 text-green-500" />
+                      Pricing Tiers
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {Object.entries(marketplace.price_tiers).map(([tier, info]) => (
+                        <div key={tier} className={`p-4 rounded-lg border ${TIER_COLORS[tier].border} ${TIER_COLORS[tier].bg}`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge className={TIER_COLORS[tier].badge}>{tier.toUpperCase()}</Badge>
+                          </div>
+                          <p className="font-semibold text-lg">{info.range}</p>
+                          <p className={`text-sm ${TIER_COLORS[tier].text}`}>{info.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Filter */}
+                <div className="flex gap-3 items-center">
+                  <Select value={marketplaceTier} onValueChange={setMarketplaceTier}>
+                    <SelectTrigger className="w-[180px] h-9">
+                      <SelectValue placeholder="Tier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos los tiers</SelectItem>
+                      <SelectItem value="starter">Starter ($19-$39)</SelectItem>
+                      <SelectItem value="gold">Gold ($49-$99)</SelectItem>
+                      <SelectItem value="premium">Premium ($89-$179)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Badge variant="outline" className="h-9 px-3">
+                    {marketplaceTier === 'all' ? marketplace.packages.length : marketplace.packages.filter(p => p.price_tier === marketplaceTier).length} packs
+                  </Badge>
+                </div>
+
+                {/* Package Cards */}
+                <ScrollArea className="h-[calc(100vh-480px)]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-4 pb-4">
+                    {marketplace.packages
+                      .filter(p => marketplaceTier === 'all' || p.price_tier === marketplaceTier)
+                      .map(pkg => (
+                      <Card
+                        key={pkg.id}
+                        className={`hover:shadow-xl transition-all duration-200 cursor-pointer group ${TIER_COLORS[pkg.price_tier].border} ${TIER_COLORS[pkg.price_tier].bg}`}
+                        onClick={() => setSelectedPackage(pkg)}
+                      >
+                        <CardHeader className="pb-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <CardTitle className="text-sm font-bold line-clamp-2 group-hover:text-violet-700 transition-colors">
+                              {pkg.name}
+                            </CardTitle>
+                            <Badge className={`${TIER_COLORS[pkg.price_tier].badge} text-xs shrink-0`}>
+                              {pkg.price_tier.toUpperCase()}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-slate-600 line-clamp-2">{pkg.short_description}</p>
+                        </CardHeader>
+                        <CardContent className="pt-0 pb-3">
+                          <div className="flex items-center gap-1 text-sm font-semibold mb-2">
+                            <DollarSign className="w-3.5 h-3.5" />
+                            {pkg.price_range}
+                          </div>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {pkg.categories.slice(0, 3).map(cat => (
+                              <Badge
+                                key={cat}
+                                variant="secondary"
+                                className="text-xs px-1.5 py-0.5"
+                                style={{ backgroundColor: CATEGORY_COLORS[cat] + '20', color: CATEGORY_COLORS[cat] }}
+                              >
+                                {CATEGORY_ICONS[cat]} {cat}
+                              </Badge>
+                            ))}
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-slate-500">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {pkg.setup_time}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Zap className="w-3 h-3" />
+                              {pkg.nodes_count} nodos
+                            </span>
+                            {pkg.demo_available && (
+                              <span className="flex items-center gap-1 text-emerald-600">
+                                <Star className="w-3 h-3" />
+                                Demo
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-600 mt-2 line-clamp-1 italic">
+                            ROI: {pkg.roi_estimate}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </ScrollArea>
+
+                {/* n8n.io Categories Reference */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <ExternalLink className="w-5 h-5 text-blue-500" />
+                      Referencia de Mercado — n8n.io/workflows ({Object.values(marketplace.n8n_io_categories).reduce((a, b) => a + b.count, 0).toLocaleString()}+ templates)
+                    </CardTitle>
+                    <CardDescription>Categorías y volumen en el marketplace oficial de n8n — muestra el mercado existente para cada vertical</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {Object.entries(marketplace.n8n_io_categories).map(([cat, info]) => (
+                        <div key={cat} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                          <p className="font-semibold text-sm">{cat}</p>
+                          <p className="text-xs text-violet-600 font-medium">{info.count.toLocaleString()}+ workflows</p>
+                          <div className="mt-1 space-y-0.5">
+                            {info.top_use_cases.slice(0, 3).map(uc => (
+                              <p key={uc} className="text-xs text-slate-500 truncate">{uc}</p>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </TabsContent>
         </Tabs>
       </main>
 
@@ -916,10 +1182,148 @@ export default function CatalogPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Package Detail Modal */}
+      <Dialog open={selectedPackage !== null} onOpenChange={() => setSelectedPackage(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Store className="w-5 h-5 text-violet-600" />
+              {selectedPackage?.name}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedPackage?.short_description}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedPackage && (
+            <ScrollArea className="max-h-[60vh] pr-4">
+              <div className="space-y-5">
+                {/* Tier + Price */}
+                <div className="flex items-center gap-3">
+                  <Badge className={TIER_COLORS[selectedPackage.price_tier].badge}>
+                    {selectedPackage.price_tier.toUpperCase()}
+                  </Badge>
+                  <span className="font-semibold text-lg">{selectedPackage.price_range}</span>
+                  <span className="text-sm text-slate-500 flex items-center gap-1">
+                    <Clock className="w-4 h-4" /> Setup: {selectedPackage.setup_time}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2">Descripción</h4>
+                  <p className="text-sm">{selectedPackage.description}</p>
+                </div>
+
+                {/* ROI */}
+                <div className={`p-4 rounded-lg border ${TIER_COLORS[selectedPackage.price_tier].bg} ${TIER_COLORS[selectedPackage.price_tier].border}`}>
+                  <h4 className="text-sm font-medium flex items-center gap-2 mb-1">
+                    <TrendingUp className="w-4 h-4" /> ROI Estimado
+                  </h4>
+                  <p className={`font-semibold ${TIER_COLORS[selectedPackage.price_tier].text}`}>{selectedPackage.roi_estimate}</p>
+                </div>
+
+                {/* Categories */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2">Categorías</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {selectedPackage.categories.map(cat => (
+                      <Badge key={cat} style={{ backgroundColor: CATEGORY_COLORS[cat] + '20', color: CATEGORY_COLORS[cat], borderColor: CATEGORY_COLORS[cat] + '40' }}>
+                        <span className="flex items-center gap-1">{CATEGORY_ICONS[cat]} {cat}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Use Cases */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <Users className="w-4 h-4" /> Casos de Uso por Industria
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedPackage.use_cases.map((uc, i) => (
+                      <div key={i} className="p-3 rounded bg-slate-50 border border-slate-200 text-sm">
+                        {uc}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Integrations */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2">Integraciones</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {selectedPackage.integrations.map(int => (
+                      <Badge key={int} variant="outline" className="text-xs">{int}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Source Workflows */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2">
+                    Workflows Originales Consolidados ({selectedPackage.source_workflows.length})
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedPackage.source_workflows.map((wf, i) => (
+                      <div key={i} className="p-2 rounded bg-slate-50 border border-slate-200 text-sm">
+                        {wf}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Consolidated from duplicates */}
+                {selectedPackage.consolidated_from_duplicates.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                      <GitMerge className="w-4 h-4 text-violet-500" /> Duplicaciones Eliminadas
+                    </h4>
+                    <div className="space-y-1">
+                      {selectedPackage.consolidated_from_duplicates.map((d, i) => (
+                        <div key={i} className="p-2 rounded bg-violet-50 border border-violet-200 text-sm text-violet-700">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Best Practices Applied */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Buenas Prácticas Aplicadas
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedPackage.best_practices_applied.map((bp, i) => (
+                      <div key={i} className="flex items-center gap-2 p-2 rounded bg-emerald-50 border border-emerald-200 text-sm">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        {bp}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex gap-3 pt-3">
+                  <Button className="bg-violet-600 hover:bg-violet-700">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Solicitar Demo
+                  </Button>
+                  <Button variant="outline">
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Comprar Pack
+                  </Button>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Footer */}
       <footer className="mt-auto bg-white border-t border-slate-200 py-4 text-center">
         <p className="text-sm text-slate-500">
-          Catálogo de Automatizaciones n8n &middot; Análisis generado el {data.metadata.analysis_date} &middot; {data.metadata.total_workflows_parsed} workflows de {data.metadata.total_files_analyzed} archivos
+          Catálogo Marketplace n8n &middot; {marketplace?.metadata.total_packages || 0} packs &middot; Inspirado en n8nmarkets.com y n8n.io/workflows
         </p>
       </footer>
     </div>
