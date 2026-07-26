@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://community.n8n.io/t/recommended-architecture-for-modular-workflow-orchestration-in-n8n-2-28/301843?tl=en",
+    "name": "Recommended architecture for modular workflow",
+    "snippet": "Jul 2, 2026 — Hello, I'm designing a modular data processing pipeline in n8n 2.28.4 and I'd like to follow the recommended architecture .",
+    "host_name": "community.n8n.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/pattern-for-building-reusable-workflows-in-n8n/304111",
+    "name": "Pattern for Building Reusable Workflows in n8n - Questions",
+    "snippet": "5 days ago — For those managing large n8n projects: How do you organize reusable workflow components ? Do you use sub-workflows for shared logic, or do you ...\nAs my n8n project grows, I’ve noticed that many workflows share the same logic, such as authentication, error handling, data validation, and sending notifications.",
+    "host_name": "community.n8n.io",
+    "rank": 1,
+    "date": "Jul 21, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://agenticmarketingpro.com/n8n-sub-workflows",
+    "name": "N8n Sub Workflows — a Practitioner's No-fluff Breakdown",
+    "snippet": "Apr 24, 2026 — n8n sub workflows allow you to break down complex automation processes into smaller, reusable , and manageable components . This modular approach",
+    "host_name": "agenticmarketingpro.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/how-to-use-sub-workflows-in-n8-when-to-use-examples/257577?tl=en",
+    "name": "How to Use Sub-Workflows in n8 (When to use & Examples)",
+    "snippet": "Reusing the same logic across multiple workflows (validation, API calls, formatting).",
+    "host_name": "community.n8n.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8nlogic.com/blog/n8n-sub-workflows-how-to-call-one-workflow-from-another",
+    "name": "n8n Sub-Workflows: How to Call One Workflow from Another",
+    "snippet": "Apr 28, 2026 — Learn how to set up n8n sub-workflows using the Execute Workflow node, pass data between parent and child workflows, handle errors properly, ...",
+    "host_name": "n8nlogic.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://jimmysong.io/blog/n8n-deep-dive",
+    "name": "n8n Deep Dive (2026): Architecture, Plugin System, and",
+    "snippet": "Aug 15, 2025 — n8n supports nested sub -workflows and function nodes, but readability and debugging suffer as workflows grow large. Its modular design lets the ...",
+    "host_name": "jimmysong.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.linkedin.com/pulse/how-n8n-loops-sub-workflows-code-node-save-founders-akinriyike-wwdpe",
+    "name": "How n8n Loops, Sub-Workflows, and the Code Node Save",
+    "snippet": "The single most operationally valuable pattern in n8n for growing teams is the sub - workflow . A sub - workflow is a separate workflow that is ...",
+    "host_name": "www.linkedin.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://hatchworks.com/blog/ai-agents/n8n-guide",
+    "name": "n8n Guide 2026: Features & Workflow Automation Deep Dive",
+    "snippet": "Nov 21, 2025 — This n8n guide shows you how to use n8n for secure, flexible workflow automation with no-code speed and full control over your data.",
+    "host_name": "hatchworks.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/recommended-architecture-for-modular-workflow-orchestration-in-n8n-2-28/301843",
+    "name": "Recommended architecture for modular workflow orchestration",
+    "snippet": "I’m designing a modular data processing pipeline in n8n 2.28.4 and I’d like to follow the recommended architecture. My goal is to build a reusable workflow ecosystem where each workflow performs a single responsibility and an orchestration workflow executes them in sequence.",
+    "host_name": "community.n8n.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.n8nresources.dev/blog/2026-07-16-n8n-sub-workflows-build-reusable-logic",
+    "name": "n8n Sub-Workflows: Build Reusable Logic | n8n Resources",
+    "snippet": "Extract repeated automation logic into sub-workflows so you can call it from any parent workflow and update it in one place.",
+    "host_name": "www.n8nresources.dev",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

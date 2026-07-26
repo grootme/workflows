@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://docs.n8n.io/build/flow-logic/handle-errors-gracefully",
+    "name": "Handle errors gracefully | Build",
+    "snippet": "Jul 13, 2026 — When designing your flow logic, it's a good practice to consider potential errors , and set up methods to handle them gracefully.\nJul 13, 2026 — When designing your flow logic, it's a good practice to consider potential errors, and set up methods to handle them gracefully .",
+    "host_name": "docs.n8n.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/best-practices-for-structuring-n8n-workflows-for-scale-and-long-term-maintainability/248671?tl=en",
+    "name": "Best practices for structuring n8n workflows for scale and",
+    "snippet": "Jan 12, 2026 — Breaking large workflows into reusable sub-workflows. Error handling patterns (global error workflows vs localized try/catch logic) Managing ...",
+    "host_name": "community.n8n.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://hatchworks.com/blog/ai-agents/n8n-best-practices",
+    "name": "n8n Best Practices Checklist for Production (2026)",
+    "snippet": "Mar 31, 2026 — Proper error handling means knowing when to retry and when to stop . n8n's built-in Retry on Fail setting handles most transient failures. For ...",
+    "host_name": "hatchworks.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/1pqkzdo/error_handling_is_the_difference_between_a",
+    "name": "Error handling is the difference between a workflow that",
+    "snippet": "The workflows I share on my n8n creator profile always include error handling examples because that's what makes them actually usable beyond ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.n8nmarkets.com/en/n8n-workflow-patterns",
+    "name": "n8n Workflow Patterns — Architecture Best Practices",
+    "snippet": "Error Handling : Configure error workflows for failure notifications via Slack or email. Add retry logic for API calls that may fail due to rate limiting or ...",
+    "host_name": "www.n8nmarkets.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/workflow-stops-silently-mid-execution-nested-sub-workflows-ai-loop-over-1000-items-memory-timeout-issue/273501?tl=en",
+    "name": "nested sub-workflows + AI loop over 1000+ items",
+    "snippet": "Mar 5, 2026 — I'm building a large-scale AI classification pipeline in n8n that processes thousands of records per run and assigns each one a label using an ...",
+    "host_name": "community.n8n.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://michaelitoback.com/n8n-workflow-best-practices",
+    "name": "Seven N8N Workflow Best Practices for 2026",
+    "snippet": "Nov 16, 2025 — Configure node-level error responses strategically—use “Continue” for non-critical steps and “Stop Workflow ” when failure isn't an option.",
+    "host_name": "michaelitoback.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/pattern-for-building-reusable-workflows-in-n8n/304111",
+    "name": "Pattern for Building Reusable Workflows in n8n - Questions",
+    "snippet": "5 days ago — Best practices Keep sub-workflows focused on a single responsibility Pass inputs and outputs clearly between workflows",
+    "host_name": "community.n8n.io",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8nlab.io/blog/n8n-error-handling-best-practices",
+    "name": "n8n Error Handling: 7 Best Practices to Stop Workflow",
+    "snippet": "Apr 13, 2026 — By implementing the seven patterns detailed in this guide—Global Error Triggers, Exponential Backoff, Pre-flight Validation, Idempotency, Dead ...",
+    "host_name": "n8nlab.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/1lob6b9/most_n8n_error_handling_tutorials_break_in",
+    "name": "Most n8n error handling tutorials break in real-world usage",
+    "snippet": "Always have a fallback - Retries can fail too. Don't let your flow die silently. Add a fallback branch with same logic, but different API (Node).",
+    "host_name": "www.reddit.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo Marketplace de Automatizaciones n8n</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+    @page {
+        size: 720px 1020px;
+        margin: 0;
+    }
+    :root {
+        --c-bg: #0d1117;
+        --c-surface: #161b22;
+        --c-card: #1c2333;
+        --c-border: #30363d;
+        --c-text: #e6edf3;
+        --c-text-muted: #8b949e;
+        --c-accent: #ff6b35;
+        --c-accent-light: #ff8c5a;
+        --c-accent2: #58a6ff;
+        --c-success: #3fb950;
+        --c-warning: #d29922;
+        --c-danger: #f85149;
+    }
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 720px;
+        background: var(--c-bg);
+        color: var(--c-text);
+        font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    @media screen {
+        html {
+            height: auto;
+            display: flex;
+            justify-content: center;
+            background: #1a1a2e;
+        }
+        body {
+            transform-origin: top center;
+            margin: 20px auto;
+        }
+    }
+
+    /* Cover */
+    .cover {
+        width: 720px;
+        height: 1020px;
+        box-sizing: border-box;
+        break-after: page;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        background: var(--c-bg);
+        padding: 70px 60px;
+    }
+    .cover-bg-circle1 {
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+        top: 20px;
+        right: 20px;
+        pointer-events: none;
+    }
+    .cover-bg-circle2 {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%);
+        bottom: 20px;
+        left: 20px;
+        pointer-events: none;
+    }
+    .cover-tag {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--c-accent);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+        background: rgba(255,107,53,0.15);
+        padding: 10px 24px;
+        border-radius: 4px;
+    }
+    .cover-title {
+        font-size: 48px;
+        font-weight: 900;
+        line-height: 1.15;
+        text-align: center;
+        margin-bottom: 24px;
+        color: var(--c-text);
+    }
+    .cover-subtitle {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--c-text-muted);
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 40px;
+    }
+    .cover-stats {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .cover-stat {
+        text-align: center;
+        padding: 14px 20px;
+        background: var(--c-card);
+        border-radius: 8px;
+    }
+    .cover-stat-num {
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--c-accent);
+    }
+    .cover-stat-label {
+        font-size: 11px;
+        color: var(--c-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .cover-footer {
+        position: absolute;
+        bottom: 40px;
+        font-size: 12px;
+        color: var(--c-text-muted);
+        text-align: center;
+    }
+
+    /* Main content */
+    .main-content {
+        padding: 50px 55px 40px 55px;
+    }
+
+    /* Chapter header */
+    .chapter-header {
+        break-after: avoid;
+        break-inside: avoid;
+        margin-top: 28px;
+        margin-bottom: 16px;
+    }
+    .section-tag {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--c-accent);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .section-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--c-text);
+        margin-bottom: 6px;
+        line-height: 1.2;
+    }
+    .divider {
+        width: 60px;
+        height: 3px;
+        background: var(--c-accent);
+        border-radius: 2px;
+        margin-bottom: 16px;
+    }
+
+    /* Body text */
+    .body-text {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--c-text);
+        margin-bottom: 14px;
+    }
+    .body-text-muted {
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--c-text-muted);
+        margin-bottom: 12px;
+    }
+
+    /* Cards */
+    .card {
+        break-inside: avoid;
+        margin-bottom: 14px;
+        padding: 16px 18px;
+        background: var(--c-card);
+        border: 1px solid var(--c-border);
+        border-radius: 8px;
+    }
+    .card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--c-text);
+        margin-bottom: 6px;
+    }
+    .card-meta {
+        font-size: 12px;
+        color: var(--c-accent2);
+        margin-bottom: 8px;
+        display: flex;
+        gap: 12px;
+    }
+    .card-body {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--c-text-muted);
+    }
+    .card-price {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--c-accent);
+        margin-top: 8px;
+    }
+
+    /* Data table */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 14px;
+        font-size: 12px;
+    }
+    .data-table th {
+        background: var(--c-surface);
+        color: var(--c-accent2);
+        font-weight: 600;
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 2px solid var(--c-accent);
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+    .data-table td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--c-border);
+        color: var(--c-text);
+        vertical-align: top;
+    }
+    .data-table tr:nth-child(even) {
+        background: var(--c-surface);
+    }
+    .data-table td:first-child {
+        color: var(--c-text);
+        font-weight: 500;
+    }
+    .data-table td.price {
+        color: var(--c-accent);
+        font-weight: 600;
+    }
+    .data-table td.bad {
+        color: var(--c-danger);
+    }
+    .data-table td.good {
+        color: var(--c-success);
+    }
+
+    /* Pricing tier card */
+    .pricing-tier {
+        break-inside: avoid;
+        margin-bottom: 14px;
+        padding: 18px 20px;
+        background: var(--c-card);
+        border: 1px solid var(--c-border);
+        border-radius: 8px;
+        position: relative;
+    }
+    .pricing-tier::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--c-accent);
+        border-radius: 4px 0 0 4px;
+    }
+    .pricing-tier-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--c-text);
+        margin-bottom: 4px;
+    }
+    .pricing-tier-price {
+        font-size: 20px;
+        font-weight: 900;
+        color: var(--c-accent);
+        margin-bottom: 8px;
+    }
+    .pricing-tier-desc {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--c-text-muted);
+        margin-bottom: 8px;
+    }
+    .pricing-tier-examples {
+        font-size: 12px;
+        color: var(--c-accent2);
+        font-style: italic;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+        break-inside: avoid;
+        margin-bottom: 14px;
+        padding: 14px 16px;
+        background: rgba(255,107,53,0.08);
+        border: 1px solid rgba(255,107,53,0.3);
+        border-radius: 8px;
+    }
+    .highlight-box-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--c-accent);
+        margin-bottom: 6px;
+    }
+    .highlight-box-body {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--c-text);
+    }
+
+    /* Pattern card */
+    .pattern-card {
+        break-inside: avoid;
+        margin-bottom: 14px;
+        padding: 16px 18px;
+        background: var(--c-card);
+        border: 1px solid var(--c-border);
+        border-radius: 8px;
+    }
+    .pattern-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--c-accent);
+    }
+    .pattern-complexity {
+        font-size: 11px;
+        color: var(--c-accent2);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .pattern-desc {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--c-text);
+    }
+
+    /* Stat row */
+    .stat-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .stat-item {
+        flex: 1 1 auto;
+        min-width: 80px;
+        max-width: 100%;
+        padding: 12px 14px;
+        background: var(--c-card);
+        border: 1px solid var(--c-border);
+        border-radius: 6px;
+        text-align: center;
+    }
+    .stat-value {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--c-accent);
+    }
+    .stat-label {
+        font-size: 10px;
+        color: var(--c-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Badge */
+    .badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-right: 4px;
+    }
+    .badge-accent { background: rgba(255,107,53,0.2); color: var(--c-accent); }
+    .badge-blue { background: rgba(88,166,255,0.2); color: var(--c-accent2); }
+    .badge-green { background: rgba(63,185,80,0.2); color: var(--c-success); }
+    .badge-warning { background: rgba(210,153,34,0.2); color: var(--c-warning); }
+    .badge-danger { background: rgba(248,81,73,0.2); color: var(--c-danger); }
+
+    /* List */
+    .list-item {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--c-text);
+        margin-bottom: 4px;
+        padding-left: 16px;
+        position: relative;
+    }
+    .list-item::before {
+        content: '-';
+        position: absolute;
+        left: 0;
+        color: var(--c-accent);
+    }
+
+    /* Ending page */
+    .ending {
+        width: 720px;
+        height: 1020px;
+        box-sizing: border-box;
+        break-before: page;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: var(--c-bg);
+        padding: 70px 60px;
+        position: relative;
+    }
+    .ending-bg-circle {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+        top: 200px;
+        right: -100px;
+    }
+    .ending-big-text {
+        font-size: 36px;
+        font-weight: 900;
+        color: var(--c-accent);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .ending-sub-text {
+        font-size: 16px;
+        color: var(--c-text-muted);
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+    .ending-cta {
+        font-size: 14px;
+        color: var(--c-text);
+        font-weight: 600;
+        text-align: center;
+        padding: 12px 24px;
+        background: rgba(255,107,53,0.15);
+        border: 1px solid var(--c-accent);
+        border-radius: 6px;
+    }
+    </style>
+</head>
+<body>
+
+
+<div class="cover">
+    <div class="cover-tag">MARKETPLACE CATALOGO</div>
+    <div class="cover-title">Catalogo de<br>Automatizaciones n8n</div>
+    <div class="cover-subtitle">
+        Analisis de 118 workflows, refactoring con buenas practicas,<br>
+        patrones architectonicos, templates base, MCP servers,<br>
+        y modelo de pricing para mercado profesional.
+    </div>
+    <div class="cover-stats">
+        <div class="cover-stat">
+            <div class="cover-stat-num">118</div>
+            <div class="cover-stat-label">Workflows Analizados</div>
+        </div>
+        <div class="cover-stat">
+            <div class="cover-stat-num">14</div>
+            <div class="cover-stat-label">Duplicados Detectados</div>
+        </div>
+        <div class="cover-stat">
+            <div class="cover-stat-num">41</div>
+            <div class="cover-stat-label">Similitudes Encontradas</div>
+        </div>
+        <div class="cover-stat">
+            <div class="cover-stat-num">6</div>
+            <div class="cover-stat-label">Templates Base</div>
+        </div>
+    </div>
+    <div class="cover-footer">
+        Documento confidencial - Marketplace privado de automatizaciones | Julio 2026
+    </div>
+</div>
+
+<div class="main-content">
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 01</div>
+    <div class="section-title">Resumen Ejecutivo</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+Este documento presenta el catalogo marketplace completo de automatizaciones n8n, desarrollado a partir del analisis exhaustivo de 118 workflows existentes y la investigacion de mercados externos como n8nmarkets.com (850+ templates, $5-$50+ por workflow) y n8n.io/workflows (10,930 templates comunitarios). El objetivo es transformar el portfolio actual de automatizaciones en un catalogo profesional, listo para ofrecer a clientes prospectos, con pricing competitivo, templates base para desarrollo rapido, y patrones architectonicos que garanticen calidad production-ready.
+</div>
+<div class="body-text">
+El analisis revela que el portfolio actual tiene 93 workflows de IA y Agentes como categoria dominante, 14 duplicaciones exactas que generan mantenimiento redundante, y 41 similitudes que indican oportunidades de consolidation significativas. Solo una minoria de workflows tiene error handling explicito, y la categoria E-Commerce tiene 3 versiones (v1, v2, v3) que necesitan unification urgente. Este documento propone un plan comprehensivo de refactoring, consolidation, y comercialization.
+</div>
+<div class="stat-row">
+    <div class="stat-item"><div class="stat-value">118</div><div class="stat-label">Workflows Totales</div></div>
+    <div class="stat-item"><div class="stat-value">18</div><div class="stat-label">Categorias</div></div>
+    <div class="stat-item"><div class="stat-value">14</div><div class="stat-label">Duplicados Exactos</div></div>
+    <div class="stat-item"><div class="stat-value">41</div><div class="stat-label">Similitudes</div></div>
+    <div class="stat-item"><div class="stat-value">55</div><div class="stat-label">Sugerencias Consolidacion</div></div>
+</div>
+
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 02</div>
+    <div class="section-title">Portfolio Actual de Automatizaciones</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+El portfolio actual comprende 118 workflows provenientes de 5 fuentes principales: Plantillas JosemaFernandez (60 workflows), Materiales Comunidad WhatsApp (49 workflows), Sistema Agentes Marketing de Victor Perez (6 workflows), Milvus vs Supabase (1 workflow), y otros archivos individuales. La distribucion por categorias muestra una concentracion significativa en IA y Agentes (93 workflows), lo cual refleja el foco del portfolio en automatizaciones inteligentes, pero tambien indica una falta de diversificacion hacia otras verticals de negocio con alto potencial comercial.
+</div>
+
+<table class="data-table">
+<tr><th>Categoria</th><th>Workflows</th><th>% Portfolio</th><th>Potencial Mercado</th></tr>
+<tr><td>IA & Agentes</td><td>93</td><td>78.8%</td><td class="good">High</td></tr>
+<tr><td>Chat & Mensajería</td><td>38</td><td>32.2%</td><td class="good">High</td></tr>
+<tr><td>Email & Comunicación</td><td>30</td><td>25.4%</td><td class="good">High</td></tr>
+<tr><td>Social Media & Contenido</td><td>21</td><td>17.8%</td><td class="good">High</td></tr>
+<tr><td>Marketing & Leads</td><td>16</td><td>13.6%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Voz & Transcripción</td><td>14</td><td>11.9%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>MCP Tools</td><td>14</td><td>11.9%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Scraping & Extracción</td><td>11</td><td>9.3%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Calendario & Agenda</td><td>11</td><td>9.3%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>RRHH & Selección</td><td>11</td><td>9.3%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Base de Datos</td><td>10</td><td>8.5%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>RAG & Vector Store</td><td>9</td><td>7.6%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>E-Commerce & Ventas</td><td>9</td><td>7.6%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Dashboard & Datos</td><td>7</td><td>5.9%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Utilidades & DevOps</td><td>6</td><td>5.1%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Flowise Integration</td><td>5</td><td>4.2%</td><td class="badge-warning">Medium</td></tr>
+<tr><td>Documentos & PDF</td><td>3</td><td>2.5%</td><td class="bad">Low</td></tr>
+<tr><td>General</td><td>2</td><td>1.7%</td><td class="bad">Low</td></tr>
+</table>
+
+<div class="body-text" style="margin-top: 14px;">
+Las fuentes del portfolio revelan una dependencia fuerte de templates comunitarios (Plantillas JosemaFernandez y Materiales Comunidad WhatsApp), que representan mas del 90% del contenido. Esto implica que los workflows no son necesariamente production-ready en su estado actual, ya que muchos son templates educativos o demostrativos sin error handling, sin versionado, y sin documentation de deployment. La refactoring propuesta busca transformar estos templates en soluciones profesionales.
+</div>
+<table class="data-table">
+<tr><th>Fuente</th><th>Workflows</th><th>Tipo</th><th>Estado</th></tr>
+<tr><td>Plantillas JosemaFernandez</td><td>60</td><td>Template</td><td class="bad">Needs Refactoring</td></tr>
+<tr><td>Materiales Comunidad WhatsApp</td><td>49</td><td>Template</td><td class="bad">Needs Refactoring</td></tr>
+<tr><td>Sistema Agentes Marketing - Víctor Pérez</td><td>6</td><td>Custom</td><td class="good">Production-ready</td></tr>
+<tr><td>Milvus vs Supabase</td><td>1</td><td>Custom</td><td class="good">Production-ready</td></tr>
+<tr><td>My Workflow 8</td><td>1</td><td>Custom</td><td class="good">Production-ready</td></tr>
+<tr><td>n8n (archivo root)</td><td>1</td><td>Custom</td><td class="good">Production-ready</td></tr>
+</table>
+
+<div class="body-text" style="margin-top: 14px;">
+Los nodos mas utilizados en el portfolio reflejan el dominio de IA. El nodo LangChain Agent aparece en 59 workflows (50% del portfolio), seguido de OpenAI Chat Model y otros nodos de AI/LLM. Esto confirma que el portfolio esta optimizado para automatizaciones de AI agents, pero necesita diversification en nodos de integracion empresarial (CRM, ERP, E-Commerce platforms) para ampliar el mercado objetivo.
+</div>
+<table class="data-table">
+<tr><th>Nodo</th><th>Frecuencia</th><th>Categoria Nodo</th></tr>
+<tr><td>@n8n/n8n-nodes-langchain.lmChatOpenAi</td><td>62</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.set</td><td>60</td><td>AI/Integration</td></tr>
+<tr><td>@n8n/n8n-nodes-langchain.agent</td><td>59</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.stickyNote</td><td>53</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.httpRequest</td><td>53</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.code</td><td>38</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.googleSheets</td><td>34</td><td>AI/Integration</td></tr>
+<tr><td>n8n-nodes-base.if</td><td>33</td><td>AI/Integration</td></tr>
+<tr><td>@n8n/n8n-nodes-langchain.openAi</td><td>31</td><td>AI/Integration</td></tr>
+<tr><td>@n8n/n8n-nodes-langchain.outputParserStructured</td><td>29</td><td>AI/Integration</td></tr>
+</table>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 03</div>
+    <div class="section-title">Plan de Refactoring y Consolidacion</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+El refactoring del portfolio sigue un enfoque sistematico basado en principios de software engineering adaptados al contexto de automatizaciones n8n. El proceso comprende cuatro fases: (1) Elimination de duplicados, (2) Consolidation de similitudes, (3) Implementation de error handling y best practices, y (4) Versionado y modularization con sub-workflows. Cada fase tiene criterios de acceptance definidos y produces deliverables que incrementan el valor comercial del catalogo.
+</div>
+
+
+<div class="highlight-box">
+    <div class="highlight-box-title">FASE 1: Elimination de Duplicados (14 encontrados)</div>
+    <div class="highlight-box-body">
+Se identificaron 14 duplicaciones exactas donde workflows con nombres diferentes o suffixes de version ejecutan la misma logica con los mismos nodos. Los duplicados mas notables incluyen: MCP_Calendario (3 copias), eCommerce workflows (3 versiones v1/v2/v3), y varios workflows de WhatsApp/Telegram con suffixes de autor. La estrategia es mantener la version mas completa (con error handling y documentation), eliminar las copias, y crear un solo workflow versionado con la logica consolidada de todas las variantes.
+    </div>
+</div>
+
+
+<div class="highlight-box">
+    <div class="highlight-box-title">FASE 2: Consolidation de Similitudes (41 encontradas)</div>
+    <div class="highlight-box-body">
+Las 41 similitudes representan workflows que comparten >60% de nodos comunes (Jaccard similarity) pero con variaciones en trigger, integracion, o configuracion. Ejemplo: multiples workflows de "AI Agent + Telegram" que solo difieren en el LLM provider (OpenAI vs Gemini) o en los tools configurados. La consolidation strategy es crear un workflow master con Switch/If nodes que permitan configurar el variant (provider, channel, complexity) como input parameter, eliminando la necesidad de mantener multiples copias casi identicas.
+    </div>
+</div>
+
+
+<div class="highlight-box">
+    <div class="highlight-box-title">FASE 3: Error Handling y Best Practices</div>
+    <div class="highlight-box-body">
+Actualmente, solo un small subset de workflows tiene error handling explicito. La implementation comprehensive incluye: (a) Global Error Trigger para notificaciones centralizadas de fallos, (b) Retry on Fail con exponential backoff para API calls, (c) Dead Letter Queue (DLQ) en PostgreSQL/Google Sheets para items que fallan permanentemente, (d) Pre-flight Validation antes de operaciones criticas, y (e) Idempotency Keys para prevenir duplicados en retries. Cada workflow production-ready debe incluir al minimum los patterns (a), (b), y (c).
+    </div>
+</div>
+
+
+<div class="highlight-box">
+    <div class="highlight-box-title">FASE 4: Versionado y Modularization con Sub-Workflows</div>
+    <div class="highlight-box-body">
+Adoptar versionado semantico (vMAJOR.MINOR.PATCH) para cada workflow. MAJOR para cambios incompatible (new required input, removed output field), MINOR para nuevas features backwards-compatible (new optional parameter, additional tool), PATCH para bug fixes. Workflows con >15 nodos se refactorizan en sub-workflows modulares via Execute Workflow node, donde cada modulo tiene una responsabilidad unica (validation, API call, notification). Esto facilita testing individual, reuso entre parent workflows, y maintenance simplificado al poder modificar un modulo sin afectar el sistema completo.
+    </div>
+</div>
+
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 04</div>
+    <div class="section-title">Best Practices de Desarrollo n8n</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+Las best practices de desarrollo n8n se derivan de la investigacion de sources como HatchWorks (n8n Best Practices Checklist for Production 2026), n8nLab (Error Handling Best Practices), la comunidad n8n (248K+ members), y n8nmarkets.com (Workflow Patterns & Architecture). Estos practices se categorizan en tres dimensiones: engineering practices (error handling, retry, validation), architectural practices (sub-workflows, versionado, modularization), y AI agent practices (model selection, tool configuration, memory management).
+</div>
+
+
+<div class="card">
+    <div class="card-title">Global Error Trigger</div>
+    <div class="card-body">Configurar un workflow global de error handling que captura fallos de cualquier workflow activo, envia notificacion a Slack/Teams, y registra en Dead Letter Queue (DLQ). Este es el patron mas fundamental para production readiness, asegurando que ningun fallo pase silenciosamente sin deteccion y sin que el equipo de operaciones tenga visibilidad completa del estado de cada automatizacion en ejecucion.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Exponential Backoff Retry</div>
+    <div class="card-body">Implementar retry logic con backoff exponencial para API calls que pueden fallar por rate limiting o transient errors. Configurar max retries (3-5), intervalo inicial (1s), y factor multiplicador (2x). N8n ofrece Retry on Fail built-in pero para scenarios complejos, usar Code node con logica custom que incluye jitter para evitar thundering herd effect en retries concurrentes.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Pre-flight Validation</div>
+    <div class="card-body">Antes de ejecutar operaciones criticas (envio de email, creacion de registro en CRM, procesamiento de pago), validar datos entrantes con un nodo If/Switch que chequea campos obligatorios, formatos correctos, y rangos aceptables. Datos invalidos se envian a un branch de error handling con logging detallado, evitando que errores de formato propagate downstream y causen fallos en cascada en workflows complejos.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Idempotency Keys</div>
+    <div class="card-body">Para operaciones que modifican estado (crear orden, enviar email, actualizar registro), implementar idempotency usando Redis o database para almacenar keys unique. Antes de ejecutar, verificar si la operacion ya fue procesada con el mismo key. Esto previene duplicados accidentalmente cuando un workflow se re-executa por error handling o manual retry, garantizando data integrity incluso en scenarios de retry automatizado.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Dead Letter Queue (DLQ)</div>
+    <div class="card-body">Mantener una tabla de DLQ en PostgreSQL, MySQL, Airtable, o Google Sheets donde se registran todos los items que fallaron processing despues de max retries. Cada registro incluye: original payload, error message, timestamp, workflow ID, y retry count. Permite analisis post-mortem, re-processing manual, y metricas de failure rate para identificar patterns de error recurrentes que necesitan atencion architectonica.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Sub-Workflow Modularization</div>
+    <div class="card-body">Dividir workflows complejos (>15 nodos) en sub-workflows con Execute Workflow node. Cada sub-workflow tiene una responsabilidad unica (validacion, API call, notification). Inputs y outputs se pasan claramente entre workflows. Esto reduce complejidad visual, facilita testing individual, permite reuso entre multiples parent workflows, y hace maintenance mucho mas sencillo al poder modificar un modulo sin afectar el sistema completo.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Versionado Semantico</div>
+    <div class="card-body">Adoptar versionado semantico (vMAJOR.MINOR.PATCH) para workflows. MAJOR para cambios incompatible (new required input, removed output), MINOR para nuevas features backwards-compatible, PATCH para fixes. Mantener tags en n8n con formato v1.0.0, v1.1.0, etc. Documentar changelog en notas del workflow. Esto permite rollback seguro, tracking de evolucion, y comunicacion clara de cambios a clientes que dependen de versions especificas.</div>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 05</div>
+    <div class="section-title">Patrones Architectonicos para Automatizaciones</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+Los patrones architectonicos proporcionan soluciones reusables a problemas recurrentes en el diseño de automatizaciones n8n. Estos patterns se inspiran en software architecture patterns adaptados al contexto visual de n8n, donde los nodos y connections representan el flow de data y logic. Cada pattern incluye una descripcion del problema que resuelve, la estructura del workflow, y ejemplos de application concrete. Los patterns se clasifican por complexity: Low (3-8 nodos), Medium (8-15 nodos), High (15+ nodos con sub-workflows).
+</div>
+
+
+<div class="pattern-card">
+    <div class="pattern-name">Fan-Out / Fan-In</div>
+    <div class="pattern-complexity">Complexity: Medium</div>
+    <div class="pattern-desc">Un trigger dispara multiples sub-workflows en paralelo (fan-out) que procesan datos independientemente, y luego un nodo Merge consolida resultados (fan-in). Ideal para processing batches donde cada item necesita AI analysis, y los resultados se agregan en un reporte final. Ejemplo: 50 leads -> 50 parallel enrichments -> 1 consolidated report.</div>
+</div>
+
+<div class="pattern-card">
+    <div class="pattern-name">Event-Driven Chain</div>
+    <div class="pattern-complexity">Complexity: Low</div>
+    <div class="pattern-desc">Cada paso del workflow es un sub-workflow independiente que se activa por el output del paso anterior via webhook. Permite decoupling: cada modulo puede evolucionar independientemente, agregar intermediarios (monitoring, logging) sin modificar otros, y reemplazar componentes sin afectar la cadena. Ejemplo: Lead captured -> enrichment triggered -> qualification triggered -> assignment triggered.</div>
+</div>
+
+<div class="pattern-card">
+    <div class="pattern-name">Circuit Breaker</div>
+    <div class="pattern-complexity">Complexity: Medium</div>
+    <div class="pattern-desc">Patron que protege contra cascading failures cuando un servicio externo esta down. Un nodo If/Switch actua como circuit breaker: si un API call falla consecutivamente N veces (threshold), el circuit se abre y subsequent calls se bypass directamente al fallback path. Despues de un cooldown period, el circuit se semi-abre para testear si el servicio esta recovered. Ejemplo: 3 failed OpenAI calls -> fallback to Gemini.</div>
+</div>
+
+<div class="pattern-card">
+    <div class="pattern-name">Saga Pattern (Compensating Actions)</div>
+    <div class="pattern-complexity">Complexity: High</div>
+    <div class="pattern-desc">Para workflows multi-step que modifican multiples sistemas (crear orden + reservar inventory + procesar pago), implementar compensating actions para rollback si cualquier paso falla. Si paso 3 (pago) falla, ejecutar compensacion de paso 2 (release inventory) y paso 1 (cancelar orden). Cada paso tiene una accion compensatoria definida. Ejemplo: E-commerce order pipeline.</div>
+</div>
+
+<div class="pattern-card">
+    <div class="pattern-name">Observer / Sidecar</div>
+    <div class="pattern-complexity">Complexity: Low</div>
+    <div class="pattern-desc">Adjuntar un sub-workflow de observacion a cada workflow principal que monitoree executions, registre metrics (latency, success rate, error types), y genere dashboards automaticos. El observer no modifica el flow principal - solo observa y reporta. Permite observabilidad sin modificar workflows existentes. Ejemplo: Workflow de lead processing + observer que trackea conversion rates.</div>
+</div>
+
+<div class="pattern-card">
+    <div class="pattern-name">Multi-Agent Orchestration</div>
+    <div class="pattern-complexity">Complexity: High</div>
+    <div class="pattern-desc">Un planner agent recibe el request, lo descompone en subtareas, asigna cada subtarea a un agente especializado (researcher, analyst, writer), y un synthesis agent consolida los resultados. Cada agente opera como sub-workflow con tools especificos. El planner usa LangChain Agent con tools de delegation. Ejemplo: Research report generation = planner -> researcher (web search) -> analyst (data processing) -> writer (document generation).</div>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 06</div>
+    <div class="section-title">Best Practices de AI Agents en n8n</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+n8n ha evolucionado significativamente como platforma para AI agents en 2026, con upgrades massive a LangChain integration, direct vector store tools, y mejor multi-agent orchestration. El nodo AI Agent de n8n bundles un chat model, system prompt, memory, y tools en un solo node, simplificando el desarrollo pero requiring configuracion cuidadosa para production. Las practices siguientes se basan en la investigacion de community.n8n.io, anmol-gupta.medium.com, y n8nlab.io sobre AI agent development en n8n.
+</div>
+
+
+<div class="card">
+    <div class="card-title">Model Selection Strategy</div>
+    <div class="card-body">Seleccionar el LLM correcto segun el use case, no solo el mas powerful. Para classification simple y extraction: GPT-4o-mini o Gemini Flash (cost-effective, fast). Para reasoning complex y multi-step: GPT-4o o Claude 3.5 (higher accuracy, slower). Para tasks que necesitan context muy largo: Gemini 1.5 Pro (1M token window). Implementar fallback chain: si el modelo primary falla o timeout, automaticamente switch al secondary model via Circuit Breaker pattern.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Tool Configuration Best Practices</div>
+    <div class="card-body">Configurar tools del AI Agent con descripciones precision y examples. Cada tool description debe explicar: (1) que hace exactamente, (2) cuando usarlo (trigger conditions), (3) que parametros necesita, y (4) que output genera. Descripciones vagueas causean el agent a seleccionar tools incorrectos o loop infinite. Limitar a 5-7 tools por agent para evitar confusion. Si un workflow necesita >7 tools, dividir en multi-agent orchestration donde cada agente tiene su tool subset especializado.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Memory and Context Management</div>
+    <div class="card-body">n8n AI Agent node soporta Window Buffer Memory y conversational memory. Para chatbots continuos: usar conversational memory con sliding window de 10-20 messages para mantener context sin exceder token limits. Para one-shot processing: no usar memory (reduce cost y latency). Para agents que necesitan context de documentos: implementar RAG pipeline como sub-workflow que injecta retrieved documents como additional context en el system prompt, en vez de pasar todo el document al LLM directamente.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Multi-Agent Orchestration Pattern</div>
+    <div class="card-body">Para tasks complexas que un solo agent no puede handle, implementar multi-agent orchestration con un Planner Agent que descompone la task, delega a specialized agents (Researcher, Analyst, Writer), y un Synthesis Agent que consolida resultados. Cada specialized agent opera como sub-workflow via Execute Workflow node. El Planner usa LangChain Agent con custom tools de delegation. Este pattern es ideal para report generation, research pipelines, y complex decision-making que requiere multiples perspectives.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Human-in-the-Loop Integration</div>
+    <div class="card-body">Para decisions criticas donde AI autonomia es risky (legal review, financial decisions, medical triage), implementar human-in-the-loop checkpoints. El AI Agent genera una recommendation con confidence score, y un If node verifica si confidence > threshold (ej: 0.85). Si confidence es low, el workflow pausa y envia a un human reviewer via Slack/Email con full context. El reviewer responde con decision, y el workflow continua. Esto combina AI efficiency con human judgment para high-stakes scenarios.</div>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 07</div>
+    <div class="section-title">MCP Server Development Templates</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+El Model Context Protocol (MCP) es el standard emergente para conectar AI agents con herramientas y datos externos. n8n soporta tanto MCP client (conectar a MCP servers externos como Claude Desktop) como MCP server (exponer workflows n8n como tools MCP). Con n8n, se pueden crear MCP servers customizados en minutos usando 267+ integraciones out-of-the-box como tools MCP. Los templates siguientes proporcionan la base para desarrollar MCP servers que se pueden incluir en el catalogo marketplace como productos premium, ya que MCP servers son un differentiator competitive significativo en 2026.
+</div>
+
+
+<div class="card">
+    <div class="card-title">CRM MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">lookup_contact | create_lead | update_deal_stage | search_deals | get_contact_activity</span></div>
+    <div class="card-body">MCP server que expone operaciones CRM como tools MCP. Compatible con HubSpot, Salesforce, Pipedrive. Permite a cualquier MCP client (Claude Desktop, ChatGPT) interactuar con CRM data directamente sin necesidad de API manual.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Calendar MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">schedule_meeting | check_availability | list_upcoming_events | cancel_event | reschedule_event</span></div>
+    <div class="card-body">MCP server para Google Calendar y Outlook. Tools de scheduling con conflict detection automatica. Integracion con timezone handling y attendee management.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Document Analysis MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">extract_text_from_pdf | analyze_document | compare_documents | generate_summary | check_compliance</span></div>
+    <div class="card-body">MCP server para procesamiento de documentos con AI. Usa LLM para extraction, analysis, y compliance checking. Vector store para RAG sobre documentos previamente procesados.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">E-Commerce MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">get_product_info | check_inventory | create_order | update_stock | get_order_status | process_refund</span></div>
+    <div class="card-body">MCP server para plataformas e-commerce (Shopify, WooCommerce, custom). Sincroniza datos entre plataformas y expone operaciones como MCP tools para agents.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Database MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">query_data | insert_record | update_record | delete_record | run_aggregation | get_schema</span></div>
+    <div class="card-body">MCP server para acceso seguro a databases (PostgreSQL, MySQL, Supabase). Incluye query validation, rate limiting, y schema discovery automatica para que agents puedan explorar data sin SQL manual.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Communication MCP Server</div>
+    <div class="card-meta"><span class="badge badge-accent">MCP Server</span> <span class="badge badge-blue">send_email | send_slack_message | send_whatsapp | create_ticket | send_sms</span></div>
+    <div class="card-body">MCP server unificado para comunicaciones multi-canal. Routing inteligente segun urgencia y tipo. Template management para responses consistentes.</div>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 08</div>
+    <div class="section-title">Templates Base de Desarrollo (Boilerplate)</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+Los templates base proporcionan starting points production-ready para nuevos workflows, eliminando la necesidad de empezar desde cero cada vez. Cada template incluye la estructura de nodos, error handling basico, logging, y placeholders para customizacion. Los templates se versionan como packages reusables y se ofrecen como "quick-start" en el marketplace, permitiendo a clientes adaptarlos a sus necesidades specificas sin reinventar la arquitectura fundamental. Los templates mas vendidos en n8nmarkets.com siguen este pattern: ofrecen un lite version free y una premium version con features adicionales.
+</div>
+
+
+<div class="card">
+    <div class="card-title">Simple Notification Template</div>
+    <div class="card-meta"><span class="badge badge-green">5 nodos</span> <span class="badge badge-blue">Trigger -> Format -> Notification -> Log -> Error Handler</span></div>
+    <div class="card-body">Template base para cualquier workflow de notificacion. Incluye: webhook/cron trigger, data formatting con Set node, notification dispatch (Slack/Email/WhatsApp), execution logging, y error branch con notification de fallo. Ideal como punto de partida para workflows simples.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">AI Agent Template</div>
+    <div class="card-meta"><span class="badge badge-green">8 nodos</span> <span class="badge badge-blue">Trigger -> Input Validation -> AI Agent (LangChain) -> Output Processing -> Action -> Notification -> Log -> Error Handler</span></div>
+    <div class="card-body">Template base para workflows con AI Agent. Incluye: trigger con pre-flight validation, LangChain Agent node con configurable tools, output processing y formatting, action execution (CRM/email/API), notification, logging, y comprehensive error handling con DLQ integration.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">RAG Pipeline Template</div>
+    <div class="card-meta"><span class="badge badge-green">10 nodos</span> <span class="badge badge-blue">Trigger -> Input -> Vector Store Query -> Document Retrieval -> LLM Processing -> Response -> Action -> Notification -> Log -> Error Handler</span></div>
+    <div class="card-body">Template base para RAG workflows. Incluye: trigger, input extraction, vector store query (Pinecone/Milvus/Supabase), document retrieval y ranking, LLM processing con context injection, response formatting, optional action execution, y error handling con retry logic para API failures.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Sub-Workflow Module Template</div>
+    <div class="card-meta"><span class="badge badge-green">6 nodos</span> <span class="badge badge-blue">Webhook Input -> Validation -> Core Logic -> Output Formatting -> Webhook Response -> Error Handler</span></div>
+    <div class="card-body">Template base para sub-workflows modulares. Recibe input via webhook (Execute Workflow), valida parametros, ejecuta logica core, formatea output, retorna response al parent workflow, y maneja errores con fallback response para que el parent workflow pueda continuar.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Multi-Step Orchestration Template</div>
+    <div class="card-meta"><span class="badge badge-green">12 nodos</span> <span class="badge badge-blue">Trigger -> Validation -> Sub-Workflow A -> Sub-Workflow B -> Merge -> Decision -> Sub-Workflow C -> Notification -> Dashboard Update -> Log -> Error Handler -> DLQ</span></div>
+    <div class="card-body">Template base para pipelines multi-step con sub-workflows. Incluye: trigger con validation, orchestration de 2-3 sub-workflows via Execute Workflow, merge de resultados, decision logic con If/Switch, final action, notification, dashboard update, logging, y error handling completo con DLQ.</div>
+</div>
+
+<div class="card">
+    <div class="card-title">MCP Server Template</div>
+    <div class="card-meta"><span class="badge badge-green">8 nodos</span> <span class="badge badge-blue">MCP Trigger -> Tool Router -> Validation -> Core Tool Logic -> External API -> Response Formatting -> MCP Response -> Error Handler</span></div>
+    <div class="card-body">Template base para MCP server workflows en n8n. Recibe MCP tool calls, routea al tool correcto con Switch, valida parameters, ejecuta logica (API call o database operation), formatea response segun MCP spec, y maneja errores con fallback response structure.</div>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 09</div>
+    <div class="section-title">Modelo de Pricing para Marketplace</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+El modelo de pricing se basa en la investigacion de n8nmarkets.com, donde los workflows se venden entre $5 y $50+ por template individual, con commissions de 10% sobre ventas. Los sellers mas exitosos en n8nmarkets.com ofrecen pricing tiers: free lite version para build trust, one-time purchase ($5-$50) para production templates, y custom solutions ($75-$200+) para integraciones enterprise. El marketplace n8n Markets tiene 850+ templates, 50K+ monthly visitors, y 2,000+ workflows listed en 30+ languages, con payments via Paddle y automated payouts.
+</div>
+
+
+<div class="pricing-tier">
+    <div class="pricing-tier-name">Starter</div>
+    <div class="pricing-tier-price">$5 - $15</div>
+    <div class="pricing-tier-desc">Workflows simples de 3-8 nodos, un solo trigger, una integracion basica</div>
+    <div class="pricing-tier-examples">Ejemplos: Notificacion Slack, Sync Google Sheets, Email auto-respuesta</div>
+</div>
+
+<div class="pricing-tier">
+    <div class="pricing-tier-name">Professional</div>
+    <div class="pricing-tier-price">$15 - $35</div>
+    <div class="pricing-tier-desc">Workflows de 8-20 nodos, multi-step logic, 2-3 integraciones, error handling basico</div>
+    <div class="pricing-tier-examples">Ejemplos: Lead qualification pipeline, CRM sync + email, Social media cross-posting</div>
+</div>
+
+<div class="pricing-tier">
+    <div class="pricing-tier-name">Enterprise</div>
+    <div class="pricing-tier-price">$35 - $75</div>
+    <div class="pricing-tier-desc">Workflows de 20+ nodos, multi-agent AI, RAG, sub-workflows, error handling completo, MCP integracion</div>
+    <div class="pricing-tier-examples">Ejemplos: Multi-agent sales assistant, RAG chatbot + vector store, Automated compliance review</div>
+</div>
+
+<div class="pricing-tier">
+    <div class="pricing-tier-name">Custom Solution</div>
+    <div class="pricing-tier-price">$75 - $200+</div>
+    <div class="pricing-tier-desc">Soluciones custom con desarrollo MCP server, integracion con sistemas proprietarios, soporte post-venta</div>
+    <div class="pricing-tier-examples">Ejemplos: MCP server para ERP proprietario, Pipeline de datos enterprise, Multi-system integration hub</div>
+</div>
+
+<div class="body-text" style="margin-top: 14px;">
+Los budgets mensuales de automatizacion por industry proporcionan un reference point para pricing de services recurring. Estos datos se basan en n8nmarkets.com/pricing-by-industry y ajustados al mercado Latinoamericano con un factor de adjustment contextual. El pricing de servicios recurring (setup + maintenance + optimization) se calcula como: Setup fee (1x) + Monthly maintenance (recurring) + Per-execution costs (variable).
+</div>
+<table class="data-table">
+<tr><th>Industry</th><th>Budget Mensual Ref.</th><th>Workflows Comunes</th><th>Complexity</th></tr>
+<tr><td>Salud / Healthcare</td><td class="price">$50-200</td><td>Patient scheduling, Insurance verification, Medical records sync, Prescription reminders, Compliance audit</td><td class="badge-warning">High</td></tr>
+<tr><td>Finanzas / Finance</td><td class="price">$100-500</td><td>Invoice processing, Transaction reconciliation, Regulatory reporting, Client onboarding, Risk assessment AI</td><td class="badge-warning">Very High</td></tr>
+<tr><td>E-Commerce</td><td class="price">$20-100</td><td>Order orchestration, Inventory sync, Price monitoring, Customer notifications, Return processing</td><td class="">Medium</td></tr>
+<tr><td>Marketing / Agencias</td><td class="price">$30-150</td><td>Lead qualification, Social media automation, SEO monitoring, Campaign reporting, Content generation AI</td><td class="">Medium</td></tr>
+<tr><td>RRHH / HR</td><td class="price">$20-80</td><td>Resume screening, Interview scheduling, Employee onboarding, Payroll integration, Compliance tracking</td><td class="">Medium</td></tr>
+<tr><td>Legal / Compliance</td><td class="price">$50-200</td><td>Document review AI, Contract analysis, Deadline tracking, Regulatory monitoring, Case management</td><td class="badge-warning">High</td></tr>
+<tr><td>IT / DevOps</td><td class="price">$30-100</td><td>Alert management, Incident response, Deployment pipelines, Monitoring dashboards, Security audit</td><td class="">Medium-High</td></tr>
+<tr><td>Educacion</td><td class="price">$10-50</td><td>Student enrollment, Grade processing, Content distribution, Attendance tracking, Feedback collection</td><td class="good">Low-Medium</td></tr>
+</table>
+
+<div class="highlight-box">
+    <div class="highlight-box-title">Formula de Pricing Recomendada</div>
+    <div class="highlight-box-body">
+Template individual: Base price ($5-$75) segun tier + Error handling premium (+20%) + MCP integration premium (+30%).<br>
+Servicio recurring: Setup fee ($150-$500) + Monthly maintenance ($50-$200/mes) + Per-optimization sessions ($100-$300/session).<br>
+Bundle pricing: 3-5 workflows relacionados a precio package ($45-$150) vs individual ($75-$250).<br>
+Freemium strategy: Lite version free (3-5 nodos, sin error handling) + Premium version ($15-$50) con full features.
+    </div>
+</div>
+
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 10</div>
+    <div class="section-title">Nuevas Ideas de Automatizacion para el Catalogo</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+Las siguientes automation ideas se derivan de la investigacion de n8nmarkets.com (850+ templates en 20+ categories), n8n.io/workflows (10,930 templates comunitarios con 7,548 AI workflows), BetterClaw (25 workflow ideas + 7 AI agent ideas), y Medium/YouTube (10+ automation roadmaps). Cada idea incluye una descripcion detallada del workflow, nodes estimate, pricing sugerido, y value proposition para clientes. Estas ideas amplian el portfolio mas alla de la concentration actual en IA y Agentes, diversificando hacia verticals de alto valor commercial.
+</div>
+
+<table class="data-table">
+<tr><th>Nombre</th><th>Categoria</th><th>Nodos</th><th>Descripcion</th><th>Price</th></tr>
+<tr><td><strong>Lead Qualification AI Agent</strong></td><td>Marketing & Leads</td><td>8-15</td><td>Agente AI que analiza leads entrantes, clasifica por prioridad, enriquece con datos de CRM, y asigna al representante correcto. Usa LangChain Agent co</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Customer Support Triage Bot</strong></td><td>Chat & Mensajeria</td><td>10-18</td><td>Agente AI que clasifica tickets de soporte por urgencia y tipo, responde automaticamente preguntas frecuentes usando RAG, y escala tickets complejos a</td><td class="price">$30-50</td></tr>
+<tr><td><strong>Social Media Content Engine</strong></td><td>Social Media & Contenido</td><td>6-12</td><td>Pipeline que genera contenido social (posts, carousels, videos) usando AI, los publica en multiples plataformas (LinkedIn, Twitter, Instagram), y trac</td><td class="price">$15-35</td></tr>
+<tr><td><strong>E-Commerce Order Orchestrator</strong></td><td>E-Commerce & Ventas</td><td>12-25</td><td>Workflow consolidado que maneja el ciclo completo: pedido -> inventario -> pago -> envio -> notificacion. Incluye sub-workflows para cada fase y error</td><td class="price">$35-65</td></tr>
+<tr><td><strong>HR Resume Screening Agent</strong></td><td>RRHH & Seleccion</td><td>8-14</td><td>Agente AI que recibe resumes via email/form, analiza con LLM contra criterios definidos, genera scorecard, y alimenta el ATS con resultados. Incluye p</td><td class="price">$25-40</td></tr>
+<tr><td><strong>Invoice Processing Pipeline</strong></td><td>E-Commerce & Ventas</td><td>10-16</td><td>OCR + AI pipeline que recibe invoices (PDF/email), extrae datos con LLM, valida contra orden de compra, y sincroniza con sistema contable. Error handl</td><td class="price">$30-55</td></tr>
+<tr><td><strong>RAG Knowledge Assistant</strong></td><td>RAG & Vector Store</td><td>6-12</td><td>Chatbot RAG que indexa documentos de empresa (Google Drive, PDFs, wiki), usa vector store para retrieval, y genera respuestas contextualmente precisas</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Multi-Agent Research Assistant</strong></td><td>IA & Agentes</td><td>15-25</td><td>Sistema multi-agente donde un planner coordina researcher, analyst, y writer agents. Cada agente tiene tools especificos (web search, data analysis, d</td><td class="price">$45-75</td></tr>
+<tr><td><strong>MCP Calendar + CRM Server</strong></td><td>MCP Tools</td><td>8-15</td><td>MCP server que expone tools de calendario y CRM como servicios MCP. Clientes pueden conectar desde Claude Desktop, ChatGPT, o cualquier MCP client. In</td><td class="price">$20-40</td></tr>
+<tr><td><strong>Automated SEO Monitor</strong></td><td>Marketing & Leads</td><td>8-14</td><td>Pipeline que monitoriza rankings SEO, analiza competitors, detecta cannibalization de keywords, y genera reportes semanales con recomendaciones AI-pow</td><td class="price">$20-35</td></tr>
+<tr><td><strong>Voice-Enabled AI Assistant</strong></td><td>Voz & Transcripcion</td><td>8-12</td><td>Asistente personal con Telegram que acepta voz y texto, transcribe con Whisper, procesa con LLM, y ejecuta acciones (calendar, reminders, emails). Int</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Data Pipeline ETL Orchestrator</strong></td><td>Dashboard & Datos</td><td>12-20</td><td>Pipeline modular ETL con sub-workflows para extract, transform, load. Maneja multiples fuentes (APIs, databases, CSVs), valida datos con pre-flight ch</td><td class="price">$35-60</td></tr>
+<tr><td><strong>Legal Document Review Agent</strong></td><td>Documentos & PDF</td><td>10-16</td><td>Agente AI que recibe documentos legales, extrae clausulas clave, verifica compliance contra regulaciones, y genera resumen con recomendaciones. Usa LL</td><td class="price">$30-55</td></tr>
+<tr><td><strong>DevOps Alert & Incident Manager</strong></td><td>Utilidades & DevOps</td><td>10-18</td><td>Workflow que recibe alertas de monitoring, clasifica severity con AI, crea incident en Jira/PagerDuty, notifica equipo via Slack, y ejecuta remediatio</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Inventory Sync & Auto-Order</strong></td><td>E-Commerce & Ventas</td><td>8-14</td><td>Workflow que syncs inventario entre multiples plataformas (Shopify, WooCommerce, ERP), detecta low-stock thresholds, genera purchase orders automatica</td><td class="price">$20-40</td></tr>
+</table>
+
+<div class="body-text" style="margin-top: 14px;">
+El marketplace n8nmarkets.com organiza sus 850+ templates en las siguientes 20 categories, que proporcionan un framework para categorizar nuestro propio catalogo de manera professional y discoverable. La alignment con estas categories facilita el cross-listing en n8nmarkets.com y mejora la discoverability para clientes que buscan soluciones por vertical de negocio. Las categories mas vendidas son: AI & Agents, Lead Generation, CRM Integrations, Social Media, y E-Commerce.
+</div>
+<div class="stat-row">
+
+<div class="badge badge-blue">AI & Agents</div> 
+<div class="badge badge-blue">Lead Generation</div> 
+<div class="badge badge-blue">CRM Integrations</div> 
+<div class="badge badge-blue">Social Media</div> 
+<div class="badge badge-blue">E-Commerce</div> 
+<div class="badge badge-blue">Email Automation</div> 
+<div class="badge badge-blue">Team Communication</div> 
+<div class="badge badge-blue">Marketing</div> 
+<div class="badge badge-blue">Sales</div> 
+<div class="badge badge-blue">HR & Recruiting</div> 
+<div class="badge badge-blue">Finance & Accounting</div> 
+<div class="badge badge-blue">IT Operations</div> 
+<div class="badge badge-blue">Document Processing</div> 
+<div class="badge badge-blue">Data & Analytics</div> 
+<div class="badge badge-blue">Healthcare</div> 
+<div class="badge badge-blue">Legal</div> 
+<div class="badge badge-blue">Education</div> 
+<div class="badge badge-blue">Customer Support</div> 
+<div class="badge badge-blue">DevOps</div> 
+<div class="badge badge-blue">Security & Compliance</div> 
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 11</div>
+    <div class="section-title">Catalogo Marketplace - Propuesta a Clientes</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+El catalogo marketplace final presenta los workflows production-ready disponibles para clientes prospectos, organizados por vertical de negocio con pricing transparente. Cada listing incluye: nombre del workflow, descripcion del value proposition, categorias, pricing tier, y link al template JSON. El catalogo se publica en n8nmarkets.com (con listings en 30+ languages auto-translated) y se ofrece directamente a clientes via proposals customizadas. La estrategia de promotion incluye: (1) Listing en n8nmarkets.com con SEO optimizado, (2) Social media marketing con case studies, (3) Webinars demostrativos, y (4) Partnerships con agencias de automation.
+</div>
+
+<table class="data-table">
+<tr><th>Workflow</th><th>Categoria</th><th>Tier</th><th>Value Proposition</th><th>Price</th></tr>
+<tr><td><strong>Unknown</strong></td><td>Calendario & Agenda, IA & Agentes</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Base de Datos, IA & Agentes, E-Commerce & Ventas</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Base de Datos, IA & Agentes, E-Commerce & Ventas</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Base de Datos, IA & Agentes, E-Commerce & Ventas</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Chat & Mensajería, IA & Agentes</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Chat & Mensajería, IA & Agentes</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Utilidades & DevOps, Chat & Mensajería, IA & Agentes</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Unknown</strong></td><td>Social Media & Contenido, Email & Comunicación, Marketing & Leads, IA & Agentes, Scraping & Extracción</td><td>Starter</td><td>Automatizacion consolidada</td><td class="price">$15-35</td></tr>
+<tr><td><strong>Lead Qualification AI Agent</strong></td><td>Marketing & Leads</td><td>Professional</td><td>Agente AI que analiza leads entrantes, clasifica por prioridad, enriquece con datos de CRM, y asigna al representante co</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Customer Support Triage Bot</strong></td><td>Chat & Mensajeria</td><td>Professional</td><td>Agente AI que clasifica tickets de soporte por urgencia y tipo, responde automaticamente preguntas frecuentes usando RAG</td><td class="price">$30-50</td></tr>
+<tr><td><strong>Social Media Content Engine</strong></td><td>Social Media & Contenido</td><td>Starter</td><td>Pipeline que genera contenido social (posts, carousels, videos) usando AI, los publica en multiples plataformas (LinkedI</td><td class="price">$15-35</td></tr>
+<tr><td><strong>E-Commerce Order Orchestrator</strong></td><td>E-Commerce & Ventas</td><td>Professional</td><td>Workflow consolidado que maneja el ciclo completo: pedido -> inventario -> pago -> envio -> notificacion. Incluye sub-wo</td><td class="price">$35-65</td></tr>
+<tr><td><strong>HR Resume Screening Agent</strong></td><td>RRHH & Seleccion</td><td>Professional</td><td>Agente AI que recibe resumes via email/form, analiza con LLM contra criterios definidos, genera scorecard, y alimenta el</td><td class="price">$25-40</td></tr>
+<tr><td><strong>Invoice Processing Pipeline</strong></td><td>E-Commerce & Ventas</td><td>Professional</td><td>OCR + AI pipeline que recibe invoices (PDF/email), extrae datos con LLM, valida contra orden de compra, y sincroniza con</td><td class="price">$30-55</td></tr>
+<tr><td><strong>RAG Knowledge Assistant</strong></td><td>RAG & Vector Store</td><td>Starter</td><td>Chatbot RAG que indexa documentos de empresa (Google Drive, PDFs, wiki), usa vector store para retrieval, y genera respu</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Multi-Agent Research Assistant</strong></td><td>IA & Agentes</td><td>Enterprise</td><td>Sistema multi-agente donde un planner coordina researcher, analyst, y writer agents. Cada agente tiene tools especificos</td><td class="price">$45-75</td></tr>
+<tr><td><strong>MCP Calendar + CRM Server</strong></td><td>MCP Tools</td><td>Professional</td><td>MCP server que expone tools de calendario y CRM como servicios MCP. Clientes pueden conectar desde Claude Desktop, ChatG</td><td class="price">$20-40</td></tr>
+<tr><td><strong>Automated SEO Monitor</strong></td><td>Marketing & Leads</td><td>Professional</td><td>Pipeline que monitoriza rankings SEO, analiza competitors, detecta cannibalization de keywords, y genera reportes semana</td><td class="price">$20-35</td></tr>
+<tr><td><strong>Voice-Enabled AI Assistant</strong></td><td>Voz & Transcripcion</td><td>Professional</td><td>Asistente personal con Telegram que acepta voz y texto, transcribe con Whisper, procesa con LLM, y ejecuta acciones (cal</td><td class="price">$25-45</td></tr>
+<tr><td><strong>Data Pipeline ETL Orchestrator</strong></td><td>Dashboard & Datos</td><td>Professional</td><td>Pipeline modular ETL con sub-workflows para extract, transform, load. Maneja multiples fuentes (APIs, databases, CSVs), </td><td class="price">$35-60</td></tr>
+<tr><td><strong>CRM MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server que expone operaciones CRM como tools MCP. Compatible con HubSpot, Salesforce, Pipedrive. Permite a cualquier</td><td class="price">$35-75</td></tr>
+<tr><td><strong>Calendar MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server para Google Calendar y Outlook. Tools de scheduling con conflict detection automatica. Integracion con timezo</td><td class="price">$35-75</td></tr>
+<tr><td><strong>Document Analysis MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server para procesamiento de documentos con AI. Usa LLM para extraction, analysis, y compliance checking. Vector sto</td><td class="price">$35-75</td></tr>
+<tr><td><strong>E-Commerce MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server para plataformas e-commerce (Shopify, WooCommerce, custom). Sincroniza datos entre plataformas y expone opera</td><td class="price">$35-75</td></tr>
+<tr><td><strong>Database MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server para acceso seguro a databases (PostgreSQL, MySQL, Supabase). Incluye query validation, rate limiting, y sche</td><td class="price">$35-75</td></tr>
+<tr><td><strong>Communication MCP Server</strong></td><td>MCP Tools</td><td>Enterprise</td><td>MCP server unificado para comunicaciones multi-canal. Routing inteligente segun urgencia y tipo. Template management par</td><td class="price">$35-75</td></tr>
+</table>
+
+<div class="chapter-header">
+    <div class="section-tag">CAPITULO 12</div>
+    <div class="section-title">Roadmap de Implementation</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+La implementation del catalogo marketplace sigue un roadmap de 4 phases con timelines estimados y deliverables concrete. Phase 1 (Semanas 1-2): Refactoring urgente de duplicados y consolidation de similitudes. Phase 2 (Semanas 3-4): Implementation de error handling y best practices en todos los workflows production-ready. Phase 3 (Semanas 5-6): Development de templates base, MCP servers, y nuevas automation ideas. Phase 4 (Semanas 7-8): Listing en n8nmarkets.com, creation de proposals para clientes, y launch del marketplace privado.
+</div>
+
+
+<div class="card">
+    <div class="card-title">Phase 1 - Semanas 1-2</div>
+    <div class="card-body">Eliminar 14 duplicados, consolidar 41 similitudes, crear workflows master con Switch/If para variants, establecer naming convention y categorization system</div>
+    <div class="card-price">Deliverable: Portfolio reducido de ~70 workflows unicos y production-structured</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Phase 2 - Semanas 3-4</div>
+    <div class="card-body">Agregar Global Error Trigger a todos los workflows, implementar Retry on Fail con exponential backoff, configurar Dead Letter Queue en PostgreSQL/Google Sheets, agregar Pre-flight Validation en workflows criticos, implementar Idempotency Keys</div>
+    <div class="card-price">Deliverable: Todos los workflows con error handling comprehensive y production readiness</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Phase 3 - Semanas 5-6</div>
+    <div class="card-body">Crear 6 templates base (boilerplate), desarrollar 6 MCP server templates, implementar 15 nuevas automation ideas, versionar todos los workflows con semantic versioning, crear sub-workflows para modularizar workflows >15 nodos</div>
+    <div class="card-price">Deliverable: Catalogo completo con templates, MCP servers, y nuevas automatizaciones</div>
+</div>
+
+<div class="card">
+    <div class="card-title">Phase 4 - Semanas 7-8</div>
+    <div class="card-body">Crear seller account en n8nmarkets.com, listar workflows con SEO-optimized descriptions en 30+ languages, crear proposals customizadas para 5 verticals (E-Commerce, Marketing, RRHH, Legal, DevOps), launch social media marketing con case studies</div>
+    <div class="card-price">Deliverable: Marketplace live con listings activos y proposals enviadas a prospectos</div>
+</div>
+
+</div>
+
+
+<div class="ending">
+    <div class="ending-bg-circle"></div>
+    <div class="ending-big-text">Automatiza.<br>Consolida.<br>Vende.</div>
+    <div class="ending-sub-text">
+        Tu portfolio de 118 workflows tiene el potential<br>
+        para transformarse en un marketplace profesional<br>
+        con pricing competitivo y clientes recurrentes.
+    </div>
+    <div class="ending-cta">
+        Siguiente paso: Iniciar Phase 1 - Refactoring de duplicados y consolidation
+    </div>
+</div>
+</body>
+</html>

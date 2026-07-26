@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://n8n.io/workflows/categories/ai",
+    "name": "Top 7548 AI automation workflows",
+    "snippet": "Common AI workflow examples are data extraction and analysis, text translation and summarization, customer support automation, image classification",
+    "host_name": "n8n.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/16hhram/n8n_workflow_and_use_cases",
+    "name": "N8N WORKFLOW AND USE CASES",
+    "snippet": "I use n8n a lot in the areas of household, meal planning, health, work (including accounting), security and networking/socializing. Read more",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8n.io/workflows/categories/social-media",
+    "name": "Top 612 Social Media automation workflows",
+    "snippet": "This comprehensive n8n workflow automatically transforms trending Google search queries into engaging LinkedIn posts using AI.",
+    "host_name": "n8n.io",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/enescingoz/awesome-n8n-templates",
+    "name": "enescingoz/awesome-n8n-templates",
+    "snippet": "280+ free n8n automation templates — ready-to- use workflows for Gmail, Telegram, Slack, Discord, WhatsApp, Google Drive, Notion, OpenAI, and more.",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://goodspeed.studio/blog/n8n-templates",
+    "name": "Best n8n Templates 2026: 30 Agency-Tested Workflows",
+    "snippet": "May 29, 2026 — The official library at n8n.io/workflows is the primary source. You can browse by category, filter by integration, or search by use case . Read more",
+    "host_name": "goodspeed.studio",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.intuz.com/blog/best-n8n-workflow-templates",
+    "name": "Top 30 n8n Workflow Templates (Free & Production-Ready)",
+    "snippet": "Jun 30, 2026 — cover common use cases like lead qualification, CRM sync, Slack notifications, email automation, and AI-powered content distribution.",
+    "host_name": "www.intuz.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tf6L9gzShf0",
+    "name": "How to Use Free n8n Templates Without Breaking Everything",
+    "snippet": "I'll walk through one relatively complex template from start to finish so you can see the full process and what to watch for along the way.",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8n.io/workflows/categories/secops",
+    "name": "Discover 195 SecOps Automation Workflows from the n8n's",
+    "snippet": "Explore 195 SecOps automated workflow templates from n8n's global community. Simplify your automation tasks with ready-made solutions tailored to your ...",
+    "host_name": "n8n.io",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8n.io/workflows",
+    "name": "Discover 10930 Automation Workflows from the n8n's Community",
+    "snippet": "Explore 10930 automated workflow templates from n8n's global community. Simplify your automation tasks with ready-made solutions tailored to your needs.",
+    "host_name": "n8n.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.n8nresources.dev",
+    "name": "5,600+ Curated n8n Workflow Templates — Free to Browse | n8n",
+    "snippet": "Independent community directory of n8n templates — 5,600+ curated n8n workflow automation templates with paste-ready JSON for Slack, Gmail, AI, webhooks, CRM & 400+ integrations.",
+    "host_name": "www.n8nresources.dev",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

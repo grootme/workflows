@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://community.n8n.io/t/build-your-first-mcp-server-with-n8n/99899?tl=en",
+    "name": "Build Your First MCP Server with n8n",
+    "snippet": "Apr 11, 2025 — In this example, we use Google Calendar and custom functions as two separate MCP Servers , demonstrating how to integrate both native and custom ...",
+    "host_name": "community.n8n.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.n8n.io/connect/connect-to-n8n-mcp-server",
+    "name": "Connect to n8n MCP server",
+    "snippet": "In the MCP Servers section, find n8n and click Connect. · Enter your n8n server URL (shown ... Read more",
+    "host_name": "docs.n8n.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/n8n/comments/1lvcwri/i_built_an_mcp_server_that_finally_enables",
+    "name": "I built an MCP server that finally enables building n8n",
+    "snippet": "✓ Provides real-time access to documentation ... Read more",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.n8n.io/t/what-i-learnt-after-building-a-bunch-of-mcp-servers-in-n8n/107628?tl=en",
+    "name": "What I Learnt after Building a Bunch of MCP Servers in N8N",
+    "snippet": "Apr 28, 2025 — Using n8n is probably one of the fastest ways to create customised MCP servers right now. being able to attach around 267 tools out of the box, ...",
+    "host_name": "community.n8n.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://codingscape.com/blog/how-to-build-n8n-workflows-with-anthropic-mcp",
+    "name": "How to build n8n workflows with Anthropic MCP integration",
+    "snippet": "These videos walk through setting up both MCP client and server configurations in n8n , complete with real examples and common gotchas.",
+    "host_name": "codingscape.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/leonardsellem/n8n-mcp-server",
+    "name": "leonardsellem/n8n-mcp-server: MCP",
+    "snippet": "This project provides a Model Context Protocol ( MCP ) server that empowers AI assistants to seamlessly interact with n8n , a popular workflow automation tool .\nThis project provides a Model Context Protocol (MCP) server that empowers AI assistants to seamlessly interact with n8n, a popular workflow automation tool. It acts as a bridge, enabling AI assistants to programmatically manage and control n8n workflows and executions using natural language commands.",
+    "host_name": "github.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://zeabur.com/blogs/use-mcp-tools-with-n8n",
+    "name": "Blogs: Getting Started with n8n + MCP",
+    "snippet": "Mar 24, 2025 — This article will guide you step-by-step: using n8n with Claude's MCP (Model Context Protocol) tools to create smarter automation flows. Read more",
+    "host_name": "zeabur.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://systemintegration.in/blog/integrating-n8n-with-mcp-servers",
+    "name": "Integrating n8n with MCP Servers for Smart Automation",
+    "snippet": "Aug 21, 2025 — Why Integrate n8n with MCP Servers ? By combining n8n with MCP servers , you create a bridge between workflow automation and AI intelligence. Read more",
+    "host_name": "systemintegration.in",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://leanware.co/insights/n8n-mcp-integration",
+    "name": "n8n MCP Integration Guide | Connect n8n with MCP Servers",
+    "snippet": "Learn how to integrate MCP (Model Context Protocol) with n8n. Detailed guide for setting up n8n as an MCP client or server and configuring nodes.",
+    "host_name": "leanware.co",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.n8n.io/build/ways-of-building-workflows/connect-to-n8n-mcp-server",
+    "name": "Use n8n MCP server | Build | n8n Docs",
+    "snippet": "An MCP server exposes a set of tools and resources. n8n provides a built-in MCP server to let AI apps interface with n8n workflows and resources. An MCP client — such as Claude Desktop, Claude Code, Codex, or a custom agent - connects to that server and calls those tools on your behalf.",
+    "host_name": "docs.n8n.io",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://blog.n8n.io/we-need-re-learn-what-ai-agent-development-tools-are-in-2026",
+    "name": "We need to re-learn what AI agent development tools are in 2026",
+    "snippet": "These will include observability, data loss prevention, transparency and verifiability, proxy-based filtering and firewalling, authentication ...",
+    "host_name": "blog.n8n.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://anmol-gupta.medium.com/building-powerful-ai-agents-with-n8n-in-2026-a-deep-dive-technical-guide-with-full-rag-tutorial-d6bc9968be68",
+    "name": "Building Powerful AI Agents with n8n in 2026 - Anmol Gupta - Medium",
+    "snippet": "2026, n8n has become a beast for building AI agents — thanks to massive LangChain upgrades, direct vector store tools, and better multi-agent ...",
+    "host_name": "anmol-gupta.medium.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=HosB3W-Iee4&vl=en-US",
+    "name": "LangChain vs n8n (2026) | Automation vs AI Agents Compared",
+    "snippet": "LangChain vs n8n (2026) | Automation vs AI Agents Compared FREE Business Toolkit for Entrepreneurs https://easyaccess.tech/free-toolkit ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://n8nlab.io/blog/n8n-vs-langchain-enterprise-ai-agent-orchestration",
+    "name": "n8n vs LangChain: AI Agent Orchestration Compared [2026]",
+    "snippet": "Discover 15 production-ready n8n multi-agent workflow templates for 2026. Expert guide on AI agent development and enterprise automation ...",
+    "host_name": "n8nlab.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://serenitiesai.com/articles/n8n-vs-langchain-2026",
+    "name": "n8n vs LangChain 2026: Automation Platform vs AI Framework",
+    "snippet": "n8n vs LangChain compared: pricing, features, and use cases. Learn when to use visual automation vs code-first AI orchestration in 2026.",
+    "host_name": "serenitiesai.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://maazsiddiqui.com/blog/ai-agent-frameworks",
+    "name": "Best AI Agent Frameworks (2026): A Practitioner's Guide | Blog",
+    "snippet": "n8n is a visual workflow-automation platform, and its native AI Agent node bundles a chat model, system prompt, memory, and tools",
+    "host_name": "maazsiddiqui.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://innovativeais.com/blog/top-10-ai-agent-frameworks-to-master-in-2026",
+    "name": "Top 10 AI Agent Frameworks to Master in 2026",
+    "snippet": "#1: LangGraph – Graph-Based Orchestration for Production. LangGraph has emerged as the leading framework for stateful, multi-agent workflows.",
+    "host_name": "innovativeais.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://sakshamsolanki.com/blog/n8n-vs-langchain-ai-workflow-automation",
+    "name": "n8n vs LangChain: When to Use Each for AI Workflow Automation",
+    "snippet": "I use n8n and LangChain in production daily. Here's an honest comparison of when each tool wins for AI workflow automation. N8n: Visual Orchestration... · Can You Use N8n And... · Is N8n Better Than Langchain...",
+    "host_name": "sakshamsolanki.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.entrans.ai/blog/build-ai-agents-automate-workflows-n8n",
+    "name": "How to Build AI Agents and Automate Workflows with n8n (2026",
+    "snippet": "Learn how to build AI agents and automate workflows with n8n in 2026. Covers architecture, LLM integration, memory, and 10 real-world ... N8n Ai Agent Architecture... · 10 Real-World N8n Ai Agent... · N8n Ai Agent Vs...",
+    "host_name": "www.entrans.ai",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=8gYgiujI_RE&vl=en",
+    "name": "Which One is Better for Workflow Automation & AI? - YouTube",
+    "snippet": "LangChain vs n8n 2026 | Which One is Better for Workflow Automation & AI? Subscribe to How to Simple to get more solutions to your problems!",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
