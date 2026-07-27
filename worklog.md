@@ -162,3 +162,36 @@ Stage Summary:
 - Phase 1 tab shows complete refactoring results with interactive UI
 - All data served from /download/phase1_refactoring_complete.json via /api/phase1
 - Web app fully functional at http://localhost:3000
+---
+Task ID: 6
+Agent: Main Agent
+Task: Phase 2 - Generate 25 importable n8n workflow JSONs, marketplace listings, and push to GitHub
+
+Work Log:
+- Analyzed original n8n workflow JSON format (nodes, connections, settings, pinData, versionId)
+- Studied node structures: parameters, typeVersion, position, id, credentials, webhookId
+- Studied connection format: from_node → {main: [[{node, type, index}]]}
+- Generated 13 consolidated workflow JSONs with full n8n structure:
+  - G13 Global Error Handler (8 nodes - foundation for all workflows)
+  - G1 MCP Calendar Suite Pro (11 nodes - dual MCP+Chat trigger, Gemini Flash, 4 Calendar tools)
+  - G2 MCP Gmail Suite Pro (9 nodes)
+  - G3 MCP Contactos Suite Pro (8 nodes)
+  - G4 E-Commerce Agent Suite (14 nodes - tiered LLM orchestrator)
+  - G5 Marketing Multi-Agent Suite (13 nodes)
+  - G6-G12: Asistente Platform, Imagenes Citas, Video, Scraper, HR, WhatsApp, RAG
+- Generated 6 MCP Server workflows (Calendar, Gmail, Contacts, E-Commerce, HR, Knowledge Base)
+  - Each has: MCP Trigger → Parse → Switch → API tools → Response
+  - Structured as proper MCP servers for client integration
+- Generated 6 Base Templates (Chat, MCP Tool, RAG, Multi-Agent Orchestrator, Error Handler, MCP Server)
+- Generated 25 marketplace listings with pricing for n8nmarkets.com
+- Created README.md for GitHub repo
+- Created GitHub repo grootme/workflows via API
+- Pushed all 52 files (6940 lines) to https://github.com/grootme/workflows
+
+Stage Summary:
+- 25 production-ready n8n workflow JSONs generated (importable format)
+- All workflows include: error handling, persistent memory, structured output, MCP compatibility
+- Placeholder credentials for easy user configuration
+- GitHub repo: https://github.com/grootme/workflows (public, 52 files)
+- Marketplace listings: 25 items with n8nmarkets pricing ($15-$89 range)
+- Total catalog value: $949
