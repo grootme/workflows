@@ -1,0 +1,350 @@
+{
+  "name": "HR AI Agent Pro v2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hr-agent",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "322aef0c-beca-4ee3-986d-d8bddefef878",
+      "name": "Webhook",
+      "webhookId": "hr-agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ac68064f-0859-4a72-b211-f8d4cfe1d754",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "e9303432-4599-4ca6-ba27-75431436941e",
+              "name": "chatId",
+              "value": "={{ $json.body.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "097b6bc2-0fac-4548-b597-2f1f5517aa42",
+              "name": "resumeUrl",
+              "value": "={{ $json.body.resumeUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ],
+      "id": "644b739f-6b85-41c2-beb6-ecdbdb29d509",
+      "name": "Parse Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "=# HR AI Agent\n\nYou are an HR assistant specialized in recruitment and employee management.\n\n## Available Tools:\n- **Resume Analyzer**: Screen and evaluate candidate resumes\n- **Interview Scheduler**: Schedule and manage interview appointments\n- **Employee Database**: Query and manage employee records\n- **Think**: Plan multi-step HR workflows\n\n## Rules:\n- Evaluate resumes objectively against job criteria\n- Score candidates on relevant skills, experience, and education\n- Schedule interviews with appropriate time slots\n- Never discriminate based on protected characteristics\n- Current datetime: {{ $now }}\n\n## Output:\n- Structured candidate evaluations with scores\n- Interview scheduling confirmations\n- Employee data queries with organized results"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        600,
+        0
+      ],
+      "id": "1f9204fd-8b8d-4b32-b968-eef059d0e87d",
+      "name": "HR Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "827c75cd-2041-4e06-b471-77bcdabb4b86",
+      "name": "GPT-4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.chatId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "d90d2c85-8a4a-4975-8864-29f36d4d2077",
+      "name": "Chat Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan resume screening criteria, interview scheduling, and multi-step HR workflows"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "474e758e-c077-441d-99ac-28386e99c880",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "description": "Analyze and evaluate candidate resumes against job requirements, scoring skills, experience, and education",
+        "url": "={{ $fromAI('Resume_API_URL', 'Resume analysis API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "6886d878-5e24-4d20-866b-fd0257ba66c0",
+      "name": "Resume Analyzer"
+    },
+    {
+      "parameters": {
+        "description": "Schedule interview appointments, check availability, and send calendar invites",
+        "url": "={{ $fromAI('Calendar_API_URL', 'Calendar scheduling API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "b08d7d2a-31c1-41ed-8ad1-fc99f981d7a4",
+      "name": "Interview Scheduler"
+    },
+    {
+      "parameters": {
+        "description": "Query and manage employee records, benefits, and organizational data",
+        "url": "={{ $fromAI('HR_DB_API_URL', 'HR database API endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        300
+      ],
+      "id": "bcb09e2a-6b57-4ba4-b45c-69cd3f66214f",
+      "name": "Employee Database"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b315389-163b-4d72-93fe-db4f39d371b0",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "d9634d18-0303-4f88-9c86-01ba93a791c1",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, response: $json.response }) }}"
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "fadcaa31-babd-47dd-a2f4-1ddb9443ea24",
+      "name": "Respond"
+    },
+    {
+      "parameters": {
+        "content": "👤 HR AI Agent Pro v2.0\n\nLLM: GPT-4o-mini\nMemory: BufferWindow\nTools: Think + Resume + Interview + Employee DB\n\nSetup:\n1. Configure Resume/Calendar/HR APIs\n2. Set up OpenAI credential\n3. Connect to HR systems\n\nZero-debt: All ai_* connections correct",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "id": "752da27a-09e2-4e2f-b149-9797df17048f",
+      "name": "HR Docs"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Request": {
+      "main": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HR Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interview Scheduler": {
+      "ai_tool": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Employee Database": {
+      "ai_tool": [
+        [
+          {
+            "node": "HR Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

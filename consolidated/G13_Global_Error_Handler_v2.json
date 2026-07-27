@@ -1,0 +1,319 @@
+{
+  "name": "Global Error Handler v2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fbd81dd2-db72-4f18-bcfe-7b1b522057da",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59f97857-09af-422f-beb5-f6d52c7a1d85",
+              "name": "workflowName",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4d9fc71b-c372-4594-aa02-4e5f0becab1f",
+              "name": "executionId",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "769f51e1-eb6e-456b-85d1-9a04372bbf39",
+              "name": "nodeName",
+              "value": "={{ $json.execution.error.node.name }}",
+              "type": "string"
+            },
+            {
+              "id": "a6e60a9a-59ab-490d-80b1-f2db12d6ad5e",
+              "name": "errorMessage",
+              "value": "={{ $json.execution.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "81b2bac3-862c-473c-8489-2d358d655f1a",
+              "name": "timestamp",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "1db95d88-5dc6-4065-93ee-d3af474c4da6",
+              "name": "severity",
+              "value": "={{ $json.execution.lastNodeExecuted }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ],
+      "id": "9ffb1224-80ee-4505-86c8-4f551058c9eb",
+      "name": "Parse Error"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.nodeName }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "critical"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.errorMessage }}",
+                    "rightValue": "timeout",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "warning"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": 2
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "4a115c22-5856-495c-9cd3-476e4feb5231",
+      "name": "Severity Router"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "admin@example.com",
+        "subject": "=🚨 CRITICAL ERROR: {{ $json.workflowName }} - {{ $json.nodeName }}",
+        "message": "=Workflow: {{ $json.workflowName }}\nNode: {{ $json.nodeName }}\nError: {{ $json.errorMessage }}\nExecution ID: {{ $json.executionId }}\nTimestamp: {{ $json.timestamp }}\n\nThis requires immediate attention.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -200
+      ],
+      "id": "40dacca3-256c-4086-96d7-37818edacd05",
+      "name": "Send Critical Alert",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "n8n_error_log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "={{ $json.workflowName }}",
+            "node_name": "={{ $json.nodeName }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "execution_id": "={{ $json.executionId }}",
+            "severity": "warning",
+            "timestamp": "={{ $json.timestamp }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        600,
+        0
+      ],
+      "id": "ff353d9f-239a-4db4-8f83-a56bd1dc106d",
+      "name": "Log Warning",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "n8n_error_log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "={{ $json.workflowName }}",
+            "node_name": "={{ $json.nodeName }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "execution_id": "={{ $json.executionId }}",
+            "severity": "info",
+            "timestamp": "={{ $json.timestamp }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        600,
+        200
+      ],
+      "id": "47d65ce6-4e2d-49c4-a495-a371ec53f2c9",
+      "name": "Log Info",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log(`[Error Handler] Workflow: ${$input.item.json.workflowName}, Node: ${$input.item.json.nodeName}, Error: ${$input.item.json.errorMessage}`); return $input.item;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "id": "97b2fef9-55a3-4389-a1c8-ab6e2208103a",
+      "name": "Console Log"
+    },
+    {
+      "parameters": {
+        "content": "🛡️ Global Error Handler v2.0\n\nArchitecture: Error Trigger → Parse → Router → Action\nActions:\n- Critical: Email alert to admin\n- Warning: Log to PostgreSQL\n- Info: Log to PostgreSQL\n\nSetup:\n1. Create n8n_error_log table in PostgreSQL\n2. Configure Gmail + PostgreSQL creds\n3. Update admin email\n4. Set this workflow as error handler\n   in other workflow settings\n\nZero-debt: Clean routing, no orphan nodes",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "id": "e12dfa26-6ef6-4f01-9707-41b6056877e0",
+      "name": "Error Handler Docs"
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Error": {
+      "main": [
+        [
+          {
+            "node": "Severity Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Console Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Severity Router": {
+      "main": [
+        [
+          {
+            "node": "Send Critical Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Warning",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

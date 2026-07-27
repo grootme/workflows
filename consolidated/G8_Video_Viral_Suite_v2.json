@@ -1,0 +1,241 @@
+{
+  "name": "AI Video Content Suite v2",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "content": "Hi! I can help you create viral video content. Tell me your topic, platform, and style!"
+          }
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ca84bf8f-d16a-412c-a5a5-3bce0f6fa60c",
+      "name": "Chat Trigger",
+      "webhookId": "ff1ae9c0-4781-45bc-98db-a9a33cc30d7f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# AI Video Content Creator\n\nYou are a video content strategist and creator with access to specialized tools.\n\n## Available Tools:\n- **Think**: Plan video concepts and multi-step strategies\n- **Script Writer**: Generate video scripts with hooks, body, and CTAs\n- **Thumbnail Designer**: Create thumbnail concepts and descriptions\n- **Audio Generator**: Plan voiceover scripts and audio elements\n\n## Rules:\n- Consider platform-specific formats (TikTok: 60s, YouTube Shorts: 60s, Reels: 90s)\n- Always include a strong hook in the first 3 seconds\n- Include trending hashtags and sound suggestions\n- Current datetime: {{ $now }}\n\n## Output Style:\n- Deliver complete video production packages\n- Include script, thumbnail, audio plan, and posting schedule"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "0e64abf6-a3bf-45bc-9d4d-5fa857d7fe7e",
+      "name": "Video Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-2.5-flash-preview-05-20",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "deee49ea-182e-4027-9423-7082686ccacc",
+      "name": "Gemini Flash",
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "",
+          "name": "Google Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        300
+      ],
+      "id": "fd325b49-353f-4646-ad64-727544fbde74",
+      "name": "Chat Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan video concept, script structure, and content strategy before generating"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "4cc1a6b5-62b1-420d-9e80-1d52c92d5c31",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "description": "Generate complete video scripts with hooks, narrative arc, and CTAs",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "8a81e9dc-4159-4b99-8e63-4c745079aa66",
+      "name": "Script Writer"
+    },
+    {
+      "parameters": {
+        "description": "Create thumbnail concepts with visual descriptions, text overlays, and color palettes",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "25da98bf-6718-463b-b043-e91a50303a79",
+      "name": "Thumbnail Designer"
+    },
+    {
+      "parameters": {
+        "description": "Plan voiceover scripts and audio elements for video production",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "75fd955e-8252-44af-9a48-f0632119041f",
+      "name": "Audio Generator"
+    },
+    {
+      "parameters": {
+        "content": "🎬 AI Video Content Suite v2.0\n\nLLM: Gemini 2.5 Flash (multimodal)\nMemory: BufferWindow\nTools: Think + 3 Sub-Workflows\n\nSetup:\n1. Deploy Script/Thumbnail/Audio sub-workflows\n2. Copy their workflow IDs\n3. Configure Gemini credential\n\nZero-debt: All ai_* connections correct",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "id": "f05ac6fc-17ef-4f83-8d8d-746f92a10cc6",
+      "name": "Video Docs"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Flash": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script Writer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thumbnail Designer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio Generator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Video Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "name": "MCP HR Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-hr"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dce466d7-55a4-4da6-bdfa-b448269b9ea6",
+      "name": "MCP HR Trigger",
+      "webhookId": "mcp-hr"
+    },
+    {
+      "parameters": {
+        "description": "Screen and evaluate candidate resumes against job criteria",
+        "url": "={{ $fromAI('Resume_API_URL', 'Resume screening API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "fe8eec9b-88d4-4934-a23b-f10c8241015f",
+      "name": "Screen Resume"
+    },
+    {
+      "parameters": {
+        "description": "Schedule interview appointments and send calendar invites",
+        "url": "={{ $fromAI('Interview_API_URL', 'Interview scheduling endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "f936fe32-e25b-4ee3-8c7d-c4fafe5c0415",
+      "name": "Schedule Interview"
+    },
+    {
+      "parameters": {
+        "description": "Query employee records, benefits, and organizational data",
+        "url": "={{ $fromAI('Employee_API_URL', 'Employee database endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "1af08f33-bfe5-4206-a5d5-72d6f645c5e0",
+      "name": "Query Employees"
+    },
+    {
+      "parameters": {
+        "description": "Get active job listings and recruitment pipeline status",
+        "url": "={{ $fromAI('Jobs_API_URL', 'Job listings API endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "5709774a-3af7-4efe-91e5-bcfcf3fe99d4",
+      "name": "Get Job Listings"
+    },
+    {
+      "parameters": {
+        "content": "👤 MCP HR Server Template\n\nTools: Screen Resume, Schedule Interview, Query Employees, Get Job Listings\n\nSetup:\n1. Configure HR API URLs\n2. Deploy and copy SSE endpoint\n3. Use MCP Client Tool in parent Agent",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "b8d92678-28f0-4ac6-b098-819a1511f242",
+      "name": "MCP HR"
+    }
+  ],
+  "connections": {
+    "Screen Resume": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP HR Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Interview": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP HR Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Employees": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP HR Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job Listings": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP HR Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

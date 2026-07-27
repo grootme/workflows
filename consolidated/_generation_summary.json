@@ -1,0 +1,153 @@
+{
+  "standards": {
+    "credential_pattern": {
+      "id": "",
+      "name": "Descriptive Name"
+    },
+    "connection_pattern": {
+      "ai_languageModel": "Sub-component \u2192 Agent via ai_languageModel",
+      "ai_memory": "Sub-component \u2192 Agent via ai_memory",
+      "ai_tool": "Tool \u2192 Agent/MCPTrigger via ai_tool",
+      "ai_outputParser": "Parser \u2192 Agent via ai_outputParser",
+      "ai_embedding": "Embeddings \u2192 VectorStore via ai_embedding",
+      "main": "Standard flow node \u2192 next node via main"
+    },
+    "forbidden_patterns": [
+      "\"id\": \"PLACEHOLDER\"",
+      "orphan nodes without connections",
+      "sequential ai_* wiring",
+      "googleCalendar instead of googleCalendarTool",
+      "shopifyTool",
+      "errorWorkflow with name string",
+      "fake tag IDs"
+    ],
+    "version": "2.0.0",
+    "author": "grootme",
+    "license": "MIT"
+  },
+  "results": {
+    "G1_MCP_Calendar_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G1_MCP_Calendar_Suite_v2.json",
+      "nodes": 6,
+      "connections": 4,
+      "node_types": [
+        "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "n8n-nodes-base.googleCalendarTool",
+        "n8n-nodes-base.googleCalendarTool",
+        "n8n-nodes-base.googleCalendarTool",
+        "n8n-nodes-base.googleCalendarTool"
+      ],
+      "ai_connections": 4
+    },
+    "G2_MCP_Gmail_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G2_MCP_Gmail_Suite_v2.json",
+      "nodes": 7,
+      "connections": 5,
+      "node_types": [
+        "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "n8n-nodes-base.gmailTool",
+        "n8n-nodes-base.gmailTool",
+        "n8n-nodes-base.gmailTool",
+        "n8n-nodes-base.gmailTool",
+        "n8n-nodes-base.gmailTool"
+      ],
+      "ai_connections": 5
+    },
+    "G3_MCP_Contactos_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G3_MCP_Contactos_Suite_v2.json",
+      "nodes": 7,
+      "connections": 5,
+      "node_types": [
+        "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "n8n-nodes-base.googleContactsTool",
+        "n8n-nodes-base.googleContactsTool",
+        "n8n-nodes-base.googleContactsTool",
+        "n8n-nodes-base.googleContactsTool",
+        "n8n-nodes-base.googleContactsTool"
+      ],
+      "ai_connections": 5
+    },
+    "G4_Ecommerce_Agent_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G4_Ecommerce_Agent_Suite_v2.json",
+      "nodes": 17,
+      "connections": 14,
+      "node_types": [
+        "n8n-nodes-base.webhook",
+        "n8n-nodes-base.set",
+        "n8n-nodes-base.switch",
+        "n8n-nodes-base.httpRequest",
+        "@n8n/n8n-nodes-langchain.openAi",
+        "n8n-nodes-base.set",
+        "n8n-nodes-base.set",
+        "@n8n/n8n-nodes-langchain.agent",
+        "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "@n8n/n8n-nodes-langchain.toolHttpRequest",
+        "@n8n/n8n-nodes-langchain.toolHttpRequest",
+        "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "n8n-nodes-base.set",
+        "n8n-nodes-base.httpRequest"
+      ],
+      "ai_connections": 5
+    },
+    "G5_Marketing_MultiAgent_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G5_Marketing_MultiAgent_Suite_v2.json",
+      "nodes": 15,
+      "connections": 13,
+      "node_types": [
+        "n8n-nodes-base.telegramTrigger",
+        "n8n-nodes-base.switch",
+        "n8n-nodes-base.telegram",
+        "@n8n/n8n-nodes-langchain.openAi",
+        "n8n-nodes-base.set",
+        "n8n-nodes-base.set",
+        "@n8n/n8n-nodes-langchain.agent",
+        "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "@n8n/n8n-nodes-langchain.toolThink",
+        "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "n8n-nodes-base.telegram"
+      ],
+      "ai_connections": 6
+    },
+    "G6_Asistente_Platform_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G6_Asistente_Platform_v2.json",
+      "nodes": 14,
+      "connections": 12,
+      "node_types": [
+        "n8n-nodes-base.telegramTrigger",
+        "n8n-nodes-base.switch",
+        "n8n-nodes-base.telegram",
+        "@n8n/n8n-nodes-langchain.openAi",
+        "n8n-nodes-base.set",
+        "n8n-nodes-base.set",
+        "@n8n/n8n-nodes-langchain.agent",
+        "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "n8n-nodes-base.telegram"
+      ],
+      "ai_connections": 5
+    },
+    "G7_Imagenes_Citas_Suite_v2": {
+      "path": "/home/z/my-project/download/n8n_workflows_v2/consolidated/G7_Imagenes_Citas_Suite_v2.json",
+      "nodes": 8,
+      "connections": 6,
+      "node_types": [
+        "@n8n/n8n-nodes-langchain.chatTrigger",
+        "@n8n/n8n-nodes-langchain.agent",
+        "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "@n8n/n8n-nodes-langchain.toolThink",
+        "@n8n/n8n-nodes-langchain.toolHttpRequest",
+        "@n8n/n8n-nodes-langchain.toolHttpRequest"
+      ],
+      "ai_connections": 5
+    }
+  },
+  "generated_at": "2026-07-27T00:31:56.020583"
+}

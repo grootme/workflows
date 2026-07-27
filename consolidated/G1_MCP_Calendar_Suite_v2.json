@@ -1,0 +1,217 @@
+{
+  "name": "MCP Calendar Suite Pro v2",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-calendar-suite"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b4ac2011-4100-4bb3-ae91-79c995d1b4ba",
+      "name": "MCP Calendar Trigger",
+      "webhookId": "mcp-calendar-suite"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": ""
+        },
+        "start": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Fecha y hora de inicio en formato ISO (e.g., 2025-01-15T10:00:00)`, 'string') }",
+        "end": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Fecha y hora de fin en formato ISO`, 'string') }",
+        "additionalFields": {
+          "attendees": [
+            "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', `Email de participante. Si vacío, no añadir`, 'string') }"
+          ],
+          "description": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Descripción de la reunión`, 'string') }",
+          "summary": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Título de la reunión`, 'string') }"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "f791dd36-3975-44ad-8e19-3ffadd3ca8b8",
+      "name": "Create Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `ID del evento a eliminar`, 'string') }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        400
+      ],
+      "id": "adcd7d2f-048a-4ebb-bc85-c4785cba719a",
+      "name": "Delete Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "limit": 10,
+        "timeMin": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `Fecha mínima para buscar eventos`, 'string') }",
+        "timeMax": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', `Fecha máxima para buscar eventos`, 'string') }",
+        "options": {
+          "timeZone": {
+            "__rl": true,
+            "value": "Europe/Madrid",
+            "mode": "list",
+            "cachedResultName": "Europe/Madrid"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        200,
+        400
+      ],
+      "id": "63eb1650-37e2-4844-8a85-65939c4f6cb1",
+      "name": "Get Events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `ID del evento a actualizar`, 'string') }",
+        "updateFields": {
+          "description": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Nueva descripción`, 'string') }",
+          "end": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Nueva fecha de fin`, 'string') }",
+          "start": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Nueva fecha de inicio`, 'string') }",
+          "summary": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Nuevo título del evento`, 'string') }"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        400
+      ],
+      "id": "310ae908-f4db-43a7-8976-26b321c588b9",
+      "name": "Update Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "📋 MCP Calendar Suite Pro v2.0\n\nTools: Create, Delete, Get, Update events\nModel: GPT-4o-mini (cost-optimized)\nMemory: PostgresChatHistory\n\nSetup:\n1. Configure Google Calendar credential\n2. Select calendar in each tool node\n3. Deploy as MCP server\n\nZero-debt: All connections via ai_tool pattern",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "b31734fb-c3b6-4452-846f-929a34486ba6",
+      "name": "Calendar Suite Docs"
+    }
+  ],
+  "connections": {
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

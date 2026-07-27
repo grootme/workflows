@@ -1,0 +1,114 @@
+{
+  "name": "MCP Knowledge Base Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-knowledge-base"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b2c20511-5596-443c-b5a9-3b94738fb5d9",
+      "name": "MCP KB Trigger",
+      "webhookId": "mcp-knowledge-base"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "query": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', `Search query for knowledge base`, 'string') }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "01261235-4dc4-4f6f-8f66-664722536886",
+      "name": "Search Documents",
+      "credentials": {
+        "qdrantApi": {
+          "id": "",
+          "name": "Qdrant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-embedding-exp-03-07",
+          "mode": "list"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        600
+      ],
+      "id": "2bb9d93d-3196-4def-9c30-e7d8e3ecbc9b",
+      "name": "Embeddings",
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "",
+          "name": "Google Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "📚 MCP Knowledge Base Server Template\n\nTool: Qdrant Vector Search + Gemini Embeddings\n\nSetup:\n1. Seed Qdrant with documents\n2. Configure Qdrant + Gemini credentials\n3. Deploy and copy SSE endpoint\n4. Use MCP Client Tool in parent Agent",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "00eeb5a1-81f7-4b86-996d-395673599b83",
+      "name": "MCP KB"
+    }
+  ],
+  "connections": {
+    "Search Documents": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP KB Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Search Documents",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

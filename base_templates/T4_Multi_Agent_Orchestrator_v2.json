@@ -1,0 +1,239 @@
+{
+  "name": "Multi-Agent Orchestrator Template",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "content": "Hello! I'm a multi-agent orchestrator with specialized sub-agents. What task do you need?"
+          }
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c65c3919-8886-48b7-8a28-374995511b33",
+      "name": "Chat Trigger",
+      "webhookId": "3630ac43-74e1-4c5b-a497-6a4ddbc93897"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are a multi-agent orchestrator. Route requests to specialized sub-agent tools based on the task type. Current datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "75aa9365-ce86-4b8b-9b98-9207aee1151d",
+      "name": "Orchestrator Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        300
+      ],
+      "id": "58b220e1-c2a3-4ccf-baa2-7c3b119813d3",
+      "name": "LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        300
+      ],
+      "id": "274db6e5-cf5f-453a-8180-a34142b8aa81",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan which sub-agents to invoke for multi-step tasks"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "a8682d86-557c-4b08-b614-84c64e8db1a3",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "description": "Specialized sub-agent for task type A",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "c201b4df-4244-4901-a042-d9efaa965809",
+      "name": "Sub-Agent A"
+    },
+    {
+      "parameters": {
+        "description": "Specialized sub-agent for task type B",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "2a627b73-4358-4acb-b29d-ceb9c9fd1406",
+      "name": "Sub-Agent B"
+    },
+    {
+      "parameters": {
+        "description": "Specialized sub-agent for task type C",
+        "workflowId": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "0d767519-a598-4382-b3dd-989b65c6342e",
+      "name": "Sub-Agent C"
+    },
+    {
+      "parameters": {
+        "content": "🎯 Multi-Agent Orchestrator Template\n\nPattern: Agent + Think + Sub-Workflows\nLLM: GPT-4o-mini\nMemory: BufferWindow\n\nSetup:\n1. Deploy sub-workflow agents\n2. Copy their IDs into toolWorkflow nodes\n3. Customize descriptions and system message",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "id": "b5672fec-20bd-415b-b905-d163d5369446",
+      "name": "Template Info"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sub-Agent A": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sub-Agent B": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sub-Agent C": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

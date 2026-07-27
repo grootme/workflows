@@ -1,0 +1,156 @@
+{
+  "name": "MCP E-Commerce Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-ecommerce"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cfae13de-f806-4019-ac1a-110cb52dd80b",
+      "name": "MCP E-Commerce Trigger",
+      "webhookId": "mcp-ecommerce"
+    },
+    {
+      "parameters": {
+        "description": "Search products by name, category, or attributes",
+        "url": "={{ $fromAI('Product_Search_URL', 'Product search API endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "d6898f1c-0010-4cd8-9613-ef49c39d2ffc",
+      "name": "Search Products"
+    },
+    {
+      "parameters": {
+        "description": "Check product availability and inventory levels",
+        "url": "={{ $fromAI('Stock_API_URL', 'Stock check API endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "40736f60-2c0b-4ef6-9759-2ad32ba0c15f",
+      "name": "Check Stock"
+    },
+    {
+      "parameters": {
+        "description": "Check order status, shipping info, and delivery updates",
+        "url": "={{ $fromAI('Order_API_URL', 'Order status API endpoint', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "669b00c0-08b0-41d0-8b1f-4053ce812fe1",
+      "name": "Get Order Status"
+    },
+    {
+      "parameters": {
+        "description": "Process product returns and refund requests",
+        "url": "={{ $fromAI('Return_API_URL', 'Returns API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "20d20883-8cc8-4843-8916-7b7442d6e74c",
+      "name": "Process Return"
+    },
+    {
+      "parameters": {
+        "content": "🛒 MCP E-Commerce Server Template\n\nTools: Search Products, Check Stock, Get Order, Process Return\n\nSetup:\n1. Configure your e-commerce API URLs\n2. Deploy and copy SSE endpoint\n3. Use MCP Client Tool in parent Agent",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "ba67ae8c-8854-49d9-8ce7-6d3146b3544b",
+      "name": "MCP E-Commerce"
+    }
+  ],
+  "connections": {
+    "Search Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP E-Commerce Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Stock": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP E-Commerce Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Status": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP E-Commerce Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Return": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP E-Commerce Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

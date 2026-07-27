@@ -1,0 +1,113 @@
+{
+  "version": "2.0.0",
+  "zero_debt_standards_applied": true,
+  "total_workflows": 18,
+  "total_ai_connections": 68,
+  "fixes_applied": [
+    "DEBT-01: All ai_* LangChain sub-type connections added",
+    "DEBT-02: No orphan nodes - all nodes wired",
+    "DEBT-03: googleCalendarTool used instead of googleCalendar",
+    "DEBT-04: $fromAI() expressions on all MCP/AI tool parameters",
+    "DEBT-05: No standalone LLM nodes in MCP Switch branches",
+    "DEBT-06: openAi node type correct for transcription",
+    "DEBT-07: Credential IDs set to empty string",
+    "DEBT-08: Sub-workflow IDs marked as configurable",
+    "DEBT-09: Invalid node types removed (shopifyTool etc)",
+    "DEBT-10: Dynamic expressions instead of hardcoded values",
+    "DEBT-11: errorWorkflow removed (for distribution)",
+    "DEBT-12: Tags set to empty array"
+  ],
+  "results": {
+    "G8_Video_Viral_Suite_v2": {
+      "nodes": 9,
+      "connections": 7,
+      "ai_connections": 6
+    },
+    "G9_Social_Scraper_Suite_v2": {
+      "nodes": 11,
+      "connections": 9,
+      "ai_connections": 5
+    },
+    "G10_HR_AI_Agent_v2": {
+      "nodes": 12,
+      "connections": 10,
+      "ai_connections": 6
+    },
+    "G11_WhatsApp_AI_Agent_v2": {
+      "nodes": 17,
+      "connections": 15,
+      "ai_connections": 7
+    },
+    "G12_Flowise_RAG_Suite_v2": {
+      "nodes": 7,
+      "connections": 5,
+      "ai_connections": 4
+    },
+    "G13_Global_Error_Handler_v2": {
+      "nodes": 8,
+      "connections": 3,
+      "ai_connections": 0
+    },
+    "MCP_Calendar_Server_v2": {
+      "nodes": 6,
+      "connections": 4,
+      "ai_connections": 4
+    },
+    "MCP_Gmail_Server_v2": {
+      "nodes": 7,
+      "connections": 5,
+      "ai_connections": 5
+    },
+    "MCP_Contacts_Server_v2": {
+      "nodes": 7,
+      "connections": 5,
+      "ai_connections": 5
+    },
+    "MCP_ECommerce_Server_v2": {
+      "nodes": 6,
+      "connections": 4,
+      "ai_connections": 4
+    },
+    "MCP_HR_Server_v2": {
+      "nodes": 6,
+      "connections": 4,
+      "ai_connections": 4
+    },
+    "MCP_Knowledge_Base_Server_v2": {
+      "nodes": 4,
+      "connections": 2,
+      "ai_connections": 2
+    },
+    "T1_Single_Agent_Chat_v2": {
+      "nodes": 5,
+      "connections": 3,
+      "ai_connections": 2
+    },
+    "T2_Agent_MCP_Tool_v2": {
+      "nodes": 6,
+      "connections": 4,
+      "ai_connections": 3
+    },
+    "T3_RAG_Agent_v2": {
+      "nodes": 7,
+      "connections": 5,
+      "ai_connections": 4
+    },
+    "T4_Multi_Agent_Orchestrator_v2": {
+      "nodes": 9,
+      "connections": 7,
+      "ai_connections": 6
+    },
+    "T5_Error_Handler_v2": {
+      "nodes": 5,
+      "connections": 2,
+      "ai_connections": 0
+    },
+    "T6_MCP_Server_v2": {
+      "nodes": 3,
+      "connections": 1,
+      "ai_connections": 1
+    }
+  },
+  "generated_at": "2026-07-27T00:36:00.630554"
+}

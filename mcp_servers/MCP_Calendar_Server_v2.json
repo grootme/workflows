@@ -1,0 +1,207 @@
+{
+  "name": "MCP Calendar Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-calendar"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bc1a1a72-6dc1-4f29-a044-e4ff5b2be710",
+      "name": "MCP Calendar Trigger",
+      "webhookId": "mcp-calendar"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "start": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Fecha y hora inicio ISO`, 'string') }",
+        "end": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Fecha y hora fin ISO`, 'string') }",
+        "additionalFields": {
+          "attendees": [
+            "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', `Participante email`, 'string') }"
+          ],
+          "description": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Descripción`, 'string') }",
+          "summary": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Título del evento`, 'string') }"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "dc106eaf-084d-4069-a5fc-ad436ce9218c",
+      "name": "Create Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `ID del evento a eliminar`, 'string') }"
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        400
+      ],
+      "id": "53ee4df4-c28f-462a-a80f-5b8cc0f4fb40",
+      "name": "Delete Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "limit": 10,
+        "timeMin": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `Fecha mínima`, 'string') }",
+        "timeMax": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', `Fecha máxima`, 'string') }"
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        200,
+        400
+      ],
+      "id": "2fb62abe-b718-4d1b-9805-152fdb4c1b2f",
+      "name": "Get Events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `ID del evento`, 'string') }",
+        "updateFields": {
+          "description": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Nueva descripción`, 'string') }",
+          "start": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Nuevo inicio ISO`, 'string') }",
+          "end": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Nuevo fin ISO`, 'string') }",
+          "summary": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Nuevo título`, 'string') }"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        400
+      ],
+      "id": "ba4399b3-c0dd-44e7-acf5-02cb5a3e027c",
+      "name": "Update Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "📋 MCP Calendar Server Template\n\nDeploy as standalone MCP server.\nTools connect to MCP Trigger via ai_tool.\n\nSetup:\n1. Configure Google Calendar credential\n2. Select calendar in each tool\n3. Deploy and copy SSE endpoint\n4. Use MCP Client Tool in parent Agent",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "1f4520ef-679a-4eca-b740-24953c5a9226",
+      "name": "MCP Calendar Server"
+    }
+  ],
+  "connections": {
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Calendar Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

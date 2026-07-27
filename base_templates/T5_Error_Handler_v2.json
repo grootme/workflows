@@ -1,0 +1,174 @@
+{
+  "name": "Error Handler Template",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9c5e7702-2a2f-4f9f-a546-77bc15e6f5f0",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67f28819-7dfd-4b6b-b79d-ef00fb3daca0",
+              "name": "workflowName",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "f5a4d402-1dd6-4cce-b21d-668d73f0ea24",
+              "name": "nodeName",
+              "value": "={{ $json.execution.error.node.name }}",
+              "type": "string"
+            },
+            {
+              "id": "af9af48b-5490-403e-94c1-611bdbad5c1d",
+              "name": "errorMessage",
+              "value": "={{ $json.execution.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "f08ba449-ca42-4598-b0ab-847308d6f2d1",
+              "name": "executionId",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "ae88804d-3793-4180-b136-351374e1c2de",
+              "name": "timestamp",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ],
+      "id": "f7d74c05-2596-4630-a9e9-e4591717472b",
+      "name": "Parse Error"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "admin@example.com",
+        "subject": "=Error in {{ $json.workflowName }}: {{ $json.nodeName }}",
+        "message": "=Workflow: {{ $json.workflowName }}\nNode: {{ $json.nodeName }}\nError: {{ $json.errorMessage }}\nTime: {{ $json.timestamp }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "0e7ec074-a671-4b4a-a594-61bec307c308",
+      "name": "Notify Admin",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "error_log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow": "={{ $json.workflowName }}",
+            "node": "={{ $json.nodeName }}",
+            "error": "={{ $json.errorMessage }}",
+            "timestamp": "={{ $json.timestamp }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        400,
+        200
+      ],
+      "id": "f4df7abd-74b0-4ac0-87b6-db01a670b9f3",
+      "name": "Log Error",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🛡️ Error Handler Template\n\nPattern: ErrorTrigger → Parse → Notify + Log\n\nSetup:\n1. Create error_log table in PostgreSQL\n2. Configure Gmail + PostgreSQL\n3. Update admin email\n4. Set as error handler in other workflows",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "id": "5fadb92d-f701-420a-a88e-6c6cbab2cc97",
+      "name": "Template Info"
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Error": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
