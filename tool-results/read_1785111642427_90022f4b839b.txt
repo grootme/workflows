@@ -1,0 +1,749 @@
+     1→{
+     2→  "name": "Create a Branded AI-Powered Website Chatbot",
+     3→  "nodes": [
+     4→    {
+     5→      "parameters": {
+     6→        "sessionIdType": "customKey",
+     7→        "sessionKey": "={{ $json.sessionId }}",
+     8→        "contextWindowLength": 20
+     9→      },
+    10→      "id": "95d98b03-f5b3-4f46-ad36-1da7d2a8dba6",
+    11→      "name": "Window Buffer Memory",
+    12→      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+    13→      "position": [
+    14→        140,
+    15→        1080
+    16→      ],
+    17→      "typeVersion": 1.2
+    18→    },
+    19→    {
+    20→      "parameters": {
+    21→        "options": {}
+    22→      },
+    23→      "id": "53ba5995-ed22-4ed7-8e4b-1da7ca2170a7",
+    24→      "name": "Respond to Webhook",
+    25→      "type": "n8n-nodes-base.respondToWebhook",
+    26→      "position": [
+    27→        560,
+    28→        780
+    29→      ],
+    30→      "typeVersion": 1.1
+    31→    },
+    32→    {
+    33→      "parameters": {
+    34→        "model": "gpt-4o-2024-08-06",
+    35→        "options": {
+    36→          "temperature": 0.4
+    37→        }
+    38→      },
+    39→      "id": "49adc483-7f55-4d06-a475-38f312f7049c",
+    40→      "name": "OpenAI Chat Model",
+    41→      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+    42→      "position": [
+    43→        40,
+    44→        960
+    45→      ],
+    46→      "typeVersion": 1
+    47→    },
+    48→    {
+    49→      "parameters": {
+    50→        "toolDescription": "Call this tool to make the appointment, ensure you send the user email, name, company, reason for the meeting and the appointment start time and the date in ISO String format with timezone for <timezone>. When creating an appointment, always send JSON.",
+    51→        "method": "POST",
+    52→        "url": "https://graph.microsoft.com/v1.0/me/events",
+    53→        "authentication": "predefinedCredentialType",
+    54→        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+    55→        "sendQuery": true,
+    56→        "parametersQuery": {
+    57→          "values": [
+    58→            {
+    59→              "name": "Content-Type",
+    60→              "valueProvider": "fieldValue",
+    61→              "value": "application/json"
+    62→            }
+    63→          ]
+    64→        },
+    65→        "sendBody": true,
+    66→        "specifyBody": "json",
+    67→        "jsonBody": "{\n  \"subject\": \"Meetings with <name> at <company>\",\n  \"start\": {\n    \"dateTime\": \"{dateStartTime}\",\n    \"timeZone\": \"Europe/London\"\n  },\n  \"end\": {\n    \"dateTime\": \"{dateEndTime}\",\n    \"timeZone\": \"Europe/London\"\n  },\n  \"body\": {\n    \"contentType\": \"HTML\",\n    \"content\": \"{reason}\"\n  },\n  \"attendees\": [\n    {\n      \"emailAddress\": {\n        \"address\": \"{email}\",\n        \"name\": \"{name}\"\n      },\n      \"type\": \"required\"\n    }\n  ],\n  \"location\": {\n    \"displayName\": \"Online Meeting\"\n  },\n  \"isOnlineMeeting\": true,\n  \"onlineMeetingProvider\": \"teamsForBusiness\",\n  \"showAs\": \"busy\",\n  \"categories\": [\n    \"Meeting\"\n  ]\n}",
+    68→        "placeholderDefinitions": {
+    69→          "values": [
+    70→            {
+    71→              "name": "dateStartTime",
+    72→              "description": "The date and start time of the appointment in toISOString format with timezone for Europe/London",
+    73→              "type": "string"
+    74→            },
+    75→            {
+    76→              "name": "dateEndTime",
+    77→              "description": "The date and end time of the appointment in toISOString format, always 30 minutes after the dateStartTime,  format with timezone for Europe/London",
+    78→              "type": "string"
+    79→            },
+    80→            {
+    81→              "name": "reason",
+    82→              "description": "Detailed description of the meeting, will be sent to us and the customer",
+    83→              "type": "string"
+    84→            },
+    85→            {
+    86→              "name": "email",
+    87→              "description": "The customers email address.",
+    88→              "type": "string"
+    89→            },
+    90→            {
+    91→              "name": "name",
+    92→              "description": "The customers full name, must be second and last name",
+    93→              "type": "string"
+    94→            }
+    95→          ]
+    96→        }
+    97→      },
+    98→      "id": "a3df40db-b675-409f-a5fd-fb6a358db9a4",
+    99→      "name": "Make Appointment",
+   100→      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+   101→      "position": [
+   102→        500,
+   103→        1040
+   104→      ],
+   105→      "typeVersion": 1.1
+   106→    },
+   107→    {
+   108→      "parameters": {},
+   109→      "id": "5131671c-43b4-4631-b40b-a088aaa683b0",
+   110→      "name": "Execute Workflow Trigger",
+   111→      "type": "n8n-nodes-base.executeWorkflowTrigger",
+   112→      "position": [
+   113→        840,
+   114→        780
+   115→      ],
+   116→      "typeVersion": 1
+   117→    },
+   118→    {
+   119→      "parameters": {
+   120→        "assignments": {
+   121→          "assignments": [
+   122→            {
+   123→              "id": "c0b6e779-0f7b-41f0-81f8-457f2b31ccfe",
+   124→              "name": "response",
+   125→              "type": "array",
+   126→              "value": "={{ $json.freeTimeSlots.toJsonString() }}"
+   127→            }
+   128→          ]
+   129→        },
+   130→        "options": {}
+   131→      },
+   132→      "id": "f9bf3adb-e789-42f6-bc5c-36aa3a7e05b0",
+   133→      "name": "varResponse",
+   134→      "type": "n8n-nodes-base.set",
+   135→      "position": [
+   136→        1800,
+   137→        660
+   138→      ],
+   139→      "typeVersion": 3.4
+   140→    },
+   141→    {
+   142→      "parameters": {
+   143→        "jsCode": "// Input: An array with objects containing a 'value' array of events.\nconst businessHoursStart = \"08:00:00Z\";  // Business hours start time\nconst businessHoursEnd = \"17:30:00Z\";    // Business hours end time\n\nconst inputData = items[0].json.value;  // Assuming the input data is in the 'value' array of the first item\n\n// Function to convert ISO datetime string to a Date object with specified time\nfunction getDateWithTime(dateString, time) {\n  const datePart = new Date(dateString).toISOString().split(\"T\")[0];  // Extract the date part (YYYY-MM-DD)\n  return new Date(`${datePart}T${time}`);\n}\n\n// Function to get day of the week from a date string\nfunction getDayOfWeek(dateString) {\n  const daysOfWeek = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"];\n  return daysOfWeek[new Date(dateString).getUTCDay()];\n}\n\n// Function to add days to a date\nfunction addDays(date, days) {\n  const result = new Date(date);\n  result.setDate(result.getDate() + days);\n  return result;\n}\n\n// Function to format date as YYYY-MM-DD\nfunction formatDate(date) {\n  return date.toISOString().split('T')[0];\n}\n\n// Determine the default timezone from input data\nconst defaultTimeZone = inputData.length > 0 && inputData[0].start && inputData[0].start.timeZone \n  ? inputData[0].start.timeZone \n  : \"UTC\";\n\n// Find min and max dates in the input\nlet minDate = null;\nlet maxDate = null;\n\ninputData.forEach(event => {\n  if (event.start && event.start.dateTime) {\n    const eventDate = new Date(event.start.dateTime);\n    if (!minDate || eventDate < minDate) {\n      minDate = eventDate;\n    }\n    if (!maxDate || eventDate > maxDate) {\n      maxDate = eventDate;\n    }\n  }\n});\n\n// If we have valid dates, ensure they're at the start of the day\nif (minDate && maxDate) {\n  minDate = new Date(minDate.toISOString().split('T')[0]);\n  maxDate = new Date(maxDate.toISOString().split('T')[0]);\n}\n\n// Organise events by date\nconst eventsByDate = {};\ninputData.forEach(event => {\n  if (event.start && event.start.dateTime) {\n    const eventDate = new Date(event.start.dateTime).toISOString().split(\"T\")[0];  // Extract the date\n    if (!eventsByDate[eventDate]) {\n      eventsByDate[eventDate] = [];\n    }\n    if (event.showAs === \"busy\") {\n      eventsByDate[eventDate].push({\n        start: new Date(event.start.dateTime),\n        end: new Date(event.end.dateTime),\n        timeZone: event.start.timeZone || defaultTimeZone\n      });\n    }\n  }\n});\n\n// Find free slots within business hours for each date\nconst freeTimeSlots = [];\n\n// Process all dates in the range\nif (minDate && maxDate) {\n  for (let currentDate = new Date(minDate); currentDate <= maxDate; currentDate = addDays(currentDate, 1)) {\n    const dateStr = formatDate(currentDate);\n    const busyEvents = eventsByDate[dateStr] || [];\n    \n    // Define business start and end times for the current date\n    const businessStart = getDateWithTime(dateStr, businessHoursStart);\n    const businessEnd = getDateWithTime(dateStr, businessHoursEnd);\n    \n    // If there are no busy events for this date, add the entire business day as free\n    if (busyEvents.length === 0) {\n      freeTimeSlots.push({\n        date: dateStr,\n        dayOfWeek: getDayOfWeek(dateStr),\n        freeStart: businessStart.toISOString(),\n        freeEnd: businessEnd.toISOString(),\n        timeZone: defaultTimeZone\n      });\n      continue; // Skip to the next date\n    }\n    \n    // Sort events by their start time\n    busyEvents.sort((a, b) => a.start - b.start);\n    \n    // Check if there's free time before the first busy event\n    if (busyEvents[0].start > businessStart) {\n      freeTimeSlots.push({\n        date: dateStr,\n        dayOfWeek: getDayOfWeek(dateStr),\n        freeStart: businessStart.toISOString(),\n        freeEnd: busyEvents[0].start.toISOString(),\n        timeZone: busyEvents[0].timeZone\n      });\n    }\n    \n    // Check for gaps between busy events\n    for (let i = 0; i < busyEvents.length - 1; i++) {\n      if (busyEvents[i].end < busyEvents[i+1].start) {\n        freeTimeSlots.push({\n          date: dateStr,\n          dayOfWeek: getDayOfWeek(dateStr),\n          freeStart: busyEvents[i].end.toISOString(),\n          freeEnd: busyEvents[i+1].start.toISOString(),\n          timeZone: busyEvents[i].timeZone\n        });\n      }\n    }\n    \n    // Check if there's free time after the last busy event\n    if (busyEvents[busyEvents.length - 1].end < businessEnd) {\n      freeTimeSlots.push({\n        date: dateStr,\n        dayOfWeek: getDayOfWeek(dateStr),\n        freeStart: busyEvents[busyEvents.length - 1].end.toISOString(),\n        freeEnd: businessEnd.toISOString(),\n        timeZone: busyEvents[busyEvents.length - 1].timeZone\n      });\n    }\n  }\n}\n\n// Output the free time slots\nreturn [{ json: { freeTimeSlots } }];\n"
+   144→      },
+   145→      "id": "2805d7ce-8c0e-472c-9d7b-b49bf8e9992f",
+   146→      "name": "freeTimeSlots",
+   147→      "type": "n8n-nodes-base.code",
+   148→      "position": [
+   149→        1580,
+   150→        660
+   151→      ],
+   152→      "typeVersion": 2
+   153→    },
+   154→    {
+   155→      "parameters": {
+   156→        "url": "=https://graph.microsoft.com/v1.0/me/calendarView",
+   157→        "authentication": "predefinedCredentialType",
+   158→        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+   159→        "sendQuery": true,
+   160→        "queryParameters": {
+   161→          "parameters": [
+   162→            {
+   163→              "name": "startDateTime",
+   164→              "value": "={{ new Date(new Date().setDate(new Date().getDate() + 2)).toISOString() }}"
+   165→            },
+   166→            {
+   167→              "name": "endDateTime",
+   168→              "value": "={{ new Date(new Date().setDate(new Date().getDate() + 16)).toISOString() }}"
+   169→            },
+   170→            {
+   171→              "name": "$top",
+   172→              "value": "50"
+   173→            },
+   174→            {
+   175→              "name": "select",
+   176→              "value": "start,end,categories,importance,isAllDay,recurrence,showAs,subject,type"
+   177→            },
+   178→            {
+   179→              "name": "orderby",
+   180→              "value": "start/dateTime asc"
+   181→            }
+   182→          ]
+   183→        },
+   184→        "sendHeaders": true,
+   185→        "headerParameters": {
+   186→          "parameters": [
+   187→            {
+   188→              "name": "Prefer",
+   189→              "value": "outlook.timezone=\"Europe/London\""
+   190→            }
+   191→          ]
+   192→        },
+   193→        "options": {}
+   194→      },
+   195→      "id": "d38acf8e-93da-470e-8165-cbffa9f38c0f",
+   196→      "name": "Get Events",
+   197→      "type": "n8n-nodes-base.httpRequest",
+   198→      "position": [
+   199→        1360,
+   200→        660
+   201→      ],
+   202→      "typeVersion": 4.2
+   203→    },
+   204→    {
+   205→      "parameters": {
+   206→        "name": "Get_availability",
+   207→        "description": "Call this tool to check my calendar for availability before booking an appointment. This will result in all events for the next 2 weeks. Review all events and do not double book.",
+   208→        "workflowId": {
+   209→          "__rl": true,
+   210→          "mode": "list",
+   211→          "value": "KD21RG8VeXYDS2Vf",
+   212→          "cachedResultName": "Website Chatbot"
+   213→        },
+   214→        "fields": {
+   215→          "values": [
+   216→            {
+   217→              "name": "route",
+   218→              "stringValue": "availability"
+   219→            }
+   220→          ]
+   221→        }
+   222→      },
+   223→      "id": "3c278934-df4c-431a-852e-cb4326ba5a1d",
+   224→      "name": "Get Availability",
+   225→      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+   226→      "position": [
+   227→        440,
+   228→        1280
+   229→      ],
+   230→      "typeVersion": 1.2
+   231→    },
+   232→    {
+   233→      "parameters": {
+   234→        "name": "Send_email",
+   235→        "description": "Call this tool when the customer wants to speak to a human, or is not ready to make an appointment or if the customer has questions outside of your remit. The tool will send an email to our founder, <insert name>. Always send the customer's full name, company and email address along with a detailed message about the enquiry. You must always gather project details.",
+   236→        "workflowId": {
+   237→          "__rl": true,
+   238→          "mode": "list",
+   239→          "value": "KD21RG8VeXYDS2Vf",
+   240→          "cachedResultName": "Website Chatbot"
+   241→        },
+   242→        "fields": {
+   243→          "values": [
+   244→            {
+   245→              "name": "route",
+   246→              "stringValue": "message"
+   247→            }
+   248→          ]
+   249→        },
+   250→        "specifyInputSchema": true,
+   251→        "jsonSchemaExample": "{\n\t\"email\": \"the customer's email\",\n    \"subject\": \"the subject of the email\",\n    \"message\": \"The customer's enquiry, must be a detailed description of their enquiry\",\n    \"name\": \"the customer's full name\",\n    \"company\": \"the customer company name\"\n}"
+   252→      },
+   253→      "id": "4f57ae93-d41d-49c3-a9d8-4c23a9f95216",
+   254→      "name": "Send Message",
+   255→      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+   256→      "position": [
+   257→        300,
+   258→        1280
+   259→      ],
+   260→      "typeVersion": 1.2
+   261→    },
+   262→    {
+   263→      "parameters": {
+   264→        "public": true,
+   265→        "mode": "webhook",
+   266→        "options": {
+   267→          "allowedOrigins": "*",
+   268→          "responseMode": "responseNode"
+   269→        }
+   270→      },
+   271→      "id": "f0a044c7-58ba-4a77-9f31-402977cd5dbf",
+   272→      "name": "Chat Trigger",
+   273→      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+   274→      "position": [
+   275→        -700,
+   276→        800
+   277→      ],
+   278→      "webhookId": "f406671e-c954-4691-b39a-66c90aa2f103",
+   279→      "typeVersion": 1,
+   280→      "disabled": true
+   281→    },
+   282→    {
+   283→      "parameters": {
+   284→        "rules": {
+   285→          "values": [
+   286→            {
+   287→              "conditions": {
+   288→                "options": {
+   289→                  "version": 2,
+   290→                  "leftValue": "",
+   291→                  "caseSensitive": true,
+   292→                  "typeValidation": "strict"
+   293→                },
+   294→                "combinator": "and",
+   295→                "conditions": [
+   296→                  {
+   297→                    "operator": {
+   298→                      "type": "string",
+   299→                      "operation": "equals"
+   300→                    },
+   301→                    "leftValue": "={{ $json.route }}",
+   302→                    "rightValue": "availability"
+   303→                  }
+   304→                ]
+   305→              },
+   306→              "renameOutput": true,
+   307→              "outputKey": "availability"
+   308→            },
+   309→            {
+   310→              "conditions": {
+   311→                "options": {
+   312→                  "version": 2,
+   313→                  "leftValue": "",
+   314→                  "caseSensitive": true,
+   315→                  "typeValidation": "strict"
+   316→                },
+   317→                "combinator": "and",
+   318→                "conditions": [
+   319→                  {
+   320→                    "id": "52fd844b-cc8d-471f-a56a-40e119b66194",
+   321→                    "operator": {
+   322→                      "name": "filter.operator.equals",
+   323→                      "type": "string",
+   324→                      "operation": "equals"
+   325→                    },
+   326→                    "leftValue": "={{ $json.route }}",
+   327→                    "rightValue": "message"
+   328→                  }
+   329→                ]
+   330→              },
+   331→              "renameOutput": true,
+   332→              "outputKey": "message"
+   333→            }
+   334→          ]
+   335→        },
+   336→        "options": {}
+   337→      },
+   338→      "id": "bbeb7418-a711-48b6-a61c-3e9c4678ecfc",
+   339→      "name": "Switch",
+   340→      "type": "n8n-nodes-base.switch",
+   341→      "position": [
+   342→        1060,
+   343→        780
+   344→      ],
+   345→      "typeVersion": 3.2
+   346→    },
+   347→    {
+   348→      "parameters": {
+   349→        "assignments": {
+   350→          "assignments": [
+   351→            {
+   352→              "id": "0d2ad084-9707-4979-84e4-297d1c21f725",
+   353→              "name": "response",
+   354→              "type": "string",
+   355→              "value": "={{ $json }}"
+   356→            }
+   357→          ]
+   358→        },
+   359→        "options": {
+   360→          "ignoreConversionErrors": false
+   361→        }
+   362→      },
+   363→      "id": "aafac0fc-c19c-48da-8b79-0ad7d74cbde6",
+   364→      "name": "varMessageResponse",
+   365→      "type": "n8n-nodes-base.set",
+   366→      "position": [
+   367→        1580,
+   368→        900
+   369→      ],
+   370→      "typeVersion": 3.4
+   371→    },
+   372→    {
+   373→      "parameters": {
+   374→        "toRecipients": "you@yourdomain.com",
+   375→        "subject": "={{ $('Execute Workflow Trigger').item.json.query.subject }}",
+   376→        "bodyContent": "=<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>New Webchat Customer Enquiry</title>\n    <style type=\"text/css\">\n        /* Client-specific styles */\n        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }\n        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }\n        img { -ms-interpolation-mode: bicubic; }\n\n        /* Reset styles */\n        body { margin: 0; padding: 0; }\n        img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }\n        table { border-collapse: collapse !important; }\n        body { height: 100% !important; margin: 0; padding: 0; width: 100% !important; }\n\n        /* iOS BLUE LINKS */\n        a[x-apple-data-detectors] {\n            color: inherit !important;\n            text-decoration: none !important;\n            font-size: inherit !important;\n            font-family: inherit !important;\n            font-weight: inherit !important;\n            line-height: inherit !important;\n        }\n\n        /* Styles for Outlook and other email clients */\n        .ExternalClass { width: 100%; }\n        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }\n        \n        /* Responsive styles */\n        @media screen and (max-width: 600px) {\n            .container { width: 100% !important; }\n            .content { padding: 15px !important; }\n            .field { padding: 10px !important; }\n            .header h1 { font-size: 20px !important; }\n            .header p { font-size: 12px !important; }\n        }\n    </style>\n</head>\n<body style=\"margin: 0; padding: 0; background-color: #f4f4f4;\">\n    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n        <tr>\n            <td>\n                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"600\" style=\"border-collapse: collapse; background-color: #ffffff;\">\n                    <tr>\n                        <td align=\"center\" bgcolor=\"#1a1a1a\" style=\"padding: 30px 0; background: linear-gradient(135deg, #1a1a1a 0%, #2d1f3d 100%);\">\n                            <h1 style=\"color: #ffffff; font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 1px;\">New Customer Enquiry</h1>\n                            <p style=\"color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; line-height: 20px; margin: 10px 0 0; opacity: 0.8;\">A potential client has reached out through our webchat</p>\n                        </td>\n                    </tr>\n                    <tr>\n                        <td style=\"padding: 20px;\">\n                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n                                <tr>\n                                    <td style=\"padding: 15px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px;\">\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #6a1b9a; font-weight: bold; margin: 0 0 5px 0;\">FROM</p>\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333333; margin: 0;\">{{ $('Execute Workflow Trigger').item.json.query.name }}</p>\n                                    </td>\n                                </tr>\n                                <tr><td height=\"20\"></td></tr>\n                                <tr>\n                                    <td style=\"padding: 15px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px;\">\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #6a1b9a; font-weight: bold; margin: 0 0 5px 0;\">EMAIL</p>\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333333; margin: 0;\">{{ $('Execute Workflow Trigger').item.json.query.email }}</p>\n                                    </td>\n                                </tr>\n                                <tr><td height=\"20\"></td></tr>\n                                <tr>\n                                    <td style=\"padding: 15px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px;\">\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #6a1b9a; font-weight: bold; margin: 0 0 5px 0;\">COMPANY</p>\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333333; margin: 0;\">{{ $('Execute Workflow Trigger').item.json.query.company }}</p>\n                                    </td>\n                                </tr>\n                                <tr><td height=\"20\"></td></tr>\n                                <tr>\n                                    <td style=\"padding: 15px; background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px;\">\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #6a1b9a; font-weight: bold; margin: 0 0 5px 0;\">MESSAGE</p>\n                                        <p style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333333; margin: 0;\">{{ $('Execute Workflow Trigger').item.json.query.message }}</p>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    <tr>\n                        <td align=\"center\" bgcolor=\"#e90ebb\" style=\"padding: 20px; background: linear-gradient(135deg, #e90ebb 0%, #6a1b9a 100%);\">\n                            <p style=\"font-family: Arial, sans-serif; font-size: 14px; line-height: 20px; color: #ffffff; margin: 0;\">This enquiry was automatically generated from our website's chat interface.</p>\n                        </td>\n                    </tr>\n                </table>\n            </td>\n        </tr>\n    </table>\n</body>\n</html>",
+   377→        "additionalFields": {
+   378→          "importance": "High",
+   379→          "bodyContentType": "html"
+   380→        }
+   381→      },
+   382→      "id": "c1b30dbd-c442-45c9-b46b-bbfa60bc6656",
+   383→      "name": "Send Message1",
+   384→      "type": "n8n-nodes-base.microsoftOutlook",
+   385→      "position": [
+   386→        1360,
+   387→        900
+   388→      ],
+   389→      "webhookId": "d8acc2cb-fcba-4312-a743-e74abe76d071",
+   390→      "typeVersion": 2
+   391→    },
+   392→    {
+   393→      "parameters": {
+   394→        "content": "Ensure these referance this workflow, replace placeholders",
+   395→        "height": 205.34013605442183,
+   396→        "width": 311.6936390497898
+   397→      },
+   398→      "id": "614353ab-1a17-4602-bccf-459207f57ba6",
+   399→      "name": "Sticky Note",
+   400→      "type": "n8n-nodes-base.stickyNote",
+   401→      "position": [
+   402→        260,
+   403→        1200
+   404→      ],
+   405→      "typeVersion": 1
+   406→    },
+   407→    {
+   408→      "parameters": {
+   409→        "content": "modify business hours\nmodify timezones",
+   410→        "height": 238,
+   411→        "width": 468
+   412→      },
+   413→      "id": "49d06119-002e-4ced-a275-6bbe63245bde",
+   414→      "name": "Sticky Note1",
+   415→      "type": "n8n-nodes-base.stickyNote",
+   416→      "position": [
+   417→        1280,
+   418→        580
+   419→      ],
+   420→      "typeVersion": 1
+   421→    },
+   422→    {
+   423→      "parameters": {
+   424→        "promptType": "define",
+   425→        "text": "={{ $json.chatInput }}",
+   426→        "options": {
+   427→          "systemMessage": "=You are an intelligent personal assistant to Wayne, Founder at nocodecreative.io (ai consultancy and software development agency) responsible for coordinating appointments and gathering relevant information from customers. Your tasks are to:\n\n- Understand when the customer is available by asking for suitable days and times (ensuring they are aware we are in a UK timezone)\n- Check the calendar to identify available slots that match their preferences. Pay attention to each event's start and end time and do not double book, you will be given all events for the next 14 days\n- Ask the customer what they would like to discuss during the appointment to ensure proper preparation.\n- Get the customer's name, company name and email address to book the appointment\n- Make the conversation friendly and natural. Confirm the appointment details with the customer and let them know I’ll be ready to discuss what they’d like.\n- After you have checked the calendar, book the appointment accordingly, without double booking. Confirm the customer's timezone and adjust the appointment for EU/London.\n- If the customer isn't ready to book, you can send an email for a human to respond to, ensure you gather a detailed enquiry from the customer including contact details and project information.Ensure the message contains enough information for a human to respond, always include project details, if the customer hasn't provided project details, ask.\n- Alwways suggest an appointment before sending a message, appointment are you primary goal, message are a fall back\n\nExample questions:\n\n\"Hi there! we'd love to help arrange a time that works for us to meet. Could you let us know which days and times are best for you? We’ll check the calendar and book in a suitable slot.\"\n\n\"Could you please let us know what you’d like to discuss during the appointment? This helps us prepare in advance and make our time together as productive as possible.\"\n\n\"Before we put you in touch with a human, please can you provide more information about the project you have in mind?\" //You must gather project info at all times, even if the enquiry is about pricing/costs.\n\nIf the time the customer suggests is not available, suggest the nearest alternative appointment based on existing events, do not book an appointment outside of freeTimeSlots\n\nImportant information:\n- All appointments need 48 hours' notice from {{ \n  new Date().toLocaleString(\"en-GB\", { timeZone: \"Europe/London\", hour12: false })\n  .split(\", \")[0].split(\"/\").reverse().join(\"-\") \n  + \"T\" + new Date().toLocaleTimeString(\"en-GB\", { timeZone: \"Europe/London\", hour12: false }) + \":00.000Z\" \n}} (current date and time in the UK) // this is non-negotiable, but discuss with care and be friendly, only let the customer know this if required\n- Business hours are 8am - 6pm Monday to Friday only Europe/London timezone, ensure the customer is aware of this and help them book during UK hours, you must confirm their timezone to do this!\n- Do not book appointments on a Saturday or sunday\n- Do not book appointments outside of freeTimeSlots\n- Always check the next 14 days, and review all events before providing availability \n- All appointments are for a max of 30 minutes\n- You must never offer an appointment without checking the calendar, if you cannot check the calendar, you cannot book and must let the customer know you can not book an appointment right now.\n- Always offer the soonest appointment available if the customer's preferred time is unavailable\n- When confirming an appointment, be thankful and excited!\n- Initial 30 minute consultation are free of charge\n\n\nMessages and description:\n- When creating descriptions or sending messages, always ensure enough detail is provided for preparation, meaning you can ask follow-up questions to extract further information as required. For example, if a customer asks about pricing, gather some information about the project so our team can provide accurate pricing, and apply this logic throughout\n\nComments:\n//!IMPORTANT! Do not offer any times without checking the calendar, do not make availability up\n//**Do not discuss anything other than appointment booking, if the query does not relate to an appointment, advise them you cannot help at this time.** be friendly and always offer to book an appointment to discuss their query\n//When the appointment is confirmed, let the customer know, by name, that they will be meeting our founder, Wayne for a 30 minute consultation, and that they will receive a calendar invite by email, ensure they accept the invite to confirm the appointment.\n//Always respond as a highly professional executive PA, remember this is the customer's first engagement, they do not know us or Wayne at this stage\n//Do not refer to yourself as me or I, instead communicate like an organisation, using terms like 'us'\n//Always gather project for descriptions and messages"
+   428→        }
+   429→      },
+   430→      "id": "208a7cda-4761-42b0-adb0-df53cd04d641",
+   431→      "name": "AI Agent",
+   432→      "type": "@n8n/n8n-nodes-langchain.agent",
+   433→      "position": [
+   434→        140,
+   435→        780
+   436→      ],
+   437→      "typeVersion": 1.6
+   438→    },
+   439→    {
+   440→      "parameters": {
+   441→        "conditions": {
+   442→          "options": {
+   443→            "version": 2,
+   444→            "leftValue": "",
+   445→            "caseSensitive": true,
+   446→            "typeValidation": "strict"
+   447→          },
+   448→          "combinator": "and",
+   449→          "conditions": [
+   450→            {
+   451→              "id": "158a0b91-534d-4745-b10e-8a7c97050861",
+   452→              "operator": {
+   453→                "type": "string",
+   454→                "operation": "exists",
+   455→                "singleValue": true
+   456→              },
+   457→              "leftValue": "={{ $json.chatInput }}",
+   458→              "rightValue": ""
+   459→            }
+   460→          ]
+   461→        },
+   462→        "options": {}
+   463→      },
+   464→      "id": "656bb22b-43e9-4cca-8221-c9de802e0481",
+   465→      "name": "If",
+   466→      "type": "n8n-nodes-base.if",
+   467→      "position": [
+   468→        -480,
+   469→        800
+   470→      ],
+   471→      "typeVersion": 2.2
+   472→    },
+   473→    {
+   474→      "parameters": {
+   475→        "respondWith": "json",
+   476→        "responseBody": "{\n  \"output\": \"Hi, how can I help you today?\"\n}",
+   477→        "options": {}
+   478→      },
+   479→      "id": "bcc55944-4312-43d8-ae67-a24cbc40009a",
+   480→      "name": "Respond With Initial Message",
+   481→      "type": "n8n-nodes-base.respondToWebhook",
+   482→      "position": [
+   483→        -180,
+   484→        920
+   485→      ],
+   486→      "typeVersion": 1.1
+   487→    },
+   488→    {
+   489→      "parameters": {
+   490→        "content": "# Custom Branded n8n Chatbot\nBuilt by [Wayne Simpson](https://www.linkedin.com/in/simpsonwayne/) at [nocodecreative.io](https://nocodecreative.io)\n☕ If you find this useful, feel free to [buy me a coffee](https://ko-fi.com/waynesimpson)",
+   491→        "height": 111,
+   492→        "width": 668,
+   493→        "color": 6
+   494→      },
+   495→      "id": "71f84329-ea25-4a2d-9af3-6cd60397d511",
+   496→      "name": "Sticky Note8",
+   497→      "type": "n8n-nodes-base.stickyNote",
+   498→      "position": [
+   499→        20,
+   500→        -40
+   501→      ],
+   502→      "typeVersion": 1
+   503→    },
+   504→    {
+   505→      "parameters": {
+   506→        "content": "# Watch the Setup Video 📺\n### Watch Set Up Video 👇\n[![Auto Categorise Outlook Emails with AI](https://cdn.jsdelivr.net/gh/WayneSimpson/n8n-chatbot-template/custom-branded-chatbot.png)](https://youtu.be/xQ1tCQZhLaI)\n\n",
+   507→        "height": 497,
+   508→        "width": 667,
+   509→        "color": 7
+   510→      },
+   511→      "id": "95cce507-a5fd-44b7-8a87-d5da09f5691f",
+   512→      "name": "Sticky Note9",
+   513→      "type": "n8n-nodes-base.stickyNote",
+   514→      "position": [
+   515→        -320,
+   516→        120
+   517→      ],
+   518→      "typeVersion": 1
+   519→    },
+   520→    {
+   521→      "parameters": {
+   522→        "content": "## Read to blog post to get started 📝\n**Follow along to add a custom branded chat widget to your webiste**\n\n[![Custom Branded n8n Chatbot](https://cdn.jsdelivr.net/gh/WayneSimpson/n8n-chatbot-template/chat%20widget.png)](https://blog.nocodecreative.io/create-a-branded-ai-powered-website-chatbot-with-n8n/)",
+   523→        "height": 500,
+   524→        "width": 600,
+   525→        "color": 7
+   526→      },
+   527→      "id": "63c1e2ad-719e-49f0-97bb-991419657c86",
+   528→      "name": "Sticky Note2",
+   529→      "type": "n8n-nodes-base.stickyNote",
+   530→      "position": [
+   531→        380,
+   532→        120
+   533→      ],
+   534→      "typeVersion": 1
+   535→    },
+   536→    {
+   537→      "parameters": {
+   538→        "content": "Customise the email template",
+   539→        "height": 240,
+   540→        "width": 260,
+   541→        "color": 4
+   542→      },
+   543→      "id": "9b5c032e-5b6a-4af6-b23e-2effe6de86cc",
+   544→      "name": "Sticky Note3",
+   545→      "type": "n8n-nodes-base.stickyNote",
+   546→      "position": [
+   547→        1280,
+   548→        840
+   549→      ],
+   550→      "typeVersion": 1
+   551→    },
+   552→    {
+   553→      "parameters": {
+   554→        "content": "modify timezones",
+   555→        "height": 238,
+   556→        "width": 208,
+   557→        "color": 6
+   558→      },
+   559→      "id": "012ff0bb-9780-4e75-8a49-84b06c70082c",
+   560→      "name": "Sticky Note4",
+   561→      "type": "n8n-nodes-base.stickyNote",
+   562→      "position": [
+   563→        440,
+   564→        940
+   565→      ],
+   566→      "typeVersion": 1
+   567→    }
+   568→  ],
+   569→  "pinData": {
+   570→    "Execute Workflow Trigger": [
+   571→      {
+   572→        "json": {
+   573→          "query": "Check availability for Monday at 9am",
+   574→          "route": "availability"
+   575→        }
+   576→      }
+   577→    ]
+   578→  },
+   579→  "connections": {
+   580→    "If": {
+   581→      "main": [
+   582→        [
+   583→          {
+   584→            "node": "AI Agent",
+   585→            "type": "main",
+   586→            "index": 0
+   587→          }
+   588→        ],
+   589→        [
+   590→          {
+   591→            "node": "Respond With Initial Message",
+   592→            "type": "main",
+   593→            "index": 0
+   594→          }
+   595→        ]
+   596→      ]
+   597→    },
+   598→    "Switch": {
+   599→      "main": [
+   600→        [
+   601→          {
+   602→            "node": "Get Events",
+   603→            "type": "main",
+   604→            "index": 0
+   605→          }
+   606→        ],
+   607→        [
+   608→          {
+   609→            "node": "Send Message1",
+   610→            "type": "main",
+   611→            "index": 0
+   612→          }
+   613→        ]
+   614→      ]
+   615→    },
+   616→    "AI Agent": {
+   617→      "main": [
+   618→        [
+   619→          {
+   620→            "node": "Respond to Webhook",
+   621→            "type": "main",
+   622→            "index": 0
+   623→          }
+   624→        ]
+   625→      ]
+   626→    },
+   627→    "Get Events": {
+   628→      "main": [
+   629→        [
+   630→          {
+   631→            "node": "freeTimeSlots",
+   632→            "type": "main",
+   633→            "index": 0
+   634→          }
+   635→        ]
+   636→      ]
+   637→    },
+   638→    "Chat Trigger": {
+   639→      "main": [
+   640→        [
+   641→          {
+   642→            "node": "If",
+   643→            "type": "main",
+   644→            "index": 0
+   645→          }
+   646→        ]
+   647→      ]
+   648→    },
+   649→    "Send Message": {
+   650→      "ai_tool": [
+   651→        [
+   652→          {
+   653→            "node": "AI Agent",
+   654→            "type": "ai_tool",
+   655→            "index": 0
+   656→          }
+   657→        ]
+   658→      ]
+   659→    },
+   660→    "Send Message1": {
+   661→      "main": [
+   662→        [
+   663→          {
+   664→            "node": "varMessageResponse",
+   665→            "type": "main",
+   666→            "index": 0
+   667→          }
+   668→        ]
+   669→      ]
+   670→    },
+   671→    "freeTimeSlots": {
+   672→      "main": [
+   673→        [
+   674→          {
+   675→            "node": "varResponse",
+   676→            "type": "main",
+   677→            "index": 0
+   678→          }
+   679→        ]
+   680→      ]
+   681→    },
+   682→    "Get Availability": {
+   683→      "ai_tool": [
+   684→        [
+   685→          {
+   686→            "node": "AI Agent",
+   687→            "type": "ai_tool",
+   688→            "index": 0
+   689→          }
+   690→        ]
+   691→      ]
+   692→    },
+   693→    "Make Appointment": {
+   694→      "ai_tool": [
+   695→        [
+   696→          {
+   697→            "node": "AI Agent",
+   698→            "type": "ai_tool",
+   699→            "index": 0
+   700→          }
+   701→        ]
+   702→      ]
+   703→    },
+   704→    "OpenAI Chat Model": {
+   705→      "ai_languageModel": [
+   706→        [
+   707→          {
+   708→            "node": "AI Agent",
+   709→            "type": "ai_languageModel",
+   710→            "index": 0
+   711→          }
+   712→        ]
+   713→      ]
+   714→    },
+   715→    "Window Buffer Memory": {
+   716→      "ai_memory": [
+   717→        [
+   718→          {
+   719→            "node": "AI Agent",
+   720→            "type": "ai_memory",
+   721→            "index": 0
+   722→          }
+   723→        ]
+   724→      ]
+   725→    },
+   726→    "Execute Workflow Trigger": {
+   727→      "main": [
+   728→        [
+   729→          {
+   730→            "node": "Switch",
+   731→            "type": "main",
+   732→            "index": 0
+   733→          }
+   734→        ]
+   735→      ]
+   736→    }
+   737→  },
+   738→  "active": false,
+   739→  "settings": {
+   740→    "executionOrder": "v1"
+   741→  },
+   742→  "versionId": "eb5e79f2-08cc-41e0-86ef-2c2cc279b9fd",
+   743→  "meta": {
+   744→    "templateCredsSetupCompleted": true,
+   745→    "instanceId": "9d8747a358c6ef7f467b6ae415e9e8b134cc3cfbb4ead13516b19d9211ae0b58"
+   746→  },
+   747→  "id": "XUN3zXAPePHOqVAi",
+   748→  "tags": []
+   749→}
