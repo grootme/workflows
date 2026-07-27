@@ -1,0 +1,350 @@
+{
+  "G13_Global_Error_Handler": {
+    "title": "Global Error Handler Workflow - Production-Ready Error Management",
+    "short_description": "Automated error handling for all your n8n workflows. Classify severity, send alerts, and log errors to PostgreSQL.",
+    "long_description": "## 🛡️ Global Error Handler v2\n\n**Zero-debt, production-ready n8n workflow** for automated error management across all your automation infrastructure.\n\n### What It Does\n- **Error Trigger**: Automatically catches errors from any n8n workflow configured to use this handler\n- **Severity Classification**: Routes errors into Critical, Warning, and Info categories using smart pattern matching\n- **Critical Alerts**: Sends urgent email notifications to your admin team for immediate attention\n- **Warning Logging**: Stores warning-level errors in PostgreSQL for review\n- **Info Logging**: Tracks minor errors for analytics and debugging\n- **Console Logging**: Real-time error output for development monitoring\n\n### Key Features\n- ✅ Zero-debt engineering - no technical debt, all connections correct\n- ✅ Severity-based routing - Critical/Warning/Info classification\n- ✅ Dual notification - Email alerts + Database logging\n- ✅ Structured error data - Workflow, Node, Message, Timestamp\n- ✅ Easy setup - Just set as error handler in your other workflows' settings\n\n### Setup Instructions\n1. Create `n8n_error_log` table in PostgreSQL\n2. Configure Gmail + PostgreSQL credentials\n3. Update admin email address\n4. Activate this workflow\n5. In your other workflows, go to Settings → Error Workflow → select this handler\n\n### Included\n- 1 importable n8n JSON workflow\n- StickyNote documentation nodes\n- PostgreSQL table creation SQL script available on request",
+    "price": 15,
+    "tier": "Starter",
+    "tags": [
+      "error handling",
+      "production",
+      "monitoring",
+      "PostgreSQL",
+      "Gmail alerts"
+    ],
+    "category": "Utilities",
+    "difficulty": "Beginner",
+    "credentials_required": [
+      "Gmail OAuth2",
+      "PostgreSQL"
+    ],
+    "nodes_count": 8,
+    "compatible_n8n_version": "1.0+",
+    "images": [
+      "error_handler_flow_diagram"
+    ],
+    "bundle_available": true,
+    "id": "G13_Global_Error_Handler",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G13_Global_Error_Handler_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660416",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G12_Flowise_RAG_Suite": {
+    "title": "Flowise RAG Agent Suite - Knowledge Base Chatbot with Flowise Integration",
+    "short_description": "AI chatbot connected to Flowise RAG pipeline for accurate document-based answers with source citations.",
+    "long_description": "## 📚 Flowise RAG Agent Suite v2\n\n**Production-ready n8n workflow** for building knowledge-based chatbots with Flowise RAG integration.\n\n### What It Does\n- **Chat Interface**: Built-in ChatTrigger for immediate interactive testing\n- **RAG Search**: Connects to your Flowise RAG pipeline for document-based answers\n- **Source Citations**: Automatically references source documents in responses\n- **Think Tool**: Plans complex research queries before execution\n- **Conversation Memory**: Maintains context across multi-turn conversations\n\n### Key Features\n- ✅ Zero-debt: All `ai_*` connections properly wired\n- ✅ Flowise HTTP integration - seamless RAG pipeline connection\n- ✅ Cost-optimized LLM: GPT-4o-mini ($0.15/$0.60 per 1M tokens)\n- ✅ Memory: BufferWindow for conversation context\n- ✅ Easy setup - just configure your Flowise URL\n\n### Setup Instructions\n1. Deploy Flowise with your RAG pipeline\n2. Import this workflow into n8n\n3. Configure OpenAI credential\n4. Update Flowise API URL in the HTTP tool node\n5. Test via ChatTrigger interface",
+    "price": 19,
+    "tier": "Starter",
+    "tags": [
+      "RAG",
+      "knowledge base",
+      "Flowise",
+      "chatbot",
+      "document search"
+    ],
+    "category": "AI Agents",
+    "difficulty": "Intermediate",
+    "credentials_required": [
+      "OpenAI"
+    ],
+    "nodes_count": 7,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G12_Flowise_RAG_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G12_Flowise_RAG_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660630",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G1_MCP_Calendar_Suite": {
+    "title": "MCP Calendar Suite Pro - AI-Powered Calendar Management MCP Server",
+    "short_description": "Deploy as MCP server to give any AI agent full Google Calendar control: create, delete, get, and update events.",
+    "long_description": "## 📋 MCP Calendar Suite Pro v2\n\n**Zero-debt, production-ready MCP server** for Google Calendar management. Deploy standalone and connect to any AI agent via MCP Client Tool.\n\n### What It Does\n- **MCP Server**: Deploys as standalone MCP server that any n8n AI agent can connect to\n- **Create Events**: Create calendar events with AI-generated parameters (title, time, attendees, description)\n- **Delete Events**: Remove events by ID\n- **Get Events**: Search and retrieve events by date range\n- **Update Events**: Modify existing event details\n\n### Key Features\n- ✅ Zero-debt: All `ai_tool` connections to MCP Trigger (correct MCP pattern)\n- ✅ `$fromAI()` expressions: Every parameter is AI-generated, enabling true conversational control\n- ✅ Proper `googleCalendarTool` node type (AI-tool variant, not regular action node)\n- ✅ OAuth2 credential: Secure Google Calendar access\n- ✅ Timezone support: Configurable timezone for event times\n\n### Setup Instructions\n1. Import into n8n and configure Google Calendar OAuth2 credential\n2. Select your calendar in each tool node\n3. **Activate** this workflow (MCP servers must be active)\n4. Copy the SSE endpoint URL from the MCP Trigger node\n5. In your parent Agent workflow, use `mcpClientTool` with the copied SSE endpoint\n\n### Architecture\n```\nMCP Trigger (path: /mcp-calendar-suite)\n    ↑ ai_tool\n    ├── Create Event (googleCalendarTool)\n    ├── Delete Event (googleCalendarTool)\n    ├── Get Events (googleCalendarTool)\n    └── Update Event (googleCalendarTool)\n```",
+    "price": 35,
+    "tier": "Professional",
+    "tags": [
+      "MCP",
+      "Google Calendar",
+      "calendar management",
+      "AI tools",
+      "MCP server"
+    ],
+    "category": "MCP Servers",
+    "difficulty": "Intermediate",
+    "credentials_required": [
+      "Google Calendar OAuth2"
+    ],
+    "nodes_count": 6,
+    "compatible_n8n_version": "1.0+",
+    "images": [
+      "calendar_mcp_architecture"
+    ],
+    "bundle_available": true,
+    "id": "G1_MCP_Calendar_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G1_MCP_Calendar_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660723",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G2_MCP_Gmail_Suite": {
+    "title": "MCP Gmail Suite Pro - AI-Powered Email Management MCP Server",
+    "short_description": "Deploy as MCP server to give any AI agent full Gmail control: send, search, read, reply, and delete emails.",
+    "long_description": "## 📧 MCP Gmail Suite Pro v2\n\n**Zero-debt, production-ready MCP server** for Gmail management. 5 email tools with `$fromAI()` for conversational email control.\n\n### Tools Included\n- **Send Email**: Compose and send emails with AI-generated subject, body, recipients\n- **Search Emails**: Find emails by Gmail query syntax\n- **Get Email**: Retrieve specific email by message ID\n- **Reply Email**: Reply to existing email threads\n- **Delete Email**: Remove emails by message ID\n\n### Key Features\n- ✅ 5 `gmailTool` nodes with `ai_tool` connections to MCP Trigger\n- ✅ `$fromAI()` expressions on all parameters for AI-generated arguments\n- ✅ Correct MCP server pattern: tools → trigger, NOT tools → agent\n- ✅ Template-ready credentials: empty IDs, descriptive names",
+    "price": 29,
+    "tier": "Professional",
+    "tags": [
+      "MCP",
+      "Gmail",
+      "email management",
+      "AI tools",
+      "MCP server"
+    ],
+    "category": "MCP Servers",
+    "difficulty": "Intermediate",
+    "credentials_required": [
+      "Gmail OAuth2"
+    ],
+    "nodes_count": 7,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G2_MCP_Gmail_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G2_MCP_Gmail_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660821",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G3_MCP_Contactos_Suite": {
+    "title": "MCP Contacts Suite Pro - AI-Powered Contact Management MCP Server",
+    "short_description": "Deploy as MCP server for full Google Contacts control: create, get, search, update, and delete contacts.",
+    "long_description": "## 👤 MCP Contacts Suite Pro v2\n\n**Zero-debt MCP server** for Google Contacts management. 5 contact tools with `$fromAI()`.\n\n### Tools: Create, Get, Search, Update, Delete contacts\n### Pattern: MCP Trigger → 5 googleContactsTool nodes via ai_tool",
+    "price": 25,
+    "tier": "Professional",
+    "tags": [
+      "MCP",
+      "Google Contacts",
+      "contact management",
+      "AI tools"
+    ],
+    "category": "MCP Servers",
+    "difficulty": "Intermediate",
+    "credentials_required": [
+      "Google Contacts OAuth2"
+    ],
+    "nodes_count": 7,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G3_MCP_Contactos_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G3_MCP_Contactos_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660898",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G9_Social_Scraper_Suite": {
+    "title": "Universal Social Scraper Suite - Multi-Platform Data Extraction Agent",
+    "short_description": "AI agent that scrapes Instagram, LinkedIn, Google Maps, and Twitter/X data via configurable HTTP tools.",
+    "long_description": "## 🔍 Universal Social Scraper Suite v2\n\n**Zero-debt AI agent** for multi-platform social data extraction. 4 dedicated scraper tools.\n\n### Platforms Supported\n- Instagram: Profile data, posts, followers, engagement\n- LinkedIn: Professional profiles, job listings, company data\n- Google Maps: Business data, emails, reviews, contact info\n- Twitter/X: Tweets, profiles, engagement metrics\n\n### Key Features\n- ✅ Webhook API endpoint for external integration\n- ✅ GPT-4o-mini LLM (cost-optimized)\n- ✅ Structured JSON output with timestamps\n- ✅ Configurable scraper API URLs",
+    "price": 35,
+    "tier": "Professional",
+    "tags": [
+      "scraper",
+      "Instagram",
+      "LinkedIn",
+      "Google Maps",
+      "data extraction"
+    ],
+    "category": "Data Extraction",
+    "difficulty": "Advanced",
+    "credentials_required": [
+      "OpenAI"
+    ],
+    "nodes_count": 11,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G9_Social_Scraper_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G9_Social_Scraper_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.660959",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G7_Imagenes_Citas_Suite": {
+    "title": "AI Image & Quote Generator Suite - Creative Content with Gemini Flash",
+    "short_description": "Creative AI agent using Gemini 2.5 Flash for generating inspirational images with quotes.",
+    "long_description": "## 🎨 AI Image & Quote Generator Suite v2\n\n**Zero-debt creative agent** using Gemini 2.5 Flash (multimodal, cost-effective) for image+quote generation.\n\n### Key Features\n- ✅ ChatTrigger for interactive creation\n- ✅ Gemini 2.5 Flash LLM (multimodal)\n- ✅ Think tool for creative planning\n- ✅ Quote Generator HTTP tool\n- ✅ Image Prompt Generator HTTP tool",
+    "price": 39,
+    "tier": "Professional",
+    "tags": [
+      "images",
+      "quotes",
+      "Gemini",
+      "creative",
+      "content generation"
+    ],
+    "category": "Creative",
+    "difficulty": "Intermediate",
+    "credentials_required": [
+      "Google Gemini",
+      "OpenAI"
+    ],
+    "nodes_count": 8,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G7_Imagenes_Citas_Suite",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G7_Imagenes_Citas_Suite_v2.json",
+    "last_updated": "2026-07-27T00:39:59.661022",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G10_HR_AI_Agent": {
+    "title": "HR AI Agent Pro - Resume Screening & Interview Scheduling Assistant",
+    "short_description": "AI HR assistant for resume evaluation, interview scheduling, and employee database queries.",
+    "long_description": "## 👤 HR AI Agent Pro v2\n\n**Zero-debt HR assistant** with resume analysis, interview scheduling, and employee management tools.\n\n### Tools: Think, Resume Analyzer, Interview Scheduler, Employee Database\n### LLM: GPT-4o-mini | Memory: BufferWindow",
+    "price": 45,
+    "tier": "Professional",
+    "tags": [
+      "HR",
+      "resume screening",
+      "interview scheduling",
+      "AI agent"
+    ],
+    "category": "HR",
+    "difficulty": "Advanced",
+    "credentials_required": [
+      "OpenAI"
+    ],
+    "nodes_count": 12,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G10_HR_AI_Agent",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G10_HR_AI_Agent_v2.json",
+    "last_updated": "2026-07-27T00:39:59.661082",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "G11_WhatsApp_AI_Agent": {
+    "title": "WhatsApp AI Agent Pro - RAG-Powered Customer Service with Evolution API",
+    "short_description": "Full WhatsApp AI agent with RAG knowledge base, voice transcription, order lookup, and appointment booking.",
+    "long_description": "## 💬 WhatsApp AI Agent Pro v2\n\n**Zero-debt WhatsApp agent** with Evolution API integration, RAG knowledge base, voice transcription, and business tools.\n\n### Key Features\n- ✅ Evolution API webhook integration (WhatsApp)\n- ✅ Voice transcription via OpenAI\n- ✅ PostgresChatHistory (production-grade memory)\n- ✅ Qdrant RAG with Gemini embeddings (knowledge base)\n- ✅ Order lookup + Appointment booking tools\n- ✅ Think tool for complex multi-step reasoning\n\n### Architecture\n```\nWhatsApp Webhook (Evolution API)\n    → Parse Message → Switch (text/voice)\n    → Download Audio → Transcribe (voice path)\n    → Set Text → AI Agent (text path)\n    \nAgent connections:\n    ai_languageModel ← GPT-4o-mini\n    ai_memory ← PostgresChatHistory\n    ai_tool ← Think + Knowledge Base + Order + Appointment\n    ai_embedding ← Gemini Embeddings → Qdrant Vector Store\n```",
+    "price": 49,
+    "tier": "Professional",
+    "tags": [
+      "WhatsApp",
+      "Evolution API",
+      "RAG",
+      "Qdrant",
+      "customer service"
+    ],
+    "category": "WhatsApp",
+    "difficulty": "Advanced",
+    "credentials_required": [
+      "OpenAI",
+      "PostgreSQL",
+      "Qdrant",
+      "Google Gemini"
+    ],
+    "nodes_count": 17,
+    "compatible_n8n_version": "1.0+",
+    "bundle_available": true,
+    "id": "G11_WhatsApp_AI_Agent",
+    "github_repo": "https://github.com/grootme/workflows",
+    "workflow_file": "consolidated/G11_WhatsApp_AI_Agent_v2.json",
+    "last_updated": "2026-07-27T00:39:59.661139",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "validation_score": "100%"
+  },
+  "MCP_Trio_Bundle": {
+    "title": "MCP Server Trio Bundle - Calendar + Gmail + Contacts",
+    "short_description": "All 3 MCP servers at 30% savings! Deploy Calendar, Gmail, and Contacts MCP servers for complete personal assistant capability.",
+    "price": 63,
+    "original_price": 89,
+    "savings_percent": 29,
+    "included_items": [
+      "G1_MCP_Calendar_Suite",
+      "G2_MCP_Gmail_Suite",
+      "G3_MCP_Contactos_Suite"
+    ],
+    "tier": "Professional",
+    "tags": [
+      "MCP bundle",
+      "Calendar",
+      "Gmail",
+      "Contacts",
+      "personal assistant"
+    ],
+    "id": "MCP_Trio_Bundle",
+    "github_repo": "https://github.com/grootme/workflows",
+    "last_updated": "2026-07-27T00:39:59.661294",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "is_bundle": true
+  },
+  "Starter_Bundle": {
+    "title": "Starter Bundle - Error Handler + RAG Agent",
+    "short_description": "2 Starter tier workflows at 25% savings. Get production error handling AND knowledge-based chatbot.",
+    "price": 27,
+    "original_price": 34,
+    "savings_percent": 20,
+    "included_items": [
+      "G13_Global_Error_Handler",
+      "G12_Flowise_RAG_Suite"
+    ],
+    "tier": "Starter",
+    "tags": [
+      "starter bundle",
+      "error handler",
+      "RAG",
+      "chatbot"
+    ],
+    "id": "Starter_Bundle",
+    "github_repo": "https://github.com/grootme/workflows",
+    "last_updated": "2026-07-27T00:39:59.661393",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "is_bundle": true
+  },
+  "Professional_Bundle": {
+    "title": "Professional AI Agent Bundle - 5 Best-Selling Workflows",
+    "short_description": "5 Professional tier workflows at 33% savings! WhatsApp Agent, HR Agent, Social Scraper, Image/Quote Suite, MCP Contacts.",
+    "price": 149,
+    "original_price": 193,
+    "savings_percent": 23,
+    "included_items": [
+      "G11_WhatsApp_AI_Agent",
+      "G10_HR_AI_Agent",
+      "G9_Social_Scraper_Suite",
+      "G7_Imagenes_Citas_Suite",
+      "G3_MCP_Contactos_Suite"
+    ],
+    "tier": "Professional",
+    "tags": [
+      "professional bundle",
+      "AI agents",
+      "WhatsApp",
+      "HR",
+      "scraper"
+    ],
+    "id": "Professional_Bundle",
+    "github_repo": "https://github.com/grootme/workflows",
+    "last_updated": "2026-07-27T00:39:59.661460",
+    "version": "2.0.0",
+    "zero_debt_certified": true,
+    "is_bundle": true
+  }
+}

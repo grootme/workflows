@@ -1,31 +1,29 @@
 {
-  "workflow_id": "G9_Social_Scraper_Suite",
-  "marketplace_title": "AI Agent Universal Social Scraper Suite - Production-Ready n8n Workflow",
-  "marketplace_description": "Stop wasting time on manual tasks. **Universal Social Scraper Suite** is a production-ready n8n AI workflow that automates your Scraping & Extracción processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
-  "category": "Scraping & Extracción",
+  "title": "Universal Social Scraper Suite - Multi-Platform Data Extraction Agent",
+  "short_description": "AI agent that scrapes Instagram, LinkedIn, Google Maps, and Twitter/X data via configurable HTTP tools.",
+  "long_description": "## 🔍 Universal Social Scraper Suite v2\n\n**Zero-debt AI agent** for multi-platform social data extraction. 4 dedicated scraper tools.\n\n### Platforms Supported\n- Instagram: Profile data, posts, followers, engagement\n- LinkedIn: Professional profiles, job listings, company data\n- Google Maps: Business data, emails, reviews, contact info\n- Twitter/X: Tweets, profiles, engagement metrics\n\n### Key Features\n- ✅ Webhook API endpoint for external integration\n- ✅ GPT-4o-mini LLM (cost-optimized)\n- ✅ Structured JSON output with timestamps\n- ✅ Configurable scraper API URLs",
+  "price": 35,
   "tier": "Professional",
-  "price_usd": 35,
   "tags": [
-    "AI Agent",
-    "Production-Ready",
-    "Error Handling",
-    "n8n",
-    "Scraping & Extracción",
-    "Professional"
+    "scraper",
+    "Instagram",
+    "LinkedIn",
+    "Google Maps",
+    "data extraction"
   ],
-  "includes": [
-    "n8n workflow JSON",
-    "Setup guide PDF",
-    "30-day support"
+  "category": "Data Extraction",
+  "difficulty": "Advanced",
+  "credentials_required": [
+    "OpenAI"
   ],
-  "commission_n8nmarkets": 3.5,
-  "commission_gumroad": 2.25,
-  "net_n8nmarkets": 31.5,
-  "net_gumroad": 32.75,
-  "nodes_count": 10,
-  "has_error_handling": true,
-  "has_persistent_memory": true,
-  "has_mcp_support": false,
-  "has_tiered_llm": true,
-  "github_repo_path": "workflows/G9_Social_Scraper_Suite.json"
+  "nodes_count": 11,
+  "compatible_n8n_version": "1.0+",
+  "bundle_available": true,
+  "id": "G9_Social_Scraper_Suite",
+  "github_repo": "https://github.com/grootme/workflows",
+  "workflow_file": "consolidated/G9_Social_Scraper_Suite_v2.json",
+  "last_updated": "2026-07-27T00:39:59.660959",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "validation_score": "100%"
 }

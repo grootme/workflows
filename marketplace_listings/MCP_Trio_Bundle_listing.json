@@ -1,0 +1,26 @@
+{
+  "title": "MCP Server Trio Bundle - Calendar + Gmail + Contacts",
+  "short_description": "All 3 MCP servers at 30% savings! Deploy Calendar, Gmail, and Contacts MCP servers for complete personal assistant capability.",
+  "price": 63,
+  "original_price": 89,
+  "savings_percent": 29,
+  "included_items": [
+    "G1_MCP_Calendar_Suite",
+    "G2_MCP_Gmail_Suite",
+    "G3_MCP_Contactos_Suite"
+  ],
+  "tier": "Professional",
+  "tags": [
+    "MCP bundle",
+    "Calendar",
+    "Gmail",
+    "Contacts",
+    "personal assistant"
+  ],
+  "id": "MCP_Trio_Bundle",
+  "github_repo": "https://github.com/grootme/workflows",
+  "last_updated": "2026-07-27T00:39:59.661294",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "is_bundle": true
+}

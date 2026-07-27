@@ -1,31 +1,30 @@
 {
-  "workflow_id": "G7_Imagenes_Citas_Suite",
-  "marketplace_title": "AI Agent AI Image & Quote Generator Suite - Production-Ready n8n Workflow",
-  "marketplace_description": "Stop wasting time on manual tasks. **AI Image & Quote Generator Suite** is a production-ready n8n AI workflow that automates your Social Media & Contenido processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
-  "category": "Social Media & Contenido",
+  "title": "AI Image & Quote Generator Suite - Creative Content with Gemini Flash",
+  "short_description": "Creative AI agent using Gemini 2.5 Flash for generating inspirational images with quotes.",
+  "long_description": "## 🎨 AI Image & Quote Generator Suite v2\n\n**Zero-debt creative agent** using Gemini 2.5 Flash (multimodal, cost-effective) for image+quote generation.\n\n### Key Features\n- ✅ ChatTrigger for interactive creation\n- ✅ Gemini 2.5 Flash LLM (multimodal)\n- ✅ Think tool for creative planning\n- ✅ Quote Generator HTTP tool\n- ✅ Image Prompt Generator HTTP tool",
+  "price": 39,
   "tier": "Professional",
-  "price_usd": 39,
   "tags": [
-    "AI Agent",
-    "Production-Ready",
-    "Error Handling",
-    "n8n",
-    "Social Media & Contenido",
-    "Professional"
+    "images",
+    "quotes",
+    "Gemini",
+    "creative",
+    "content generation"
   ],
-  "includes": [
-    "n8n workflow JSON",
-    "Setup guide PDF",
-    "30-day support"
+  "category": "Creative",
+  "difficulty": "Intermediate",
+  "credentials_required": [
+    "Google Gemini",
+    "OpenAI"
   ],
-  "commission_n8nmarkets": 3.9,
-  "commission_gumroad": 2.45,
-  "net_n8nmarkets": 35.1,
-  "net_gumroad": 36.55,
   "nodes_count": 8,
-  "has_error_handling": true,
-  "has_persistent_memory": true,
-  "has_mcp_support": false,
-  "has_tiered_llm": true,
-  "github_repo_path": "workflows/G7_Imagenes_Citas_Suite.json"
+  "compatible_n8n_version": "1.0+",
+  "bundle_available": true,
+  "id": "G7_Imagenes_Citas_Suite",
+  "github_repo": "https://github.com/grootme/workflows",
+  "workflow_file": "consolidated/G7_Imagenes_Citas_Suite_v2.json",
+  "last_updated": "2026-07-27T00:39:59.661022",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "validation_score": "100%"
 }

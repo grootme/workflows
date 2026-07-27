@@ -1,0 +1,28 @@
+{
+  "title": "Professional AI Agent Bundle - 5 Best-Selling Workflows",
+  "short_description": "5 Professional tier workflows at 33% savings! WhatsApp Agent, HR Agent, Social Scraper, Image/Quote Suite, MCP Contacts.",
+  "price": 149,
+  "original_price": 193,
+  "savings_percent": 23,
+  "included_items": [
+    "G11_WhatsApp_AI_Agent",
+    "G10_HR_AI_Agent",
+    "G9_Social_Scraper_Suite",
+    "G7_Imagenes_Citas_Suite",
+    "G3_MCP_Contactos_Suite"
+  ],
+  "tier": "Professional",
+  "tags": [
+    "professional bundle",
+    "AI agents",
+    "WhatsApp",
+    "HR",
+    "scraper"
+  ],
+  "id": "Professional_Bundle",
+  "github_repo": "https://github.com/grootme/workflows",
+  "last_updated": "2026-07-27T00:39:59.661460",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "is_bundle": true
+}

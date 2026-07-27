@@ -1,31 +1,32 @@
 {
-  "workflow_id": "G1_MCP_Calendar_Suite",
-  "marketplace_title": "AI Agent MCP Calendar Suite Pro - Production-Ready n8n Workflow",
-  "marketplace_description": "Stop wasting time on manual tasks. **MCP Calendar Suite Pro** is a production-ready n8n AI workflow that automates your Calendario & Agenda processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
-  "category": "Calendario & Agenda",
+  "title": "MCP Calendar Suite Pro - AI-Powered Calendar Management MCP Server",
+  "short_description": "Deploy as MCP server to give any AI agent full Google Calendar control: create, delete, get, and update events.",
+  "long_description": "## 📋 MCP Calendar Suite Pro v2\n\n**Zero-debt, production-ready MCP server** for Google Calendar management. Deploy standalone and connect to any AI agent via MCP Client Tool.\n\n### What It Does\n- **MCP Server**: Deploys as standalone MCP server that any n8n AI agent can connect to\n- **Create Events**: Create calendar events with AI-generated parameters (title, time, attendees, description)\n- **Delete Events**: Remove events by ID\n- **Get Events**: Search and retrieve events by date range\n- **Update Events**: Modify existing event details\n\n### Key Features\n- ✅ Zero-debt: All `ai_tool` connections to MCP Trigger (correct MCP pattern)\n- ✅ `$fromAI()` expressions: Every parameter is AI-generated, enabling true conversational control\n- ✅ Proper `googleCalendarTool` node type (AI-tool variant, not regular action node)\n- ✅ OAuth2 credential: Secure Google Calendar access\n- ✅ Timezone support: Configurable timezone for event times\n\n### Setup Instructions\n1. Import into n8n and configure Google Calendar OAuth2 credential\n2. Select your calendar in each tool node\n3. **Activate** this workflow (MCP servers must be active)\n4. Copy the SSE endpoint URL from the MCP Trigger node\n5. In your parent Agent workflow, use `mcpClientTool` with the copied SSE endpoint\n\n### Architecture\n```\nMCP Trigger (path: /mcp-calendar-suite)\n    ↑ ai_tool\n    ├── Create Event (googleCalendarTool)\n    ├── Delete Event (googleCalendarTool)\n    ├── Get Events (googleCalendarTool)\n    └── Update Event (googleCalendarTool)\n```",
+  "price": 35,
   "tier": "Professional",
-  "price_usd": 35,
   "tags": [
-    "AI Agent",
-    "Production-Ready",
-    "Error Handling",
-    "n8n",
-    "Calendario & Agenda",
-    "Professional"
+    "MCP",
+    "Google Calendar",
+    "calendar management",
+    "AI tools",
+    "MCP server"
   ],
-  "includes": [
-    "n8n workflow JSON",
-    "Setup guide PDF",
-    "30-day support"
+  "category": "MCP Servers",
+  "difficulty": "Intermediate",
+  "credentials_required": [
+    "Google Calendar OAuth2"
   ],
-  "commission_n8nmarkets": 3.5,
-  "commission_gumroad": 2.25,
-  "net_n8nmarkets": 31.5,
-  "net_gumroad": 32.75,
-  "nodes_count": 11,
-  "has_error_handling": true,
-  "has_persistent_memory": true,
-  "has_mcp_support": true,
-  "has_tiered_llm": true,
-  "github_repo_path": "workflows/G1_MCP_Calendar_Suite.json"
+  "nodes_count": 6,
+  "compatible_n8n_version": "1.0+",
+  "images": [
+    "calendar_mcp_architecture"
+  ],
+  "bundle_available": true,
+  "id": "G1_MCP_Calendar_Suite",
+  "github_repo": "https://github.com/grootme/workflows",
+  "workflow_file": "consolidated/G1_MCP_Calendar_Suite_v2.json",
+  "last_updated": "2026-07-27T00:39:59.660723",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "validation_score": "100%"
 }

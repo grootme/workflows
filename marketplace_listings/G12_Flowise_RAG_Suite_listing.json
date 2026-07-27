@@ -1,31 +1,29 @@
 {
-  "workflow_id": "G12_Flowise_RAG_Suite",
-  "marketplace_title": "AI Agent Flowise RAG Agent Suite - Production-Ready n8n Workflow",
-  "marketplace_description": "Stop wasting time on manual tasks. **Flowise RAG Agent Suite** is a production-ready n8n AI workflow that automates your RAG & Vector Store processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
-  "category": "RAG & Vector Store",
+  "title": "Flowise RAG Agent Suite - Knowledge Base Chatbot with Flowise Integration",
+  "short_description": "AI chatbot connected to Flowise RAG pipeline for accurate document-based answers with source citations.",
+  "long_description": "## 📚 Flowise RAG Agent Suite v2\n\n**Production-ready n8n workflow** for building knowledge-based chatbots with Flowise RAG integration.\n\n### What It Does\n- **Chat Interface**: Built-in ChatTrigger for immediate interactive testing\n- **RAG Search**: Connects to your Flowise RAG pipeline for document-based answers\n- **Source Citations**: Automatically references source documents in responses\n- **Think Tool**: Plans complex research queries before execution\n- **Conversation Memory**: Maintains context across multi-turn conversations\n\n### Key Features\n- ✅ Zero-debt: All `ai_*` connections properly wired\n- ✅ Flowise HTTP integration - seamless RAG pipeline connection\n- ✅ Cost-optimized LLM: GPT-4o-mini ($0.15/$0.60 per 1M tokens)\n- ✅ Memory: BufferWindow for conversation context\n- ✅ Easy setup - just configure your Flowise URL\n\n### Setup Instructions\n1. Deploy Flowise with your RAG pipeline\n2. Import this workflow into n8n\n3. Configure OpenAI credential\n4. Update Flowise API URL in the HTTP tool node\n5. Test via ChatTrigger interface",
+  "price": 19,
   "tier": "Starter",
-  "price_usd": 19,
   "tags": [
-    "AI Agent",
-    "Production-Ready",
-    "Error Handling",
-    "n8n",
-    "RAG & Vector Store",
-    "Starter"
+    "RAG",
+    "knowledge base",
+    "Flowise",
+    "chatbot",
+    "document search"
   ],
-  "includes": [
-    "n8n workflow JSON",
-    "Setup guide PDF",
-    "30-day support"
+  "category": "AI Agents",
+  "difficulty": "Intermediate",
+  "credentials_required": [
+    "OpenAI"
   ],
-  "commission_n8nmarkets": 1.9,
-  "commission_gumroad": 1.45,
-  "net_n8nmarkets": 17.1,
-  "net_gumroad": 17.55,
   "nodes_count": 7,
-  "has_error_handling": true,
-  "has_persistent_memory": true,
-  "has_mcp_support": false,
-  "has_tiered_llm": false,
-  "github_repo_path": "workflows/G12_Flowise_RAG_Suite.json"
+  "compatible_n8n_version": "1.0+",
+  "bundle_available": true,
+  "id": "G12_Flowise_RAG_Suite",
+  "github_repo": "https://github.com/grootme/workflows",
+  "workflow_file": "consolidated/G12_Flowise_RAG_Suite_v2.json",
+  "last_updated": "2026-07-27T00:39:59.660630",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "validation_score": "100%"
 }

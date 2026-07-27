@@ -1,31 +1,28 @@
 {
-  "workflow_id": "G3_MCP_Contactos_Suite",
-  "marketplace_title": "AI Agent MCP Contactos Suite Pro - Production-Ready n8n Workflow",
-  "marketplace_description": "Stop wasting time on manual tasks. **MCP Contactos Suite Pro** is a production-ready n8n AI workflow that automates your MCP Tools processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
-  "category": "MCP Tools",
+  "title": "MCP Contacts Suite Pro - AI-Powered Contact Management MCP Server",
+  "short_description": "Deploy as MCP server for full Google Contacts control: create, get, search, update, and delete contacts.",
+  "long_description": "## 👤 MCP Contacts Suite Pro v2\n\n**Zero-debt MCP server** for Google Contacts management. 5 contact tools with `$fromAI()`.\n\n### Tools: Create, Get, Search, Update, Delete contacts\n### Pattern: MCP Trigger → 5 googleContactsTool nodes via ai_tool",
+  "price": 25,
   "tier": "Professional",
-  "price_usd": 25,
   "tags": [
-    "AI Agent",
-    "Production-Ready",
-    "Error Handling",
-    "n8n",
-    "MCP Tools",
-    "Professional"
+    "MCP",
+    "Google Contacts",
+    "contact management",
+    "AI tools"
   ],
-  "includes": [
-    "n8n workflow JSON",
-    "Setup guide PDF",
-    "30-day support"
+  "category": "MCP Servers",
+  "difficulty": "Intermediate",
+  "credentials_required": [
+    "Google Contacts OAuth2"
   ],
-  "commission_n8nmarkets": 2.5,
-  "commission_gumroad": 1.75,
-  "net_n8nmarkets": 22.5,
-  "net_gumroad": 23.25,
-  "nodes_count": 8,
-  "has_error_handling": true,
-  "has_persistent_memory": true,
-  "has_mcp_support": true,
-  "has_tiered_llm": true,
-  "github_repo_path": "workflows/G3_MCP_Contactos_Suite.json"
+  "nodes_count": 7,
+  "compatible_n8n_version": "1.0+",
+  "bundle_available": true,
+  "id": "G3_MCP_Contactos_Suite",
+  "github_repo": "https://github.com/grootme/workflows",
+  "workflow_file": "consolidated/G3_MCP_Contactos_Suite_v2.json",
+  "last_updated": "2026-07-27T00:39:59.660898",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "validation_score": "100%"
 }

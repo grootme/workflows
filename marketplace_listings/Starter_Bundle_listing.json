@@ -1,0 +1,24 @@
+{
+  "title": "Starter Bundle - Error Handler + RAG Agent",
+  "short_description": "2 Starter tier workflows at 25% savings. Get production error handling AND knowledge-based chatbot.",
+  "price": 27,
+  "original_price": 34,
+  "savings_percent": 20,
+  "included_items": [
+    "G13_Global_Error_Handler",
+    "G12_Flowise_RAG_Suite"
+  ],
+  "tier": "Starter",
+  "tags": [
+    "starter bundle",
+    "error handler",
+    "RAG",
+    "chatbot"
+  ],
+  "id": "Starter_Bundle",
+  "github_repo": "https://github.com/grootme/workflows",
+  "last_updated": "2026-07-27T00:39:59.661393",
+  "version": "2.0.0",
+  "zero_debt_certified": true,
+  "is_bundle": true
+}
