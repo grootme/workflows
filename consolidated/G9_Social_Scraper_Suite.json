@@ -1,0 +1,330 @@
+{
+  "name": "Universal Social Scraper Suite",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "cf6967cb-f7fd-4294-b7e0-ba5ac56d535f",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "instagram",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "instagram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "linkedin",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "linkedin",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "x_twitter",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "x",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "facebook",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "facebook",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "id": "9e914336-ae4e-4f8d-9904-d30b736771d1",
+      "name": "Platform Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/instagram",
+        "method": "POST"
+      },
+      "id": "53d2e037-c488-42ea-b973-1790bec7860b",
+      "name": "Instagram Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/linkedin",
+        "method": "POST"
+      },
+      "id": "3a892c58-026a-43af-9497-04e61ff87522",
+      "name": "LinkedIn Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        750,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/x",
+        "method": "POST"
+      },
+      "id": "d0b397d5-4eba-45ab-aec8-3ddea48fc20a",
+      "name": "X Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        750,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/facebook",
+        "method": "POST"
+      },
+      "id": "7ce6fe39-0253-4257-8380-f9ca3bc7a525",
+      "name": "Facebook Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        750,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "abc29093-95b3-4b64-ba99-95ee7a925776",
+      "name": "Classify & Enrich",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "PLACEHOLDER",
+        "sheetName": "Leads"
+      },
+      "id": "bbf832f3-9972-4067-b0c0-63bf80e5565a",
+      "name": "Save to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "a3629f59-d69d-47e9-9b6d-ec724a5b0932",
+      "name": "Rate Limit Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Universal Social Scraper Suite\n\n**Consolidated from**: 3 workflows\n\n**Multi-platform**: Instagram/LinkedIn/X/Facebook\n**Gemini Flash**: Classification & enrichment\n**Rate limiting**: Wait between requests",
+        "width": 350,
+        "height": 200
+      },
+      "id": "c470f2b2-ae78-45a4-a868-c826b2b3c531",
+      "name": "📋 Universal Social Scraper Suite",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Platform Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platform Switch": {
+      "main": [
+        [
+          {
+            "node": "Instagram Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "LinkedIn Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "X Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Facebook Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Scraper": {
+      "main": [
+        [
+          {
+            "node": "Classify & Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Scraper": {
+      "main": [
+        [
+          {
+            "node": "Classify & Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X Scraper": {
+      "main": [
+        [
+          {
+            "node": "Classify & Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Scraper": {
+      "main": [
+        [
+          {
+            "node": "Classify & Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify & Enrich": {
+      "main": [
+        [
+          {
+            "node": "Save to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "5b49bddf-236a-4bcd-8f9b-28d8694b5ec9",
+  "meta": {
+    "instanceId": "697a702b-6013-440b-84cf-78212c326f5d"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

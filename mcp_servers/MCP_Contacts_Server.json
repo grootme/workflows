@@ -1,0 +1,181 @@
+{
+  "name": "MCP Contacts Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "34aeae6e-6b2c-43c9-8648-858cfcf57b93"
+      },
+      "id": "7aa2e09a-7f91-4a92-9d24-d138dfa802a7",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "29267422-f26f-464f-acb2-df28ab927449"
+    },
+    {
+      "parameters": {},
+      "id": "6150c24f-41c4-456f-9563-2ec52382b12c",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d6415b52-6f10-4527-ae50-1511546f54b0",
+      "name": "Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search"
+      },
+      "id": "b96d3c6e-f0f0-484a-9560-16a8e61387f3",
+      "name": "Search Contacts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append"
+      },
+      "id": "a6a0270c-27d8-48b6-82a2-bd6f5bd7a70f",
+      "name": "Add Contact",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "6783be08-4f7a-4403-9b45-167dbcd6f7c9",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## MCP Contacts Server\n\n**Tools**: search_contacts, add_contact, update_contact, delete_contact\n**Integration**: Google Sheets / Supabase",
+        "width": 350,
+        "height": 180
+      },
+      "id": "f4dc85b3-3d24-4095-b176-e98384495b37",
+      "name": "📋 MCP Contacts Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Router": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Contact": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "8c1b2d3d-4d18-40cd-af31-4981c1f1e384",
+  "meta": {
+    "instanceId": "dfa56d18-5b4d-45c4-a835-4fe68b9d614f"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

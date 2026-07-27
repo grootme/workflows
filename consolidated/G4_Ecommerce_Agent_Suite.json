@@ -1,0 +1,309 @@
+{
+  "name": "E-Commerce AI Agent Suite",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "4e488992-c781-4a0f-8fd8-5ec060b6813c",
+        "responseMode": "onReceived"
+      },
+      "id": "b522e2a1-693d-4288-be6d-85772acef7c3",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "c8fb7682-2790-482c-b931-cc24c7ca0314"
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your E-Commerce AI Agent. I can help with products, orders, inventory, and recommendations. What do you need?"
+      },
+      "id": "b087b3df-3d41-4795-9bfe-8fd372f8fce9",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "130d76f7-8579-4a40-98f3-66020f895742",
+      "name": "Classification LLM",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "2ed57335-b4cd-41b9-ae29-7acc71de1427",
+      "name": "Route Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03af6b7d-6a57-4ade-a691-d519b5d55e1b",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "cefd04c6-ea87-46a1-a039-016b10cf8244",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "080e48d8-f094-475e-a596-3f17bb4d6ead",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "7dd64730-5bc3-4e1b-97ac-1de13b820b0e",
+      "name": "E-Commerce Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1"
+      },
+      "id": "e489960f-0563-4453-af7b-50de64311675",
+      "name": "GPT-4.1 Primary",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "a0b3555e-bc65-4aa0-81ee-92bcbf73946d",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3d110831-afaf-4b43-90e6-9587a0cc562b",
+      "name": "Structured Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        600
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "4577e78f-2c5e-447f-acf7-7d844bd286c9",
+      "name": "Shopify Tool",
+      "type": "n8n-nodes-base.shopifyTool",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        200
+      ],
+      "credentials": {
+        "shopifyAccessTokenApi": {
+          "id": "PLACEHOLDER",
+          "name": "Shopify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": "PLACEHOLDER",
+        "sheetName": "CRM"
+      },
+      "id": "a9c7fa02-dbcb-49c2-9b2b-566caf378c9c",
+      "name": "Google Sheets CRM",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        400
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "query": "={{ $json.message }}"
+      },
+      "id": "7b8386d6-23f6-46a5-b92c-1479ba5a168d",
+      "name": "Product Knowledge",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        600
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "PLACEHOLDER",
+          "name": "Qdrant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "embedding-001"
+      },
+      "id": "1ac5d6a1-3a9e-49e0-a50f-82fd3ce46ef6",
+      "name": "Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        600
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## E-Commerce AI Agent Suite\n\n**Consolidated from**: 7 workflows (v1/v2/v3 + eCommerce + Shopify + 2 Nano Banana)\n\n**Architecture**: Orchestrator with tiered LLM\n- Classification: GPT-4o-mini (cheap routing)\n- Primary Agent: GPT-4.1 (quality reasoning)\n- Memory: PostgresChatHistory\n- Tools: Shopify + Google Sheets CRM + Qdrant RAG\n\n**Configure**: OpenAI, Shopify, Google Sheets, PostgreSQL, Qdrant, Gemini API",
+        "width": 400,
+        "height": 300
+      },
+      "id": "93b5b24c-fdc8-4874-8756-15cfd9f1fab8",
+      "name": "📋 E-Commerce AI Agent Suite",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "9f41778d-248c-426b-b002-97410cf50833",
+  "meta": {
+    "instanceId": "50711e4b-636a-49eb-838e-8e2bdc577c4d"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "ecommerce",
+      "id": "f43cb74c-e5a9-4f15-8f62-56198ac2d695"
+    },
+    {
+      "name": "production-ready",
+      "id": "cf52ee2e-9e88-4501-b9c7-fe7bcfce1887"
+    },
+    {
+      "name": "multi-agent",
+      "id": "00db1155-f0e7-4303-837b-a580c029f45f"
+    }
+  ]
+}

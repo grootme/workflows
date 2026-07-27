@@ -1,0 +1,169 @@
+{
+  "name": "AI Image & Quote Generator Suite",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your Image & Quote Generator. I can create beautiful images with inspirational quotes. What quote would you like?"
+      },
+      "id": "5f1da30b-dc54-4fde-8349-d036c4a28f2a",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true
+      },
+      "id": "b2d0a88b-8d34-437d-bcdc-b6b616ff1625",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "ba3bbf30-27dc-45ce-8f6e-fdbba90ad379",
+      "name": "Gemini Flash (Quote)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "ada9d4d4-6efd-4edf-adc2-691d15d4e35d",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        750,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "image",
+        "prompt": "={{ $json.quote }} artistic typography on beautiful background"
+      },
+      "id": "fab23232-2cfc-4a6d-9d44-b38cadab49cf",
+      "name": "OpenAI Image Gen",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        750,
+        600
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "folderId": "PLACEHOLDER"
+      },
+      "id": "b1d78725-8d2d-4007-acd3-298410d10101",
+      "name": "Save to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        300
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": "PLACEHOLDER",
+        "sheetName": "Templates"
+      },
+      "id": "00ae3171-1bda-48b7-843c-75da4318beab",
+      "name": "Template Sheets",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        500
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## AI Image & Quote Generator Suite\n\n**Consolidated from**: 4 workflows\n\n**Features**: Gemini Flash (quotes) + DALL-E (images) + Google Drive + Templates",
+        "width": 350,
+        "height": 200
+      },
+      "id": "ee10fdbe-e7cf-4ae4-99b8-d098509c2d09",
+      "name": "📋 AI Image & Quote Generator Suite",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "e888695b-5763-4124-a9b4-2cb226d82d01",
+  "meta": {
+    "instanceId": "6917fff7-10fb-4015-a3b4-43181f4a3339"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

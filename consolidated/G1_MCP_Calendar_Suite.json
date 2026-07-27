@@ -1,0 +1,286 @@
+{
+  "name": "MCP Calendar Suite Pro",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "8d5c17b3-3a56-4962-9eaf-4b7cd267d121"
+      },
+      "id": "4fcfb4d0-55db-4d76-b1e1-5324ff22581c",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "7344e4c8-2882-4e21-bc6c-467a3d096479"
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your Calendar AI Agent. I can create, find, update, and delete events. How can I help you?"
+      },
+      "id": "4c9d60cb-919c-40a0-b7b5-c38cd3e2b436",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "9d5e03db-6189-48db-96fb-60bb63a6fe6d",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash",
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "ff3e1c5d-c49f-4a21-98ed-2208b6fa38e5",
+      "name": "Gemini 2.5 Flash",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "50f880f9-da83-4fc5-b920-418b7ea9e7b7",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        750,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "659be665-022e-4e6e-97c3-bbcac8920169",
+      "name": "Structured Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "start": "={{ $fromAI('Start', 'Fecha inicio (ISO format)', 'string') }}",
+        "end": "={{ $fromAI('End', 'Fecha fin (ISO format)', 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $fromAI('Attendees', 'Participantes email', 'string') }}"
+          ],
+          "description": "={{ $fromAI('Description', 'Descripcion del evento', 'string') }}",
+          "summary": "={{ $fromAI('Summary', 'Titulo del evento', 'string') }}"
+        }
+      },
+      "id": "cd899348-e679-47cf-95a7-8edb8be51377",
+      "name": "Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "limit": 10,
+        "timeMin": "={{ $fromAI('After', 'Fecha inicio busqueda', 'string') }}",
+        "timeMax": "={{ $fromAI('Before', 'Fecha fin busqueda', 'string') }}"
+      },
+      "id": "ff4e0c7b-35a8-4aff-a89d-d0bedb2f3c19",
+      "name": "Get Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={{ $fromAI('Event_ID', 'ID del evento', 'string') }}",
+        "additionalFields": {
+          "description": "={{ $fromAI('Description', 'Nueva descripcion', 'string') }}",
+          "summary": "={{ $fromAI('Summary', 'Nuevo titulo', 'string') }}"
+        }
+      },
+      "id": "10e2f46d-d335-49ba-b048-e05099f31b84",
+      "name": "Update Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        600
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "eventId": "={{ $fromAI('Event_ID', 'ID del evento a eliminar', 'string') }}"
+      },
+      "id": "47f3c508-27c4-4985-a781-43c4ed7d6da4",
+      "name": "Delete Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        800
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## MCP Calendar Suite Pro\n\n**Consolidated from**: 7 original workflows (4 MCP_Calendario_Voz copies + 2 MCP Calendar copies + Agente_Calendario)\n\n**Features**:\n- MCP Trigger + Chat Trigger (dual input)\n- Gemini 2.5 Flash (best price/quality)\n- PostgresChatHistory (persistent memory)\n- 4 Google Calendar tools (create/get/update/delete)\n- Error Workflow linked\n\n**Configure**: Google Calendar credentials, PostgreSQL connection",
+        "width": 350,
+        "height": 300
+      },
+      "id": "425f8212-e10a-4df9-942e-96bab4d33de8",
+      "name": "📋 MCP Calendar Suite Pro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Structured Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "5bf08560-c2ee-46a6-a642-ac5dd728bb2c",
+  "meta": {
+    "instanceId": "0eb6b26b-a190-4dff-b31e-e386ebb46544"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "mcp-calendar",
+      "id": "c925e518-5e47-49db-80a4-9b5f444164b9"
+    },
+    {
+      "name": "production-ready",
+      "id": "b407c934-f215-4d65-b0d7-595ff6c7f318"
+    },
+    {
+      "name": "ai-agent",
+      "id": "5817b781-9920-4359-83b4-88ee5495050b"
+    }
+  ]
+}

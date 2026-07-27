@@ -1,0 +1,326 @@
+{
+  "name": "Global Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "22c2ea91-276e-478a-9f35-c9a5579fb093",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe289517-4355-4aee-ad2d-8598b2ee2b3f",
+              "name": "error_message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "6bb50bdf-efb4-41d0-9d0b-d600430d540b",
+              "name": "workflow_name",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "dded16d2-46a2-405b-ba8b-7e6bfbc28f49",
+              "name": "node_name",
+              "value": "={{ $json.execution.error.node.name }}",
+              "type": "string"
+            },
+            {
+              "id": "8ba6f994-f880-4c52-b846-cf654a1b12f9",
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "4418e85b-efe1-4901-8715-63dfb4485638",
+              "name": "execution_id",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e7c57cff-08c5-4ff0-a2f3-5a907898c7e7",
+              "name": "severity",
+              "value": "={{ $json.execution.error.message.includes('timeout') || $json.execution.error.message.includes('rate') ? 'critical' : 'warning' }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "319b0d6e-ec91-4051-b2fc-db06e92e7b6d",
+      "name": "Parse Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "critical",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.severity }}",
+                    "rightValue": "critical",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "warning",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.severity }}",
+                    "rightValue": "warning",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "id": "96b370bd-5ecc-46a8-a4a3-ff67ef338c2e",
+      "name": "Severity Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "channel": "#n8n-errors",
+        "text": "🔴 **CRITICAL ERROR**\nWorkflow: {{ $json.workflow_name }}\nNode: {{ $json.node_name }}\nError: {{ $json.error_message }}\nTime: {{ $json.timestamp }}\nExecution: {{ $json.execution_id }}"
+      },
+      "id": "d66c75ae-c83d-4d1e-9429-917c986d65a4",
+      "name": "Critical Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "PLACEHOLDER",
+          "name": "Slack Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "admin@example.com",
+        "subject": "🔴 CRITICAL n8n Error: {{ $json.workflow_name }}",
+        "message": "Critical error in workflow {{ $json.workflow_name }} at node {{ $json.node_name }}.\n\nError: {{ $json.error_message }}\nTime: {{ $json.timestamp }}\n\nPlease investigate immediately."
+      },
+      "id": "48dbcade-0340-47f7-a13c-edd68bc9b5fb",
+      "name": "Critical Email Alert",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "PLACEHOLDER_SPREADSHEET_ID",
+        "sheetName": "ErrorLog",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_name": "={{ $json.workflow_name }}",
+            "node_name": "={{ $json.node_name }}",
+            "error_message": "={{ $json.error_message }}",
+            "severity": "={{ $json.severity }}",
+            "timestamp": "={{ $json.timestamp }}",
+            "execution_id": "={{ $json.execution_id }}"
+          }
+        }
+      },
+      "id": "518c85b1-80e6-4163-bb63-4781b7988eb1",
+      "name": "Warning Log Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1000,
+        600
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "key": "n8n_error_dlq",
+        "value": "={{ JSON.stringify($json) }}",
+        "options": {
+          "ttl": 86400
+        }
+      },
+      "id": "8525099b-61f5-43a4-a0f7-e0dda75788cc",
+      "name": "DLQ Push to Redis",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "redis": {
+          "id": "PLACEHOLDER",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Global Error Handler\n\n- **Critical errors**: Slack + Email immediate alert\n- **Warnings**: Logged to Google Sheets\n- **All errors**: Pushed to Redis DLQ for retry\n- **Link this as Error Workflow in ALL other workflows**\n\nSettings → Error Workflow → this workflow",
+        "width": 300,
+        "height": 250
+      },
+      "id": "6270dbde-1c49-4bc2-91cd-155c12b8415d",
+      "name": "📋 Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Error": {
+      "main": [
+        [
+          {
+            "node": "Severity Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Severity Switch": {
+      "main": [
+        [
+          {
+            "node": "Critical Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Warning Log Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critical Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "DLQ Push to Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critical Email Alert": {
+      "main": [
+        [
+          {
+            "node": "DLQ Push to Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warning Log Sheet": {
+      "main": [
+        [
+          {
+            "node": "DLQ Push to Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2246765f-eeed-4673-8346-452ab8d3eb18",
+  "meta": {
+    "instanceId": "7b8a56fa-e2c2-4ef0-bc74-29ee7fbe5a0c"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "error-handling",
+      "id": "65645298-1b68-429e-8845-10f7dec6d6d8"
+    },
+    {
+      "name": "production-ready",
+      "id": "4393fc1f-6317-4edb-a5a1-b4bd6e29f010"
+    }
+  ]
+}

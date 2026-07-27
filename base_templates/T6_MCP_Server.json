@@ -1,0 +1,157 @@
+{
+  "name": "Template - MCP Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "cc356a7a-72bb-4b33-b5ba-d3a3f52c29ce"
+      },
+      "id": "f140f168-9eeb-4b7a-b277-6c8f981cbb55",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "6431ec81-3107-40a0-a128-2d78a053b4e3"
+    },
+    {
+      "parameters": {},
+      "id": "8eb7df63-07af-4f8f-b3e4-d18f7667cdcc",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "9506053b-defc-48eb-912c-fd155d15418f",
+      "name": "Tool Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "cfbd5080-93c1-47b2-8116-2352dd028d25",
+      "name": "API Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b10012e3-bcc4-4a82-84cb-dc91e03de2a4",
+      "name": "Transform Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5ad1e0a5-8562-4a23-81b3-1b69133082c4",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Template: MCP Server\n\n**Pattern**: MCP Trigger → Parse → Router → API → Transform → Response\n\n**Customize**:\n- Add more tool branches in Switch\n- Replace HTTP Request with specific API calls\n- Add Gemini/OpenAI for AI-powered tools\n\n**Compatible with**: Claude, GPT, Gemini via MCP protocol",
+        "width": 400,
+        "height": 250
+      },
+      "id": "de0eae88-cbe6-42a0-9b01-0786e0d503e5",
+      "name": "📋 Template: MCP Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Tool Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool Router": {
+      "main": [
+        [
+          {
+            "node": "API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Call": {
+      "main": [
+        [
+          {
+            "node": "Transform Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Response": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "659553d4-2381-4afa-abc3-4e49e26309b1",
+  "meta": {
+    "instanceId": "b6dc5144-7d67-490e-894f-a29c835170d5"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

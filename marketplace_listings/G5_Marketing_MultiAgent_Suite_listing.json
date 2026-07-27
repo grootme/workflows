@@ -1,0 +1,31 @@
+{
+  "workflow_id": "G5_Marketing_MultiAgent_Suite",
+  "marketplace_title": "AI Agent Marketing Multi-Agent Suite - Production-Ready n8n Workflow",
+  "marketplace_description": "Stop wasting time on manual tasks. **Marketing Multi-Agent Suite** is a production-ready n8n AI workflow that automates your Marketing & Leads processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
+  "category": "Marketing & Leads",
+  "tier": "Enterprise",
+  "price_usd": 89,
+  "tags": [
+    "AI Agent",
+    "Production-Ready",
+    "Error Handling",
+    "n8n",
+    "Marketing & Leads",
+    "Enterprise"
+  ],
+  "includes": [
+    "n8n workflow JSON",
+    "Setup guide PDF",
+    "30-day support"
+  ],
+  "commission_n8nmarkets": 8.9,
+  "commission_gumroad": 4.95,
+  "net_n8nmarkets": 80.1,
+  "net_gumroad": 84.05,
+  "nodes_count": 13,
+  "has_error_handling": true,
+  "has_persistent_memory": true,
+  "has_mcp_support": false,
+  "has_tiered_llm": true,
+  "github_repo_path": "workflows/G5_Marketing_MultiAgent_Suite.json"
+}

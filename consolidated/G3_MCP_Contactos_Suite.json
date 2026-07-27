@@ -1,0 +1,177 @@
+{
+  "name": "MCP Contactos Suite Pro",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "759497df-8840-4f59-b93f-b658bcb6300a"
+      },
+      "id": "c4a6b4d5-016a-4bb7-a4bc-7d8d89b02de2",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "61f71528-1ba9-4955-b62b-2d7865dcd6ca"
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your Contacts AI Agent. I can search, add, update, and delete contacts. How can I help you?"
+      },
+      "id": "f87f119d-4bb5-4d9e-85d6-b07617544e09",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "76bb7753-4dfe-442e-9b30-dc2175e8ac01",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "29f60711-cfb6-4c8c-bf4a-a403ea21d3a9",
+      "name": "Gemini 2.5 Flash",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "bf359c1b-a856-4760-b84a-aa15391487fe",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        750,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "f3bb8f76-82d8-426d-832d-94b3a0c37028",
+      "name": "Structured Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "documentId": "PLACEHOLDER_SPREADSHEET_ID",
+        "sheetName": "Contacts",
+        "query": "={{ $fromAI('Query', 'Busqueda de contactos', 'string') }}"
+      },
+      "id": "a1d35c9e-02f4-40ca-a4ad-8213e9e743a8",
+      "name": "Google Sheets Contacts",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## MCP Contactos Suite Pro\n\n**Consolidated from**: 3 original workflows\n\n**Configure**: Google Sheets credentials, PostgreSQL, Gemini API",
+        "width": 350,
+        "height": 200
+      },
+      "id": "30784657-8e8d-4909-87da-2bc995705364",
+      "name": "📋 MCP Contactos Suite Pro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "7f7024cf-ace3-4d74-ac65-570bae0091fb",
+  "meta": {
+    "instanceId": "0b2c3017-faa9-4216-b083-5a7bab338f74"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "mcp-contacts",
+      "id": "04d01b96-0f02-4e96-86c3-46d665b969a1"
+    },
+    {
+      "name": "production-ready",
+      "id": "0bb52182-27ac-499a-9bcd-7d704bd2a475"
+    }
+  ]
+}

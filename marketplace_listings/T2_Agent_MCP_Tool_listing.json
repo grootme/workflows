@@ -1,0 +1,31 @@
+{
+  "workflow_id": "T2_Agent_MCP_Tool",
+  "marketplace_title": "AI Agent Agent with MCP Tools Template - Production-Ready n8n Workflow",
+  "marketplace_description": "Stop wasting time on manual tasks. **Agent with MCP Tools Template** is a production-ready n8n AI workflow that automates your MCP Tools processes end-to-end.\n\n## What You Get\n- Complete n8n workflow JSON (import-ready)\n- Setup guide with step-by-step instructions  \n- 30-day email support\n- Production-ready error handling\n- Persistent memory (PostgresChatHistory)\n\n## Key Features\n- **Tiered LLM Strategy**: Cost-optimized model selection (60-80% savings)\n- **Persistent Memory**: PostgresChatHistory for conversation continuity\n- **Error Handling**: Linked to Global Error Handler workflow\n- **MCP Compatible**: Works with Claude, GPT, Gemini via MCP protocol\n- **Structured Output**: Reliable, parseable responses\n\n## Requirements\n- n8n instance (self-hosted or cloud)\n- API credentials (OpenAI/Google Calendar/etc.)\n- PostgreSQL for persistent memory (recommended)\n\n## Import Instructions\n1. Download the JSON file\n2. In n8n: Workflows → Import from File\n3. Configure your API credentials\n4. Link the Global Error Handler as error workflow\n5. Activate and test!",
+  "category": "MCP Tools",
+  "tier": "Professional",
+  "price_usd": 35,
+  "tags": [
+    "AI Agent",
+    "Production-Ready",
+    "Error Handling",
+    "n8n",
+    "MCP Tools",
+    "Professional"
+  ],
+  "includes": [
+    "n8n workflow JSON",
+    "Setup guide PDF",
+    "30-day support"
+  ],
+  "commission_n8nmarkets": 3.5,
+  "commission_gumroad": 2.25,
+  "net_n8nmarkets": 31.5,
+  "net_gumroad": 32.75,
+  "nodes_count": 7,
+  "has_error_handling": true,
+  "has_persistent_memory": true,
+  "has_mcp_support": true,
+  "has_tiered_llm": true,
+  "github_repo_path": "workflows/T2_Agent_MCP_Tool.json"
+}

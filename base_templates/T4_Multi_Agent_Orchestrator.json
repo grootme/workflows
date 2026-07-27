@@ -1,0 +1,262 @@
+{
+  "name": "Template - Multi-Agent Orchestrator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4d06abff-5c59-404c-98d8-7528f5091e3b",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini"
+      },
+      "id": "65fed17b-708a-44c3-a1c3-38df568a994f",
+      "name": "Classification LLM",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3026e015-f3c9-4fe3-98ee-34ed1a85409a",
+      "name": "Route Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "2251e7cb-b482-42e1-85f1-0c6f9597081b",
+      "name": "Switch Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "SUB_A_ID"
+      },
+      "id": "03c3bae3-6f0f-4110-80de-755dbbacd038",
+      "name": "Execute Sub A",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "SUB_B_ID"
+      },
+      "id": "ce2845d8-52fa-4e91-bafc-686913c1f5ea",
+      "name": "Execute Sub B",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "SUB_C_ID"
+      },
+      "id": "71499b55-3c9e-4d7e-beaf-e35f89105728",
+      "name": "Execute Sub C",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        600
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e6b81e09-5758-4e0b-a532-9bd7baf6ac41",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1"
+      },
+      "id": "5ddb3038-7299-4e47-a24b-96512e19e68a",
+      "name": "Response LLM",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "cd6856a2-3430-44a9-9b82-750f958b6622",
+      "name": "Orchestrator Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1500,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Template: Multi-Agent Orchestrator\n\n**Architecture**: Chat → Classify → Switch → Sub-workflows → Merge → Response\n\n**Tiered LLM**: GPT-4o-mini (routing) + GPT-4.1 (response)\n\n**Customize**: Add more sub-workflows as needed",
+        "width": 400,
+        "height": 250
+      },
+      "id": "00df0402-1b91-4f3a-a365-8bf6464862bb",
+      "name": "📋 Template: Multi-Agent Orchestrator",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Classification LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification LLM": {
+      "main": [
+        [
+          {
+            "node": "Route Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Parser": {
+      "main": [
+        [
+          {
+            "node": "Switch Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Router": {
+      "main": [
+        [
+          {
+            "node": "Execute Sub A",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Sub B",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Sub C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub A": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Sub B": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Execute Sub C": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "55449a33-f9fe-49cb-a979-0af7b6fd5bbd",
+  "meta": {
+    "instanceId": "7e8a7175-62aa-4b03-b55f-744732ac79d0"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

@@ -1,0 +1,131 @@
+{
+  "name": "Template - Single Agent Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your AI assistant. How can I help you today?"
+      },
+      "id": "0a359b79-658c-4c46-8bb2-1fc9d54c8985",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "026f911b-51ad-466f-b070-78611e63d630",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "487c5fcb-85ad-4ba8-916c-e7547b8f55fa",
+      "name": "GPT-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}",
+        "windowSize": 10
+      },
+      "id": "d1406dd3-f4a8-4916-8908-4c4959676630",
+      "name": "Window Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        750,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f4fde540-3ae3-4b7b-9ed5-c629e5eba1d8",
+      "name": "Structured Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "value": "I encountered an error. Let me try again."
+      },
+      "id": "10baa78e-04c8-454e-99dd-195c7de4b99c",
+      "name": "Error Fallback",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Template: Single Agent Chat\n\n**Replace credentials with your own**\n- OpenAI API key\n- Optional: switch to Gemini/Groq\n\n**Customize**:\n- Change initialMessages\n- Add tools (Sheets, Calendar, etc.)\n- Switch to PostgresChatHistory for production",
+        "width": 350,
+        "height": 250
+      },
+      "id": "03fbf734-e9b9-41db-894c-f6e43465c4a8",
+      "name": "📋 Template: Single Agent Chat",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "89720686-ec7a-42ee-a8ff-938cc93b4467",
+  "meta": {
+    "instanceId": "f953277d-880f-435e-844e-021e95f5e218"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

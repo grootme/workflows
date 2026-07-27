@@ -1,0 +1,170 @@
+{
+  "name": "Template - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f15cb9c8-6830-4056-b7c6-86d7d52c98f2",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3b42c866-1e2d-435a-b56b-24d7a93dc834",
+      "name": "Parse Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d688da57-5412-4d6d-b1ba-82e5694b9279",
+      "name": "Severity Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d0f2fcd5-cbe7-4e85-a06e-44cc9d27ec77",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "PLACEHOLDER",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3746fe60-c4d7-4011-847b-29610f069582",
+      "name": "Error Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3e7b469c-2a25-4736-b40b-97db7f6d0e5a",
+      "name": "Log Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1000,
+        600
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "64e2651b-d1e9-4e24-afa0-97d40b38cbdc",
+      "name": "DLQ Redis",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "redis": {
+          "id": "PLACEHOLDER",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "minutes"
+      },
+      "id": "f7fa1abf-8764-40bb-9c41-3e9644be7646",
+      "name": "Backoff Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1250,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Template: Error Handler\n\n**Features**:\n- Severity routing (critical/warning)\n- Slack + Email alerts\n- Google Sheets audit log\n- Redis DLQ for retries\n\n**Link this as Error Workflow in ALL your workflows**",
+        "width": 350,
+        "height": 250
+      },
+      "id": "0b01ea7c-9fa2-4442-96f8-367bc35c04a7",
+      "name": "📋 Template: Error Handler",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Error": {
+      "main": [
+        [
+          {
+            "node": "Severity Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "138795a5-2cb6-4194-87ad-d56f0818db57",
+  "meta": {
+    "instanceId": "504da616-9471-44b1-8501-fb56cdd900d6"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

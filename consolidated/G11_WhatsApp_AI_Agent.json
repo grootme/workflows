@@ -1,0 +1,215 @@
+{
+  "name": "WhatsApp AI Agent Pro",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "85543032-a3c1-4bd2-8903-e26452881f65",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your WhatsApp Customer Service AI Agent. I can answer questions, resolve issues, and route complex queries to humans. How can I help?"
+      },
+      "id": "15926a6d-66bb-4f76-918a-63c7b92f2991",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "77ee3d87-a4ec-498e-a53a-8f98652f7344",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini"
+      },
+      "id": "7a81f127-4aea-4a14-9914-cd266b3f43af",
+      "name": "Classification",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        500
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "2d02bb82-3fd5-4313-94e9-f86ba60318a9",
+      "name": "WhatsApp Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1"
+      },
+      "id": "91530e39-e340-485e-bdbe-5de62356aa77",
+      "name": "GPT-4.1 (Quality)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "214d4de4-073a-4a16-b747-8bad0438e9f3",
+      "name": "Gemini Flash (Routing)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "da073a78-0e5b-40c7-83c6-beb881fab71c",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        600
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "dd7563a7-2cb4-4cf0-9cae-8f3ffd759ce9",
+      "name": "CRM Sheets",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "e3be779b-965e-481b-aed2-10f3817939a7",
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## WhatsApp AI Agent Pro\n\n**Consolidated from**: 4 workflows\n\n**Tiered**: GPT-4o-mini (routing) + GPT-4.1 (quality)\n**Memory**: PostgresChatHistory\n**CRM**: Google Sheets integration",
+        "width": 350,
+        "height": 200
+      },
+      "id": "1a1658b4-09f4-4247-8ef1-7123f4dc87cf",
+      "name": "📋 WhatsApp AI Agent Pro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "db7edd7a-ce2f-446c-ae2e-5862059f3109",
+  "meta": {
+    "instanceId": "14d5f382-d34c-4738-8694-8c0de9c84b59"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

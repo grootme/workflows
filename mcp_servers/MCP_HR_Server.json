@@ -1,0 +1,128 @@
+{
+  "name": "MCP HR Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "7cbead1e-d869-4468-b9fc-c7848a54dd31"
+      },
+      "id": "259d2c58-6e72-47a5-b446-b2a486bcf849",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "f07b2258-c78e-4a7f-9309-392dda277128"
+    },
+    {
+      "parameters": {},
+      "id": "4c972d01-9cb6-4093-9fca-878e7a337855",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1"
+      },
+      "id": "b4c6c2f2-b6f5-4294-8fab-9c0ea7515899",
+      "name": "Analyze CV",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "bc988ece-52cd-4edb-989e-a4cbe01a2d5f",
+      "name": "Schedule Interview",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        750,
+        400
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "PLACEHOLDER",
+          "name": "Google Calendar"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "268f3622-7dde-4c0e-8c95-93b564e60a92",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## MCP HR Server\n\n**Tools**: analyze_cv, schedule_interview, score_candidate\n**Integration**: OpenAI + Google Calendar + Sheets",
+        "width": 350,
+        "height": 180
+      },
+      "id": "eac8c279-2759-4649-a1c2-347f51066ead",
+      "name": "📋 MCP HR Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "8f3fa1c4-db9c-4ada-bfd3-abd8de53fa30",
+  "meta": {
+    "instanceId": "266147e3-e0bd-4857-bdf3-b67f03c393a4"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

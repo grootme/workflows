@@ -1,0 +1,202 @@
+{
+  "name": "MCP Gmail Suite Pro",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "31841d9e-a698-42e1-b1b9-f93f9bf583d1"
+      },
+      "id": "47be9625-53ae-4b30-ba1f-30aecfbea32d",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "86f9f234-e770-4adb-be00-0899eddc6e27"
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your Gmail AI Agent. I can search, send, classify, and draft emails. How can I help you?"
+      },
+      "id": "c4292b34-005d-4c20-ab23-6abe07cd0b14",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "3ec40cf2-81f4-4493-b908-b6735c43f4b1",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "c26ed4b9-a749-441d-9ba4-d21f90391820",
+      "name": "Gemini 2.5 Flash",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        750,
+        200
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "f73bbbae-0b25-4b51-a277-95db31e47b89",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        750,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "5f7037fe-60cc-42c6-b335-9e6152c9715e",
+      "name": "Structured Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        750,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $fromAI('To', 'Email destinatario', 'string') }}",
+        "subject": "={{ $fromAI('Subject', 'Asunto del email', 'string') }}",
+        "message": "={{ $fromAI('Message', 'Contenido del email', 'string') }}"
+      },
+      "id": "67f93965-4b89-48a2-b431-715a14dde6fc",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "query": "={{ $fromAI('Query', 'Busqueda Gmail', 'string') }}",
+        "limit": 10
+      },
+      "id": "e20f0ca7-06a5-41df-a5ab-4653604b98f2",
+      "name": "Search Emails",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## MCP Gmail Suite Pro\n\n**Consolidated from**: 4 original workflows (2 MCP_Gmail_Voz + 2 MCP Gmail)\n\n**Features**:\n- MCP Trigger + Chat Trigger\n- Gemini 2.5 Flash\n- PostgresChatHistory\n- Gmail tools (send/search)\n\n**Configure**: Gmail credentials, PostgreSQL",
+        "width": 350,
+        "height": 250
+      },
+      "id": "38ceed70-75e5-45ef-ad0c-bd538d6143d6",
+      "name": "📋 MCP Gmail Suite Pro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "40a8f947-e83e-46ad-8f10-2373b0ba007b",
+  "meta": {
+    "instanceId": "5af40d39-e973-4516-b40a-999deac3fe3d"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "mcp-gmail",
+      "id": "44d97215-561a-42ea-84f2-ec2002160333"
+    },
+    {
+      "name": "production-ready",
+      "id": "74faf519-11c9-4377-81eb-1717c7a8b841"
+    },
+    {
+      "name": "ai-agent",
+      "id": "d056e89e-9feb-4f54-a6d9-32835c10c177"
+    }
+  ]
+}

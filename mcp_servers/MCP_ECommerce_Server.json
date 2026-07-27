@@ -1,0 +1,177 @@
+{
+  "name": "MCP E-Commerce Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "05b21a97-156c-4cb7-9cc9-683a377d48c4"
+      },
+      "id": "02952ca4-5ad3-43b3-be24-1ff6a0f817ca",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "cda3db40-44c6-4878-99a5-e8f3e2c54bee"
+    },
+    {
+      "parameters": {},
+      "id": "42fc4958-cb21-45a0-bde7-6c533f8039ad",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d8bf89d5-759d-4d66-a02e-5c85ae04e8bf",
+      "name": "Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "1800d8d3-e6e2-419e-a924-43c853a11e30",
+      "name": "Search Products",
+      "type": "n8n-nodes-base.shopify",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "shopifyAccessTokenApi": {
+          "id": "PLACEHOLDER",
+          "name": "Shopify"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "d69c732e-0357-4cf3-9216-df56f8658994",
+      "name": "Check Inventory",
+      "type": "n8n-nodes-base.shopify",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "shopifyAccessTokenApi": {
+          "id": "PLACEHOLDER",
+          "name": "Shopify"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "056d010f-d9ef-4a20-b0cc-30c53a0c3ce8",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## MCP E-Commerce Server\n\n**Tools**: search_products, check_inventory, create_order, update_order\n**Integration**: Shopify / WooCommerce",
+        "width": 350,
+        "height": 180
+      },
+      "id": "3335ae25-f799-4431-8ffa-40d6042d5664",
+      "name": "📋 MCP E-Commerce Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Router": {
+      "main": [
+        [
+          {
+            "node": "Search Products",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Products": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Inventory": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "1e9414c1-04fc-4812-9754-ecce4da64361",
+  "meta": {
+    "instanceId": "9ae429a6-1b2d-4e6f-b177-b3ab4a6a4be1"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

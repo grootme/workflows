@@ -1,0 +1,292 @@
+{
+  "name": "Marketing Multi-Agent Suite",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c0065458-e82a-4040-b41e-aeb458abcb76",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "PLACEHOLDER",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "initialMessages": "Hello! I'm your Marketing AI Agent Suite. I can create blog posts, LinkedIn content, videos, and images. What content do you need?"
+      },
+      "id": "2e9d5252-5e1d-4949-9243-d0edcbbfd8c1",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "transcribe"
+      },
+      "id": "b829fe44-029f-4778-bbf7-7fa99caf021f",
+      "name": "Transcribe Voice",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        500,
+        100
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3af1d99f-0c13-4e0e-9958-f9916a680ec3",
+              "name": "message",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "8fd3ddbb-faa7-466c-80b6-00fefe6529e6",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "3afd477f-13ab-4069-acb9-c85b1ce7c9a2",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "hasMemory": true,
+        "text": "={{ $json.message }}"
+      },
+      "id": "e4fd2355-35bc-4e8b-9d81-0561b770bd9a",
+      "name": "Marketing Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1"
+      },
+      "id": "72239e3e-4755-4611-a1cb-ab3c3c3598c3",
+      "name": "GPT-4.1 Orchestrator",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $json.sessionId }}"
+      },
+      "id": "db440d10-214f-4368-9e2f-e54d7a5f2a07",
+      "name": "Persistent Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "BLOG_SUB_WORKFLOW_ID"
+      },
+      "id": "b0c455af-aaad-419e-aba7-360c4e3af1a7",
+      "name": "Blog Content Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "LINKEDIN_SUB_WORKFLOW_ID"
+      },
+      "id": "8d9afaf1-ee87-49cb-bef3-e0a39f12c89f",
+      "name": "LinkedIn Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "VIDEO_SUB_WORKFLOW_ID"
+      },
+      "id": "82042689-d239-402e-a804-9a0c58b9442e",
+      "name": "Video Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        1250,
+        600
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "80c5e159-4a1d-428c-a659-d4881623c9d4",
+      "name": "Think Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.output }}"
+      },
+      "id": "5d3e10ce-a53f-4691-95bb-62035e68894a",
+      "name": "Send Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "PLACEHOLDER",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Marketing Multi-Agent Suite\n\n**Consolidated from**: 7 workflows (Blog/LinkedIn/Video/Image agents + Sistema Multi-Agentes)\n\n**Architecture**: Orchestrator calling sub-workflows\n- Orchestrator: GPT-4.1\n- Memory: PostgresChatHistory\n- Sub-workflows: Blog/LinkedIn/Video (separate workflow JSONs)\n- Think tool for reasoning\n\n**Configure**: OpenAI, Telegram, PostgreSQL",
+        "width": 400,
+        "height": 300
+      },
+      "id": "b0c25ef4-1e33-4180-95f3-245b065fce6b",
+      "name": "📋 Marketing Multi-Agent Suite",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Marketing Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "2cf6f1b6-db4e-4025-b2fd-44afc8f2aee2",
+  "meta": {
+    "instanceId": "c5fa2ae6-228d-4ac4-b895-813ee106ca78"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": [
+    {
+      "name": "marketing",
+      "id": "41e15d3f-31f8-4676-b5dc-923607b727b1"
+    },
+    {
+      "name": "multi-agent",
+      "id": "ee9bad31-7c49-4602-9faf-e1379c626a72"
+    },
+    {
+      "name": "production-ready",
+      "id": "5552d971-6f40-4bc3-a87a-c782c7c185e0"
+    }
+  ]
+}

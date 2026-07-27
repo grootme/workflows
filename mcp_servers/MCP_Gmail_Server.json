@@ -1,0 +1,256 @@
+{
+  "name": "MCP Gmail Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "c609050b-7a27-4fbb-a8cd-ce1bffa069dd"
+      },
+      "id": "95cab4ea-f13e-4092-a2ae-dc87cb0a8d11",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "64537365-c872-4493-8b0a-b05a690aca0a"
+    },
+    {
+      "parameters": {},
+      "id": "472fc97a-634b-4bea-8974-79a7a7c330ce",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "send_email",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "send_email"
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "search_emails",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "search_emails"
+                  }
+                ]
+              }
+            },
+            {
+              "outputKey": "draft_reply",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "draft_reply"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "65ce3b1f-3c53-4009-8c3d-c6b5c5399ee3",
+      "name": "Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send"
+      },
+      "id": "dc7d94d2-6b59-4655-ae6e-a7179c6130d0",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search"
+      },
+      "id": "f37bfd5e-8cf8-438b-adf7-1594b7c8f5a2",
+      "name": "Search Emails",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash"
+      },
+      "id": "468bf8a8-9b4e-42d2-82f7-ded8eacc2028",
+      "name": "Draft Reply",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        600
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "f5c79d17-fc06-4fc2-87cc-478036ca4b6f",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## MCP Gmail Server\n\n**Tools**: send_email, search_emails, draft_reply\n**Integration**: Gmail API + Gemini AI",
+        "width": 350,
+        "height": 180
+      },
+      "id": "d43c9861-f701-43f5-98e3-3f897f028eda",
+      "name": "📋 MCP Gmail Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Router": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Emails",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Draft Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Emails": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Reply": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "a74fb135-6581-471a-bffa-98817e01d2a4",
+  "meta": {
+    "instanceId": "ba2700d5-7291-41b1-8dfa-11277c05d297"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}

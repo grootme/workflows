@@ -1,0 +1,139 @@
+{
+  "name": "MCP Knowledge Base Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "e3a8cca8-b56f-41f3-93e7-dce2eb94cb09"
+      },
+      "id": "73fb51e7-bbcf-4f1c-b9a1-9e0dc29bc321",
+      "name": "MCP Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "7c6013aa-eaa6-4a24-a156-ef978bbaf2bd"
+    },
+    {
+      "parameters": {},
+      "id": "92a3ca43-a0aa-48e9-9140-b34cc5e1b21d",
+      "name": "Parse Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search"
+      },
+      "id": "7761409e-1974-446a-b6c1-c4585ccb38bd",
+      "name": "Search Knowledge",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "PLACEHOLDER",
+          "name": "Qdrant"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "80b42ff0-d972-4607-bc31-4f53b1cd398c",
+      "name": "Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        750,
+        500
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "PLACEHOLDER",
+          "name": "Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "07d13904-a401-493b-a838-f5ec078e6ecc",
+      "name": "MCP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## MCP Knowledge Base Server\n\n**Tools**: search_knowledge, add_document, get_context\n**Stack**: Qdrant + Gemini Embeddings",
+        "width": 350,
+        "height": 180
+      },
+      "id": "7df216bf-8070-47c7-8c23-12f6fedc4249",
+      "name": "📋 MCP Knowledge Base Server",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        50,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Search Knowledge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Knowledge": {
+      "main": [
+        [
+          {
+            "node": "MCP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Global_Error_Handler"
+  },
+  "versionId": "32e31159-3814-45a8-b6e9-77abd612ffa8",
+  "meta": {
+    "instanceId": "4bd28283-adf1-4591-ab6b-9a4214f8ab09"
+  },
+  "pinData": {},
+  "id": "",
+  "tags": []
+}
