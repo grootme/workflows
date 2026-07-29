@@ -1,0 +1,822 @@
+
+  <div class="cmp-side-navigation__heading">AI Agents</div>
+  <ul class="cmp-side-navigation__level0" role="tree">
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0 cmp-side-navigation__section--selected" aria-expanded="true">
+    
+    
+
+        <a href="https://www.ibm.com/think/ai-agents#605511093" data-menu-id="605511093" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level0 cmp-side-navigation__item--link cmp-side-navigation__item--selected" data-cmp-hook-side-navigation="link">
+            <span>Welcome</span>
+        </a>
+
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Introduction</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents#7281535" data-menu-id="7281535" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-vs-ai-assistants#7281536" data-menu-id="7281536" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>AI agents vs AI assistants</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-ai#7281537" data-menu-id="7281537" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Agentic AI</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-ai-vs-generative-ai#7281538" data-menu-id="7281538" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Agentic AI vs generative AI</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-types#7281539" data-menu-id="7281539" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Types of AI agents</span>
+                    </a>
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Components</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/components-of-ai-agents#498277090" data-menu-id="498277090" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>Agentic workflows</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/agentic-workflows#732739700" data-menu-id="732739700" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What are agentic workflows?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/build-agentic-workflows-langgraph-granite#732739699" data-menu-id="732739699" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Agentic workflows</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-communication#498277088" data-menu-id="498277088" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Communication</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-learning#498277087" data-menu-id="498277087" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Learning</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-memory#498277086" data-menu-id="498277086" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Memory</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-perception#498277085" data-menu-id="498277085" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Perception</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-planning#498277084" data-menu-id="498277084" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Planning</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-reasoning#498277083" data-menu-id="498277083" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Reasoning</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>Tool calling</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/tool-calling#23317221" data-menu-id="23317221" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is tool calling?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/local-tool-calling-ollama-granite#23317222" data-menu-id="23317222" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Ollama tool calling</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Architecture</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-architecture#1003835715" data-menu-id="1003835715" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>AI agent orchestration</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/ai-agent-orchestration#228874317" data-menu-id="228874317" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is agent orchestration?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/llm-agent-orchestration-with-langchain-and-granite#228874318" data-menu-id="228874318" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Agent orchestration</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>Multi-agent systems</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/multiagent-system#276684308" data-menu-id="276684308" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What are multi-agent systems?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/multi-agent-collaboration-call-analysis-watsonx-ai-crewai#276684307" data-menu-id="276684307" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: crewAI multi-agent call analysis</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/multi-agent-collaboration#1003835712" data-menu-id="1003835712" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Multi-agent collaboration</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>ReAct</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/react-agent#1287801558" data-menu-id="1287801558" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is ReAct?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/deploy-langgraph-react-agent-manage-it-support-tickets-watsonx-ai#1287801557" data-menu-id="1287801557" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: LangGraph ReAct agent</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>ReWOO</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/build-rewoo-reasoning-agent-granite#1793360183" data-menu-id="1793360183" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: ReWOO reasoning agent</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Protocols</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agent-communication-protocol#1509394340" data-menu-id="1509394340" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Agent Communication Protocol (ACP)</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agent2agent-protocol#1509394339" data-menu-id="1509394339" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Agent2Agent (A2A)</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/model-context-protocol#1509394338" data-menu-id="1509394338" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Model Context Protocol (MCP)</span>
+                    </a>
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Multi-agent systems</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/multiagent-system#2014952965" data-menu-id="2014952965" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>Agentic orchestration</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/ai-agent-orchestration#2142864945" data-menu-id="2142864945" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is agentic orchestration?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/llm-agent-orchestration-with-langchain-and-granite#2142864944" data-menu-id="2142864944" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Agent orchestration</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/multi-agent-collaboration#2014952963" data-menu-id="2014952963" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Multi-agent collaboration</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/tutorials/multi-agent-collaboration-call-analysis-watsonx-ai-crewai#2014952962" data-menu-id="2014952962" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Tutorial: crewAI multi-agent call analysis</span>
+                    </a>
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Frameworks</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/insights/top-ai-agent-frameworks#1774455706" data-menu-id="1774455706" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>AutoGen</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/multi-agent-autogen-rag-granite#1181250928" data-menu-id="1181250928" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: AutoGen multi-agent RAG</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/autogpt#1774455708" data-menu-id="1774455708" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>AutoGPT</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>BeeAI</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/beeai#2102599118" data-menu-id="2102599118" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is BeeAI?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/build-multi-agent-contract-management-system-beeai-framework#2102599119" data-menu-id="2102599119" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: BeeAI agentic contract management</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>ChatDev</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/chatdev#1597040493" data-menu-id="1597040493" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is ChatDev?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/chatdev-chatchain-agent-communication-watsonx-ai#1597040494" data-menu-id="1597040494" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: ChatDev ChatChain</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>crewAI</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/crew-ai#1091481868" data-menu-id="1091481868" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is crewAI?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/crewai-example-multimodal-agent-retail-shelf-optimization-watsonx#1091481869" data-menu-id="1091481869" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: crewAI retail shelf optimization</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>LangGraph</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/langgraph#585923243" data-menu-id="585923243" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is LangGraph?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/build-sql-agent-langgraph-mistral-medium-3-watsonx-ai#585923244" data-menu-id="585923244" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: LangGraph SQL agent</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/deploy-langgraph-react-agent-manage-it-support-tickets-watsonx-ai#585923245" data-menu-id="585923245" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: LangGraph ReAct agent</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>LangChain</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/langchain#80364618" data-menu-id="80364618" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is LangChain?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/using-langchain-tools-to-build-an-ai-agent#80364619" data-menu-id="80364619" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: LangChain agent</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>MetaGPT</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/metagpt#425194007" data-menu-id="425194007" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is MetaGPT?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/multi-agent-prd-ai-automation-metagpt-ollama-deepseek#425194006" data-menu-id="425194006" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Multi-agent PRD automation</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Governance</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/insights/ai-agent-governance#1268897081" data-menu-id="1268897081" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/insights/ai-agent-ethics#1268897082" data-menu-id="1268897082" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>AI agent ethics</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>AI agent evaluation</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/ai-agent-evaluation#725195536" data-menu-id="725195536" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is AI agent evaluation?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/ai-agent-evaluation#725195535" data-menu-id="725195535" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: AI agent evaluation</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Agentic RAG</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-rag#763338456" data-menu-id="763338456" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/tutorials/agentic-rag#763338457" data-menu-id="763338457" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Tutorial: LangChain agentic RAG </span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                    <span class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+                        <span aria-label="Expand Section Title" class="toggle">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+                        </span>
+                        <span>Agentic chunking</span>
+                    </span>
+                    <ul class="cmp-side-navigation__level2" role="group">
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/topics/agentic-chunking#236418481" data-menu-id="236418481" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>What is agentic chunking?</span>
+                            </a>
+                        </li>
+                    
+                        <li class="cmp-side-navigation__section cmp-side-navigation__section--level2" role="treeitem">
+                            <a href="https://www.ibm.com/think/tutorials/use-agentic-chunking-to-optimize-llm-inputs-with-langchain-watsonx-ai#236418482" data-menu-id="236418482" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level2 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                                <span>Tutorial: Agentic chunking for RAG</span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  
+    <li class="cmp-side-navigation__section cmp-side-navigation__section--level0" aria-expanded="false">
+    
+        <span class="cmp-side-navigation__item cmp-side-navigation__item--collapsible" data-cmp-hook-side-navigation="collapsible">
+            <span aria-label="Expand Section Title" class="toggle">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 8L22 16 12 24z"></path><title>Caret right</title></svg>
+            </span>
+            <span>Use cases / Applications</span>
+        </span>
+        <ul class="cmp-side-navigation__level1" role="group">
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agent-use-cases#257779831" data-menu-id="257779831" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Overview</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/agentic-automation#257779832" data-menu-id="257779832" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Automation</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-in-customer-service#257779833" data-menu-id="257779833" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Customer service</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-in-human-resources#257779834" data-menu-id="257779834" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Human resources</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-in-marketing#257779835" data-menu-id="257779835" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Marketing</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-in-procurement#257779836" data-menu-id="257779836" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Procurement</span>
+                    </a>
+                
+            </li>
+        
+            <li class="cmp-side-navigation__section cmp-side-navigation__section--level1" aria-expanded="false">
+                
+                
+                    <a href="https://www.ibm.com/think/topics/ai-agents-in-sales#257779837" data-menu-id="257779837" target="_self" class="cmp-side-navigation__item cmp-side-navigation__item--level1 cmp-side-navigation__item--link" data-cmp-hook-side-navigation="link">
+                        <span>Sales</span>
+                    </a>
+                
+            </li>
+        </ul>
+    
+    
+</li>
+  </ul>

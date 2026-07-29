@@ -1,0 +1,138 @@
+{
+  "name": "ElToque Taxes Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        0
+      ],
+      "id": "scheduleTrigger",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://tasas.eltoque.com/v1/trmi",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -192,
+        -240
+      ],
+      "id": "elToqueTaxesRequest",
+      "name": "ElToque Taxes Request",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "mUmtxqHXDAdkMLBl",
+          "name": "El Toque Auth Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "eltoque"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -240
+      ],
+      "id": "borrarTaxes",
+      "name": "Borrar Taxes",
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "eltoque",
+        "value": "={{ $json.body.tasas }}",
+        "keyType": "hash"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -240
+      ],
+      "id": "updateElToqueTaxes",
+      "name": "Update ELToque Taxes",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    }],
+  "connections": {
+    "scheduleTrigger": {
+      "main": [
+        [
+          {
+            "node": "elToqueTaxesRequest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "elToqueTaxesRequest": {
+      "main": [
+        [
+          {
+            "node": "borrarTaxes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "borrarTaxes": {
+      "main": [
+        [
+          {
+            "node": "updateElToqueTaxes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    } },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "",
+  "tags": []
+}

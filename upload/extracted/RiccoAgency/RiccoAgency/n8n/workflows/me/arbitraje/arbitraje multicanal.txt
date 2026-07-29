@@ -1,0 +1,2115 @@
+uiero clasificar y estandarizar estos mensajes:
+Los de Qvapay:
+[
+  {
+    "body": {
+      "current_page": 1,
+      "data": [
+        {
+          "uuid": "9ad34182-677c-4af6-807c-8f23f75945e8",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "167.95",
+          "receive": "83550",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:35:54.000Z",
+          "updated_at": "2025-10-16T22:35:54.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "29bb2fbc-03db-4fd0-ab0b-c470ba8c84c7",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "19.59",
+          "receive": "9747",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:30:51.000Z",
+          "updated_at": "2025-10-16T22:30:51.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "af8fc277-4058-4d84-be23-34eb1b58d825",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "60.31",
+          "receive": "30000",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:27:48.000Z",
+          "updated_at": "2025-10-16T22:27:48.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "67f3807e-6f7e-451b-91bf-fec8c11ddd38",
+          "type": "buy",
+          "coin": "BOLSATM",
+          "amount": "95.77",
+          "receive": "47600",
+          "payment_type_id": 0,
+          "message": "💥 Si no estoy conectado envía SMS al 51247346 👍 ",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:23:47.000Z",
+          "updated_at": "2025-10-16T22:23:47.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "Josielis",
+            "uuid": "68287255-ae61-486c-a6b2-1c18fedd8526",
+            "username": "josielismachadofajardo",
+            "image": "profiles/uKGMBDhzBQTSPQzTgjxbfxBV22S6dPoJKVYIh47a.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 247,
+              "P2P_Peer": 418
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 486
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "0eece8b9-72e0-452e-8f1b-bd15ac432476",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "18.69",
+          "receive": "9297",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:22:15.000Z",
+          "updated_at": "2025-10-16T22:22:15.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "4e54864d-4cde-4d2f-8fe7-a6366ebc6e82",
+          "type": "buy",
+          "coin": "ZELLE",
+          "amount": "500",
+          "receive": "500",
+          "payment_type_id": 0,
+          "message": "Si no estoy en linea, llamar o sms al 52783431, sera un placer atenderlo",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:20:57.000Z",
+          "updated_at": "2025-10-16T22:20:57.000Z",
+          "Coin": {
+            "name": "Zelle",
+            "tick": "ZELLE",
+            "logo": "zelle",
+            "price": "1"
+          },
+          "User": {
+            "name": "Miguel",
+            "uuid": "f616ab40-00c3-4800-838b-8cf1cb77cf0b",
+            "username": "mjmrbs",
+            "image": "profiles/30xSpJ0Q5Sabr8iW6kC5ytTtqHGhbLzLB4AKnaQW.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 7,
+              "P2P_Peer": 30
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.11,
+            "rating_count": 38
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "8ca1b565-624b-4d46-ae99-57ba1907fd4b",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "125.95",
+          "receive": "62599",
+          "payment_type_id": 0,
+          "message": "otra cantidad 55343422⚡",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:20:08.000Z",
+          "updated_at": "2025-10-16T22:20:08.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "𝕕𝕚𝕦𝕧𝕖𝕣",
+            "uuid": "8145f1dd-261b-41c8-919b-49f951821bf3",
+            "username": "diuveraviles",
+            "image": "profiles/GgVxVm5ktDIDjvFW4tPxc4Zd96jsEBG9eKYOt6AX.png",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1554,
+              "P2P_Peer": 655
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 1350
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "0db907e1-9c22-40c0-aa35-51ef09fe9322",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "2.01",
+          "receive": "1000",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:19:13.000Z",
+          "updated_at": "2025-10-16T22:19:13.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "387aeb6d-ae61-4485-8ce4-3151ab5f5523",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "160.96",
+          "receive": "79999",
+          "payment_type_id": 0,
+          "message": "otra cantidad 55343422⚡",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:19:00.000Z",
+          "updated_at": "2025-10-16T22:19:00.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "𝕕𝕚𝕦𝕧𝕖𝕣",
+            "uuid": "8145f1dd-261b-41c8-919b-49f951821bf3",
+            "username": "diuveraviles",
+            "image": "profiles/GgVxVm5ktDIDjvFW4tPxc4Zd96jsEBG9eKYOt6AX.png",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1554,
+              "P2P_Peer": 655
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 1350
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "c013d198-5cc2-4f3c-9583-87f23fa2659e",
+          "type": "sell",
+          "coin": "TROPIPAY",
+          "amount": "200",
+          "receive": "184",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:16:57.000Z",
+          "updated_at": "2025-10-16T22:16:57.000Z",
+          "Coin": {
+            "name": "TropiPay",
+            "tick": "TROPIPAY",
+            "logo": "tropipay",
+            "price": "1.164550849389303"
+          },
+          "User": {
+            "name": "KS",
+            "uuid": "c49c5e28-784f-4fb6-b053-d5310f14f4ef",
+            "username": "xr2",
+            "image": "profiles/SZZexJT7kDTwB23G2pFaZOzYwqqUs8jTQ3afq09l.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 661,
+              "P2P_Peer": 349
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 689
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "0396bb9a-4bae-4894-a956-1d62d3d26f12",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "73.83",
+          "receive": "36729",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:14:09.000Z",
+          "updated_at": "2025-10-16T22:14:09.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "ff16e1f7-77e3-443b-99d1-7bc48a45db15",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "22.84",
+          "receive": "11363",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:11:07.000Z",
+          "updated_at": "2025-10-16T22:11:07.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "57c7ee1b-768b-4cdb-acbb-9963617953c9",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "10",
+          "receive": "5000",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:09:09.000Z",
+          "updated_at": "2025-10-16T22:09:09.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "Guillermo",
+            "uuid": "9e16af8a-beb7-444c-bae0-66ad9d4ff0f1",
+            "username": "guillermito",
+            "image": "profiles/LpCRQPPLooZaSkML5e6UqgIDHkNwDfpibRcUjQ2Y.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 4050,
+              "P2P_Peer": 4319
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 3606
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "d0bf42eb-2cbd-4d96-8f9e-004b166d5cb8",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "19.59",
+          "receive": "9747",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:06:04.000Z",
+          "updated_at": "2025-10-16T22:06:04.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "196cee47-759d-4ded-901a-a27d1b7fd1e1",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "55.2",
+          "receive": "27461",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T22:03:02.000Z",
+          "updated_at": "2025-10-16T22:03:02.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "7bb29c29-ae33-45b5-83a2-59dfd4012dc3",
+          "type": "buy",
+          "coin": "BANK_CUP",
+          "amount": "51.54",
+          "receive": "25000",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:02:26.000Z",
+          "updated_at": "2025-10-16T22:02:26.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "Yoannel",
+            "uuid": "92d3569a-b445-4dcb-b25e-037edf7eae90",
+            "username": "yoannelguillermo",
+            "image": null,
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 0,
+              "P2P_Peer": 0
+            },
+            "telegram_verified": true,
+            "rating_avg": 0,
+            "rating_count": 0
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "beeb1554-6682-42dd-8151-273d6337a88e",
+          "type": "buy",
+          "coin": "BANK_CUP",
+          "amount": "25",
+          "receive": "12375",
+          "payment_type_id": 0,
+          "message": "Si no estoy en línea WhatsApp o SMS al 58700228",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T22:01:44.000Z",
+          "updated_at": "2025-10-16T22:01:44.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "LuisEnrique",
+            "uuid": "ac9b976b-9d71-4fb9-99a9-c3e8cadf4c5d",
+            "username": "luisenriquecg221325",
+            "image": "profiles/ibQdGafD3qSlSHgLJiqdwdzlHQju1bHtzdNFyQ3S.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 15,
+              "P2P_Peer": 12
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.82,
+            "rating_count": 22
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "34b8d709-8083-43f9-955f-2c486f36ed21",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "19.73",
+          "receive": "9814",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:57:28.000Z",
+          "updated_at": "2025-10-16T21:57:28.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "755daee2-0657-4f46-906d-5b967fb9213f",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "97.12",
+          "receive": "48313",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:54:25.000Z",
+          "updated_at": "2025-10-16T21:54:25.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "1fc74045-269f-4807-bd4d-c24ecf732702",
+          "type": "sell",
+          "coin": "ETECSA",
+          "amount": "35.71",
+          "receive": "5000",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:53:19.000Z",
+          "updated_at": "2025-10-16T21:53:19.000Z",
+          "Coin": {
+            "name": "ETECSA",
+            "tick": "ETECSA",
+            "logo": "etecsa",
+            "price": "0.009090900000000001"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "ca333b19-4828-484f-bc4f-cc0d4e3f1eaa",
+          "type": "sell",
+          "coin": "CLASICA",
+          "amount": "30",
+          "receive": "33",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:50:55.000Z",
+          "updated_at": "2025-10-16T21:50:55.000Z",
+          "Coin": {
+            "name": "CLASICA",
+            "tick": "CLASICA",
+            "logo": "clasica",
+            "price": "1"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "1fd91cdd-2963-4478-be88-1af1dc32117d",
+          "type": "sell",
+          "coin": "CLASICA",
+          "amount": "200",
+          "receive": "216",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:49:40.000Z",
+          "updated_at": "2025-10-16T21:49:40.000Z",
+          "Coin": {
+            "name": "CLASICA",
+            "tick": "CLASICA",
+            "logo": "clasica",
+            "price": "1"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "8c9e2f56-be84-4a66-bd9c-84a53bf3198f",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "20.68",
+          "receive": "10289",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:49:22.000Z",
+          "updated_at": "2025-10-16T21:49:22.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "28297514-4657-4c6d-bdf9-2708da6d0484",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "2.61",
+          "receive": "1300",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:46:19.000Z",
+          "updated_at": "2025-10-16T21:46:19.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "0a3efec0-1ca1-4fe9-a0e5-132d79876fce",
+          "type": "buy",
+          "coin": "BANK_MLC",
+          "amount": "100",
+          "receive": "245",
+          "payment_type_id": 0,
+          "message": "Llamar o SMS 53591670 📲♨️ sino estoy en línea",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:45:23.000Z",
+          "updated_at": "2025-10-16T21:45:23.000Z",
+          "Coin": {
+            "name": "MLC",
+            "tick": "BANK_MLC",
+            "logo": "bankmlc",
+            "price": "1"
+          },
+          "User": {
+            "name": "Juan",
+            "uuid": "9c269269-0ad0-42ba-9373-e2dea2ae234e",
+            "username": "juanantonioiglesiasrosa",
+            "image": "profiles/qzlH8ca7M8TxkvF2mU7pylGBQYMBEXU5BHsLOoFk.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 778,
+              "P2P_Peer": 683
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 976
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "ca05a88d-577c-4504-bb27-7d51ae28d2d0",
+          "type": "buy",
+          "coin": "BANK_MLC",
+          "amount": "50",
+          "receive": "121",
+          "payment_type_id": 0,
+          "message": "Llamar o SMS 53591670 📲♨️ sino estoy en línea",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:43:52.000Z",
+          "updated_at": "2025-10-16T21:43:52.000Z",
+          "Coin": {
+            "name": "MLC",
+            "tick": "BANK_MLC",
+            "logo": "bankmlc",
+            "price": "1"
+          },
+          "User": {
+            "name": "Juan",
+            "uuid": "9c269269-0ad0-42ba-9373-e2dea2ae234e",
+            "username": "juanantonioiglesiasrosa",
+            "image": "profiles/qzlH8ca7M8TxkvF2mU7pylGBQYMBEXU5BHsLOoFk.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 778,
+              "P2P_Peer": 683
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 976
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "28e15e90-b194-4b21-8935-bfe001c95321",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "19.73",
+          "receive": "9813",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:41:15.000Z",
+          "updated_at": "2025-10-16T21:41:15.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "7356d2a2-46ec-4426-9492-904b721fbf30",
+          "type": "sell",
+          "coin": "CLASICA",
+          "amount": "100",
+          "receive": "108",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:40:43.000Z",
+          "updated_at": "2025-10-16T21:40:43.000Z",
+          "Coin": {
+            "name": "CLASICA",
+            "tick": "CLASICA",
+            "logo": "clasica",
+            "price": "1"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "31002ba3-4759-4a59-8429-39bdd5673fc7",
+          "type": "sell",
+          "coin": "CLASICA",
+          "amount": "50",
+          "receive": "54",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:39:48.000Z",
+          "updated_at": "2025-10-16T21:39:48.000Z",
+          "Coin": {
+            "name": "CLASICA",
+            "tick": "CLASICA",
+            "logo": "clasica",
+            "price": "1"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "a3577920-15f7-4883-a8b0-44de7b8de228",
+          "type": "buy",
+          "coin": "BANK_MLC",
+          "amount": "100",
+          "receive": "245",
+          "payment_type_id": 0,
+          "message": "Llamar o SMS 53591670 📲♨️ sino estoy en línea",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:38:19.000Z",
+          "updated_at": "2025-10-16T21:38:19.000Z",
+          "Coin": {
+            "name": "MLC",
+            "tick": "BANK_MLC",
+            "logo": "bankmlc",
+            "price": "1"
+          },
+          "User": {
+            "name": "Juan",
+            "uuid": "9c269269-0ad0-42ba-9373-e2dea2ae234e",
+            "username": "juanantonioiglesiasrosa",
+            "image": "profiles/qzlH8ca7M8TxkvF2mU7pylGBQYMBEXU5BHsLOoFk.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 778,
+              "P2P_Peer": 683
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 976
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "3e99183c-8e75-4344-9762-8eda7cfb835b",
+          "type": "sell",
+          "coin": "ETECSA",
+          "amount": "1",
+          "receive": "140",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:38:19.000Z",
+          "updated_at": "2025-10-16T21:38:19.000Z",
+          "Coin": {
+            "name": "ETECSA",
+            "tick": "ETECSA",
+            "logo": "etecsa",
+            "price": "0.009090900000000001"
+          },
+          "User": {
+            "name": "Yandy",
+            "uuid": "f3db957e-b7d1-492e-b98a-4a9931fc0590",
+            "username": "almagueryandy",
+            "image": null,
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1,
+              "P2P_Peer": 5
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 5
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "2335e78f-b78f-4f8f-a444-a6a3cd6702ae",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "60.31",
+          "receive": "30000",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:38:13.000Z",
+          "updated_at": "2025-10-16T21:38:13.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "c6548fae-51cb-4681-b1b0-b361cfc45139",
+          "type": "buy",
+          "coin": "BANK_MLC",
+          "amount": "50",
+          "receive": "120",
+          "payment_type_id": 0,
+          "message": "Llamar o SMS 53591670 📲♨️ sino estoy en línea",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:37:37.000Z",
+          "updated_at": "2025-10-16T21:37:37.000Z",
+          "Coin": {
+            "name": "MLC",
+            "tick": "BANK_MLC",
+            "logo": "bankmlc",
+            "price": "1"
+          },
+          "User": {
+            "name": "Juan",
+            "uuid": "9c269269-0ad0-42ba-9373-e2dea2ae234e",
+            "username": "juanantonioiglesiasrosa",
+            "image": "profiles/qzlH8ca7M8TxkvF2mU7pylGBQYMBEXU5BHsLOoFk.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 778,
+              "P2P_Peer": 683
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 976
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "f5cee015-f09f-42f8-ba5e-69d2342fdd10",
+          "type": "sell",
+          "coin": "ETECSA",
+          "amount": "71",
+          "receive": "10000",
+          "payment_type_id": 0,
+          "message": "📱54299783📱 llame o escriba, acepto otras cantidades 🖐️😊",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:36:57.000Z",
+          "updated_at": "2025-10-16T21:36:57.000Z",
+          "Coin": {
+            "name": "ETECSA",
+            "tick": "ETECSA",
+            "logo": "etecsa",
+            "price": "0.009090900000000001"
+          },
+          "User": {
+            "name": "Garitto",
+            "uuid": "d9aee3d1-68ea-476c-8c13-233deaf955e4",
+            "username": "Garitto",
+            "image": "profiles/C28DdVJSwngQliHLOrXq95Yj8YEIeW40Ns4DM6zb.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1160,
+              "P2P_Peer": 882
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 1352
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "e67f33fb-5aea-491e-8db0-e5bc85c101be",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "100",
+          "receive": "49500",
+          "payment_type_id": 0,
+          "message": "52767695",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:34:35.000Z",
+          "updated_at": "2025-10-16T21:49:58.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "Leinier",
+            "uuid": "21d5fb05-3ff9-482c-b72d-3cf5b3ec7484",
+            "username": "leiniermena13",
+            "image": null,
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 73,
+              "P2P_Peer": 22
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 62
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "dcdab1d8-8cea-4767-9e81-15bcb87f0158",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "18.69",
+          "receive": "9297",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:33:09.000Z",
+          "updated_at": "2025-10-16T21:33:09.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "14929ce2-e348-47e8-a223-8fabdd4081c2",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "95.77",
+          "receive": "47215",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:32:42.000Z",
+          "updated_at": "2025-10-16T22:33:45.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "Sheyla",
+            "uuid": "c2d6856d-0998-4c57-8f7f-1094cf944065",
+            "username": "shey.santana.fdz",
+            "image": "profiles/zeKfK7Zd8LjAwfAQXteTUeAiV8nQc2YGQCPU8Zox.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 4385,
+              "P2P_Peer": 3
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.91,
+            "rating_count": 2544
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "7207b83d-f064-4ac8-9463-5caa9fb5e60b",
+          "type": "sell",
+          "coin": "ETECSA",
+          "amount": "2.57",
+          "receive": "360",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:31:12.000Z",
+          "updated_at": "2025-10-16T21:31:12.000Z",
+          "Coin": {
+            "name": "ETECSA",
+            "tick": "ETECSA",
+            "logo": "etecsa",
+            "price": "0.009090900000000001"
+          },
+          "User": {
+            "name": "Yandy",
+            "uuid": "f3db957e-b7d1-492e-b98a-4a9931fc0590",
+            "username": "almagueryandy",
+            "image": null,
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1,
+              "P2P_Peer": 5
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 5
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "b3d611e0-8d22-4bfe-9f93-2e13cb7741f4",
+          "type": "sell",
+          "coin": "BANK_MLC",
+          "amount": "50",
+          "receive": "127.5",
+          "payment_type_id": 0,
+          "message": "Llamar o SMS 53591670 📲♨️ libero ",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:30:34.000Z",
+          "updated_at": "2025-10-16T21:30:34.000Z",
+          "Coin": {
+            "name": "MLC",
+            "tick": "BANK_MLC",
+            "logo": "bankmlc",
+            "price": "1"
+          },
+          "User": {
+            "name": "Juan",
+            "uuid": "9c269269-0ad0-42ba-9373-e2dea2ae234e",
+            "username": "juanantonioiglesiasrosa",
+            "image": "profiles/qzlH8ca7M8TxkvF2mU7pylGBQYMBEXU5BHsLOoFk.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 778,
+              "P2P_Peer": 683
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 976
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "dcbb2a70-23c8-4aa7-a6b9-be32fa89a2ae",
+          "type": "buy",
+          "coin": "ZELLE",
+          "amount": "500",
+          "receive": "500",
+          "payment_type_id": 0,
+          "message": "OTRAS CANTIDADES TAMBIÉN. Escribir al +17139279113",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:30:34.000Z",
+          "updated_at": "2025-10-16T21:30:34.000Z",
+          "Coin": {
+            "name": "Zelle",
+            "tick": "ZELLE",
+            "logo": "zelle",
+            "price": "1"
+          },
+          "User": {
+            "name": "Yosvany",
+            "uuid": "4e8ee79c-968a-4b98-ab59-366d58b90f91",
+            "username": "yosvanyromo7",
+            "image": "profiles/4JIdha7jcCw8c1xIYHfaVSBEYh6JJb5oRdv07Qut.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1297,
+              "P2P_Peer": 319
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.98,
+            "rating_count": 1055
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "69f6b59d-17f0-4b3b-8018-3a9e0e928d6e",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "60.31",
+          "receive": "30000",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:30:07.000Z",
+          "updated_at": "2025-10-16T21:30:07.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "9ce575bd-c7df-4af8-bf9f-55a10042dd6c",
+          "type": "buy",
+          "coin": "ETECSA",
+          "amount": "44.6",
+          "receive": "5575",
+          "payment_type_id": 0,
+          "message": "Llamar o WhatsApp al 55537527",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:27:52.000Z",
+          "updated_at": "2025-10-16T21:27:52.000Z",
+          "Coin": {
+            "name": "ETECSA",
+            "tick": "ETECSA",
+            "logo": "etecsa",
+            "price": "0.009090900000000001"
+          },
+          "User": {
+            "name": "Aledsey",
+            "uuid": "24d5d6a3-6184-44c3-ab2f-d8ab38aa2cd0",
+            "username": "aledseycobo04",
+            "image": "profiles/hmaukI95xNtcsWlRlsDoXopdrfRVj2N057g4RUXu.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 146,
+              "P2P_Peer": 33
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.97,
+            "rating_count": 136
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "6a82792c-edc9-442f-bd5a-affcb55692c8",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "50",
+          "receive": "26000",
+          "payment_type_id": 0,
+          "message": "",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:27:39.000Z",
+          "updated_at": "2025-10-16T21:27:39.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "Anabel",
+            "uuid": "d00ecbec-916b-4e3b-ae01-e7f5d2d9d75c",
+            "username": "llorentesc",
+            "image": "profiles/6i96b0P8R7ozu1u52GX7dWJQtuIdxAIOA6dGkj2c.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 245,
+              "P2P_Peer": 2
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.74,
+            "rating_count": 137
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "832da61c-b54a-4e0f-8011-139a66f723d6",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "101.75",
+          "receive": "50615",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:25:03.000Z",
+          "updated_at": "2025-10-16T21:25:03.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "16328d1f-7adb-4f9b-937f-4cb41e9e18eb",
+          "type": "sell",
+          "coin": "USDTBSC",
+          "amount": "755.33",
+          "receive": "755.33",
+          "payment_type_id": 0,
+          "message": "54866340 para otras cantidades ",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:23:14.000Z",
+          "updated_at": "2025-10-16T21:23:14.000Z",
+          "Coin": {
+            "name": "USDT (BSC)",
+            "tick": "USDTBSC",
+            "logo": "usdt",
+            "price": "1"
+          },
+          "User": {
+            "name": "Daniel",
+            "uuid": "ef530d8c-9937-416f-a11a-c0895ba64553",
+            "username": "danycisnero1999",
+            "image": "profiles/T7EXwNOrXukRK0cgFLQdvqy6Iban4XMkELq448vK.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 3103,
+              "P2P_Peer": 1220
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.98,
+            "rating_count": 2596
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "1913c5c7-0958-4ebb-a58c-c85746075d4a",
+          "type": "sell",
+          "coin": "USDCASH",
+          "amount": "1000",
+          "receive": "1030",
+          "payment_type_id": 0,
+          "message": "WhatsApp 56144509 La Lisa",
+          "only_kyc": true,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:22:24.000Z",
+          "updated_at": "2025-10-16T21:22:24.000Z",
+          "Coin": {
+            "name": "USD Cash",
+            "tick": "USDCASH",
+            "logo": "usdcash",
+            "price": "1"
+          },
+          "User": {
+            "name": "Leandro",
+            "uuid": "59e1954b-3452-4ef3-9c23-8acdff865ae0",
+            "username": "Leandro23",
+            "image": "profiles/KdOZjvx84ElYlkcQyx8tX8hGhOvh36GDr9JO9rSU.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1522,
+              "P2P_Peer": 4403
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.98,
+            "rating_count": 2732
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "9c1d5336-5d50-4ed8-b82e-d146097c1a9b",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "15.08",
+          "receive": "7500",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:22:01.000Z",
+          "updated_at": "2025-10-16T21:22:01.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "c7f7df91-8fe2-4df8-8dda-4c57b4e36c46",
+          "type": "sell",
+          "coin": "BOLSATM",
+          "amount": "34.47",
+          "receive": "17147",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:16:27.000Z",
+          "updated_at": "2025-10-16T21:16:27.000Z",
+          "Coin": {
+            "name": "Bolsa TM",
+            "tick": "BOLSATM",
+            "logo": "bolsatm",
+            "price": "0.00285714"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "7bbd181a-7e71-487f-8067-5731be1e13a2",
+          "type": "sell",
+          "coin": "BANK_CUP",
+          "amount": "2.01",
+          "receive": "1000",
+          "payment_type_id": 0,
+          "message": null,
+          "only_kyc": false,
+          "private": false,
+          "only_vip": true,
+          "status": "open",
+          "created_at": "2025-10-16T21:13:24.000Z",
+          "updated_at": "2025-10-16T21:13:24.000Z",
+          "Coin": {
+            "name": "CUP",
+            "tick": "BANK_CUP",
+            "logo": "bankcup",
+            "price": "0.0026315"
+          },
+          "User": {
+            "name": "FastCash",
+            "uuid": "ea98ea26-0958-4fac-84b2-7ce28fccfc8f",
+            "username": "fastcash",
+            "image": "profiles/s23EdOXNnllDbblL4evtpSnz0jhPva4mfP8qwRsy.jpg",
+            "kyc": true,
+            "vip": true,
+            "golden_check": false,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 27305,
+              "P2P_Peer": 88
+            },
+            "telegram_verified": true,
+            "rating_avg": 5,
+            "rating_count": 10150
+          },
+          "Peer": {}
+        },
+        {
+          "uuid": "38876d1d-784d-4e32-8605-ffd596e725ac",
+          "type": "sell",
+          "coin": "CLASICA",
+          "amount": "438",
+          "receive": "469",
+          "payment_type_id": 0,
+          "message": "🫵🏻53768488 SI NO ESTOY EN LÍNEA ME ESCRIBES GRACIAS🫵🏻",
+          "only_kyc": false,
+          "private": false,
+          "only_vip": false,
+          "status": "open",
+          "created_at": "2025-10-16T21:10:01.000Z",
+          "updated_at": "2025-10-16T21:10:01.000Z",
+          "Coin": {
+            "name": "CLASICA",
+            "tick": "CLASICA",
+            "logo": "clasica",
+            "price": "1"
+          },
+          "User": {
+            "name": "Lomberto",
+            "uuid": "086710ae-90fd-4e3d-a9e3-732341cb0cca",
+            "username": "lombertofeal",
+            "image": "profiles/MEOU1p9BmqmGJSraaBx8Jkq2nZhdnDDifL1FUpDA.jpg",
+            "kyc": true,
+            "vip": false,
+            "golden_check": true,
+            "phone_verified": true,
+            "_count": {
+              "P2P": 1021,
+              "P2P_Peer": 343
+            },
+            "telegram_verified": true,
+            "rating_avg": 4.99,
+            "rating_count": 954
+          },
+          "Peer": {}
+        }
+      ],
+      "per_page": 50,
+      "total": 395
+    },
+  }
+]
+
+
+Los de Coinex:
+{
+    "location": null,
+    "merchant": {
+      "acceptance_rate": 0.8405,
+      "account_name": "user7327642",
+      "avatar": "https://file.coinexstatic.com/avatar-webp/coinex_default_avatar_robot.webp",
+      "avg_payment_time": 307,
+      "avg_release_time": 0,
+      "completion_rate": 0.9219,
+      "deal_count": 437,
+      "id": "67689049",
+      "margin_enough": true,
+      "nickname": "User_PNACUB92",
+      "paid_margin": "100"
+    },
+    "message_id": "677fc83cedae0305901a7ef0",
+    "offer": {
+      "base": "buy",
+      "calculated_amount": 1000,
+      "currency_pair": "buy/USDT",
+      "fiatCurrency": "USDT",
+      "limitRange": "36000 ~ 360000 USDT",
+      "paymentMethods": [
+        "Enzona - ETECSA"
+      ],
+      "price": 512,
+      "quote": "USDT",
+      "type": "buy",
+      "usdtAmount": 1000
+    },
+    "payment_methods": [
+      "Enzona - ETECSA"
+    ],
+    "platform": "Coinex",
+    "sender_id": "67689049",
+    "sender_username": "user7327642",
+    "simplified_text": "Compro 1000 buy a 512 USDT",
+    "source_id": "677fc83cedae0305901a7ef0",
+    "text": "",
+    "timestamp": "2025-10-22T05:58:48.939Z"
+  },
+
+
+Los de whatsapp:
+"body": {
+      "event": "messages.upsert",
+      "instance": "First Project Linux",
+      "data": {
+        "key": {
+          "remoteJid": "120363355547236504@g.us",
+          "fromMe": false,
+          "id": "AC9F2655A71C7C2F2838351FD4CD0C1F",
+          "participant": "99175140221054@lid",
+          "participantPn": "5351907118@s.whatsapp.net"
+        },
+        "pushName": "videlbisf",
+        "status": "DELIVERY_ACK",
+        "message": {
+          "senderKeyDistributionMessage": {
+            "groupId": "120363355547236504@g.us",
+            "axolotlSenderKeyDistributionMessage": "Mwjw9oHhBBACGiAqm7P1xvb6hSUbwjJ8ztcYPgP2Jg/yZY7ebkx1y0cDlCIhBQ0+OvcNARgwNjn1SAccCBvzlUo7xufwnrpf6RwuS3J8"
+          },
+          "messageContextInfo": {
+            "messageSecret": "uMJLxcpsN2c7qBQ5OJzDcq1C+3SOmPq07e/yzoKslEI=",
+            "limitSharingV2": {
+              "sharingLimited": true,
+              "trigger": "CHAT_SETTING",
+              "limitSharingSettingTimestamp": "1755528328447",
+              "initiatedByMe": false
+            }
+          },
+          "conversation": "
+¡Escríbeme por Mensaje Privado (PV: 56694233) para acordar! 💬
+[17:30, 17/10/2025] +53 5 6694233: ¡Compro USDT & Dólares Americanos! 💰📈
+
+✅ Compro USDT por cantidad.
+✅ Compro Dólares Americanos (USD) no importa la cantidad.
+✅ Compro Euros( cualquier cantidad)
+✅ Recargas Internacionales disponibles. ✈️
+✅ Compro y vendo de Saldo.
+✅ Precios negociables (depende de la cantidad).
+✅ Remesas disponibles.
+
+¡Escríbeme por Mensaje Privado (PV: 56694233) para acordar! 💬
+[17:31, 17/10/2025] +53 5 6694233: 🚨TENGO EFECTIVO AL 10%, billetes grandes de 1000🚨
+
+- Cualquier cantidad"
+        },
+        "contextInfo": {
+          "expiration": 86400,
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT",
+            "trigger": "UNKNOWN"
+          }
+        },
+        "messageType": "conversation",
+        "messageTimestamp": 1760322656,
+        "instanceId": "ab83a13f-c1ff-43e6-aa34-4178920482ab",
+        "source": "android"
+      },
+      "destination": "http://host.docker.internal:5678/webhook/0d7c1682-6f76-417c-9c2d-b5237a85c547",
+      "date_time": "2025-10-13T01:50:50.430Z",
+      "sender": "5350819559@s.whatsapp.net",
+      "server_url": "http://localhost:8080",
+      "apikey": "A8C6039D7A6C-4057-AD3D-0906DB873B68"
+    },
+	
+	
+Los de telegram:
+
+    "body": {
+      "message_id": 228103,
+      "timestamp": "2025-10-19T08:58:44+00:00",
+      "text": "¡Escríbeme por Mensaje Privado (PV: 56694233) para acordar! 💬
+[17:30, 17/10/2025] +53 5 6694233: ¡Compro USDT & Dólares Americanos! 💰📈
+
+✅ Compro USDT por cantidad.
+✅ Compro Dólares Americanos (USD) no importa la cantidad.
+✅ Compro Euros( cualquier cantidad)
+✅ Recargas Internacionales disponibles. ✈️
+✅ Compro y vendo de Saldo.
+✅ Precios negociables (depende de la cantidad).
+✅ Remesas disponibles.
+
+¡Escríbeme por Mensaje Privado (PV: 56694233) para acordar! 💬
+[17:31, 17/10/2025] +53 5 6694233: 🚨TENGO EFECTIVO AL 10%, billetes grandes de 1000🚨
+
+- Cualquier cantidad",
+      "is_out": false,
+      "sender": {
+        "id": 477326488,
+        "first_name": "Group Booster",
+        "last_name": null,
+        "username": "Cleanrobot",
+        "phone": null,
+        "is_bot": true
+      },
+      "chat": {
+        "id": 1427108171,
+        "title": "👥Grupo Amigos de Casalex👥",
+        "first_name": null,
+        "username": "Alquileres_Playas_del_este",
+        "type": "channel"
+      },
+      "reply_to": null,
+      "forwarded": null,
+      "has_media": false,
+      "media_type": null
+    },

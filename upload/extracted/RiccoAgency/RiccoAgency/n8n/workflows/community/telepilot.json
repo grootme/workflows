@@ -1,0 +1,630 @@
+[
+  {
+    "name": "telepilot Login",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "59daebf5-fd8d-4264-ae16-095923dd0eaf",
+        "name": "When clicking \"Execute Workflow\"",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          760,
+          380
+        ]
+      },
+      {
+        "parameters": {
+          "resource": "login"
+        },
+        "id": "da58309b-2e54-4eb2-9bf0-a7bfca4fed95",
+        "name": "Telegram Co-Pilot",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+        "typeVersion": 1,
+        "position": [
+          960,
+          380
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "When clicking \"Execute Workflow\"": {
+        "main": [
+          [
+            {
+              "node": "Telegram Co-Pilot",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {},
+    "versionId": "d5744f06-9dc0-4528-9ad0-195ba046954a",
+    "id": "26",
+    "meta": {
+      "instanceId": "instanceId"
+    },
+    "tags": [
+      {
+        "name": "telepilot.co-managed",
+        "createdAt": "2023-06-03T16:54:56.644Z",
+        "updatedAt": "2023-06-03T16:54:56.644Z",
+        "id": "9"
+      }
+    ]
+  },
+  {
+    "name": "5-TelePilot: Auto-Reply",
+    "nodes": [
+      {
+        "parameters": {
+          "events": [
+            "updateNewMessage"
+          ]
+        },
+        "id": "77815aea-5c3d-4f86-bee0-82f91632e320",
+        "name": "TelePilot Trigger",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilotTrigger",
+        "typeVersion": 1,
+        "position": [
+          1240,
+          -20
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "amount": 2,
+          "unit": "seconds"
+        },
+        "id": "2f26f51d-b0e8-47a4-b4e8-6552fe55dd0d",
+        "name": "Wait",
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1,
+        "position": [
+          1160,
+          400
+        ],
+        "webhookId": "2efa44b6-c4e5-400b-b095-fb0bb5d5eaea"
+      },
+      {
+        "parameters": {
+          "resource": "user",
+          "operation": "getUser",
+          "user_id": "={{ $json.message.sender_id.user_id }}"
+        },
+        "id": "20128679-81eb-49aa-90bb-04417259b6a3",
+        "name": "Telegram Co-Pilot getUser",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+        "typeVersion": 1,
+        "position": [
+          1340,
+          400
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "chat_id": "={{ $json.id }}",
+          "messageText": "=Hey {{ $json.first_name }}!\n\nI'm currently on a break. If your matter is of importance, please book a call with me on Calendly. \nFind a suitable timeslot using this link: https://my-personal-calendly-link\n\nCheers! "
+        },
+        "id": "e645bd96-91ba-4a29-8fc3-e8bfb3e298d0",
+        "name": "Telegram Co-Pilot: sendMessage",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+        "typeVersion": 1,
+        "position": [
+          1520,
+          400
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{ $json.message.sender_id._ }}",
+                "value2": "=messageSenderUser"
+              }
+            ]
+          }
+        },
+        "id": "ac93063a-eedb-4dd3-bcb8-5b467ad675fb",
+        "name": "IF User Message",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          1120,
+          200
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "boolean": [
+              {
+                "value1": "={{ Boolean($json.message.is_outgoing) }}"
+              }
+            ]
+          }
+        },
+        "id": "d520b4d2-f537-46f5-b7cf-74478fbe72a0",
+        "name": "IF incoming",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          1520,
+          200
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{ $json.message.sender_id.user_id }}",
+                "value2": "={{ $json.message.chat_id }}"
+              }
+            ]
+          }
+        },
+        "id": "0ed756d1-ccbb-48c2-a432-39e1890f7775",
+        "name": "IF 1-on-1 chat",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          1300,
+          180
+        ]
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "TelePilot Trigger": {
+        "main": [
+          [
+            {
+              "node": "IF User Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Telegram Co-Pilot getUser",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram Co-Pilot getUser": {
+        "main": [
+          [
+            {
+              "node": "Telegram Co-Pilot: sendMessage",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "IF User Message": {
+        "main": [
+          [
+            {
+              "node": "IF 1-on-1 chat",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "IF incoming": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "IF 1-on-1 chat": {
+        "main": [
+          [
+            {
+              "node": "IF incoming",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "saveExecutionProgress": true,
+      "saveManualExecutions": true,
+      "callerPolicy": "workflowsFromSameOwner"
+    },
+    "versionId": "6f0c0463-d982-41a0-adae-d850a7e02aec",
+    "id": "30",
+    "meta": {
+      "instanceId": "instanceId"
+    },
+    "tags": [
+      {
+        "createdAt": "2023-06-13T12:43:46.639Z",
+        "updatedAt": "2023-06-13T12:43:46.639Z",
+        "id": "10",
+        "name": "workflows"
+      },
+      {
+        "createdAt": "2023-06-13T14:47:35.054Z",
+        "updatedAt": "2023-06-13T14:47:35.054Z",
+        "id": "11",
+        "name": "finished"
+      }
+    ]
+  },
+  {
+    "name": "TelePilot: Search",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "searchPublicChats",
+          "query": "={{ $node[\"Set: search_query\"].json[\"search_query\"] }}"
+        },
+        "id": "db2c6177-2fd1-4d3e-a448-1b8712fcff4b",
+        "name": "Telegram CoPilot",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+        "typeVersion": 1,
+        "position": [
+          1720,
+          120
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "id": "b9277813-0dc6-4d43-b34d-a6dd7832d8c9",
+        "name": "When clicking \"Execute Workflow\"",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          1340,
+          -40
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "insert",
+          "collection": "search",
+          "fields": "={{ Object.keys($json).join(\",\") }}",
+          "options": {}
+        },
+        "id": "7711b164-ede4-44d1-83b6-e833e596b2a1",
+        "name": "MongoDB",
+        "type": "n8n-nodes-base.mongoDb",
+        "typeVersion": 1,
+        "position": [
+          1940,
+          360
+        ],
+        "credentials": {
+          "mongoDb": {
+            "id": "20",
+            "name": "MongoDB account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "batchSize": 1,
+          "options": {}
+        },
+        "id": "79c98ba6-8c44-48fb-a6c8-4baa0c92d1f1",
+        "name": "Split In Batches",
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 1,
+        "position": [
+          1360,
+          380
+        ]
+      },
+      {
+        "parameters": {
+          "values": {
+            "string": [
+              {
+                "name": "search_query",
+                "value": "Javascript developer"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "49bbf414-a9f0-41b7-8f7f-05038b5d0783",
+        "name": "Set: search_query",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 1,
+        "position": [
+          1560,
+          -40
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "return $input.all()[0]\n .json\n .chat_ids\n .map(\n (cid) => ({\"chat_id\": cid})\n )\n"
+        },
+        "id": "c8942ed8-d8c6-4e57-8e60-7befa72bca4d",
+        "name": "Code: map for iteration",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1,
+        "position": [
+          1920,
+          120
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "getChat",
+          "chat_id": "={{ $json.chat_id }}"
+        },
+        "id": "a41728db-93df-4f27-a92e-248d990b0944",
+        "name": "Telegram CoPilot: get Chat Info",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+        "typeVersion": 1,
+        "position": [
+          1680,
+          360
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Telegram CoPilot": {
+        "main": [
+          [
+            {
+              "node": "Code: map for iteration",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking \"Execute Workflow\"": {
+        "main": [
+          [
+            {
+              "node": "Set: search_query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MongoDB": {
+        "main": [
+          [
+            {
+              "node": "Split In Batches",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split In Batches": {
+        "main": [
+          [
+            {
+              "node": "Telegram CoPilot: get Chat Info",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set: search_query": {
+        "main": [
+          [
+            {
+              "node": "Telegram CoPilot",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code: map for iteration": {
+        "main": [
+          [
+            {
+              "node": "Split In Batches",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram CoPilot: get Chat Info": {
+        "main": [
+          [
+            {
+              "node": "MongoDB",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {},
+    "versionId": "269a9b1e-3100-4f16-ad4e-f82ac44153f7",
+    "id": "32",
+    "meta": {
+      "instanceId": "instanceId"
+    },
+    "tags": [
+      {
+        "createdAt": "2023-06-13T12:43:46.639Z",
+        "updatedAt": "2023-06-13T12:43:46.639Z",
+        "id": "10",
+        "name": "workflows"
+      },
+      {
+        "createdAt": "2023-06-13T14:47:35.054Z",
+        "updatedAt": "2023-06-13T14:47:35.054Z",
+        "id": "11",
+        "name": "finished"
+      }
+    ]
+  },
+  {
+    "name": "TelePilot: Listen to Events with Mapper",
+    "nodes": [
+      {
+        "parameters": {
+          "events": [
+            "updateNewMessage"
+          ]
+        },
+        "id": "129ad3b2-f2f4-420d-9f0e-8425127a8dda",
+        "name": "TelePilot Trigger",
+        "type": "@telepilotco/n8n-nodes-telepilot.telePilotTrigger",
+        "typeVersion": 1,
+        "position": [
+          420,
+          600
+        ],
+        "credentials": {
+          "telePilotApi": {
+            "id": "41",
+            "name": "Personal Telegram Co-Pilot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "insert",
+          "collection": "all_events",
+          "fields": "={{ Object.keys($json).join(\",\") }}",
+          "options": {}
+        },
+        "id": "c6884fc9-918d-4eb0-88fc-e5fb85e9dccd",
+        "name": "MongoDB",
+        "type": "n8n-nodes-base.mongoDb",
+        "typeVersion": 1,
+        "position": [
+          980,
+          600
+        ],
+        "credentials": {
+          "mongoDb": {
+            "id": "20",
+            "name": "MongoDB account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Get the first item from input (usually the data from the previous node)\nlet item = items[0].json;\n\n// Extract the required fields\nlet result = {\n \"_\": item._,\n \"id\": item.message.id,\n \"senderType\": item.message.sender_id._,\n \"user_id\": item.message.sender_id.user_id,\n \"chat_id\": item.message.chat_id,\n \"text\": item.message.content.text.text,\n};\n\n// Output the transformed item\nreturn [\n {\n json: result\n }\n];\n"
+        },
+        "id": "9c45fe38-b10d-42e5-a89c-f696a4a22c0b",
+        "name": "Code",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1,
+        "position": [
+          640,
+          600
+        ]
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "TelePilot Trigger": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "MongoDB",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {},
+    "versionId": "d66df447-f493-42a0-811c-16d85ddbb9ee",
+    "id": "34",
+    "meta": {
+      "instanceId": "instanceId"
+    },
+    "tags": [
+      {
+        "createdAt": "2023-06-13T12:43:46.639Z",
+        "updatedAt": "2023-06-13T12:43:46.639Z",
+        "id": "10",
+        "name": "telepilot-workflows"
+      }
+    ]
+  }
+]

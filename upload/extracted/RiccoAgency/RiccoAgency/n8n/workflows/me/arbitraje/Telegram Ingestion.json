@@ -1,0 +1,226 @@
+{
+  "name": "Telegram Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-ingestion",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -624,
+        1552
+      ],
+      "id": "telegramWebhook",
+      "name": "Telegram Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89bf3a0a-8397-4536-a622-a0e791f5d755",
+              "leftValue": "={{ $('Telegram Webhook').item.json.body.has_media }}",
+              "rightValue": "=conversation",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "74a4e7e0-a2ae-43d8-baf8-80ee0755c014",
+              "leftValue": "={{ $('Telegram Webhook').item.json.body.sender.is_bot }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -416,
+        1552
+      ],
+      "id": "tgIsText",
+      "name": "TG Is Text?1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "groups",
+        "key": "=groups",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        1536
+      ],
+      "id": "bufferRedis2",
+      "name": "bufferRedis2",
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f1b5cda5-4299-4475-978e-5ea7d7977f11",
+              "leftValue": "={{ $json.groups }}",
+              "rightValue": "={{ $('Telegram Webhook').item.json.body.chat.id }}",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -32,
+        1536
+      ],
+      "id": "containsGroups",
+      "name": "Contains Groups?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae y estandariza mensajes de WhatsApp y Telegram\n// para que un agente LLM los interprete después.\n// NO se hace normalización ni inferencia aquí.\n\nconst input = $(\"WA Webhook\").item.json;\n    const platform = 'Telegram';\n    const text = input.body.text;\n    const timestamp = input.body.timestamp || new Date().toISOString();\n    const senderId = input.body.sender?.id?.toString() || '';\n    const messageId = input.body.message_id?.toString() || '';\n    const isBot = input.body.sender?.is_bot === true;\n\n  let contact = null;\n  const contactMatch = text.match(/(?:PV|privado|mensaje privado|escribirme|llam[ae])\\s*[:\\-]?\\s*(\\+?53\\s?5\\s?\\d{7,8}|\\d{8})/i);\n  if (contactMatch) {\n    contact = contactMatch[1].replace(/\\D/g, ''); // Normaliza a 56694233\n  } else {\n    // Buscar número directo en formato cubano\n    const phoneMatch = text.match(/(\\+53\\s?5\\s?\\d{7,8}|\\b5\\d{7,8}\\b)/);\n    if (phoneMatch) {\n      contact = phoneMatch[1].replace(/\\D/g, '');\n    }\n  }\n\n  // ─── Construir objeto estandarizado ─────────────────\n  return  {\n    platform,\n    text, // ✅ Texto original intacto\n    timestamp,\n    contact, // número limpio o null\n    sender_id: senderId,\n    message_id: messageId,\n    is_bot: isBot\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        1504
+      ],
+      "id": "telegramSetPayload",
+      "name": "Telegram Set Payload"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/process-raw-offer",
+        "method": "POST",
+        "sendBody": true,
+        "jsonBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "Telegram"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        1504
+      ],
+      "id": "sendToProcessor",
+      "name": "Send to Processor"
+    }],
+  "connections": {
+    "telegramWebhook": {
+      "main": [
+        [
+          {
+            "node": "tgIsText",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tgIsText": {
+      "main": [
+        [
+          {
+            "node": "bufferRedis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bufferRedis2": {
+      "main": [
+        [
+          {
+            "node": "containsGroups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "containsGroups": {
+      "main": [
+        [
+          {
+            "node": "telegramSetPayload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "telegramSetPayload": {
+      "main": [
+        [
+          {
+            "node": "sendToProcessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    } },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "",
+  "tags": []
+}

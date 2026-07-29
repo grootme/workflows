@@ -1,0 +1,149 @@
+{
+  "name": "Lead Qualification - MVP",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "webhook-lead",
+        "httpMethod": "POST"
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// normalize payload\nconst input = items[0].json;\nconst lead = {\n  name: input.name || `${input.firstName || ''} ${input.lastName || ''}`.trim(),\n  email: input.email|| input.Email || null,\n  phone: input.phone || input.telephone || null,\n  company: input.company || input.companyName || null,\n  title: input.title || input.jobTitle || null,\n  source: input.source || 'web',\n};\nreturn [{ json: lead }];"
+      },
+      "id": "2",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clearbit_api",
+        "requestMethod": "GET",
+        "url": "=https://person.clearbit.com/v2/people/find?email=${$json[\"email\"]}"
+      },
+      "id": "3",
+      "name": "Enrichment (Clearbit)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// scoring rules example\nconst lead = items[0].json;\nlet score = 0;\nif (lead.email) score += 30;\nif (lead.company) score += 20;\nif (lead.title && /manager|ceo|founder|director/i.test(lead.title)) score += 30;\nif (lead.enrichment && lead.enrichment.site && /enterprise|corp|llc/i.test(lead.enrichment.site)) score += 20;\nlead.score = Math.min(score, 100);\nreturn [{ json: lead }];"
+      },
+      "id": "4",
+      "name": "Scoring",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "number": [
+            {
+              "value1": "={{$json[\"score\"]}}",
+              "operation": "larger",
+              "value2": 70
+            }
+          ],
+          "string": []
+        }
+      },
+      "id": "5",
+      "name": "High Priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "query": "INSERT INTO leads (name,email,phone,company,title,source,score,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,now())",
+        "values": "=[$json[\"name\"], $json[\"email\"], $json[\"phone\"], $json[\"company\"], $json[\"title\"], $json[\"source\"], $json[\"score\"]]",
+        "options": {}
+      },
+      "id": "6",
+      "name": "Save to Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1250, 220],
+      "credentials": {
+        "postgres": {
+          "id": "=credentials('nyx-db')",
+          "name": "nyx-db"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "INSERT INTO leads (name,email,phone,company,title,source,score,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,now())",
+        "values": "=[$json[\"name\"], $json[\"email\"], $json[\"phone\"], $json[\"company\"], $json[\"title\"], $json[\"source\"], $json[\"score\"]]",
+        "options": {}
+      },
+      "id": "7",
+      "name": "Save to Postgres (Low)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1250, 380],
+      "credentials": {
+        "postgres": {
+          "id": "=credentials('nyx-db')",
+          "name": "nyx-db"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "id": "8",
+      "name": "Create in CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1450, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "=credentials('hubspot-oauth')",
+          "name": "hubspot-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "webhookUrl": "={{$credentials.slack_webhook.url}}",
+        "text": "={{`New lead: ${$json[\"name\"]} (${ $json[\"email\"] }) - Score: ${$json[\"score\"]}`}}"
+      },
+      "id": "9",
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1650, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "=credentials('slack-webhook')",
+          "name": "slack-webhook"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node":"Normalize","type":"main","index":0}]]},
+    "Normalize": {"main": [[{"node":"Enrichment (Clearbit)","type":"main","index":0}]]},
+    "Enrichment (Clearbit)": {"main": [[{"node":"Scoring","type":"main","index":0}]]},
+    "Scoring": {"main": [[{"node":"High Priority?","type":"main","index":0}]]},
+    "High Priority?": {"main": [[{"node":"Save to Postgres","type":"main","index":0}], [{"node":"Save to Postgres (Low)","type":"main","index":1}]]},
+    "Save to Postgres": {"main": [[{"node":"Create in CRM","type":"main","index":0}]]},
+    "Create in CRM": {"main": [[{"node":"Notify Slack","type":"main","index":0}]]}
+  }
+}

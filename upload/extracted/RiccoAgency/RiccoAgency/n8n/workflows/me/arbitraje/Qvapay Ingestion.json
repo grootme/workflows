@@ -1,0 +1,425 @@
+{
+  "name": "Qvapay Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        0
+      ],
+      "id": "scheduleTrigger",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "token",
+        "key": "token",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        480
+      ],
+      "id": "bufferRedis",
+      "name": "bufferRedis",
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89bf3a0a-8397-4536-a622-a0e791f5d755",
+              "leftValue": "={{ $json.token }}",
+              "rightValue": "=conversation",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -176,
+        480
+      ],
+      "id": "hasToken",
+      "name": "Has Token?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.qvapay.com/auth/login",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Cookie",
+              "value": "__cf_bm=EqTt0X7RaVJalL.vB_1h5pCYY52sAxNiV2.3quLr1HA-1759967217-1.0.1.1-DAEai5dmGk0Wu5TuwXCOv8b15Zjd0xMO7VWbtGZ_RjJ1pGvjpLUV7ednIsa_XFzSabEPHH7yWSAZYPzV.pmKAjfhGLihHnQ9vE8s1ZZK_tA"
+            },
+            {
+              "name": "cookie",
+              "value": "__cf_bm=EqTt0X7RaVJalL.vB_1h5pCYY52sAxNiV2.3quLr1HA-1759967217-1.0.1.1-DAEai5dmGk0Wu5TuwXCOv8b15Zjd0xMO7VWbtGZ_RjJ1pGvjpLUV7ednIsa_XFzSabEPHH7yWSAZYPzV.pmKAjfhGLihHnQ9vE8s1ZZK_tA;"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "pyzel.19@gmail.com"
+            },
+            {
+              "name": "password",
+              "value": "*Qvapay+2025*"
+            },
+            {
+              "name": "two_factor_code",
+              "value": "6411"
+            },
+            {
+              "name": "remember",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        128,
+        688
+      ],
+      "id": "qvapayLogin",
+      "name": "Qvapay Login"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "token",
+        "value": "={{ $json.accessToken }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        720
+      ],
+      "id": "qvapaySetToken",
+      "name": "Qvapay Set Token",
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.qvapay.com/p2p/index",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + $('bufferRedis').item.json.token }}"
+            },
+            {
+              "name": "Cookie",
+              "value": "__cf_bm=daK92ZsJhEyS4e2V8V3TALsQY07sRcQ._DzmOq5z8R8-1759970420-1.0.1.1-9MUWmCJBc7YNGxCkewSu7sFJtoCvz8kuYzZgGftkBTnBSSDi7ja1YSLwfd1xwT4QDTHGgkELpAFzv1f3zAcP_3stojxXiLQyzJKd3ajr5WI"
+            },
+            {
+              "name": "cookie",
+              "value": "__cf_bm=daK92ZsJhEyS4e2V8V3TALsQY07sRcQ._DzmOq5z8R8-1759970420-1.0.1.1-9MUWmCJBc7YNGxCkewSu7sFJtoCvz8kuYzZgGftkBTnBSSDi7ja1YSLwfd1xwT4QDTHGgkELpAFzv1f3zAcP_3stojxXiLQyzJKd3ajr5WI;"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchInterval": 36000
+            }
+          },
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        400
+      ],
+      "id": "qvapayGetOffersRequest",
+      "name": "Qvapay Get Offers Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89bf3a0a-8397-4536-a622-a0e791f5d755",
+              "leftValue": "={{ $json.statusCode.toString() }}",
+              "rightValue": "=200",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        416
+      ],
+      "id": "if3",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/process-raw-offer",
+        "method": "POST",
+        "sendBody": true,
+        "jsonBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "Qvapay"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json.body.data }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        528,
+        400
+      ],
+      "id": "sendToProcessor",
+      "name": "Send to Processor"
+    },
+    {
+      "parameters": {
+        "url": "https://api.qvapay.com/p2p/index",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + $('bufferRedis').item.json.token }}"
+            },
+            {
+              "name": "Cookie",
+              "value": "__cf_bm=daK92ZsJhEyS4e2V8V3TALsQY07sRcQ._DzmOq5z8R8-1759970420-1.0.1.1-9MUWmCJBc7YNGxCkewSu7sFJtoCvz8kuYzZgGftkBTnBSSDi7ja1YSLwfd1xwT4QDTHGgkELpAFzv1f3zAcP_3stojxXiLQyzJKd3ajr5WI"
+            },
+            {
+              "name": "cookie",
+              "value": "__cf_bm=daK92ZsJhEyS4e2V8V3TALsQY07sRcQ._DzmOq5z8R8-1759970420-1.0.1.1-9MUWmCJBc7YNGxCkewSu7sFJtoCvz8kuYzZgGftkBTnBSSDi7ja1YSLwfd1xwT4QDTHGgkELpAFzv1f3zAcP_3stojxXiLQyzJKd3ajr5WI;"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchInterval": 36000
+            }
+          },
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        400
+      ],
+      "id": "qvapayGetOffersRequest",
+      "name": "Qvapay Get Offers Request"
+    }],
+  "connections": {
+    "scheduleTrigger": {
+      "main": [
+        [
+          {
+            "node": "bufferRedis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bufferRedis": {
+      "main": [
+        [
+          {
+            "node": "hasToken",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hasToken": {
+      "main": [
+        [
+          {
+            "node": "qvapayGetOffersRequest",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "qvapayLogin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "qvapayLogin": {
+      "main": [
+        [
+          {
+            "node": "qvapaySetToken",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "qvapaySetToken": {
+      "main": [
+        [
+          {
+            "node": "qvapayGetOffersRequest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "qvapayGetOffersRequest": {
+      "main": [
+        [
+          {
+            "node": "if3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if3": {
+      "main": [
+        [
+          {
+            "node": "sendToProcessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    } },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "",
+  "tags": []
+}

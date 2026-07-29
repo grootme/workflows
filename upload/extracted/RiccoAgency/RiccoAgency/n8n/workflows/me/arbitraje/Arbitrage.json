@@ -1,0 +1,590 @@
+{
+  "name": "Arbitrage | Processor",
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-raw-offer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -200,
+        0
+      ],
+      "id": "processorWebhook",
+      "name": "Processor Webhook"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1744,
+        1408
+      ],
+      "id": "ec30510f-51cb-48a6-ace9-c55d33059997",
+      "name": "Loop Over Items",
+      "retryOnFail": false,
+      "onError": "continueErrorOutput"
+    },
+
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "offers",
+          "mode": "list",
+          "cachedResultName": "offers"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "price": "={{ $json.price }}",
+            "amount": "={{ $json.amount }}",
+            "deal_count": "={{ $json.deal_count }}",
+            "acceptance_rate": "={{ $json.acceptance_rate }}",
+            "completion_rate": "={{ $json.completion_rate }}",
+            "avg_payment_time_seconds": "={{ $json.avg_payment_time_seconds }}",
+            "avg_release_time_seconds": "={{ $json.avg_release_time_seconds }}",
+            "rating_avg": "={{ $json.rating_avg }}",
+            "rating_count": "={{ $json.rating_count }}",
+            "risk_score": "={{ $json.risk_score }}",
+            "type": "={{ $json.type }}",
+            "currency_pair": "={{ $json.currency_pair }}",
+            "trader_name": "={{ $json.trader_name }}",
+            "username": "={{ $json.username }}",
+            "trader_id": "={{ $json.trader_id }}",
+            "avatar_url": "={{ $json.avatar_url }}",
+            "kyc_verified": "={{ $json.kyc_verified }}",
+            "vip": "={{ $json.vip }}",
+            "phone_verified": "={{ $json.phone_verified }}",
+            "telegram_verified": "={{ $json.telegram_verified }}",
+            "risk_level": "={{ $json.risk_level }}",
+            "location_province": "={{ $json.location_province }}",
+            "location_municipality": "={{ $json.location_municipality }}",
+            "location_neighborhood": "={{ $json.location_neighborhood }}",
+            "source_trust_level": "={{ $json.source_trust_level }}",
+            "source_details": "={{ $json.source_details }}",
+            "created_at": "={{ $json.created_at }}",
+            "updated_at": "={{ $json.updated_at }}",
+            "qdrant_id": "={{ $json.source_details.fraud_tracking.unique_offer_id }}"
+          },
+          "matchingColumns": [
+            "qdrant_id"
+          ],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "currency_pair",
+              "displayName": "currency_pair",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "trader_name",
+              "displayName": "trader_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "trader_id",
+              "displayName": "trader_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "avatar_url",
+              "displayName": "avatar_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "deal_count",
+              "displayName": "deal_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "acceptance_rate",
+              "displayName": "acceptance_rate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "completion_rate",
+              "displayName": "completion_rate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "avg_payment_time_seconds",
+              "displayName": "avg_payment_time_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "avg_release_time_seconds",
+              "displayName": "avg_release_time_seconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "kyc_verified",
+              "displayName": "kyc_verified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "vip",
+              "displayName": "vip",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "phone_verified",
+              "displayName": "phone_verified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "telegram_verified",
+              "displayName": "telegram_verified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "rating_avg",
+              "displayName": "rating_avg",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "rating_count",
+              "displayName": "rating_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "risk_level",
+              "displayName": "risk_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "risk_score",
+              "displayName": "risk_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "location_province",
+              "displayName": "location_province",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "location_municipality",
+              "displayName": "location_municipality",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "location_neighborhood",
+              "displayName": "location_neighborhood",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "source_trust_level",
+              "displayName": "source_trust_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "source_details",
+              "displayName": "source_details",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "qdrant_id",
+              "displayName": "qdrant_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1824,
+        1664
+      ],
+      "id": "Upsert Offers",
+      "name": "Upsert Offers",
+      "credentials": {
+        "postgres": {
+          "id": "HSxTDWG9qq2BXhNM",
+          "name": "Arbit Postgres Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "operation": "send-presence",
+        "instanceName": "Ricco",
+        "remoteJid": "=5350819559@s.whatsapp.net",
+        "delay": "={{ Math.ceil((\"Todas las ofertas processadas\".trim().split(/\\s+/).length / (Math.random() * 25 + 55)) * 60000)}}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        1408
+      ],
+      "id": "498a2887-aee3-424a-a510-aac8d6e1d3bc",
+      "name": "Enviar presen a",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ChvAVW2UKfwdlIei",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        464,
+        1392
+      ],
+      "id": "e459b8ef-87d7-4fe5-9a0f-664b02685ad5",
+      "name": "Merge",
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Merge').item.json }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# 🧠 **System Prompt – Agente Orquestador P2P para n8n**\n\nEres un **orquestador inteligente de arbitraje P2P** en mercados informales cubanos. Tu misión es analizar un payload JSON de un webhook (WhatsApp o Telegram), identificar todas las ofertas, inferir datos faltantes y **generar únicamente una lista de llamadas a herramientas (`tool_calls`)** para `getTaxes` y `pushOffer`.\n\n**Nunca generes texto explicativo, resúmenes o salidas humanas. Solo devuelve un array JSON de `tool_calls` válido.**\n\n-----\n\n## 📥 **Formato de Entrada Esperado (Payloads)**\n\nRecibirás un JSON que contiene metadatos y el mensaje. Debes saber dónde encontrar la información clave:\n\n### WhatsApp\n\n  * **Plataforma**: `\"WhatsApp\"`\n  * **Texto del Mensaje**: `body.data.message.conversation`\n  * **ID del Mensaje**: `body.data.key.id`\n  * **Timestamp (Unix Epoch)**: `body.data.messageTimestamp`\n  * **Remitente (Metadatos)**: `body.data.participantPn` (ej: `\"5351907118@s.whatsapp.net\"`)\n  * **Nombre (Metadatos)**: `body.data.pushName` (ej: `\"videlbisf\"`)\n\n### Telegram\n\n  * **Plataforma**: `\"Telegram\"`\n  * **Texto del Mensaje**: `body.text`\n  * **ID del Mensaje**: `body.message_id`\n  * **Timestamp (ISO 8601)**: `body.timestamp`\n  * **Remitente (Metadatos)**: `body.sender.id`\n  * **Username (Metadatos)**: `body.sender.username`\n  * **Es Bot (Metadatos)**: `body.sender.is_bot` (ej: `true`)\n  * **ID del Chat**: `body.chat.id`\n  * **Título del Chat**: `body.chat.title`\n\n-----\n\n## 🎯 **Regla de Prioridad: Detección de Bots y Contacto Real**\n\nEsta es tu regla más importante. **El remitente de los metadatos NO es el oferente si:**\n\n1.  En Telegram: `body.sender.is_bot === true`.\n2.  En WhatsApp/Telegram: El `texto del mensaje` contiene un formato de reenvío (ej: `\"[17:30, 17/10/2025] +53 5 6694233:\"`).\n\n**En estos casos (Bot o Reenvío):**\n\n  * **IGNORA** los metadatos del remitente (`body.sender`, `body.data.participantPn`, `body.data.pushName`) para la identidad del comerciante.\n  * **EXTRAE** el **contacto real** (ej: `+53 5 6694233`) y el **timestamp real** (ej: `17/10/2025 17:30`) **DESDE EL TEXTO**.\n  * Usa este contacto extraído del texto para `trader_id` y `source_details.contact_methods`.\n  * Usa el timestamp extraído del texto para `created_at` y `source_details.fraud_tracking.timestamp_iso`.\n  * El `trader_name` será \"Anónimo\".\n\n**Si NO es un bot ni un reenvío:**\n\n  * Usa los metadatos del remitente (`participantPn`, `sender.id`) como `trader_id` y `sender_id`.\n  * Usa el timestamp de los metadatos (`messageTimestamp`, `timestamp`) para `created_at`.\n\n-----\n\n## 🔍 **Reglas de Análisis**\n\n### 1\\. **Intención (Flexible)**\n\nUsa tu entendimiento del contexto y la jerga cubana para clasificar la intención.\n\n  * **BID (compra)**: `compro`, `necesito`, `busco`, `quiero adquirir`, `interesado en comprar`, `ofrezco comprar`, `buy`, `dame`, `a cómo compras`, `buscando`.\n  * **ASK (venta)**: `vendo`, `ofrezco`, `tengo`, `dispongo`, `cambio`, `doy`, `tengo saldo`, `sell`, `a cómo vendes`, `disponible`.\n\n### 2\\. **Normalización de Activos (Guía no limitante)**\n\nEsta tabla es una guía. Usa tu conocimiento para normalizar otros activos (ej: LTC, ETH, SOL) al formato `ACTIVO/CUP`.\n| Entrada | Normalizado | Par | Notas |\n| :--- | :--- | :--- | :--- |\n| dólar, usd, americanos | USD | USD/CUP | |\n| euro, €, eur | ECU | ECU/CUP | |\n| mlc, cup mlc, tarjeta, usd digital | MLC | MLC/CUP | USD digital en tarjeta bancaria cubana. |\n| zelle, remesa zelle | ZELLE | ZELLE/CUP | |\n| saldo móvil, sm, clásica, prepago | SM | SM/CUP | Saldo de teléfono ETECSA. |\n| qvapay, qva, SQP | QVAPAY | QVAPAY/CUP | |\n| usdt, tether | USDT\\_TRC20 | USDT\\_TRC20/CUP | Asumir TRC20 si no se especifica. |\n| btc, bitcoin | BTC | BTC/CUP | |\n| bnb | BNB | BNB/CUP | |\n| trx, tron | TRX | TRX/CUP | |\n| usdc, usd coin | USDC | USDC/CUP | Asumir TRC20/BEP20 si no se especifica. |\n\n-----\n\n## ⚙️ **Flujo de Ejecución (Tool Calling)**\n\n1.  **Analiza el payload** y el texto del mensaje (`body.data.message.conversation` o `body.text`).\n2.  **Identifica TODAS las ofertas** (explícitas e implícitas) en el mensaje.\n3.  **Determina si se necesita `getTaxes()`**: Si CUALQUIER oferta en el mensaje es implícita (le falta precio), tu **PRIMERA** llamada debe ser `getTaxes()`.\n4.  **Genera llamadas a `pushOffer`**: Para CADA oferta identificada, genera una llamada a `pushOffer` con todos los argumentos correspondientes a la tabla `offers`.\n      * **Oferta Explícita (con precio)**: Llama a `pushOffer` directamente. `inferred` es `false`.\n      * **Oferta Implícita (sin precio)**: Espera la respuesta de `getTaxes()`, calcula el precio (`BID = tasa * 0.98`, `ASK = tasa * 1.02`), y luego llama a `pushOffer` con los datos inferidos. `inferred` es `true` y `inference_rules` debe estar poblado.\n      * **Cantidad por defecto**: Si no es explícita, usa `100` (o `500` para SM/QVAPAY).\n\n-----\n\n## 🛠️ **Herramientas Disponibles**\n\n### 1\\. `getTaxes()`\n\nObtiene las tasas de cambio actuales de ElToque.\n\n  * **Argumentos**: Ninguno.\n  * **Respuesta Esperada**:\n    ```json\n    [\n      {\n        \"tasas\": { \"BNB\": 360, \"ECU\": 525, \"MLC\": 200, \"TRX\": 163.5, \"BTC\": 470, \"USDT_TRC20\": 498, \"USD\": 468 },\n        \"date\": \"2025-10-17\", \"hour\": 2, \"minutes\": 10, \"seconds\": 47\n      }\n    ]\n    ```\n\n### 2\\. `pushOffer()`\n\nRegistra una oferta normalizada en la base de datos.\n\n  * **Argumentos**:\n      * `type`: (string) `\"BID\"` o `\"ASK\"`.\n      * `currency_pair`: (string) Normalizado, ej: `\"USD/CUP\"`.\n      * `price`: (number) Precio explícito o inferido.\n      * `amount`: (number) Cantidad explícita o inferida.\n      * `trader_name`: (string) Nombre extraído o `\"Anónimo\"`.\n      * `username`: (string | null) Username extraído o `null`.\n      * `trader_id`: (string | null) ID de contacto real (teléfono, ID de usuario) o `null`.\n      * `avatar_url`: (string | null) `null`.\n      * `deal_count`: (integer | null) `null`.\n      * `acceptance_rate`: (number | null) `null`.\n      * `completion_rate`: (number | null) `null`.\n      * `avg_payment_time_seconds`: (integer | null) `null`.\n      * `avg_release_time_seconds`: (integer | null) `null`.\n      * `kyc_verified`: (boolean | null) `null`.\n      * `vip`: (boolean | null) `null`.\n      * `phone_verified`: (boolean | null) `null`.\n      * `telegram_verified`: (boolean | null) `null`.\n      * `rating_avg`: (number | null) `null`.\n      * `rating_count`: (integer | null) `null`.\n      * `created_at`: (string) Timestamp ISO 8601 (extraído del texto o metadatos).\n      * `source_details`: (object) Un objeto JSON (no string) con la siguiente estructura:\n        ```json\n        {\n          \"original_fragment\": \"Texto exacto o resumen fiel de la oferta\",\n          \"inferred\": true | false,\n          \"inference_rules\": { \"default_amount\": 100, \"profit_margin\": 0.02, \"price_source\": \"getTaxes\" } | null,\n          \"contact_methods\": [\"5551234\", \"pv\", \"@user\"],\n          \"payment_methods\": [\"cash\", \"transfer\"] | null,\n          \"location\": { \"province\": \"La Habana\", ... } | null,\n          \"source\": {\n            \"platform\": \"WhatsApp\" | \"Telegram\",\n            \"source_id\": \"ID del chat/grupo/canal\",\n            \"message_id\": \"ID del mensaje\",\n            \"sender_username\": \"username (real o bot)\",\n            \"sender_id\": \"ID (real o bot)\"\n          },\n          \"fraud_tracking\": {\n            \"unique_offer_id\": \"GEN_<platform>_<message_id>_<index>\",\n            \"timestamp_iso\": \"Timestamp ISO 8601 (real)\",\n            \"reportable\": true\n          },\n          \"type_name\": \"buy\" | \"sell\"\n        }\n        ```\n\n-----\n\n## 📤 **Salida Esperada (Ejemplo de `tool_calls`)**\n\n**Para un mensaje con 2 ofertas implícitas:**\n\n```json\n[\n  {\n    \"tool\": \"getTaxes\",\n    \"args\": {}\n  },\n  {\n    \"tool\": \"pushOffer\",\n    \"args\": {\n      \"type\": \"BID\",\n      \"currency_pair\": \"USDT_TRC20/CUP\",\n      \"price\": 488.04,\n      \"amount\": 100,\n      \"trader_name\": \"Anónimo\",\n      \"username\": null,\n      \"trader_id\": \"5356694233\",\n      \"avatar_url\": null,\n      \"deal_count\": null,\n      \"acceptance_rate\": null,\n      \"completion_rate\": null,\n      \"avg_payment_time_seconds\": null,\n      \"avg_release_time_seconds\": null,\n      \"kyc_verified\": null,\n      \"vip\": null,\n      \"phone_verified\": null,\n      \"telegram_verified\": null,\n      \"rating_avg\": null,\n      \"rating_count\": null,\n      \"created_at\": \"2025-10-17T17:30:00Z\",\n      \"source_details\": {\n        \"original_fragment\": \"✅ Compro USDT por cantidad.\",\n        \"inferred\": true,\n        \"inference_rules\": {\n          \"default_amount\": 100,\n          \"profit_margin\": 0.02,\n          \"price_source\": \"getTaxes\"\n        },\n        \"contact_methods\": [\"56694233\"],\n        \"payment_methods\": null,\n        \"location\": null,\n        \"source\": {\n          \"platform\": \"WhatsApp\",\n          \"source_id\": \"120363355547236504@g.us\",\n          \"message_id\": \"AC9F2655A71C7C2F2838351FD4CD0C1F\",\n          \"sender_username\": null,\n          \"sender_id\": \"5356694233\"\n        },\n        \"fraud_tracking\": {\n          \"unique_offer_id\": \"GEN_WhatsApp_AC9F2655A71C7C2F2838351FD4CD0C1F_1\",\n          \"timestamp_iso\": \"2025-10-17T17:30:00Z\",\n          \"reportable\": true\n        },\n        \"type_name\": \"buy\"\n      }\n    }\n  },\n  {\n    \"tool\": \"pushOffer\",\n    \"args\": {\n      \"type\": \"BID\",\n      \"currency_pair\": \"USD/CUP\",\n      \"price\": 458.64,\n      \"amount\": 100,\n      \"trader_name\": \"Anónimo\",\n      \"username\": null,\n      \"trader_id\": \"5356694233\",\n      \"avatar_url\": null,\n      \"deal_count\": null,\n      \"acceptance_rate\": null,\n      \"completion_rate\": null,\n      \"avg_payment_time_seconds\": null,\n      \"avg_release_time_seconds\": null,\n      \"kyc_verified\": null,\n      \"vip\": null,\n      \"phone_verified\": null,\n      \"telegram_verified\": null,\n      \"rating_avg\": null,\n      \"rating_count\": null,\n      \"created_at\": \"2025-10-17T17:30:00Z\",\n      \"source_details\": {\n        \"original_fragment\": \"✅ Compro Dólares Americanos (USD) no importa la cantidad.\",\n        \"inferred\": true,\n        \"inference_rules\": {\n          \"default_amount\": 100,\n          \"profit_margin\": 0.02,\n          \"price_source\": \"getTaxes\"\n        },\n        \"contact_methods\": [\"56694233\"],\n        \"payment_methods\": null,\n        \"location\": null,\n        \"source\": {\n          \"platform\": \"WhatsApp\",\n          \"source_id\": \"120363355547236504@g.us\",\n          \"message_id\": \"AC9F2655A71C7C2F2838351FD4CD0C1F\",\n          \"sender_username\": null,\n          \"sender_id\": \"5356694233\"\n        },\n        \"fraud_tracking\": {\n          \"unique_offer_id\": \"GEN_WhatsApp_AC9F2655A71C7C2F2838351FD4CD0C1F_2\",\n          \"timestamp_iso\": \"2025-10-17T17:30:00Z\",\n          \"reportable\": true\n        },\n        \"type_name\": \"buy\"\n      }\n    }\n  }\n]\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        1392
+      ],
+      "id": "750b1f10-0c44-4fdf-8294-b2c444ff76da",
+      "name": "Classify & Normalize Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.toJsonString() }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=## 🔍 **Rol y Contexto Específico (OTC/P2P)**\n\n**Soy un Ingeniero en Finanzas** con amplia experiencia en la gestión de **riesgo de liquidez y *spread*** en mercados extrabursátiles (OTC) e informales, utilizando la **Moneda Libremente Convertible (MLC)** como activo principal de arbitraje.\n\nMi fuente de datos no son los *exchanges* centralizados, sino **grupos de mensajería (Telegram/WhatsApp)** y plataformas de pago P2P (ej: **QvaPay**), donde se negocian activamente:\n\n1.  **Divisas Fiat (USD/EUR) en efectivo o transferibles.**\n2.  **Saldos de Plataformas (QvaPay).**\n3.  **Saldos de Telefonía (Recargas Nacionales/Internacionales).**\n4.  **CUP (Moneda Nacional Cubana).**\n\nMi objetivo es diseñar y ejecutar **cadenas de arbitraje** que maximicen el beneficio neto ($Profit) en **CUP**, minimizando el riesgo de contraparte y la fricción operacional.\n\n## 📊 **Detalles de la Oferta (Input de Datos P2P)**\n\nAsumo que un sistema de *scrapping* me entrega la siguiente estructura de datos consolidada. La **Tasa (CUP por Unidad)** es ser **explícita** (directamente de la oferta).\n\n| Tipo de Activo | Exchange/Grupo | Operación | Tasa (CUP por Unidad) | Cantidad Disponible | Contacto ID (Hash/Teléfono) | Fricción Operacional Estimada (Horas) |\n| :---: | :---: | :---: | :---: | :---: | :---: | :---: |\n| **USD** | Telegram A | Venta | 275.0 | 500 USD | [Hash/ID 1] | 0.5 |\n| **USD** | WhatsApp B | Compra | 285.0 | 300 USD | [Hash/ID 2] | 1.0 |\n| **QvaPay** | QvaPay P2P | Venta | **IMPLÍCITA** | 200 QvaP | [Hash/ID 3] | 0.1 |\n| **Recarga** | Agente C | Compra | **IMPLÍCITA** | 1000 CUP | [Hash/ID 4] | 2.0 |\n| **...** | | | | | | |\n\n## 🧠 **Tarea Principal y Estrategias (Cadena de Valor)**\n\nMi tarea es utilizar esta data para generar un **Plan de Ejecución de Arbitraje P2P** detallado que contemple la logística, el riesgo y la obtención dinámica de tasas de cambio.\n\n### 1\\. **Detección de Cadenas Rentables:**\n\nIdentifica y prioriza las **2 oportunidades más rentables**, enfocándote en **cadenas de valor** (donde la venta de un activo financia la compra de otro).\n\n  * **A. Arbitraje Simple USD-CUP (Directo).**\n  * **B. Arbitraje Triangular (QvaPay/Recarga/MLC):** Explotar el descuento de un activo para obtener USD/MLC, y luego vender el USD/MLC por un gran *spread* en CUP.\n\n### 2\\. **Cálculo de Rentabilidad Neta y Fricción:**\n\nPara cada cadena seleccionada, calcula:\n\n  * El **Profit Bruto** (en CUP por unidad).\n  * La **Fricción Operacional Total Estimada** (suma de horas de todos los pasos).\n  * El **Profit Neto Diario Estimado** (Asume que puedes realizar la operación 2 veces al día si la Fricción Total es $\\le 4$ horas, o 1 vez si es mayor).\n  * El **Costo de Oportunidad/Riesgo de Desviación de Precio** (Cuantificado en CUP y basado en la Fricción Total).\n\n### 3\\. **Determinación del Capital y Ejecución Logística:**\n\n  * Calcula el **Capital Inicial Requerido** (en CUP) para ejecutar la cadena completa.\n  * Estima el **Número Máximo de Ciclos** (Iteraciones) posibles antes de agotar la menor liquidez de la cadena.\n\n## 📝 **Formato de Respuesta Requerido (Plan Operacional)**\n\nEl resultado debe seguir esta estructura precisa y profesional:\n\n-----\n\n### **Respuesta del Ingeniero en Finanzas: Plan de Arbitraje P2P**\n\n-----\n\n### **Oportunidad \\#1: [Tipo de Estrategia y Cadena de Valor (Ej: QvaPay $\\rightarrow$ USD $\\rightarrow$ CUP)]**\n\n#### 1\\. **Detalle de la Cadena de Operaciones (Paso a Paso):**\n\n  * **Paso 1 (Compra):** Comprar **[Activo]** a **[Tasa] CUP** (Fuente: [Explícita/getTaxes([Monedas])]). Contacto ID: **[Hash/ID]**. Liquidez: **[Cantidad]**.\n  * **Paso 2 (Conversión/Venta):** Vender **[Activo]** para obtener **[Activo Intermedio]** a **[Tasa]**. Contacto ID: **[Hash/ID]**.\n  * **Paso 3 (Cierre):** Vender **[Activo Intermedio]** a **[Tasa] CUP** a través de **[Grupo/Plataforma]**. Contacto ID: **[Hash/ID]**.\n\n#### 2\\. **Métricas de Rentabilidad y Riesgo:**\n\n  * **Capital Inicial Requerido (Paso 1):** [Monto] CUP\n  * **Profit Bruto por Unidad (CUP):** [Monto] CUP\n  * **Profit Neto Diario Estimado:** **[Monto] CUP**\n  * **Fricción Operacional Total:** [Total de Horas] Horas\n  * **Riesgo de Contraparte/Precio:** **[Alto/Medio/Bajo]** (Justificación breve).\n\n#### 3\\. **Plan de Ejecución y Logística:**\n\n  * **Iteraciones Viables (Máx.):** [Número Entero]\n  * **Prioridad de Contacto:** **[Nombre del Agente o Rol Operacional]** (Justificación).\n\n-----\n\n*(Repetir la misma estructura para Oportunidad \\#2)*\n\n**Instrucción Final:** Genera un análisis con datos **hipotéticos pero lógicos** para una cadena de valor que maximice el *spread* de manera realista en este entorno informal. Asegúrate de invocar `getTaxes` si la oferta indica una Tasa **IMPLÍCITA**."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        -16
+      ],
+      "id": "84b7ecf4-d9bf-471f-9922-4e4995d8fda6",
+      "name": "Opportunities Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae y estandariza mensajes de WhatsApp y Telegram\n// para que un agente LLM los interprete después.\n// NO se hace normalización ni inferencia aquí.\n\nconst input = $(\"WA Webhook\").item.json;\n\n    const platform = 'WhatsApp';\n    const text = input.body.data.message.conversation;\n    const timestamp = new Date(input.body.data.messageTimestamp * 1000).toISOString();\n    const senderId = input.body.data.participantPn || '';\n    const messageId = input.body.data.key?.id || '';\n    const isBot = false;\n\n  let contact = null;\n  const contactMatch = text.match(/(?:PV|privado|mensaje privado|escribirme|llam[ae])\\s*[:\\-]?\\s*(\\+?53\\s?5\\s?\\d{7,8}|\\d{8})/i);\n  if (contactMatch) {\n    contact = contactMatch[1].replace(/\\D/g, ''); // Normaliza a 56694233\n  } else {\n    // Buscar número directo en formato cubano\n    const phoneMatch = text.match(/(\\+53\\s?5\\s?\\d{7,8}|\\b5\\d{7,8}\\b)/);\n    if (phoneMatch) {\n      contact = phoneMatch[1].replace(/\\D/g, '');\n    }\n  }\n\n  // ─── Construir objeto estandarizado ─────────────────\n  return  {\n    platform,\n    text, // ✅ Texto original intacto\n    timestamp,\n    contact, // número limpio o null\n    sender_id: senderId,\n    message_id: messageId,\n    is_bot: isBot\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        1248
+      ],
+      "id": "ff083ebc-b104-4f17-a8a5-414352f7c0a9",
+      "name": "Whatsapp Set Payload",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normaliza una oferta de QvaPay al formato estándar de la tabla `offers`\nlet offers = [];\nconst qvapayOffers = $input.first().json.body.data;\nfor (const raw of qvapayOffers) {\n  \n// Determinar tipo (BID/ASK)\nconst type = raw.type === 'buy' ? 'BID' : 'ASK';\n\n// Normalizar moneda\nconst currencyMap = {\n  'ETECSA': 'SM',\n  'CLASICA': 'CLASSIC',\n  'BANK_MLC': 'MLC'\n};\nconst baseCurrency = currencyMap[raw.coin] || raw.coin;\nconst currencyPair = `${baseCurrency}/SQP`;\n\n// Calcular precio (CUP por unidad de activo)\nconst amount = parseFloat(raw.amount);\nconst receive = parseFloat(raw.receive);\nconst price = receive / amount;\n\n// Nivel de riesgo y confianza\nconst riskLevel = 'bajo';\nconst riskScore = 0.2;\nconst sourceTrust = 'alta';\n\n// Contacto (no aplica directamente en QvaPay, pero se puede usar username)\nconst contactMethods = raw.User.username ? [`@${raw.User.username}`] : [];\n\n// Construir oferta estandarizada\nconst offer = {\n  type,\n  currency_pair: currencyPair,\n  price: parseFloat(price.toFixed(6)),\n  amount: amount,\n  trader_name: raw.User.name || \"Anónimo\",\n  username: raw.User.username || \"\",\n  trader_id: raw.User.uuid || null,\n  avatar_url: raw.User.image || null,\n  deal_count: raw.User._count?.P2P || null,\n  acceptance_rate: null, // No disponible en QvaPay\n  completion_rate: null,\n  avg_payment_time_seconds: null,\n  avg_release_time_seconds: null,\n  kyc_verified: raw.User.kyc || null,\n  vip: raw.User.vip || null,\n  phone_verified: raw.User.phone_verified || null,\n  telegram_verified: raw.User.telegram_verified || null,\n  rating_avg: raw.User.rating_avg || null,\n  rating_count: raw.User.rating_count || null,\n  risk_level: riskLevel,\n  risk_score: riskScore,\n  location_province: null,\n  location_municipality: null,\n  location_neighborhood: null,\n  source_trust_level: sourceTrust,\n  source_details: {\n    original_fragment: raw.message || `Oferta de ${raw.type} de ${raw.coin}`,\n    inferred: false,\n    inference_rules: null,\n    contact_methods: contactMethods,\n    payment_methods: null,\n    location: null,\n    source: {\n      platform: \"QvaPay\",\n      source_id: raw.User.uuid,\n      post_url: null,\n      message_id: raw.uuid,\n      sender_username: raw.User.username,\n      sender_id: raw.User.uuid\n    },\n    fraud_tracking: {\n      unique_offer_id: `QV_${raw.uuid}`,\n      timestamp_iso: raw.created_at,\n      reportable: true\n    },\n    type_name: raw.type // \"buy\" o \"sell\"\n  },\n  created_at: raw.created_at,\n  updated_at: raw.created_at\n};\n  offers.push(offer)\n}\n\nreturn offers;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        496
+      ],
+      "id": "678e1c92-1692-4607-bb21-7b1b26aecdd1",
+      "name": "Qvapay Set Payload"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae y estandariza mensajes de WhatsApp y Telegram\n// para que un agente LLM los interprete después.\n// NO se hace normalización ni inferencia aquí.\n\nconst input = $(\"WA Webhook\").item.json;\n    const platform = 'Telegram';\n    const text = input.body.text;\n    const timestamp = input.body.timestamp || new Date().toISOString();\n    const senderId = input.body.sender?.id?.toString() || '';\n    const messageId = input.body.message_id?.toString() || '';\n    const isBot = input.body.sender?.is_bot === true;\n\n  let contact = null;\n  const contactMatch = text.match(/(?:PV|privado|mensaje privado|escribirme|llam[ae])\\s*[:\\-]?\\s*(\\+?53\\s?5\\s?\\d{7,8}|\\d{8})/i);\n  if (contactMatch) {\n    contact = contactMatch[1].replace(/\\D/g, ''); // Normaliza a 56694233\n  } else {\n    // Buscar número directo en formato cubano\n    const phoneMatch = text.match(/(\\+53\\s?5\\s?\\d{7,8}|\\b5\\d{7,8}\\b)/);\n    if (phoneMatch) {\n      contact = phoneMatch[1].replace(/\\D/g, '');\n    }\n  }\n\n  // ─── Construir objeto estandarizado ─────────────────\n  return  {\n    platform,\n    text, // ✅ Texto original intacto\n    timestamp,\n    contact, // número limpio o null\n    sender_id: senderId,\n    message_id: messageId,\n    is_bot: isBot\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        1504
+      ],
+      "id": "d4c63fc4-9d08-4771-9676-4c7ef0932ac3",
+      "name": "Telegram Set Payload"
+    },
+
+
+
+
+
+
+
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "34d9b12b-4231-44da-a21e-e5736ecfb063",
+              "name": "text",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        944
+      ],
+      "id": "75446aca-f002-4103-8b9f-1a2a88e8595a",
+      "name": "Edit Fields"
+    },
+
+  ],
+  "pinData": {},
+    "Processor Webhook": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    "Classify & Normalize Agent": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },,

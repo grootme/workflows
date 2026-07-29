@@ -1,0 +1,863 @@
+{
+  "name": "WhatsApp Sales Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "id": "da7e142b-756d-40bd-afb8-7e22325e37bb",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "position": [
+        -380,
+        1300
+      ],
+      "webhookId": "whatsapp-webhook-id",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "04a5287c-3bca-48ad-9fc2-4e72267dfd5f",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -400,
+        1120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $('Write video').item.json.originalFilename.replaceAll(\" \", \"_\") }}",
+        "dataPropertyName": "datavideo"
+      },
+      "id": "599390b3-1924-4b4a-9433-1b2ac620ce35",
+      "name": "Read Video from Google Drive",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "position": [
+        4680,
+        6040
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "5b2fa322-754b-4b08-a874-e4081f3488b5",
+      "name": "Parse Products",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -60,
+        1180
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1-name",
+              "leftValue": "={{$json.name}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a2-price",
+              "leftValue": "={{$json.price}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a3-image",
+              "leftValue": "={{$json.imageUrl}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a4-link",
+              "leftValue": "={{$json.link}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a5-recipient",
+              "leftValue": "={{$json.recipientNumber}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "name": "filter.operator.notEmpty"
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d882f07e-5d36-4a4a-9834-4535f9dffc8e",
+      "name": "Validate Product Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.groupId }}/feed",
+        "options": {}
+      },
+      "id": "cccb46cf-f175-4046-803a-d038030f5d61",
+      "name": "Post to Facebook Group",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        780,
+        1120
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.telegramChatId }}",
+        "additionalFields": {}
+      },
+      "id": "6da5f4aa-d7b7-4030-b12d-ec9f64c19601",
+      "name": "Post to Telegram Group",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        780,
+        1320
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "e4a9bd89-d776-4977-aeef-c1d380583251"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.igUserId }}/media",
+        "options": {}
+      },
+      "id": "11e03e89-2d63-4538-835d-715b84d0e901",
+      "name": "Create IG Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        580,
+        1520
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.igUserId }}/media_publish",
+        "options": {}
+      },
+      "id": "a93e9f27-88e3-4e10-96f4-316638b8b455",
+      "name": "Publish IG Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        780,
+        1520
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {},
+      "id": "4ad909e8-71c0-4302-8dbd-11376b989de2",
+      "name": "Post to WhatsApp",
+      "type": "n8n-nodes-base.whatsapp",
+      "position": [
+        780,
+        1720
+      ],
+      "typeVersion": 1,
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "operation": "__CUSTOM_API_CALL__"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        1720
+      ],
+      "id": "85069491-c916-4d1c-b036-d2b50cbb0723",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "c5939b2a-9374-4182-8795-a6f816e9a11b"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-2024-08-06",
+        "options": {}
+      },
+      "id": "0613a307-36a2-450a-b913-62159306f756",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        120,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=whatsapp-75-{{ $json.messages[0].from }}"
+      },
+      "id": "d554f752-f689-46a0-8fbe-80360d345fb6",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        280,
+        480
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "name": "query_product_brochure",
+        "description": "Call this tool to query the product brochure. Valid for the year 2024."
+      },
+      "id": "02c60dbb-1234-442e-811b-85958766fe73",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        480,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "4c021725-b7e0-4b1b-b659-eb0493d3a42e",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        340,
+        840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-2024-08-06",
+        "options": {}
+      },
+      "id": "a6296808-f2d8-480d-ab03-0f2f086abba8",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        300,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "477115632141067",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {
+          "previewUrl": false
+        }
+      },
+      "id": "84251fc1-4946-4851-a303-ea338bf378a9",
+      "name": "Reply To User",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        980,
+        420
+      ],
+      "typeVersion": 1,
+      "webhookId": "df2ec641-3f35-473b-be41-acd9c5cd39dc"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "477115632141067",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "textBody": "=I'm unable to process non-text messages. Please send only text messages. Thanks!",
+        "additionalFields": {
+          "previewUrl": false
+        }
+      },
+      "id": "3ce22808-0161-45ab-8f91-f8460226de4c",
+      "name": "Reply To User1",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        -80,
+        780
+      ],
+      "typeVersion": 1,
+      "webhookId": "34c8f9ed-fc42-46ca-ac4c-c8df3040334f"
+    },
+    {
+      "parameters": {
+        "memoryKey": "whatsapp-75"
+      },
+      "id": "3b1be04f-afd5-44b7-98ea-a32aa1235f7e",
+      "name": "Product Catalogue",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        500,
+        740
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 3. Use the WhatsApp Trigger\n[Learn more about the WhatsApp Trigger](https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.whatsapptrigger/)\n\nThe WhatsApp Trigger allows you to receive incoming WhatsApp messages from customers. It requires a bit of setup so remember to follow the documentation carefully! Once ready however, it's quite easy to build powerful workflows which are easily accessible to users.\n\nNote that WhatsApp can send many message types such as audio and video so in this demonstration, we'll filter them out and just accept the text messages.",
+        "height": 484.1875,
+        "width": 546.6875,
+        "color": 7
+      },
+      "id": "90557592-9589-40b0-8bb3-432ee45ba427",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -580,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Want to handle all message types?\nCheck out my other WhatsApp template in my creator page! https://n8n.io/creators/jimleuk/",
+        "height": 92,
+        "width": 338
+      },
+      "id": "1aadd894-0ebc-4e39-a1e4-5d860f3ebdd2",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        980
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 3a. Handle Unsupported Message Types\nFor non-text messages, we'll just reply with a simple message to inform the sender.",
+        "height": 311.1875,
+        "width": 337.6875,
+        "color": 7
+      },
+      "id": "43685ef0-6b9b-459e-bcf6-24eae7dc13b0",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 4. Sales AI Agent Responds To Customers\n[Learn more about using AI Agents](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/)\n\nn8n's AI agents are powerful nodes which make it incredibly easy to use state-of-the-art AI in your workflows. Not only do they have the ability to remember conversations per individual customer but also tap into resources such as our product catalogue vector store to pull factual information and data for every question.\n\nIn this demonstration, we use an AI agent which is directed to help the user navigate the product brochure. A Chat memory subnode is attached to identify and keep track of the customer session. A Vector store tool is added to allow the Agent to tap into the product catalogue knowledgebase we built earlier.",
+        "height": 1029,
+        "width": 767,
+        "color": 7
+      },
+      "id": "821b78cc-2bb0-48a9-ab7f-29cefaefec05",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 5. Repond to WhatsApp User\n[Learn more about the WhatsApp Node](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.whatsapp/)\n\nThe WhatsApp node is the go-to if you want to interact with WhatsApp users. With this node, you can send text, images, audio and video messages as well as use your WhatsApp message templates.\n\nHere, we'll keep it simple by replying with a text message which is the output of the AI agent.",
+        "height": 484.1875,
+        "width": 495.4375,
+        "color": 7
+      },
+      "id": "beeb2046-b47f-4ae9-96bb-161998b2af32",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        780,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "text"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Supported"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "89971d8c-a386-4e77-8f6c-f491a8e84cb6",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    },
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "text"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Not Supported"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8d109498-cbc6-4e97-8627-283dec7bee62",
+      "name": "Handle Message Types",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -180,
+        500
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "content": "### Activate your workflow to use!\nTo start using the WhatsApp chatbot, you'll need to activate the workflow. If you are self-hosting ensure WhatsApp is able to connect to your server.",
+        "height": 107.02804651162779,
+        "width": 364.6293255813954,
+        "color": 5
+      },
+      "id": "c3020cf9-64ae-4d26-8726-dd9b03a00749",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -580,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "You are an assistant working for a company who sells Yamaha Powered Loudspeakers and helping the user navigate the product catalog for the year 2024. Your goal is not to facilitate a sale but if the user enquires, direct them to the appropriate website, url or contact information.\n\nDo your best to answer any questions factually. If you don't know the answer or unable to obtain the information from the datastore, then tell the user so."
+        }
+      },
+      "id": "9992b396-e5f9-4b97-af5d-5c736cd3c227",
+      "name": "AI Sales Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        240,
+        320
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "id": "ef5f503e-2523-4e1a-96ee-a2b540d0b9e8",
+      "name": "WhatsApp Trigger1",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "position": [
+        -360,
+        540
+      ],
+      "webhookId": "aaa71f03-f7af-4d18-8d9a-0afb86f1b554",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "sheetId": "={{ $env.GOOGLE_SHEET_ID }}",
+        "range": "A:Z",
+        "options": {}
+      },
+      "id": "5021f2e6-115b-4370-ac05-c2ca83ee6f0d",
+      "name": "Leer Productos desde Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -400,
+        1720
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleApi": {
+          "id": null,
+          "name": "Google API Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9eff7f4c-d5a3-47fd-a017-d693bb252051",
+      "name": "Leer Imagen desde Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        -380,
+        1500
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleApi": {
+          "id": null,
+          "name": "Google API Creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "facebookGroupIds": ["grupo1", "grupo2", "grupo3"],
+          "telegramChatIds": ["-100123456", "-100789012"],
+          "igUserIds": ["17841405309211800"],
+          "whatsappGroups": ["5511987654321@g.us", "5511912345678@g.us"]
+        }
+      },
+      "id": "grupos-config",
+      "name": "Lista de Grupos",
+      "type": "n8n-nodes-base.set",
+      "position": [0, -4480],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/{{ $json.groupId }}/feed",
+        "options": {  }
+      },
+      "id": "facebook-multi",
+      "name": "Post a Múltiples Grupos de Facebook",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [180, -4480],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.chatId }}",
+        "additionalFields": {}
+      },
+      "id": "telegram-multi",
+      "name": "Post a Múltiples Grupos de Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [180, -4320],
+      "typeVersion": 1.2,
+      "webhookId": "e4a9bd89-d776-4977-aeef-c1d380583251"
+    },{
+      "parameters": {
+        "fieldName": "facebookGroupIds",
+        "options": {}
+      },
+      "id": "split-facebook",
+      "name": "Dividir Grupos Facebook",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [-180, -4480],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Lista de Grupos": {
+      "main": [
+        [
+          {
+            "node": "Dividir Grupos Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dividir Grupos Facebook": {
+      "main": [
+        [
+          {
+            "node": "Post a Múltiples Grupos de Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Products": {
+      "main": [
+        [
+          {
+            "node": "Validate Product Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Product Data": {
+      "main": [
+        [
+          {
+            "node": "Post to Facebook Group",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Telegram Group",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create IG Container",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          },{
+            "node": "Lista de Grupos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Create IG Container": {
+      "main": [
+        [
+          {
+            "node": "Publish IG Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Sales Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply To User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Productos desde Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Validate Product Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Imagen desde Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Validate Product Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Product Catalogue",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Catalogue": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Message Types": {
+      "main": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply To User1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Handle Message Types",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7e351765-a3ef-4a50-9422-15fa45f99603",
+  "meta": {
+    "instanceId": "094929c0fbb5fa0f68c44c41fa98f25bf7aa2f6ea74f1c421df00b1b18f1416a"
+  },
+  "id": "HqynS55Z9HPriZH7",
+  "tags": []
+}

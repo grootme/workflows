@@ -1,0 +1,220 @@
+{
+  "name": "WhatsApp Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-ingestion",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        1328
+      ],
+      "id": "waWebhook",
+      "name": "WA Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89bf3a0a-8397-4536-a622-a0e791f5d755",
+              "leftValue": "={{ $('WA Webhook').item.json.body.data.messageType }}",
+              "rightValue": "=conversation",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -416,
+        1328
+      ],
+      "id": "waIsText",
+      "name": "WA Is Text?1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "groups",
+        "key": "=groups",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        1264
+      ],
+      "id": "bufferRedis1",
+      "name": "bufferRedis1",
+      "credentials": {
+        "redis": {
+          "id": "Nxn1dFIxBYSCzkye",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f1b5cda5-4299-4475-978e-5ea7d7977f11",
+              "leftValue": "={{ $json.groups }}",
+              "rightValue": "={{ $('WA Webhook').item.json.body.data.key.remoteJid }}",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        1264
+      ],
+      "id": "containsGroups1",
+      "name": "Contains Groups?1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae y estandariza mensajes de WhatsApp y Telegram\n// para que un agente LLM los interprete después.\n// NO se hace normalización ni inferencia aquí.\n\nconst input = $(\"WA Webhook\").item.json;\n\n    const platform = 'WhatsApp';\n    const text = input.body.data.message.conversation;\n    const timestamp = new Date(input.body.data.messageTimestamp * 1000).toISOString();\n    const senderId = input.body.data.participantPn || '';\n    const messageId = input.body.data.key?.id || '';\n    const isBot = false;\n\n  let contact = null;\n  const contactMatch = text.match(/(?:PV|privado|mensaje privado|escribirme|llam[ae])\\s*[:\\-]?\\s*(\\+?53\\s?5\\s?\\d{7,8}|\\d{8})/i);\n  if (contactMatch) {\n    contact = contactMatch[1].replace(/\\D/g, ''); // Normaliza a 56694233\n  } else {\n    // Buscar número directo en formato cubano\n    const phoneMatch = text.match(/(\\+53\\s?5\\s?\\d{7,8}|\\b5\\d{7,8}\\b)/);\n    if (phoneMatch) {\n      contact = phoneMatch[1].replace(/\\D/g, '');\n    }\n  }\n\n  // ─── Construir objeto estandarizado ─────────────────\n  return  {\n    platform,\n    text, // ✅ Texto original intacto\n    timestamp,\n    contact, // número limpio o null\n    sender_id: senderId,\n    message_id: messageId,\n    is_bot: isBot\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        1248
+      ],
+      "id": "whatsappSetPayload",
+      "name": "Whatsapp Set Payload",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/process-raw-offer",
+        "method": "POST",
+        "sendBody": true,
+        "jsonBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "WhatsApp"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        432,
+        1248
+      ],
+      "id": "sendToProcessor",
+      "name": "Send to Processor"
+    }],
+  "connections": {
+    "waWebhook": {
+      "main": [
+        [
+          {
+            "node": "waIsText",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "waIsText": {
+      "main": [
+        [
+          {
+            "node": "bufferRedis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bufferRedis1": {
+      "main": [
+        [
+          {
+            "node": "containsGroups1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "containsGroups1": {
+      "main": [
+        [
+          {
+            "node": "whatsappSetPayload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "whatsappSetPayload": {
+      "main": [
+        [
+          {
+            "node": "sendToProcessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+    },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "",
+  "tags": []
+}

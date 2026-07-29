@@ -1,0 +1,10 @@
+5. DeerFlow: Orquestacion de Agentes IA
+DeerFlow es el sistema de orquestacion de agentes IA basado en LangGraph con mas de 50
+agentes nombrados segun mitologia griega organizados en 4 niveles: Orquestadores (Zeus,
+Athena, Hermes, Hera, Apollo, Artemis), Tacticos (Prometheus, Hephaestus, Demeter, Kratos,
+Nike, Vulcan), Analistas (Oracle, Sophia, Codex, Prisma, Mnemosyne, Nexus, Sieve, Refine), y
+Especialistas (Aegis, Shield, Sentinel, Forge, Vision, Pixel, Mentor, Metric, Neural, Sibila, Titan,
+Alchemist, Cognito, Prompt, Veritas, Insight, Aurora, Eros, Orpheus, Plutus, Daedalus,
+Thesaurus, Phoenix, Venus, Arquimedes, Iris, Hygieia). Cada agente tiene SOUL.md y
+config.yaml. El sistema soporta canales Telegram, Discord, Slack, Feishu, WeChat y sandbox de
+ejecucion segura.

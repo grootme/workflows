@@ -1,0 +1,104 @@
+{
+  "name": "Coinex Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "coinex-ingestion",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -640,
+        944
+      ],
+      "id": "coinexWebhook",
+      "name": "Coinex Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "34d9b12b-4231-44da-a21e-e5736ecfb063",
+              "name": "text",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        944
+      ],
+      "id": "editFields",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/process-raw-offer",
+        "method": "POST",
+        "sendBody": true,
+        "jsonBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "Coinex"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        304,
+        944
+      ],
+      "id": "sendToProcessor",
+      "name": "Send to Processor"
+    }],
+  "connections": {
+    "coinexWebhook": {
+      "main": [
+        [
+          {
+            "node": "editFields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "editFields": {
+      "main": [
+        [
+          {
+            "node": "sendToProcessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    } },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "",
+  "tags": []
+}
