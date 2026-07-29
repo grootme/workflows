@@ -1,0 +1,210 @@
+{
+  "name": "P6 Cognitive Capital MCP Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "cognitive-capital"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a0d9fcbc-8c74-4c2b-b564-c59f5c7d6bdf",
+      "name": "MCP Trigger",
+      "webhookId": "cognitive-capital"
+    },
+    {
+      "parameters": {
+        "description": "Systematic multi-angle research methodology. Search from 3-5 different angles, fetch full content, validate facts. Use for any research question.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Research_API_URL', `Research API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "c6efa3a7-83aa-4576-90c3-e50ad4d47485",
+      "name": "Deep Research Skill"
+    },
+    {
+      "parameters": {
+        "description": "Professional consulting-grade analysis framework. Generate analysis skeleton, data requirements, and structured narratives. Use for market analysis, competitive intelligence, financial analysis.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Analysis_API_URL', `Analysis API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "db075951-3816-4794-b267-1afb8d6e7f98",
+      "name": "Consulting Analysis Skill"
+    },
+    {
+      "parameters": {
+        "description": "Data analysis and visualization skill. Analyze datasets, generate statistics, create charts. Use for data-driven insights and reporting.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data_API_URL', `Data analysis API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "21aa8568-14a1-4314-8124-0d0e98a0078c",
+      "name": "Data Analysis Skill"
+    },
+    {
+      "parameters": {
+        "description": "Professional newsletter generation. Research, curate, and write newsletters with proper sourcing. Use for email digests, weekly roundups, industry briefings.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Newsletter_API_URL', `Newsletter API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "f9ee3613-45d2-4957-a88e-ea15d0dd1d4f",
+      "name": "Newsletter Skill"
+    },
+    {
+      "parameters": {
+        "description": "Convert text content into conversational podcast audio. Two-host dialogue format. Use for content repurposing, audio summaries.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Podcast_API_URL', `Podcast generation API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "171ed4fd-6db6-4915-9456-a0f878c85315",
+      "name": "Podcast Skill"
+    },
+    {
+      "parameters": {
+        "description": "Generate professional code documentation. API docs, README files, inline comments. Use for technical documentation tasks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Docs_API_URL', `Documentation API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "bff5d854-aace-41c4-9bc6-d76d86b17f98",
+      "name": "Code Documentation Skill"
+    },
+    {
+      "parameters": {
+        "content": "🧠 P6: Cognitive Capital MCP Server\n\nExposes Anthropic Skills as MCP tools:\n- deep-research\n- consulting-analysis\n- data-analysis\n- newsletter-generation\n- podcast-generation\n- code-documentation\n\nAny agent can consume these skills\nvia MCP Client Tool (SSE endpoint)",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "16f51fc7-40fa-4835-90e0-7c5f7a82b0ac",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Deep Research Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulting Analysis Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Analysis Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Newsletter Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Podcast Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Documentation Skill": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

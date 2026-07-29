@@ -1,0 +1,343 @@
+{
+  "name": "P4 Evaluator-Optimizer Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I'll create and iteratively refine content until it meets quality standards. What would you like me to work on?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b5f907e4-0afd-49d0-93d0-08a6f4c8d81c",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# Generator Agent (Evaluator-Optimizer Pattern)\n\nYou create content based on the given task. Focus on quality and accuracy.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- newsletter-generation: Content structure and formatting\n- deep-research: Research methodology\n\n## Rules:\n- Produce high-quality initial output\n- If feedback is provided, incorporate it into the revision\n- Each revision must be demonstrably better\n- Track changes between versions\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "04b5e090-d275-4658-b21c-258347e3b63b",
+      "name": "Generator Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "ccb7c8bc-d310-4e1c-a7f1-a168374ae4aa",
+      "name": "GPT-4.1 Generator",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'eval-optimizer' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "1a5f2ad9-d1bf-4372-a750-9a032426803b",
+      "name": "Generator Memory",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan content structure and strategy before generating"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "da538a24-4dd4-4be4-ab5e-cced17b836d9",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "description": "Search for current information and data to support content",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_URL', `Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "be18cfec-b726-4710-89ed-bb5b4647467f",
+      "name": "Web Search Tool"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Generator Agent').item.json.output }}",
+        "options": {
+          "systemMessage": "=# Evaluator Agent (Evaluator-Optimizer Pattern)\n\nYou evaluate content quality and provide specific, actionable feedback.\n\n## Evaluation Criteria:\n1. **Accuracy**: All facts verified? Sources cited?\n2. **Completeness**: All aspects covered? Missing information?\n3. **Clarity**: Easy to understand? Well-structured?\n4. **Engagement**: Captivating? Appropriate tone?\n5. **Actionability**: Practical takeaways?\n\n## Output Format:\n- score: 1-10 overall quality\n- passed: true if score >= 7\n- feedback: Specific improvement suggestions\n- improvements: List of concrete changes needed\n\n## Skills Loaded:\n- academic-paper-review: Rigorous evaluation methodology\n- consulting-analysis: Quality standards\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1400,
+        0
+      ],
+      "id": "70129ac6-5520-474c-a529-dda7ee7077fc",
+      "name": "Evaluator Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1400,
+        300
+      ],
+      "id": "6e9db416-015b-40b1-aaa1-0422b9f9861d",
+      "name": "GPT-4o-mini Evaluator",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "evaluator-session",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "1560fc50-e012-495b-9d83-9c9b2bc6bbe4",
+      "name": "Evaluator Memory"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": ""
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "passed",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        0
+      ],
+      "id": "3e46f95b-35c9-4bdd-82ad-7781606fb645",
+      "name": "Quality Check"
+    },
+    {
+      "parameters": {
+        "content": "🔄 P4: Evaluator-Optimizer (Anthropic Pattern)\n\nChat → Generator → Evaluator → Quality Gate\n                                  ↓ Failed\n                           Generator (with feedback)\n\nSkills: consulting-analysis, newsletter-generation, deep-research, academic-paper-review\n\nTiered LLM: GPT-4.1 for generation, GPT-4o-mini for evaluation",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -400
+      ],
+      "id": "8bc0fef7-6f14-4811-999d-b0f332ff51cd",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generator Agent": {
+      "main": [
+        [
+          {
+            "node": "Evaluator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluator Agent": {
+      "main": [
+        [
+          {
+            "node": "Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Check": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Generator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Generator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generator Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Generator Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Generator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Generator Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini Evaluator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluator Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Evaluator Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
