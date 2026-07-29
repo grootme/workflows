@@ -1,0 +1,329 @@
+{
+  "name": "Universal Social Scraper Suite v2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "social-scraper",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "336a532d-6581-4ac1-926e-c694800e22a0",
+      "name": "Webhook Trigger",
+      "webhookId": "social-scraper"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e43a9fe-1a17-4251-9b2e-3bc162158e94",
+              "name": "query",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            },
+            {
+              "id": "0520dd54-6fd3-4f9c-a417-f601c7f879a1",
+              "name": "platform",
+              "value": "={{ $json.body.platform }}",
+              "type": "string"
+            },
+            {
+              "id": "03078057-9ed7-4db5-ba10-5cc2a4a05fbf",
+              "name": "target",
+              "value": "={{ $json.body.target }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ],
+      "id": "87031d19-4830-4c07-af9a-c92280e80f85",
+      "name": "Parse Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }} - Platform: {{ $json.platform }} - Target: {{ $json.target }}",
+        "options": {
+          "systemMessage": "=# Universal Social Scraper Agent\n\nYou are a data extraction specialist with access to multiple social platform scrapers.\n\n## Available Tools:\n- **Instagram Scraper**: Extract profile data, posts, followers\n- **LinkedIn Scraper**: Extract professional profiles, job listings\n- **Google Maps Scraper**: Extract business data, emails, reviews\n- **Twitter/X Scraper**: Extract tweets, profiles, engagement data\n\n## Rules:\n- Use the appropriate platform scraper for the request\n- Structure extracted data in organized format\n- Respect rate limits and data privacy\n- Current datetime: {{ $now }}\n\n## Output:\n- Structured JSON with extracted data\n- Include source URLs and extraction timestamps"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        600,
+        0
+      ],
+      "id": "de495769-8351-47df-9b8c-7f49233f333c",
+      "name": "Scraper Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "917e51e5-b208-4585-a21b-d4506475d7d5",
+      "name": "GPT-4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Extract Instagram profile data including posts, followers, engagement metrics, and contact info",
+        "url": "={{ $fromAI('Instagram_API_URL', 'Instagram scraping API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "a4e43119-3f01-4a1c-8287-3977dc637d36",
+      "name": "Instagram Scraper"
+    },
+    {
+      "parameters": {
+        "description": "Extract LinkedIn professional profiles, job listings, company data, and contact information",
+        "url": "={{ $fromAI('LinkedIn_API_URL', 'LinkedIn scraping API endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "dae61e81-8723-41de-8d96-9cc62cd30111",
+      "name": "LinkedIn Scraper"
+    },
+    {
+      "parameters": {
+        "description": "Extract business data from Google Maps including emails, phone numbers, addresses, and reviews",
+        "url": "={{ $fromAI('Maps_API_URL', 'Google Maps scraping endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "041481da-0afe-4da5-bf2d-de590c47c856",
+      "name": "Google Maps Scraper"
+    },
+    {
+      "parameters": {
+        "description": "Extract Twitter/X data including tweets, profiles, engagement metrics, and follower analysis",
+        "url": "={{ $fromAI('Twitter_API_URL', 'Twitter/X scraping endpoint', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "4e85c370-2394-4f91-8959-fc10eccc3a41",
+      "name": "Twitter Scraper"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ac2a5e4-9482-47db-bf18-0f329bc4ecd7",
+              "name": "result",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "285709d0-e229-4f5f-a27f-5d7921681bb0",
+      "name": "Format Results"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, data: $json.result }) }}"
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "8c547460-82ff-40c2-8425-35f1d92b895a",
+      "name": "Respond"
+    },
+    {
+      "parameters": {
+        "content": "🔍 Social Scraper Suite v2.0\n\nLLM: GPT-4o-mini\nTools: 4 HTTP scrapers\nOutput: Structured JSON\n\nSetup:\n1. Configure scraping API URLs\n2. Set up OpenAI credential\n3. Configure rate limiting\n\n⚠️ Note: Scraping must comply with platform ToS and local data privacy laws",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "id": "f0627f85-9b89-41de-8218-62cfd93cdf8a",
+      "name": "Scraper Docs"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Request": {
+      "main": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scraper Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Results": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twitter Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "Scraper Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

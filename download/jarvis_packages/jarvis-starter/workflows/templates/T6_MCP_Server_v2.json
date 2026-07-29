@@ -1,0 +1,75 @@
+{
+  "name": "MCP Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-custom"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f9a41dae-2610-4688-b75b-03c3ee19ca02",
+      "name": "MCP Trigger",
+      "webhookId": "mcp-custom"
+    },
+    {
+      "parameters": {
+        "description": "Custom tool description - update for your use case",
+        "url": "={{ $fromAI('API_URL', 'API endpoint URL', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "ef66161e-387b-492a-a238-05198f8665db",
+      "name": "Custom Tool"
+    },
+    {
+      "parameters": {
+        "content": "🔧 MCP Server Template\n\nPattern: MCPTrigger → Custom Tools\nAll tools connect via ai_tool\n\nCustomize:\n1. Add your specific tool nodes\n2. Use $fromAI() for AI-generated params\n3. Use toolHttpRequest or native tool types\n4. Deploy and copy SSE endpoint\n\nRule: ALL tools must connect to MCP Trigger via ai_tool",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "id": "615ccb19-59c3-4003-a8d9-3672a8636ec8",
+      "name": "Template Info"
+    }
+  ],
+  "connections": {
+    "Custom Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,468 @@
+{
+  "name": "Asistente AI Platform v2",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1400,
+        0
+      ],
+      "id": "a888337d-2c6b-44ad-96ca-1b99846c317c",
+      "name": "Telegram Trigger",
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram Bot"
+        }
+      },
+      "webhookId": "90327a98-b7c0-448d-ba18-50ef16fa68d8"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1200,
+        0
+      ],
+      "id": "2025ac87-87c4-4a90-89de-42f772ae804f",
+      "name": "Input Router"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1000,
+        -300
+      ],
+      "id": "5ecb67d7-1c6c-4740-ad9f-57ca681be3e6",
+      "name": "Download Audio",
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram Bot"
+        }
+      },
+      "webhookId": "db38fbef-e592-46fa-8c10-1f915788647e"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -800,
+        -300
+      ],
+      "id": "f79614d0-bb26-437b-b1d2-c88ff9f96e16",
+      "name": "Transcribe Audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6deb230a-cb74-478e-8d28-d20c8987a9f4",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -600,
+        -300
+      ],
+      "id": "24f99dcc-afe7-457d-aba4-b772182403e6",
+      "name": "Set Voice Text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84a52c8b-1d5a-4cc0-b1b7-f0e190547710",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -600,
+        0
+      ],
+      "id": "ffe16f31-22da-4f84-a5fc-a665d23cefa1",
+      "name": "Set Text"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=# Personal Assistant AI Agent\n\nEres un asistente personal inteligente con acceso a herramientas MCP para gestionar tu vida digital.\n\n## Herramientas:\n- **MCP Gmail**: Enviar, responder, buscar, eliminar correos\n- **MCP Calendar**: Crear, eliminar, buscar, actualizar eventos\n- **MCP Contacts**: Buscar, crear, actualizar, eliminar contactos\n\n## Reglas:\n- Si el usuario pide enviar un correo sin dirección pero con nombre, usa MCP Contacts primero\n- Si no existe el contacto, solicita la dirección\n- Siempre confirma acciones importantes antes de ejecutar\n- Fecha/hora actual: **{{ $now }}**\n- Nunca inventes información, usa las herramientas\n\n## Estilo:\n- Profesional y eficiente\n- Confirmar resultados de acciones\n- Sugerir acciones relacionadas"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e29aa381-cdc7-47bf-adf7-2dfb7d229528",
+      "name": "Personal Assistant Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        300
+      ],
+      "id": "139a307c-9bf7-4163-bc3c-457230d73fb5",
+      "name": "GPT-4.1-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        300
+      ],
+      "id": "cd6bb3db-4468-408b-9a2f-2b8f0f7b7211",
+      "name": "Chat Memory"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "43a66d52-6b09-4ebf-9b9e-04711b53636c",
+      "name": "MCP Gmail"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ],
+      "id": "a8ebe2dc-2ec7-4dd5-9bee-31639364683e",
+      "name": "MCP Calendar"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": ""
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "f7550cef-3949-483d-b363-7847f9630535",
+      "name": "MCP Contacts"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "8dcc551c-6d92-4f27-8c62-66bfcda7f855",
+      "name": "Send Response",
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram Bot"
+        }
+      },
+      "webhookId": "a048708d-e08d-44fd-9670-691f75a439d3"
+    },
+    {
+      "parameters": {
+        "content": "🤖 Asistente AI Platform v2.0\n\nMulti-Agent with MCP Client Tools\nLLM: GPT-4.1-mini\nMemory: BufferWindow\nMCP: Gmail + Calendar + Contacts\n\nSetup:\n1. Deploy MCP Server workflows first\n2. Copy their SSE endpoints into MCP Client nodes\n3. Configure Telegram + OpenAI creds\n\nZero-debt: Correct ai_* + MCP connections",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -400
+      ],
+      "id": "bfffabbe-7035-40d5-9c3b-7ca88589a816",
+      "name": "Asistente Docs"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Input Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Router": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Audio": {
+      "main": [
+        [
+          {
+            "node": "Set Voice Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Voice Text": {
+      "main": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text": {
+      "main": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Assistant Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Personal Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

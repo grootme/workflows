@@ -1,0 +1,228 @@
+{
+  "name": "MCP Contacts Suite Pro v2",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-contacts-suite"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f1f7d3ef-ea69-486a-8739-6307284855ef",
+      "name": "MCP Contacts Trigger",
+      "webhookId": "mcp-contacts-suite"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "givenName": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('First_Name', `Nombre del contacto`, 'string') }",
+        "familyName": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Last_Name', `Apellido del contacto`, 'string') }",
+        "emailAddresses": [
+          {
+            "value": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Email del contacto`, 'string') }"
+          }
+        ],
+        "phoneNumbers": [
+          {
+            "value": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phone', `Teléfono del contacto. Si vacío, omitir`, 'string') }"
+          }
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "8b54922c-a11e-446a-99b2-1d959a56f920",
+      "name": "Create Contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "",
+          "name": "Google Contacts"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "contactId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', `ID del contacto a obtener`, 'string') }",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "ccaaa450-0b3e-49ae-b3e2-38d883c99e5f",
+      "name": "Get Contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "",
+          "name": "Google Contacts"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "contactId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', `ID del contacto a actualizar`, 'string') }",
+        "updateFields": {
+          "givenName": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('First_Name', `Nuevo nombre`, 'string') }",
+          "familyName": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Last_Name', `Nuevo apellido`, 'string') }",
+          "emailAddresses": [
+            {
+              "value": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Nuevo email`, 'string') }"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "e434c120-3988-4f61-acc5-c10ddc841a2a",
+      "name": "Update Contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "",
+          "name": "Google Contacts"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "contactId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', `ID del contacto a eliminar`, 'string') }",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "00f9aa1e-f2f7-4a4f-85e1-3dd6e2987f42",
+      "name": "Delete Contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "",
+          "name": "Google Contacts"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "query": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', `Nombre o email para buscar contacto`, 'string') }",
+        "limit": 10,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "6a0dd2f0-374c-4e9c-af7e-94004f74d64c",
+      "name": "Search Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "",
+          "name": "Google Contacts"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "👤 MCP Contacts Suite Pro v2.0\n\nTools: Create, Get, Update, Delete, Search\nSetup:\n1. Configure Google Contacts credential\n2. Deploy as MCP server\n3. Connect via MCP Client Tool\n\nZero-debt: All ai_tool connections",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "e8759689-34ce-420c-b478-2567d6cc6391",
+      "name": "Contacts Docs"
+    }
+  ],
+  "connections": {
+    "Create Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Contacts Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Contacts Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Contacts Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Contacts Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Contacts Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

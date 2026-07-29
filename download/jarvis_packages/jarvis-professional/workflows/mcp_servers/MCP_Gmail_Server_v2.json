@@ -1,0 +1,207 @@
+{
+  "name": "MCP Gmail Server Template",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mcp-gmail"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fab6529e-c8a3-46f9-b8a6-2567c6a22b76",
+      "name": "MCP Gmail Trigger",
+      "webhookId": "mcp-gmail"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', `Email destinatario`, 'string') }",
+        "subject": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `Asunto`, 'string') }",
+        "message": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `Contenido`, 'string') }"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "2cfab67f-1f45-4645-9ce0-784f82f508a8",
+      "name": "Send Email",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "query": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', `Query Gmail`, 'string') }",
+        "limit": 10
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        400
+      ],
+      "id": "8c109c6e-d169-4f95-a27a-749c6b5c9f59",
+      "name": "Search Emails",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', `ID del mensaje`, 'string') }"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        400
+      ],
+      "id": "11f834c0-b690-410a-b0e9-f398ee633b63",
+      "name": "Get Email",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', `ID del mensaje`, 'string') }",
+        "message": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Reply', `Contenido de respuesta`, 'string') }"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        400
+      ],
+      "id": "3c581461-823f-4ee3-b729-e5dd826a12c1",
+      "name": "Reply Email",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', `ID del mensaje a eliminar`, 'string') }"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        400
+      ],
+      "id": "a78406b0-7937-48b7-a072-2c0855fdcb69",
+      "name": "Delete Email",
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "📧 MCP Gmail Server Template\n\nTools: Send, Search, Get, Reply, Delete\nAll with $fromAI() expressions\n\nSetup:\n1. Configure Gmail OAuth2 credential\n2. Deploy and copy SSE endpoint\n3. Use MCP Client Tool in parent Agent",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -200
+      ],
+      "id": "1b70b61e-4762-4af1-94db-60c6ff88937d",
+      "name": "MCP Gmail Server"
+    }
+  ],
+  "connections": {
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Gmail Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Gmail Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Gmail Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Gmail Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Gmail Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

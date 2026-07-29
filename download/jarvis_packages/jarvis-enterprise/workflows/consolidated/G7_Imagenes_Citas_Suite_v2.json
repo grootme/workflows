@@ -1,0 +1,220 @@
+{
+  "name": "AI Image & Quote Suite v2",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "content": "Hi! I can create beautiful images with inspirational quotes. Tell me a topic or quote you'd like!"
+          }
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "65882c19-5308-4c5e-b0bc-ad0517977dd3",
+      "name": "Chat Trigger",
+      "webhookId": "fc9b1380-f376-4749-a114-4d2feb03c90d"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# AI Image & Quote Generator\n\nYou are a creative assistant that generates inspirational images with quotes.\n\n## Workflow:\n1. Understand the user's theme or quote request\n2. Use the Think tool to plan the image composition\n3. Use the Quote Generator to craft an inspiring quote\n4. Use the Image Prompt tool to generate the image description\n5. Return the formatted result\n\n## Rules:\n- Quotes should be relevant to the requested theme\n- Image descriptions should be vivid and artistic\n- Include styling suggestions (fonts, colors, layout)\n- Current datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "b0620ec7-7477-4466-b1a4-207f7c6c7506",
+      "name": "Image Quote Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-2.5-flash-preview-05-20",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "84787f3b-7fec-4482-93c2-07caf9cc314e",
+      "name": "Gemini Flash",
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "",
+          "name": "Google Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        300
+      ],
+      "id": "ebabf9fe-702e-4e3a-9cb2-82bdd741ed67",
+      "name": "Chat Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan image composition, quote content, and visual style before generating"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "6c95ec5d-ef8f-4a3d-8e99-52438f3371e1",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "description": "Generate inspirational quotes based on themes, adjusting length and tone",
+        "url": "={{ $fromAI('Quote_API_URL', 'URL para generar citas', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "ee310931-fd0e-413b-a782-ddf09f492353",
+      "name": "Quote Generator"
+    },
+    {
+      "parameters": {
+        "description": "Generate detailed image prompts for AI image generation based on quote and theme",
+        "url": "={{ $fromAI('Image_API_URL', 'URL para generar prompts de imagen', 'string') }}",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "27145214-2617-46c7-89aa-ab4f765933c3",
+      "name": "Image Prompt Generator"
+    },
+    {
+      "parameters": {
+        "content": "🎨 AI Image & Quote Suite v2.0\n\nArchitecture: ChatTrigger → Agent\nLLM: Gemini 2.5 Flash (multimodal)\nMemory: BufferWindow\nTools: Think + Quote + Image Prompt\n\nSetup:\n1. Configure Google Gemini credential\n2. Update Quote/Image API URLs\n3. Connect to image generation service\n\nZero-debt: All ai_* connections correct",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "id": "ff98e79d-ca7f-4f22-8511-c108162ed568",
+      "name": "Image Suite Docs"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Flash": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quote Generator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt Generator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Image Quote Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

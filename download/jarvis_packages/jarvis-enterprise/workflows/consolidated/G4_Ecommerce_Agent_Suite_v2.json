@@ -1,0 +1,601 @@
+{
+  "name": "E-Commerce AI Agent Suite v2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ecommerce-agent",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2600,
+        0
+      ],
+      "id": "bb631e75-173e-4b02-a040-fc95f6b07f9a",
+      "name": "Webhook",
+      "webhookId": "ecommerce-agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43388ffa-2eeb-4997-9c40-05ed54b7ae3e",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "4e942636-4281-4aa0-9934-24be5b4975d4",
+              "name": "chatId",
+              "value": "={{ $json.body.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "93124758-cd71-4aa2-a073-501dc5dcd489",
+              "name": "serverUrl",
+              "value": "={{ $json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "80d383e7-85ad-49a3-8f37-f47426553b6e",
+              "name": "instanceName",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "62dda8c1-ff08-490e-87c2-579fc3fffd66",
+              "name": "apiKey",
+              "value": "={{ $json.body.apikey }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2400,
+        0
+      ],
+      "id": "b210a0f7-5c8a-422a-99b3-f26a93c6ceb3",
+      "name": "Parse Input"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.audioUrl }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "278e91fa-281e-48c6-99fe-3d15a0908888",
+      "name": "Message Router"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.audioUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2000,
+        -300
+      ],
+      "id": "3a4dcd81-86e1-476c-b7ab-bdbbdaed13df",
+      "name": "Download Audio"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "6dbe7ba5-b459-46bc-a2ed-2e75b6a3225e",
+      "name": "Transcribe",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "107c4b05-1a33-42b3-b7a7-9b90f77eb105",
+              "name": "userMessage",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "f470c02a-0cf9-4906-8f21-3793cca69d41",
+              "name": "chatId",
+              "value": "={{ $('Parse Input').item.json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1600,
+        -300
+      ],
+      "id": "24c1680f-7a62-47a4-931c-7bf4e66eae46",
+      "name": "Set Transcription"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82ccf0e4-e08b-4e66-90f3-888e0913c663",
+              "name": "userMessage",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "7088fc45-3e6c-4179-9967-5da11278bbe5",
+              "name": "chatId",
+              "value": "={{ $json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "fc9c1100-895d-49c7-a83b-6a458e4dc1b7",
+      "name": "Set Text Message"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.userMessage }}",
+        "options": {
+          "systemMessage": "=# E-Commerce AI Assistant\n\nYou are an expert e-commerce assistant with access to product catalog, stock information, and order management tools.\n\n## Capabilities:\n- **Product Search**: Find products by name, category, or attributes\n- **Stock Check**: Verify product availability and inventory levels\n- **Order Help**: Guide customers through order status, returns, and shipping\n- **Recommendations**: Provide personalized product suggestions\n\n## Rules:\n- Always verify stock before confirming product availability\n- For complex orders, guide the user step-by-step\n- If you don't have enough information, ask clarifying questions\n- Never make up product information - use the tools\n- Current datetime: {{ $now }}\n\n## Response Style:\n- Friendly and professional\n- Include product details (price, stock, description)\n- Suggest alternatives if a product is unavailable"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "60b4b116-e8aa-4063-a069-652f94a5cd03",
+      "name": "E-Commerce Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        200
+      ],
+      "id": "063dec53-c8a6-4f1f-8ced-777ed0eb626e",
+      "name": "GPT-4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.chatId }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        200
+      ],
+      "id": "e228bce1-0b5b-413c-a03e-6b879c30c491",
+      "name": "Chat Memory",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Search products in catalog, check stock availability, get product details",
+        "url": "={{ $fromAI('Product_API_URL', 'URL del endpoint de productos', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        200
+      ],
+      "id": "83eaba92-99e0-4e3a-98a8-eb6f736cbed2",
+      "name": "Product Catalog Tool"
+    },
+    {
+      "parameters": {
+        "description": "Check order status, process returns, get shipping information",
+        "url": "={{ $fromAI('Order_API_URL', 'URL del endpoint de pedidos', 'string') }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "e539a9dc-d6bf-47b1-b2f5-dfbd56c4d5d2",
+      "name": "Order Management Tool"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        200
+      ],
+      "id": "9b3baffb-4fab-447a-b1e8-98a11bde1db6",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0744c5e4-e137-4eaa-ad7b-6609364923f9",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "d2ec1d2d-1212-4282-a64f-f23237f201cc",
+              "name": "chatId",
+              "value": "={{ $('Parse Input').item.json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "1798ee68-c11d-48f9-9661-617dbe3e9331",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Parse Input').item.json.serverUrl }}/chat/sendMessage/{{ $('Parse Input').item.json.instanceName }}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Parse Input').item.json.apiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ number: $json.chatId, text: $json.response }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        0
+      ],
+      "id": "b8918b1d-2d3f-4b50-be25-59c12d8a7d75",
+      "name": "Send WhatsApp Response"
+    },
+    {
+      "parameters": {
+        "content": "🛒 E-Commerce AI Agent Suite v2.0\n\nArchitecture: Webhook → Router → Agent\nLLM: GPT-4o-mini (cost-optimized)\nMemory: PostgresChatHistory\nTools: Product Catalog + Order API\nParser: Structured Output\n\nSetup:\n1. Configure OpenAI + PostgreSQL credentials\n2. Update Product/Order API URLs in tools\n3. Configure WhatsApp Evolution API\n\nZero-debt: All ai_* connections correct",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2600,
+        -400
+      ],
+      "id": "bdd2e435-9bfd-4bb5-9204-637325871a74",
+      "name": "E-Commerce Docs"
+    },
+    {
+      "parameters": {
+        "content": "💡 Tiered LLM Strategy:\n- GPT-4o-mini: $0.15/$0.60 per 1M tokens\n  For routine product queries\n- Upgrade to GPT-4.1 ($2/$8) for:\n  Complex multi-step orders\n  Returns/refund processing\n  Personalized recommendations\n\nCost savings: 60-80% vs single-model",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "642e859b-28ad-4081-9678-d79c294ed52a",
+      "name": "Tiered LLM Note"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Message Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Router": {
+      "main": [
+        [
+          {
+            "node": "Set Text Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Set Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text Message": {
+      "main": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Transcription": {
+      "main": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "E-Commerce Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Catalog Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Management Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "E-Commerce Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

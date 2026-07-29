@@ -1,0 +1,140 @@
+{
+  "name": "Single Agent Chat Template",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "content": "Hello! I'm your AI assistant. How can I help you?"
+          }
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dc194910-ae11-4124-b7be-e07f042e1b91",
+      "name": "Chat Trigger",
+      "webhookId": "07995213-dfd6-4ab4-8cfb-c43e4fd8d544"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are a helpful AI assistant. Answer questions clearly and concisely. Current datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "0ed48caa-050c-4e20-8410-e96c3f8f9517",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        300
+      ],
+      "id": "5aeec247-9ac5-4461-ac65-a2c7ceea4dfa",
+      "name": "LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        300
+      ],
+      "id": "09f49fba-3037-4f37-86e2-37bb5347f0af",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "content": "🤖 Single Agent Chat Template\n\nPattern: ChatTrigger → Agent\nLLM: GPT-4o-mini\nMemory: BufferWindow\n\nCustomize:\n1. Update system message\n2. Change LLM model\n3. Add tools as needed",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "id": "b4a02ef6-7032-4eae-a667-d3b645ccaa20",
+      "name": "Template Info"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
