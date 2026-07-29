@@ -1,0 +1,155 @@
+{
+  "version": "2.0.0",
+  "packages": [
+    "jarvis-starter",
+    "jarvis-professional",
+    "jarvis-enterprise"
+  ],
+  "total_workflows": 25,
+  "total_ai_connections": 68,
+  "zero_debt_items": 0,
+  "pricing": {
+    "starter": 49,
+    "professional": 149,
+    "enterprise": 399
+  },
+  "generated_at": "2026-07-29T23:01:25.290033",
+  "manifests": {
+    "jarvis-starter": {
+      "package": "jarvis-starter",
+      "name": "JARVIS Starter",
+      "version": "2.0.0",
+      "price": 49,
+      "zero_debt": true,
+      "workflows": {
+        "consolidated": [
+          "G1_MCP_Calendar_Suite_v2.json",
+          "G2_MCP_Gmail_Suite_v2.json",
+          "G3_MCP_Contactos_Suite_v2.json",
+          "G7_Imagenes_Citas_Suite_v2.json",
+          "G8_Video_Viral_Suite_v2.json",
+          "G12_Flowise_RAG_Suite_v2.json"
+        ],
+        "mcp_servers": [
+          "MCP_Calendar_Server_v2.json",
+          "MCP_Gmail_Server_v2.json",
+          "MCP_Contacts_Server_v2.json",
+          "MCP_Knowledge_Base_Server_v2.json"
+        ],
+        "templates": [
+          "T1_Single_Agent_Chat_v2.json",
+          "T6_MCP_Server_v2.json"
+        ]
+      },
+      "docker_services": [
+        "n8n",
+        "postgres"
+      ],
+      "llm_tier": "GPT-4o-mini ($0.15/$0.60 per 1M tokens)",
+      "estimated_monthly_cost": "$5-15/month (depending on usage)",
+      "generated_at": "2026-07-29T23:01:25.282893"
+    },
+    "jarvis-professional": {
+      "package": "jarvis-professional",
+      "name": "JARVIS Professional",
+      "version": "2.0.0",
+      "price": 149,
+      "zero_debt": true,
+      "workflows": {
+        "consolidated": [
+          "G1_MCP_Calendar_Suite_v2.json",
+          "G2_MCP_Gmail_Suite_v2.json",
+          "G3_MCP_Contactos_Suite_v2.json",
+          "G4_Ecommerce_Agent_Suite_v2.json",
+          "G5_Marketing_MultiAgent_Suite_v2.json",
+          "G6_Asistente_Platform_v2.json",
+          "G7_Imagenes_Citas_Suite_v2.json",
+          "G8_Video_Viral_Suite_v2.json",
+          "G9_Social_Scraper_Suite_v2.json",
+          "G10_HR_AI_Agent_v2.json",
+          "G11_WhatsApp_AI_Agent_v2.json",
+          "G12_Flowise_RAG_Suite_v2.json",
+          "G13_Global_Error_Handler_v2.json"
+        ],
+        "mcp_servers": [
+          "MCP_Calendar_Server_v2.json",
+          "MCP_Gmail_Server_v2.json",
+          "MCP_Contacts_Server_v2.json",
+          "MCP_ECommerce_Server_v2.json",
+          "MCP_HR_Server_v2.json",
+          "MCP_Knowledge_Base_Server_v2.json"
+        ],
+        "templates": [
+          "T1_Single_Agent_Chat_v2.json",
+          "T2_Agent_MCP_Tool_v2.json",
+          "T3_RAG_Agent_v2.json",
+          "T4_Multi_Agent_Orchestrator_v2.json",
+          "T5_Error_Handler_v2.json",
+          "T6_MCP_Server_v2.json"
+        ]
+      },
+      "docker_services": [
+        "n8n",
+        "postgres",
+        "qdrant",
+        "redis"
+      ],
+      "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash (tiered)",
+      "estimated_monthly_cost": "$25-75/month (depending on usage)",
+      "generated_at": "2026-07-29T23:01:25.285906"
+    },
+    "jarvis-enterprise": {
+      "package": "jarvis-enterprise",
+      "name": "JARVIS Enterprise",
+      "version": "2.0.0",
+      "price": 399,
+      "zero_debt": true,
+      "workflows": {
+        "consolidated": [
+          "G1_MCP_Calendar_Suite_v2.json",
+          "G2_MCP_Gmail_Suite_v2.json",
+          "G3_MCP_Contactos_Suite_v2.json",
+          "G4_Ecommerce_Agent_Suite_v2.json",
+          "G5_Marketing_MultiAgent_Suite_v2.json",
+          "G6_Asistente_Platform_v2.json",
+          "G7_Imagenes_Citas_Suite_v2.json",
+          "G8_Video_Viral_Suite_v2.json",
+          "G9_Social_Scraper_Suite_v2.json",
+          "G10_HR_AI_Agent_v2.json",
+          "G11_WhatsApp_AI_Agent_v2.json",
+          "G12_Flowise_RAG_Suite_v2.json",
+          "G13_Global_Error_Handler_v2.json"
+        ],
+        "mcp_servers": [
+          "MCP_Calendar_Server_v2.json",
+          "MCP_Gmail_Server_v2.json",
+          "MCP_Contacts_Server_v2.json",
+          "MCP_ECommerce_Server_v2.json",
+          "MCP_HR_Server_v2.json",
+          "MCP_Knowledge_Base_Server_v2.json"
+        ],
+        "templates": [
+          "T1_Single_Agent_Chat_v2.json",
+          "T2_Agent_MCP_Tool_v2.json",
+          "T3_RAG_Agent_v2.json",
+          "T4_Multi_Agent_Orchestrator_v2.json",
+          "T5_Error_Handler_v2.json",
+          "T6_MCP_Server_v2.json"
+        ]
+      },
+      "docker_services": [
+        "n8n",
+        "postgres",
+        "qdrant",
+        "redis",
+        "nginx",
+        "prometheus",
+        "grafana",
+        "zep"
+      ],
+      "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash \u2192 GPT-4.1 \u2192 Claude Sonnet (full tiered)",
+      "estimated_monthly_cost": "$75-250/month (depending on usage and scale)",
+      "generated_at": "2026-07-29T23:01:25.289839"
+    }
+  }
+}

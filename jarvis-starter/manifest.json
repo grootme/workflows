@@ -1,0 +1,34 @@
+{
+  "package": "jarvis-starter",
+  "name": "JARVIS Starter",
+  "version": "2.0.0",
+  "price": 49,
+  "zero_debt": true,
+  "workflows": {
+    "consolidated": [
+      "G1_MCP_Calendar_Suite_v2.json",
+      "G2_MCP_Gmail_Suite_v2.json",
+      "G3_MCP_Contactos_Suite_v2.json",
+      "G7_Imagenes_Citas_Suite_v2.json",
+      "G8_Video_Viral_Suite_v2.json",
+      "G12_Flowise_RAG_Suite_v2.json"
+    ],
+    "mcp_servers": [
+      "MCP_Calendar_Server_v2.json",
+      "MCP_Gmail_Server_v2.json",
+      "MCP_Contacts_Server_v2.json",
+      "MCP_Knowledge_Base_Server_v2.json"
+    ],
+    "templates": [
+      "T1_Single_Agent_Chat_v2.json",
+      "T6_MCP_Server_v2.json"
+    ]
+  },
+  "docker_services": [
+    "n8n",
+    "postgres"
+  ],
+  "llm_tier": "GPT-4o-mini ($0.15/$0.60 per 1M tokens)",
+  "estimated_monthly_cost": "$5-15/month (depending on usage)",
+  "generated_at": "2026-07-29T23:01:25.282893"
+}
