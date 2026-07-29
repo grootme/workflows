@@ -1,6 +1,6 @@
 # JARVIS AI Automation — n8n Workflows
 
-> 25 zero-debt n8n workflows → 3 high-value product packages
+> 32 zero-debt n8n workflows → 3 product packages + Anthropic Agent Patterns
 
 [![Zero Debt](https://img.shields.io/badge/Zero-Debt-brightgreen)]()
 [![n8n](https://img.shields.io/badge/n8n-Compatible-orange)](https://n8n.io)
@@ -23,7 +23,8 @@
 | Consolidated Workflows | 13 | ✅ | 47 |
 | MCP Server Workflows | 6 | ✅ | 24 |
 | Base Templates | 6 | ✅ | 16 |
-| **Total** | **25** | **✅** | **68** |
+| Anthropic Pattern Workflows | 7 | ✅ | 50 |
+| **Total** | **32** | **✅** | **118** |
 
 ## 🏗️ Architecture
 
@@ -94,6 +95,22 @@ workflows/
 │   ├── setup_guide.md           # Step-by-step setup
 │   └── README.md
 │
+├── anthropic_patterns/          # 7 Anthropic-pattern workflows (Phase 3)
+│   ├── P1_Prompt_Chaining_Agent_v3.json
+│   ├── P2_Smart_Routing_Agent_v3.json
+│   ├── P3_Orchestrator_Workers_Agent_v3.json
+│   ├── P4_Evaluator_Optimizer_Agent_v3.json
+│   ├── P5_Parallelization_Agent_v3.json
+│   ├── P6_Cognitive_Capital_MCP_Server_v3.json
+│   └── P7_SOUL_Bootstrap_Agent_v3.json
+├── cognitive_capital/           # Agent Skills as cognitive capital
+│   ├── deep-research/SKILL.md
+│   ├── consulting-analysis/SKILL.md
+│   ├── data-analysis/SKILL.md
+│   ├── newsletter-generation/SKILL.md
+│   ├── code-documentation/SKILL.md
+│   ├── podcast-generation/SKILL.md
+│   └── SOUL.template.md
 ├── consolidated/                # Individual workflow files (G1-G13)
 ├── mcp_servers/                 # Individual MCP server files
 ├── base_templates/              # Individual template files
