@@ -1,0 +1,241 @@
+{
+  "name": "MCP GitHub Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "github-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "59ee74f2-6284-4dfa-aae6-4b2105fd8a6e",
+      "name": "MCP Trigger",
+      "webhookId": "github-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Search GitHub repositories by name, language, or topic. Returns repo URL, stars, description.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Repos_URL', `Search Repos API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "69cd2f9e-6332-454e-b514-6b2497203b58",
+      "name": "Search Repos"
+    },
+    {
+      "parameters": {
+        "description": "Get detailed information about a GitHub repository: README, stats, languages, contributors.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get Repo Info_URL', `Get Repo Info API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "b0deb6ab-7860-4763-8d18-73b9dbfc6783",
+      "name": "Get Repo Info"
+    },
+    {
+      "parameters": {
+        "description": "List issues in a GitHub repository. Filter by state (open/closed), labels, assignee.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List Issues_URL', `List Issues API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "e18b8d81-2a70-464b-8647-e493d37c074a",
+      "name": "List Issues"
+    },
+    {
+      "parameters": {
+        "description": "Create a new GitHub issue with title, body, labels, and assignees.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Issue_URL', `Create Issue API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "2ef76161-78e5-44ac-8681-a70e99413e3c",
+      "name": "Create Issue"
+    },
+    {
+      "parameters": {
+        "description": "List pull requests in a GitHub repository. Filter by state, author, reviewer.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List Pull Requests_URL', `List Pull Requests API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "f42e83a0-5d92-4d30-98e0-04be29eebab1",
+      "name": "List Pull Requests"
+    },
+    {
+      "parameters": {
+        "description": "Get the content of a file from a GitHub repository. Returns file content and metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get File Content_URL', `Get File Content API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "da9640bd-6019-48e0-bd46-4a3256b324c7",
+      "name": "Get File Content"
+    },
+    {
+      "parameters": {
+        "description": "Search code within GitHub repositories. Returns matching file paths and code snippets.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Code_URL', `Search Code API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "a24cee49-537f-4a78-84c1-eb3a2240e6a5",
+      "name": "Search Code"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP GitHub Server v3\n\nIBM Tool Calling + DeerFlow Specialist Pattern\n7 Tools: Search Repos, Get Repo, List/Create Issues, List PRs, Get File, Search Code\n\nAll tools use $fromAI() for dynamic parameters",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "71f452ea-99b6-4de9-93ca-f8fce17b89cb",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Search Repos": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Repo Info": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Issues": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Issue": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Pull Requests": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File Content": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Code": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "github",
+    "devops"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

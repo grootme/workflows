@@ -1,0 +1,241 @@
+{
+  "name": "MCP HubSpot Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "hubspot-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "61bddf89-405d-4f63-884a-bc68e82e03d3",
+      "name": "MCP Trigger",
+      "webhookId": "hubspot-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Search HubSpot contacts by name, email, or company. Returns contact details and recent activity.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Contacts_URL', `Search Contacts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "4fd8ad9b-7ae1-40bf-b047-2d2870d0184c",
+      "name": "Search Contacts"
+    },
+    {
+      "parameters": {
+        "description": "Create a new HubSpot contact with email, name, phone, company, and custom properties.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Contact_URL', `Create Contact API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "82cd500a-5382-4e0e-9cf0-cb7e268780a2",
+      "name": "Create Contact"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing HubSpot contact's properties. Use for adding notes, changing lifecycle stage.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update Contact_URL', `Update Contact API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "fbdd1a08-c0dd-4200-94e6-0e82f656c3c2",
+      "name": "Update Contact"
+    },
+    {
+      "parameters": {
+        "description": "List deals in the HubSpot CRM pipeline. Filter by stage, owner, or amount.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List Deals_URL', `List Deals API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "174f1d48-ac25-4805-b1c6-5f70f67a0854",
+      "name": "List Deals"
+    },
+    {
+      "parameters": {
+        "description": "Create a new deal in HubSpot CRM with name, amount, stage, and associated contacts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Deal_URL', `Create Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "9b8d9d3e-26e2-4c07-9a97-de3544ed6379",
+      "name": "Create Deal"
+    },
+    {
+      "parameters": {
+        "description": "Move a deal to a different pipeline stage. Use for pipeline progression tracking.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update Deal Stage_URL', `Update Deal Stage API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "3945a494-dff9-44aa-8874-f7d99b851d97",
+      "name": "Update Deal Stage"
+    },
+    {
+      "parameters": {
+        "description": "Get detailed information about a HubSpot company including associated contacts and deals.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get Company_URL', `Get Company API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "1114fd8e-c628-4068-a95f-223ad71d9038",
+      "name": "Get Company"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP HubSpot Server v3\n\nIBM Governance + DeerFlow Specialist Pattern\n7 Tools: Search/Create/Update Contacts, List/Create/Update Deals, Get Company\n\nAll tools use $fromAI() for dynamic parameters",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "3ea57c2b-c918-48e9-ad99-53237902d219",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Search Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Deals": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Deal": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Deal Stage": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Company": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "hubspot",
+    "crm"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

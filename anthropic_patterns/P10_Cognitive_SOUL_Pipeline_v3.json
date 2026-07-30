@@ -1,0 +1,431 @@
+{
+  "name": "P10 Cognitive-SOUL Pipeline Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Hello! I'm your AI personality architect. I'll help you create a personalized SOUL.md and then equip your agent with the right skills. Let's start \u2014 what language would you prefer?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "349a863f-5a89-4616-83b7-066ee8cf96eb",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# SOUL Bootstrap Agent (P6+P7 Combined)\n\nYou create a personalized SOUL.md for the AI assistant through conversation.\n\n## Skills Loaded:\n- bootstrap: Conversational onboarding and SOUL.md generation\n\n## Conversation Phases:\n\n### Phase 1 \u2014 Hello (1 round)\nEstablish preferred language.\n\n### Phase 2 \u2014 You (2 rounds)\n- Round A: Who they are, what drains them, what they need\n- Round B: AI name and relationship framing (assistant/partner/co-pilot/second brain)\n\n### Phase 3 \u2014 Personality (2 rounds)\n- Round A: Core traits and pushback preference\n- Round B: Communication style and voice\n\n### Phase 4 \u2014 Depth (1-2 rounds)\n- Autonomy level, failure philosophy, long-term vision, blind spots\n\n### Phase 5 \u2014 Skill Selection (NEW)\n- Based on the user's profile, recommend 3-5 cognitive capital skills\n- Explain what each skill does and why it's relevant\n- User confirms which skills to load\n\n## Extraction Tracker:\n| Field | Required | Phase |\n|-------|----------|-------|\n| Preferred language | Yes | 1 |\n| User's name | Yes | 2 |\n| User's role | Yes | 2 |\n| AI name | Yes | 2 |\n| Relationship framing | Yes | 2 |\n| Core traits (3-5 rules) | Yes | 3 |\n| Communication style | Yes | 3 |\n| Pushback preference | Yes | 3 |\n| Autonomy level | Yes | 4 |\n| Failure philosophy | Yes | 4 |\n| Selected skills | Yes | 5 |\n\n## Skill Recommendation Logic:\n- If user is a researcher \u2192 deep-research, data-analysis, consulting-analysis\n- If user is a business owner \u2192 consulting-analysis, newsletter-generation, data-analysis\n- If user is a developer \u2192 code-documentation, deep-research, podcast-generation\n- If user is a creator \u2192 newsletter-generation, podcast-generation, consulting-analysis\n- If user is a manager \u2192 consulting-analysis, data-analysis, deep-research\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "03aa636b-f380-4a1e-bb69-fa2a797395a0",
+      "name": "SOUL Bootstrap"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "00045f26-d288-4e25-8cd3-adea06d268f9",
+      "name": "GPT-4.1-mini Bootstrap",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "3826ed4d-779a-4177-bcfe-4195441f66ff",
+      "name": "Bootstrap Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan conversation flow, track extracted fields, and determine when to move to the next phase"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "40feb520-0d8e-4587-90e6-f7316dd4447c",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Cognitive Capital Loader (P6+P7 Combined)\n\nYou load the selected cognitive capital skills into the agent's memory and generate a complete configuration.\n\n## Available Skills:\n1. **deep-research** \u2014 Systematic multi-angle research methodology\n2. **consulting-analysis** \u2014 Professional analysis framework\n3. **data-analysis** \u2014 Data extraction and visualization\n4. **newsletter-generation** \u2014 Content structure and formatting\n5. **code-documentation** \u2014 Precision and clarity standards\n6. **podcast-generation** \u2014 Audio content production\n\n## Loading Process:\n1. Read the SOUL.md generated by the bootstrap agent\n2. Load each selected skill's SKILL.md into context\n3. Verify compatibility between personality and skills\n4. Generate a complete agent configuration:\n   - SOUL.md (personality)\n   - Skill manifest (which skills are active)\n   - Integration notes (how skills interact with personality)\n   - Usage recommendations\n\n## Output Format:\nReturn a complete agent configuration with:\n- soul_md: The complete SOUL.md content\n- skills: Array of loaded skill objects with name, description, usage_tips\n- integration_notes: How skills complement the personality\n- recommended_workflows: Which JARVIS workflows to use\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "bc08de15-0d44-4e5e-bd13-8e31815d79cd",
+      "name": "Cognitive Capital Loader"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "a1b3f65e-43d2-49cd-bb2b-abc0c4668310",
+      "name": "GPT-4.1 Loader",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1400,
+        300
+      ],
+      "id": "c49d84a5-a7f1-45f6-9143-85b94ae44fe2",
+      "name": "Loader Memory"
+    },
+    {
+      "parameters": {
+        "description": "Access the cognitive capital skill registry to load SKILL.md files for selected skills",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Skill Registry_URL', `Skill Registry API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "4a96353e-d736-4d86-8c47-862eecc02e43",
+      "name": "Skill Registry"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Personalized Agent (P6+P7 Output)\n\nYou are the fully configured agent with personality and skills. You operate based on the SOUL.md and cognitive capital loaded by the pipeline.\n\n## Your Configuration:\n- Personality: Defined by SOUL.md (loaded from bootstrap)\n- Skills: Cognitive capital skills (loaded from registry)\n- Memory: Persistent across sessions\n\n## Operating Rules:\n- Always follow your SOUL.md personality traits\n- Use your loaded skills when relevant\n- Maintain the user's preferred communication style\n- Apply your core traits as behavioral rules\n- Push back when appropriate (per pushback preference)\n\nThis agent is the final product of the P10 Cognitive-SOUL Pipeline."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        2000,
+        0
+      ],
+      "id": "77c012fc-187f-4a21-be99-c90c8bfc4c6c",
+      "name": "Personalized Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        300
+      ],
+      "id": "a821c0b7-8854-4916-9e82-47ab856c0eab",
+      "name": "GPT-4.1 Personalized",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2200,
+        300
+      ],
+      "id": "f1a592c3-ea32-4c62-bcbe-fbfba1bd6734",
+      "name": "Personalized Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "soul_md": {
+              "type": "string",
+              "description": "Complete SOUL.md content"
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Loaded skill objects"
+            },
+            "integration_notes": {
+              "type": "string",
+              "description": "How skills complement personality"
+            },
+            "recommended_workflows": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Recommended JARVIS workflows"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        0
+      ],
+      "id": "09b3c74d-ebe1-4a5c-823b-254e866033b0",
+      "name": "Config Parser"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 P10: Cognitive-SOUL Pipeline (P6+P7 Combined)\n\nPhase 1: SOUL Bootstrap\n  \u2192 4-phase conversation\n  \u2192 Creates personalized SOUL.md\n  \u2192 Recommends cognitive capital skills\n\nPhase 2: Cognitive Capital Loader\n  \u2192 Loads selected SKILL.md files\n  \u2192 Verifies personality-skill compatibility\n  \u2192 Generates complete agent config\n\nPhase 3: Personalized Agent\n  \u2192 Operates with SOUL.md + skills\n  \u2192 Persistent memory across sessions\n\nLLM: 4.1-mini\u21924.1 (tiered)",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -400
+      ],
+      "id": "a3f8fa3f-7df6-4d1e-8aa4-225c4c24b291",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "SOUL Bootstrap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SOUL Bootstrap": {
+      "main": [
+        [
+          {
+            "node": "Cognitive Capital Loader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cognitive Capital Loader": {
+      "main": [
+        [
+          {
+            "node": "Personalized Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini Bootstrap": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "SOUL Bootstrap",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bootstrap Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "SOUL Bootstrap",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "SOUL Bootstrap",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Loader": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Cognitive Capital Loader",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loader Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Cognitive Capital Loader",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skill Registry": {
+      "ai_tool": [
+        [
+          {
+            "node": "Cognitive Capital Loader",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Personalized": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Personalized Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personalized Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Personalized Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Personalized Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "anthropic",
+    "combined",
+    "cognitive",
+    "soul"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

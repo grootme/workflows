@@ -1,7 +1,7 @@
 {
   "package": "jarvis-professional",
   "name": "JARVIS Professional",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "price": 149,
   "zero_debt": true,
   "workflows": {
@@ -26,7 +26,10 @@
       "MCP_Contacts_Server_v2.json",
       "MCP_ECommerce_Server_v2.json",
       "MCP_HR_Server_v2.json",
-      "MCP_Knowledge_Base_Server_v2.json"
+      "MCP_Knowledge_Base_Server_v2.json",
+      "MCP_Slack_Server_v3.json",
+      "MCP_Notion_Server_v3.json",
+      "MCP_GitHub_Server_v3.json"
     ],
     "templates": [
       "T1_Single_Agent_Chat_v2.json",
@@ -42,7 +45,10 @@
       "P3_Orchestrator_Workers_Agent_v3.json",
       "P4_Evaluator_Optimizer_Agent_v3.json",
       "P5_Parallelization_Agent_v3.json",
-      "P7_SOUL_Bootstrap_Agent_v3.json"
+      "P7_SOUL_Bootstrap_Agent_v3.json",
+      "P8_Router_Orchestrator_v3.json",
+      "P9_Evaluator_Parallel_v3.json",
+      "P10_Cognitive_SOUL_Pipeline_v3.json"
     ]
   },
   "docker_services": [
@@ -54,7 +60,7 @@
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash (tiered)",
   "estimated_monthly_cost": "$25-75/month (depending on usage)",
   "generated_at": "2026-07-29T23:01:25.285906",
-  "total_workflows": 31,
+  "total_workflows": 37,
   "cognitive_capital": {
     "skills": [
       "deep-research",

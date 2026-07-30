@@ -1,0 +1,783 @@
+{
+  "name": "P8 Router-Orchestrator Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I'm your Router-Orchestrator. I'll classify your request, route it to the right team, and orchestrate the work. What do you need?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6927d76e-9e91-4983-90e3-f527f6526bba",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Router Agent (P2+P3 Combined Pattern)\n\nYou classify user intent and determine which specialized team should handle the request.\n\n## Available Teams:\n- **Operations Team**: Calendar, email, contacts, Slack, project management\n- **Research Team**: Deep research, data analysis, market intelligence\n- **Creative Team**: Content creation, newsletters, podcasts, design\n- **Technical Team**: Code, GitHub, debugging, architecture\n\n## Skills Loaded:\n- deep-research: Systematic research methodology\n- consulting-analysis: Professional analysis framework\n- find-skills: Discover new capabilities\n\n## Decision Rules:\n1. Analyze the request complexity and domain\n2. Select the appropriate team (1-2 teams max)\n3. For each team, define clear subtask instructions\n4. If the task spans multiple domains, decompose into subtasks for each team\n5. Simple tasks: handle directly with Think tool\n\n## Output Format:\nReturn a JSON object with:\n- team: which team(s) to route to\n- subtasks: array of subtask instructions\n- priority: low/medium/high/critical\n- estimated_complexity: simple/moderate/complex\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "ae6165fc-ada8-440b-9ae4-e5d5ab7648a2",
+      "name": "Router Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "236fa7bb-6fe3-496e-a1d6-dc3e0c588af0",
+      "name": "GPT-4.1-mini Router",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "b2e24e4e-45a9-4c32-bbf1-3e64473fb9f7",
+      "name": "Router Memory"
+    },
+    {
+      "parameters": {
+        "description": "Plan routing strategy and decompose complex requests into subtasks before delegating"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "0cd4a257-4c99-40fa-acfb-8acedb0904c0",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Operations Sub-Orchestrator\n\nYou manage the Operations team. Execute calendar, email, contacts, Slack, and project management tasks.\n\n## Available Tools:\n- Google Calendar, Gmail, Contacts (via MCP)\n- Slack messaging and channels\n- Trello project boards\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Execute tasks in order of priority\n- Confirm actions before modifying data\n- Use Think tool for complex multi-step operations\n- Report results clearly"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        -600
+      ],
+      "id": "258020d5-3f37-46e7-a79f-69d45c4e7b96",
+      "name": "Operations Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -300
+      ],
+      "id": "56f57c75-1a3c-4841-81b0-67b1633c589e",
+      "name": "GPT-4o-mini Ops",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1400,
+        -300
+      ],
+      "id": "b4a90906-f931-4a50-be09-68e791360e46",
+      "name": "Ops Memory"
+    },
+    {
+      "parameters": {
+        "description": "Send messages, list channels, and search in Slack",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack Tool_URL', `Slack Tool API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -300
+      ],
+      "id": "a0dcd6a0-0593-43eb-b5ac-4bb47b10ba41",
+      "name": "Slack Tool"
+    },
+    {
+      "parameters": {
+        "description": "Manage Trello boards, cards, and lists for project tracking",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Trello Tool_URL', `Trello Tool API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -600
+      ],
+      "id": "78371562-de38-4f3c-aa91-8604145dd855",
+      "name": "Trello Tool"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Research Sub-Orchestrator\n\nYou manage the Research team. Conduct deep research, data analysis, and market intelligence.\n\n## Available Tools:\n- Web search and analysis\n- Notion knowledge base\n- Data analysis capabilities\n\n## Skills Loaded:\n- deep-research: Systematic multi-angle research\n- data-analysis: Extract insights from data\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Research from multiple angles (3-5 minimum)\n- Always cite sources\n- Include specific data points and statistics\n- Identify trends and patterns"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "cf31ac5f-606b-4121-ad26-f41bebf6ed25",
+      "name": "Research Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        600
+      ],
+      "id": "614a22ad-c5b3-4c7b-aa2b-c3adf05104a1",
+      "name": "GPT-4.1 Research",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1400,
+        600
+      ],
+      "id": "d844544f-3343-44dd-8af8-a8802084c2c7",
+      "name": "Research Memory"
+    },
+    {
+      "parameters": {
+        "description": "Search and manage Notion pages and databases for knowledge base",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion Tool_URL', `Notion Tool API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        600
+      ],
+      "id": "ce4642b9-2839-42c5-ad63-c840289421d4",
+      "name": "Notion Tool"
+    },
+    {
+      "parameters": {
+        "description": "Search the web for current information, news, and data",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Web Search_URL', `Web Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "bf86a898-2a8f-45d0-a69f-ebfae62623f5",
+      "name": "Web Search"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Creative Sub-Orchestrator\n\nYou manage the Creative team. Create content, newsletters, podcasts, and design assets.\n\n## Skills Loaded:\n- newsletter-generation: Content structure and formatting\n- podcast-generation: Audio content production\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Follow brand voice and style guidelines\n- Create engaging, well-structured content\n- Include specific examples and data points\n- Ensure consistent formatting"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        1200
+      ],
+      "id": "7e3c362b-444a-4d4f-b091-7a94395539c1",
+      "name": "Creative Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        1500
+      ],
+      "id": "3672dc74-b053-47ef-aee6-c47bca2581b7",
+      "name": "GPT-4.1-mini Creative",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1400,
+        1500
+      ],
+      "id": "760ff889-8186-4ca9-95d5-2b916c485326",
+      "name": "Creative Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Technical Sub-Orchestrator\n\nYou manage the Technical team. Handle code, debugging, architecture, and GitHub operations.\n\n## Available Tools:\n- GitHub repos, issues, PRs\n- Code search and analysis\n\n## Skills Loaded:\n- code-documentation: Precision and clarity standards\n- deep-research: Research methodology\n\n## Rules:\n- Write production-quality code\n- Include error handling and edge cases\n- Follow best practices and design patterns\n- Document all changes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        2100
+      ],
+      "id": "db05dd01-bc6a-4eec-a7ab-3aac4f59ff8d",
+      "name": "Technical Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        2400
+      ],
+      "id": "8ac427f8-2930-42bf-a75f-6a9444d14aab",
+      "name": "GPT-4.1 Technical",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1400,
+        2400
+      ],
+      "id": "f5b71c37-7da3-48ad-9c03-d0ecdbac20c1",
+      "name": "Technical Memory"
+    },
+    {
+      "parameters": {
+        "description": "Access GitHub repos, issues, PRs, and code search",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GitHub Tool_URL', `GitHub Tool API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        2400
+      ],
+      "id": "048417f6-926c-48b6-bcb3-01e75e5a8a81",
+      "name": "GitHub Tool"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Aggregation Agent\n\nYou synthesize outputs from multiple sub-orchestrators into a coherent, unified response.\n\n## Rules:\n- Combine insights from all teams that were activated\n- Resolve any conflicting information\n- Prioritize by relevance and importance\n- Present a clear, actionable summary\n- Include attribution to the source team"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        2200,
+        600
+      ],
+      "id": "42114e9b-8b5a-4deb-aaea-51969dbdc8f3",
+      "name": "Aggregation Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        900
+      ],
+      "id": "2d875667-3c30-461b-9de4-16c12a5d8832",
+      "name": "GPT-4.1 Aggregate",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2400,
+        900
+      ],
+      "id": "9288fa77-5297-49ae-afb8-731ea1507cfe",
+      "name": "Aggregation Memory"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 P8: Router-Orchestrator (P2+P3 Combined)\n\n1. Router classifies intent \u2192 selects team\n2. Sub-orchestrator decomposes tasks\n3. Workers execute with tools\n4. Aggregation synthesizes results\n\n4 Teams: Ops, Research, Creative, Technical\nLLM: 4o-mini\u21924.1-mini\u21924.1 (tiered)",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -400
+      ],
+      "id": "6088294b-bd5e-4e9c-a057-3808596c3899",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Router Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Agent": {
+      "main": [
+        [
+          {
+            "node": "Operations Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Research Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Creative Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Technical Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operations Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini Router": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Router Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Router Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Router Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini Ops": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Operations Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ops Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Operations Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Operations Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trello Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Operations Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Research": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Research Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini Creative": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Creative Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Creative Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Technical": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Technical Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Technical Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Technical Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Aggregate": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Aggregation Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "anthropic",
+    "combined",
+    "routing",
+    "orchestrator"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

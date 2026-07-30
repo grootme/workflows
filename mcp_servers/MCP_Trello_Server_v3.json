@@ -1,0 +1,214 @@
+{
+  "name": "MCP Trello Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "trello-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "faad7b88-e16f-4e8e-94eb-ac55d8cbdf6f",
+      "name": "MCP Trigger",
+      "webhookId": "trello-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List all Trello boards the user has access to. Returns board names, IDs, and member counts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List Boards_URL', `List Boards API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "7d06832d-8978-48e3-8d1c-46055e532b29",
+      "name": "List Boards"
+    },
+    {
+      "parameters": {
+        "description": "Get detailed information about a Trello board including all lists and their cards.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get Board_URL', `Get Board API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "838d13a3-b28f-467f-9129-3eb2337159d3",
+      "name": "Get Board"
+    },
+    {
+      "parameters": {
+        "description": "Create a new card in a Trello list. Supports name, description, due date, labels, and assignees.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Card_URL', `Create Card API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "1227bf61-3483-4c3d-ac2a-1324b9afa28d",
+      "name": "Create Card"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing Trello card: move between lists, add comments, change labels, set due dates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update Card_URL', `Update Card API endpoint URL`, 'string') }",
+        "method": "PUT",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "5e8871bd-23a4-4788-81ba-9069340d7471",
+      "name": "Update Card"
+    },
+    {
+      "parameters": {
+        "description": "Search for cards across Trello boards by name, description, or labels.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Cards_URL', `Search Cards API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "8bc2e262-ba81-4e64-bee4-8f30090a0499",
+      "name": "Search Cards"
+    },
+    {
+      "parameters": {
+        "description": "Add a comment to a Trello card. Use for progress updates, notes, or collaboration.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Add Comment_URL', `Add Comment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "834305a2-3f2f-4436-940c-fed5d427e0d9",
+      "name": "Add Comment"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Trello Server v3\n\nIBM Planning + DeerFlow Tactical Pattern\n6 Tools: List/Get Boards, Create/Update/Search Cards, Add Comment\n\nAll tools use $fromAI() for dynamic parameters",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "033a57ba-4996-4834-b2a4-7f02ce2625b7",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Boards": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Board": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Card": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Card": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Cards": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Comment": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "trello",
+    "project"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

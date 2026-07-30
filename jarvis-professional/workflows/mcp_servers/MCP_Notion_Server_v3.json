@@ -1,0 +1,241 @@
+{
+  "name": "MCP Notion Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "notion-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d5ef0b1f-fb71-456c-b9f0-29271f999fe6",
+      "name": "MCP Trigger",
+      "webhookId": "notion-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Search Notion pages and databases by title or content. Returns page IDs, titles, and last edited dates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Pages_URL', `Search Pages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "fd631654-009d-4df0-a896-4f0559eeaf00",
+      "name": "Search Pages"
+    },
+    {
+      "parameters": {
+        "description": "Retrieve full content of a Notion page including all blocks and properties.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get Page_URL', `Get Page API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "66885c14-aa0c-4999-8df7-b76adbb97ff1",
+      "name": "Get Page"
+    },
+    {
+      "parameters": {
+        "description": "Create a new Notion page in a specified parent (page or database). Supports markdown content.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Page_URL', `Create Page API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "00991181-dfab-4ee6-a5ca-d4dcecfd1832",
+      "name": "Create Page"
+    },
+    {
+      "parameters": {
+        "description": "Update properties or content of an existing Notion page. Supports appending blocks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update Page_URL', `Update Page API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "40cfe4bb-2144-4d44-bcd8-f5a922ea2a47",
+      "name": "Update Page"
+    },
+    {
+      "parameters": {
+        "description": "Query a Notion database with filters and sorts. Returns matching entries with properties.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query Database_URL', `Query Database API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "409c99aa-2ef5-4ab9-8b17-2038ff1bd382",
+      "name": "Query Database"
+    },
+    {
+      "parameters": {
+        "description": "Create a new entry in a Notion database with specified property values.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create Database Entry_URL', `Create Database Entry API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "b39c47b2-4d95-49b0-9fe8-d84101aee1d2",
+      "name": "Create Database Entry"
+    },
+    {
+      "parameters": {
+        "description": "Append content blocks to an existing Notion page. Supports text, headings, lists, code, and more.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Append Blocks_URL', `Append Blocks API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "e356dedb-9cb6-43e7-bc71-7da1dfa32edd",
+      "name": "Append Blocks"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Notion Server v3\n\nIBM Knowledge Management Pattern\n7 Tools: Search, Get, Create, Update Page + Query/Create Database + Append Blocks\n\nAll tools use $fromAI() for dynamic parameters",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "86f8f72b-6c7c-4563-813f-08f3a77ffc64",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Search Pages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Page": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Page": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Page": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Database": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Database Entry": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Blocks": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "notion",
+    "knowledge"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

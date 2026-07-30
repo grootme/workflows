@@ -1,0 +1,214 @@
+{
+  "name": "MCP Slack Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "slack-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6cb898a7-a927-4996-9702-bdd2e23b43b7",
+      "name": "MCP Trigger",
+      "webhookId": "slack-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Send a message to a Slack channel or user. Supports markdown formatting.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "9affc028-c26b-4a40-ad7d-774549914405",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "List all Slack channels the bot has access to, including member counts and topics.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List Channels_URL', `List Channels API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "4593797f-b1c7-478f-b4ab-995ef20bb865",
+      "name": "List Channels"
+    },
+    {
+      "parameters": {
+        "description": "Search Slack messages matching a query. Returns message text, author, and timestamp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search Messages_URL', `Search Messages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "515bee91-dc8e-4143-a98b-690b7911dbdc",
+      "name": "Search Messages"
+    },
+    {
+      "parameters": {
+        "description": "Retrieve all replies in a Slack thread. Use for context gathering before responding.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get Thread_URL', `Get Thread API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "b8456c0f-0f3d-4449-b763-16f6d7cf04ef",
+      "name": "Get Thread"
+    },
+    {
+      "parameters": {
+        "description": "Add an emoji reaction to a Slack message. Use for acknowledging or categorizing messages.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Add Reaction_URL', `Add Reaction API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "dc4fc915-0241-4cdf-8947-02c6ebc325dd",
+      "name": "Add Reaction"
+    },
+    {
+      "parameters": {
+        "description": "Upload a file to a Slack channel. Supports images, PDFs, and documents.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Upload File_URL', `Upload File API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "dcac7785-57f4-4118-b4ed-11968a7609ef",
+      "name": "Upload File"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Slack Server v3\n\nDeerFlow Channel Pattern\n7 Tools: Send Message, List Channels, Search Messages, Get Thread, Add Reaction, Upload File\n\nAll tools use $fromAI() for dynamic parameters",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "f998b435-c406-408c-adc8-6e20374f979c",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Channels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thread": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Reaction": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload File": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "slack",
+    "channel"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
