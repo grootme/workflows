@@ -4,14 +4,14 @@
 
 [![Zero Debt](https://img.shields.io/badge/Zero-Debt-brightgreen)](https://github.com/grootme/workflows)
 [![n8n](https://img.shields.io/badge/n8n-Compatible-orange)](https://n8n.io)
+[![Anthropic Patterns](https://img.shields.io/badge/Anthropic-Patterns-blueviolet)](https://www.anthropic.com/engineering/building-effective-agents)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://docker.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ## Overview
 
-Full business automation suite with e-commerce, marketing, HR, and WhatsApp AI agents. Multi-agent orchestration with MCP client architecture.
+Business Automation Platform with 6 Anthropic-pattern workflows, 4 cognitive capital skills, and SOUL template for personalized AI personalities.
 
-**Target**: SMBs, agencies, and growing businesses that need automated customer service, marketing, and HR workflows.
+**Target**: Businesses that need multi-pattern agent orchestration with smart routing, quality loops, and parallel analysis.
 
 ## What's Included
 
@@ -20,7 +20,9 @@ Full business automation suite with e-commerce, marketing, HR, and WhatsApp AI a
 | Consolidated Workflows | 13 | Production-ready AI automation suites |
 | MCP Server Templates | 6 | Reusable MCP tool servers |
 | Base Templates | 6 | Starting points for custom workflows |
-| **Total Workflows** | **25** | All zero-debt, production-ready |
+| **Anthropic Patterns** | **6** | Agent design patterns from Anthropic research |
+| Cognitive Capital Skills | 4 | SKILL.md knowledge base for agents |
+| **Total Workflows** | **31** | All zero-debt, production-ready |
 
 ## Quick Start
 
@@ -40,28 +42,39 @@ docker compose up -d
 open http://localhost:5678
 ```
 
-## Architecture
+## Anthropic Pattern Workflows
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  JARVIS Professional                    │
-│                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
-│  │  MCP      │  │  Agent   │  │  Error   │          │
-│  │  Servers  │  │  Suites  │  │  Handler │          │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘          │
-│       │              │              │                 │
-│       └──────────────┼──────────────┘                 │
-│                      │                                │
-│              ┌───────▼───────┐                       │
-│              │     n8n       │                       │
-│              └───────┬───────┘                       │
-│                      │                                │
-│              ┌───────▼───────┐                       │
-│              │  PostgreSQL   │                       │
-│              └───────────────┘                       │
-└─────────────────────────────────────────────────────┘
-```
+Based on [Anthropic's "Building Effective Agents"](https://www.anthropic.com/engineering/building-effective-agents) research. These implement the 5 core agent design patterns plus cognitive capital and SOUL personality system.
+
+- **P1 Prompt Chaining Agent** — `P1_Prompt_Chaining_Agent_v3.json` — Research → Gate → Draft → Gate → Polish. Multi-step content pipeline with quality gates and tiered LLMs (GPT-4o-mini → GPT-4.1-mini → GPT-4.1).
+- **P2 Smart Routing Agent** — `P2_Smart_Routing_Agent_v3.json` — Classifies user intent and routes to 7 specialized sub-agents (calendar, email, research, ecommerce, creative, technical, HR).
+- **P3 Orchestrator-Workers Agent** — `P3_Orchestrator_Workers_Agent_v3.json` — Central orchestrator breaks complex tasks into subtasks and delegates to 4 specialized workers (Research, Creative, Technical, Data).
+- **P4 Evaluator-Optimizer Agent** — `P4_Evaluator_Optimizer_Agent_v3.json` — Generator → Evaluator → Quality Gate loop. Iteratively refines content until quality threshold is met (max 3 retries).
+- **P5 Parallelization Agent** — `P5_Parallelization_Agent_v3.json` — 3 parallel analysts (Financial, Market, Technical) → Aggregate → Synthesis Agent. Webhook-based for API integration.
+- **P7 SOUL Bootstrap Agent** — `P7_SOUL_Bootstrap_Agent_v3.json` — 4-phase conversational onboarding (Hello → You → Personality → Depth) that generates a personalized SOUL.md for AI assistants.
+
+### Pattern Selection Guide
+
+| Pattern | Best For | Complexity |
+|---------|----------|------------|
+| P1 Prompt Chaining | Multi-step content pipelines | Medium |
+| P2 Smart Routing | Multi-domain intent classification | Medium-High |
+| P3 Orchestrator-Workers | Complex task decomposition | High |
+| P4 Evaluator-Optimizer | Quality-gated iterative refinement | Medium-High |
+| P5 Parallelization | Multi-perspective analysis | Medium |
+| P6 Cognitive Capital MCP | Skill-as-a-service for agents | Medium |
+| P7 SOUL Bootstrap | Personalized AI personality creation | Low |
+
+## Cognitive Capital
+
+Skills loaded into agent memory for better results. Following [Anthropic's progressive disclosure pattern](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills).
+
+- **deep-research** — `cognitive_capital/deep-research/SKILL.md`
+- **consulting-analysis** — `cognitive_capital/consulting-analysis/SKILL.md`
+- **data-analysis** — `cognitive_capital/data-analysis/SKILL.md`
+- **newsletter-generation** — `cognitive_capital/newsletter-generation/SKILL.md`
+
+- **SOUL Template** — `cognitive_capital/SOUL.template.md` — Personalized AI personality system
 
 ## Workflows
 
@@ -99,19 +112,14 @@ open http://localhost:5678
 - **T5 Error Handler** — `T5_Error_Handler_v2.json`
 - **T6 MCP Server** — `T6_MCP_Server_v2.json`
 
-
 ## Credentials Needed
 
-- OpenAI API Key (GPT-4o-mini + GPT-4.1-mini)
-- Google Calendar OAuth2
-- Gmail OAuth2
-- Google Contacts OAuth2
-- Google Gemini API Key (embeddings + Flash)
+- OpenAI API Key (multiple models)
+- Google Workspace OAuth2 (Calendar, Gmail, Contacts)
+- Google Gemini API Key (embeddings)
 - PostgreSQL connection
-- Qdrant (cloud or self-hosted)
-- Telegram Bot Token
-- Evolution API (WhatsApp)
-- Flowise URL (optional)
+- Qdrant API Key (vector store)
+- Redis connection (caching)
 
 
 ## LLM Strategy
@@ -125,11 +133,10 @@ GPT-4o-mini → GPT-4.1-mini → Gemini 2.5 Flash (tiered)
 
 ## Docker Services
 
-- n8n
-- postgres
-- qdrant
-- redis
-
+  - n8n
+  - postgres
+  - qdrant
+  - redis
 
 ## Documentation
 

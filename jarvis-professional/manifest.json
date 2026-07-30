@@ -1,7 +1,7 @@
 {
   "package": "jarvis-professional",
   "name": "JARVIS Professional",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "price": 149,
   "zero_debt": true,
   "workflows": {
@@ -35,6 +35,14 @@
       "T4_Multi_Agent_Orchestrator_v2.json",
       "T5_Error_Handler_v2.json",
       "T6_MCP_Server_v2.json"
+    ],
+    "anthropic_patterns": [
+      "P1_Prompt_Chaining_Agent_v3.json",
+      "P2_Smart_Routing_Agent_v3.json",
+      "P3_Orchestrator_Workers_Agent_v3.json",
+      "P4_Evaluator_Optimizer_Agent_v3.json",
+      "P5_Parallelization_Agent_v3.json",
+      "P7_SOUL_Bootstrap_Agent_v3.json"
     ]
   },
   "docker_services": [
@@ -45,5 +53,15 @@
   ],
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash (tiered)",
   "estimated_monthly_cost": "$25-75/month (depending on usage)",
-  "generated_at": "2026-07-29T23:01:25.285906"
+  "generated_at": "2026-07-29T23:01:25.285906",
+  "total_workflows": 31,
+  "cognitive_capital": {
+    "skills": [
+      "deep-research",
+      "consulting-analysis",
+      "data-analysis",
+      "newsletter-generation"
+    ],
+    "soul_template": true
+  }
 }

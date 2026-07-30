@@ -1,7 +1,7 @@
 # JARVIS Starter — Setup Guide
 
 > Your Personal AI Assistant
-> Version 2.0 | Zero Technical Debt | Production Ready
+> Version 3.0 | Zero Technical Debt | Production Ready
 
 ---
 
@@ -157,6 +157,26 @@ For Calendar, Gmail, and Contacts MCP suites:
 11. `T1_Single_Agent_Chat_v2.json`
 12. `T6_MCP_Server_v2.json`
 
+
+
+#### Anthropic Pattern Workflows
+
+1. `P1_Prompt_Chaining_Agent_v3.json` — P1 Prompt Chaining Agent
+2. `P7_SOUL_Bootstrap_Agent_v3.json` — P7 SOUL Bootstrap Agent
+
+#### Cognitive Capital Skills
+
+These SKILL.md files are loaded into agent memory for better results. Copy them to your n8n data directory:
+
+```bash
+# Copy cognitive capital to n8n data volume
+cp -r cognitive_capital/ /path/to/n8n/data/
+```
+
+Skills available:
+- **deep-research** — `cognitive_capital/deep-research/SKILL.md`
+- **consulting-analysis** — `cognitive_capital/consulting-analysis/SKILL.md`
+- **SOUL Template** — `cognitive_capital/SOUL.template.md`
 
 ### Post-Import Configuration
 

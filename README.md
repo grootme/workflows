@@ -76,7 +76,7 @@ workflows/
 │   └── README.md
 │
 ├── jarvis-professional/         # 💜 $149 — Business Automation Platform
-│   ├── workflows/               # 25 zero-debt workflows
+│   ├── workflows/               # 32 zero-debt workflows
 │   │   ├── consolidated/        # 13 suites (G1-G13, all)
 │   │   ├── mcp_servers/         # 6 MCP servers
 │   │   └── templates/           # 6 templates
@@ -86,7 +86,7 @@ workflows/
 │   └── README.md
 │
 ├── jarvis-enterprise/           # 💗 $399 — Full AI Operations Suite
-│   ├── workflows/               # 25 zero-debt workflows
+│   ├── workflows/               # 32 zero-debt workflows
 │   ├── docker-compose.yml       # 8 services (full stack)
 │   ├── nginx/                   # Reverse proxy + SSL
 │   ├── monitoring/              # Prometheus + Grafana
@@ -173,4 +173,4 @@ MIT License — Use, modify, and distribute freely.
 
 ---
 
-*Built with JARVIS Package Builder v2.0 — 25 workflows • 68 AI connections • 0 technical debt*
+*Built with JARVIS Package Builder v3.0 — 25 workflows • 68 AI connections • 0 technical debt*

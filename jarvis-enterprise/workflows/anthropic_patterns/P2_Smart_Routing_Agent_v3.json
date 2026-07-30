@@ -1,0 +1,694 @@
+{
+  "name": "P2 Smart Routing Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "smart-router",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "6ccf2397-ed90-4e37-b587-e06f632de020",
+      "name": "Webhook",
+      "webhookId": "smart-router"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5bb13cbb-abfc-4ddc-a275-4ff2a81a7f16",
+              "name": "query",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            },
+            {
+              "id": "8366da13-153f-42bf-957d-aaef315300a3",
+              "name": "context",
+              "value": "={{ $json.body.context || 'general' }}",
+              "type": "string"
+            },
+            {
+              "id": "8efa2535-3316-4acb-b6e2-c5b39869074d",
+              "name": "priority",
+              "value": "={{ $json.body.priority || 'normal' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2000,
+        0
+      ],
+      "id": "3f9e83ca-55e2-456b-a97a-d40c864f36cb",
+      "name": "Parse Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Smart Router (Anthropic Routing Pattern)\n\nClassify the user's query into exactly ONE of these categories:\n\n- **calendar**: Scheduling, meetings, appointments, time management\n- **email**: Email, messaging, communications\n- **research**: Research, analysis, data gathering, deep investigation\n- **ecommerce**: Orders, products, customer support, shopping\n- **creative**: Content creation, writing, design, marketing\n- **technical**: Code, debugging, technical support, development\n- **hr**: HR, employees, policies, time-off\n\n## Skills Loaded:\n- deep-research: For research classification\n- consulting-analysis: For business analysis\n\n## Output:\nReturn ONLY the category name in lowercase. Nothing else.\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1800,
+        0
+      ],
+      "id": "c75e41ab-da0f-4e7f-9558-6876bd32006d",
+      "name": "Classify Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1800,
+        300
+      ],
+      "id": "1abbc7a2-3435-4190-adc0-833888c23fb0",
+      "name": "GPT-4o-mini Router",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "router-session",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "10c90740-a20d-4270-add7-67baadb0aeb9",
+      "name": "Router Memory"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "calendar",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "calendar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "email",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "email",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "research",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "research",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "ecommerce",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "ecommerce",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "creative",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "creative",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "technical",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "technical",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "hr",
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.toLowerCase().trim() }}",
+                    "rightValue": "hr",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1400,
+        0
+      ],
+      "id": "49d86970-cf13-4a99-badd-f3c3f6ffccc3",
+      "name": "Route Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Parse Input').item.json.query }}",
+        "options": {
+          "systemMessage": "=# Calendar Specialist\n\nYou handle scheduling and time management.\n\nSkills: deep-research\nTools: Calendar MCP\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1000,
+        -600
+      ],
+      "id": "113ce542-2638-4f67-ac9b-4f6b3c8c991a",
+      "name": "Calendar Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -600
+      ],
+      "id": "a0628faa-5c92-4f6b-8ddb-e6e5458bb43e",
+      "name": "Calendar LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Access calendar tools via MCP server",
+        "sseEndpoint": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_MCP_URL', `MCP Calendar Server SSE endpoint URL`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -600
+      ],
+      "id": "bdd1692f-613b-4c23-b1a6-bfa1ae852136",
+      "name": "Calendar MCP"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Parse Input').item.json.query }}",
+        "options": {
+          "systemMessage": "=# Email Specialist\n\nYou handle email and communications.\n\nSkills: consulting-analysis\nTools: Gmail MCP\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1000,
+        -300
+      ],
+      "id": "3d32f1d7-cbff-4f29-8e8a-d3679faff7f0",
+      "name": "Email Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -300
+      ],
+      "id": "d31e9d39-add6-40e6-8532-a69776b1c74e",
+      "name": "Email LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Access email tools via MCP server",
+        "sseEndpoint": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_MCP_URL', `MCP Gmail Server SSE endpoint URL`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -300
+      ],
+      "id": "8076fde9-83eb-4548-853f-bd727b033962",
+      "name": "Email MCP"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Parse Input').item.json.query }}",
+        "options": {
+          "systemMessage": "=# Research Specialist\n\nYou handle deep research and analysis.\n\nSkills: deep-research, consulting-analysis, data-analysis\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1000,
+        0
+      ],
+      "id": "e6f272e3-e837-4187-b9fd-7131858fd334",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "7253a3e2-2e09-4450-89af-e0b368424708",
+      "name": "Research LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan research strategy and organize findings"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        0
+      ],
+      "id": "60cfefd7-c622-4951-8bc8-419284075162",
+      "name": "Research Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Parse Input').item.json.query }}",
+        "options": {
+          "systemMessage": "=# General Purpose Agent\n\nYou handle any query that doesn't fit other categories.\n\nSkills: consulting-analysis\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1000,
+        600
+      ],
+      "id": "8b537f98-d9ad-403c-8cd9-746b9ee4c034",
+      "name": "General Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        600
+      ],
+      "id": "6cd4927e-cf45-4241-a718-168b64b8a09f",
+      "name": "General LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Think through complex problems step by step"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        600
+      ],
+      "id": "4d3ae92e-ef55-4bdc-9721-4394664f0b9a",
+      "name": "General Think"
+    },
+    {
+      "parameters": {
+        "content": "🔀 P2: Smart Routing (Anthropic Pattern)\n\nWebhook → Parse → Classify → Switch → Specialized Agent\n\n7 routes: calendar, email, research, ecommerce, creative, technical, hr\n\nMCP Client Tools for Calendar, Gmail\nThink tools for research\nTiered LLM: mini for routing, 4.1-mini for research",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "2ee88b6a-40fd-4692-96a1-1b35bd67e8ee",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Input": {
+      "main": [
+        [
+          {
+            "node": "Classify Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Agent": {
+      "main": [
+        [
+          {
+            "node": "Route Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Switch": {
+      "main": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o-mini Router": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classify Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Classify Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "General LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "General Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "General Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "General Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

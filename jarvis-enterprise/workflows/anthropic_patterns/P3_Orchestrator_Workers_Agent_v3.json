@@ -1,0 +1,320 @@
+{
+  "name": "P3 Orchestrator-Workers Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I'm your orchestrator agent. I'll break down complex tasks and delegate to specialized workers. What would you like me to work on?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fe1c257a-6bd4-41bd-b997-2dbf4bc038d7",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# Orchestrator Agent (Anthropic Orchestrator-Workers Pattern)\n\nYou are the central orchestrator. Break down complex tasks and delegate to specialized workers.\n\n## Available Workers:\n- **Research Worker**: Deep research, data gathering, analysis\n- **Creative Worker**: Content creation, writing, design\n- **Technical Worker**: Code, debugging, technical tasks\n- **Data Worker**: Data analysis, visualization, reports\n\n## Skills Loaded (Cognitive Capital):\n- deep-research: Systematic multi-angle research\n- consulting-analysis: Professional analysis framework\n- find-skills: Discover and install new capabilities\n\n## Decision Rules:\n1. Analyze the task complexity\n2. Identify which workers are needed\n3. For each worker, define clear subtask instructions\n4. Synthesize all worker outputs into a coherent response\n5. If the task is simple, handle it directly with Think tool\n\n## Tiered LLM Strategy:\n- Simple tasks: GPT-4o-mini (fast, cheap)\n- Complex tasks: GPT-4.1-mini (balanced)\n- Critical tasks: GPT-4.1 (highest quality)\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "c57f884e-d3b2-443a-a1bf-85d02eb61f67",
+      "name": "Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "09acdc50-49b6-408a-9426-4bc5cf0393e9",
+      "name": "GPT-4.1 Orchestrator",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'orchestrator' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "2fb3a14e-6237-4cb0-985c-0149bfb5797f",
+      "name": "Orchestrator Memory",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan task decomposition strategy and worker assignments"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "31998d91-8396-4bdc-93e6-1593d3a48236",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "description": "Delegate research tasks: gather data, analyze information, investigate topics",
+        "workflowId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Research_Workflow_ID', `n8n workflow ID for research worker`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "40a45800-d462-4f53-b702-29fefc67a369",
+      "name": "Research Worker"
+    },
+    {
+      "parameters": {
+        "description": "Delegate creative tasks: write content, generate ideas, design materials",
+        "workflowId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Creative_Workflow_ID', `n8n workflow ID for creative worker`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "4da74b3c-4347-4136-abef-901637f10116",
+      "name": "Creative Worker"
+    },
+    {
+      "parameters": {
+        "description": "Delegate technical tasks: code, debug, analyze technical issues",
+        "workflowId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Technical_Workflow_ID', `n8n workflow ID for technical worker`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        0
+      ],
+      "id": "eb642938-0f04-4495-9d8a-1902649e479b",
+      "name": "Technical Worker"
+    },
+    {
+      "parameters": {
+        "description": "Delegate data tasks: analyze datasets, create visualizations, generate reports",
+        "workflowId": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data_Workflow_ID', `n8n workflow ID for data analysis worker`, 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "b4add4ba-4123-43fb-a867-93ac45e44c9d",
+      "name": "Data Worker"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "task_breakdown": {
+              "type": "string",
+              "description": "How the task was decomposed"
+            },
+            "workers_used": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Workers that were delegated to"
+            },
+            "synthesized_result": {
+              "type": "string",
+              "description": "Final synthesized output"
+            },
+            "confidence": {
+              "type": "number",
+              "description": "Confidence score 1-10"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        500
+      ],
+      "id": "6f4f4b3c-f5c0-46a6-8274-db3d8c20a4b9",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "🏗️ P3: Orchestrator-Workers (Anthropic Pattern)\n\nChat → Orchestrator → Worker Sub-Workflows\n\n4 workers: Research, Creative, Technical, Data\nOrchestrator uses GPT-4.1 + PostgresChatHistory\nThink tool for planning\n\nSkills: deep-research, consulting-analysis, find-skills\nCognitive Capital: Progressive disclosure pattern",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -400
+      ],
+      "id": "817dabd7-a749-4dbd-8c51-2fde9836e1e6",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Worker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creative Worker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Worker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Worker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Orchestrator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
