@@ -1,0 +1,453 @@
+{
+  "name": "PERS1 Personal Finance Manager v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Finanzas Personales. Registro gastos por WhatsApp, controlo presupuestos en CRM, gestiono metas de ahorro con Stripe y te env\u00edo alertas SMS. \u00bfQu\u00e9 necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "aad29776-cb96-46c4-a8ff-1bfc11433342",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Finanzas Personales\n\nGASTOS: WhatsApp \u2192 Categorizar \u2192 CRM\nPRESUPUESTO: CRM \u2192 Alertas \u2192 SMS\nAHORRO: Metas \u2192 Stripe \u2192 Seguimiento\nREPORTES: Semanal WhatsApp + Mensual CRM",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "4af92c83-d086-4a24-b7bc-8170fa372831",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Finanzas Personales\n\nGestionas las finanzas personales de un individuo a trav\u00e9s de m\u00faltiples plataformas:\n\n## Registro de Ingresos y Gastos:\n- Registrar gastos v\u00eda WhatsApp con categor\u00eda, monto y fecha\n- Categor\u00edas: Alimentaci\u00f3n, Transporte, Vivienda, Entretenimiento, Salud, Educaci\u00f3n, Servicios, Otros\n- Registrar ingresos: salario, freelance, inversiones, otros\n- Captura autom\u00e1tica de recibos y facturas v\u00eda WhatsApp\n- Clasificaci\u00f3n inteligente por IA de gastos recurrentes\n\n## Presupuesto y Control:\n- Crear presupuesto mensual por categor\u00eda en CRM\n- Alertas cuando se alcanza el 70%, 90% y 100% del presupuesto\n- Comparaci\u00f3n mes a mes de gastos vs presupuesto\n- Identificar gastos hormiga y sugerir reducciones\n- Proyecci\u00f3n de gastos para fin de mes\n\n## Metas de Ahorro:\n- Definir metas de ahorro con Stripe (fondo de emergencia, vacaciones, auto, casa)\n- Transferencias autom\u00e1ticas a cuenta de ahorro\n- Seguimiento de progreso hacia cada meta\n- Celebraci\u00f3n de hitos alcanzados\n- Sugerencias de optimizaci\u00f3n de ahorro\n\n## Alertas y Reportes:\n- SMS diario con resumen de gastos\n- WhatsApp semanal con comparaci\u00f3n de presupuesto\n- Reporte mensual con gr\u00e1ficos y recomendaciones\n- Alertas de pagos pr\u00f3ximos (servicios, pr\u00e9stamos, suscripciones)\n- Notificaci\u00f3n de cargos inusuales o no reconocidos\n\n## Skills Cargados:\n- data-analysis: An\u00e1lisis de patrones de gasto\n- consulting-analysis: Recomendaciones de optimizaci\u00f3n financiera\n- deep-research: Comparaci\u00f3n de productos financieros\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "082dc01d-1a1f-4c23-9eb4-077aae28522e",
+      "name": "Personal Finance Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "cacf3894-4397-4759-b4c1-cc2ef03585d1",
+      "name": "GPT-4.1 Finance",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "8f8c0598-6ba6-4933-8f6d-5191858a99f2",
+      "name": "Finance Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (income/expense/budget/savings/alert)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "amount": {
+              "type": "string",
+              "description": "Monto si aplica"
+            },
+            "budget_status": {
+              "type": "string",
+              "description": "Estado del presupuesto (ok/warning/exceeded)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "0706e25e-7121-4ab4-8e84-360a450ca3d2",
+      "name": "Finance Output"
+    },
+    {
+      "parameters": {
+        "description": "Registrar un gasto v\u00eda WhatsApp con categor\u00eda, monto, descripci\u00f3n y fecha. Soporta captura de imagen de recibo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Expense_URL', `WA Register Expense API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "9f1b1180-a331-414c-aefa-c43be29c160f",
+      "name": "WA Register Expense"
+    },
+    {
+      "parameters": {
+        "description": "Registrar un ingreso v\u00eda WhatsApp con fuente, monto y frecuencia (\u00fanico/recurrente).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Income_URL', `WA Register Income API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "1c94aa78-ec2e-4876-bb20-213de2a7754d",
+      "name": "WA Register Income"
+    },
+    {
+      "parameters": {
+        "description": "Enviar reporte semanal de finanzas por WhatsApp con comparaci\u00f3n de presupuesto y recomendaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Report_URL', `WA Weekly Report API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "2c125898-2c0f-454d-a15e-e0ce82ba7b95",
+      "name": "WA Weekly Report"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar presupuesto mensual por categor\u00eda en CRM. Definir l\u00edmites y alertas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Budget_URL', `CRM Budget API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "b003bd4b-db1f-47ef-94b4-6d8dec511b78",
+      "name": "CRM Budget"
+    },
+    {
+      "parameters": {
+        "description": "Registrar y consultar historial de gastos en CRM con filtros por categor\u00eda, fecha y monto.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Track_URL', `CRM Track Spending API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "acddae78-b703-4a0b-a39f-20f1517191a9",
+      "name": "CRM Track Spending"
+    },
+    {
+      "parameters": {
+        "description": "Comparar gastos del mes actual vs mes anterior por categor\u00eda. Identificar tendencias y anomal\u00edas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Compare_URL', `CRM Month Compare API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "c1a61e34-d877-4b70-a2f6-9b5ecb461d6f",
+      "name": "CRM Month Compare"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar una meta de ahorro en Stripe con monto objetivo, plazo y contribuci\u00f3n autom\u00e1tica.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Savings_URL', `Stripe Savings Goal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "25718efb-43b0-42e6-a158-0a8a084a5d29",
+      "name": "Stripe Savings Goal"
+    },
+    {
+      "parameters": {
+        "description": "Transferir autom\u00e1ticamente a cuenta de ahorro seg\u00fan regla definida (monto fijo o % del ingreso).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Transfer_URL', `Stripe Auto Transfer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "49505c96-af2d-4a77-a078-3bda1f439941",
+      "name": "Stripe Auto Transfer"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta SMS cuando se alcanza umbral de presupuesto (70%, 90%, 100%) o cargo inusual.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Alert_URL', `SMS Budget Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "9c300bc6-fc21-4919-a6b6-fe623922adb7",
+      "name": "SMS Budget Alert"
+    },
+    {
+      "parameters": {
+        "description": "Recordatorio SMS de pagos pr\u00f3ximos: servicios, pr\u00e9stamos, suscripciones, tarjetas de cr\u00e9dito.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Reminder_URL', `SMS Payment Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "ba48e0a2-235e-4d3e-8c31-e0aa636ecfb0",
+      "name": "SMS Payment Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones de gasto, presupuesto vs realidad, metas de ahorro, y recomendar optimizaciones."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "d4261a1a-6bfb-469f-ac88-e129992b3f6b",
+      "name": "Finance Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Personal Finance Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Finance Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Finance",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Finance Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Finance Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Register Expense",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Register Income",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Weekly Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Budget",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Track Spending",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Month Compare",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Savings Goal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Auto Transfer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Budget Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Payment Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "personal"
+    },
+    {
+      "name": "finance"
+    },
+    {
+      "name": "personas-naturales"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

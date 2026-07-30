@@ -1,0 +1,277 @@
+{
+  "name": "MCP Twilio SMS Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "twilio-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f19adbf2-6671-4c89-aa84-8fbec1ffc479",
+      "name": "MCP Trigger",
+      "webhookId": "twilio-mcp"
+    },
+    {
+      "parameters": {
+        "content": "Twilio SMS/Voice MCP Server\n\n8 Tools: Send SMS, Send WhatsApp, Make Call, Lookup Number, List Messages, Get Message, Verify OTP, Create Service\n\nAuth: Twilio Account SID + Auth Token\nOAuth2: N/A (API Key-based)\nAPI: api.twilio.com/2010-04-01/Accounts/{AccountSid}",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "13fdd908-a7cf-4827-ab34-6616e498a0d6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Send an SMS message via Twilio. Supports to/from numbers, body text, media URLs, and status callback.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_SMS_URL', `Send SMS API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "4bc6bbda-3e10-4ee1-a48c-7bf3d8b12789",
+      "name": "Send SMS"
+    },
+    {
+      "parameters": {
+        "description": "Send a WhatsApp message via Twilio WhatsApp Business API. Supports template messages, media, and location.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_WhatsApp_URL', `Send WhatsApp API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "40a0daaa-695f-4a3c-87d3-5bf250be9784",
+      "name": "Send WhatsApp"
+    },
+    {
+      "parameters": {
+        "description": "Initiate a voice call via Twilio. Supports TwiML URL, application SID, and status callbacks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Make_Call_URL', `Make Call API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "4a72c5bc-d371-40a7-8149-7f01987dfc87",
+      "name": "Make Call"
+    },
+    {
+      "parameters": {
+        "description": "Lookup a phone number via Twilio Lookup API. Returns carrier info, caller name, and line type.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Lookup_Number_URL', `Lookup Number API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "8567008d-e826-45e9-80fa-368747fbe537",
+      "name": "Lookup Number"
+    },
+    {
+      "parameters": {
+        "description": "List Twilio messages with filters for date, status, from/to number, and direction.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Messages_URL', `List Messages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "36c71ee8-2346-44b2-83d6-37cb2fd3f8f9",
+      "name": "List Messages"
+    },
+    {
+      "parameters": {
+        "description": "Get details of a specific Twilio message including body, status, error code, and price.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Message_URL', `Get Message API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "c51d4ea6-5d24-48e7-abb5-62e5c9897231",
+      "name": "Get Message"
+    },
+    {
+      "parameters": {
+        "description": "Send or verify a one-time password via Twilio Verify service. Supports SMS, call, and email channels.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Verify_OTP_URL', `Verify OTP API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "07dbdd31-6a52-42db-954d-2c3a67be5a4f",
+      "name": "Verify OTP"
+    },
+    {
+      "parameters": {
+        "description": "Create a Twilio service for Verify, Proxy, or Conversations. Configure settings and webhooks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Service_URL', `Create Service API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "136d00c3-48a0-4eb2-a5d1-83488e509965",
+      "name": "Create Service"
+    }
+  ],
+  "connections": {
+    "Send SMS": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make Call": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Number": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify OTP": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Service": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "twilio"
+    },
+    {
+      "name": "communication"
+    },
+    {
+      "name": "sms"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

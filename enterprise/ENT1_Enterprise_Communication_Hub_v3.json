@@ -1,0 +1,453 @@
+{
+  "name": "ENT1 Enterprise Communication Hub v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Hub de Comunicaci\u00f3n Enterprise. Unifico Teams, Slack, Twilio SMS, CRM y ERPNext para comunicaci\u00f3n corporativa a gran escala. \u00bfQu\u00e9 necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "ea08771f-b729-4cf0-abfd-043d0e7a1885",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Hub Comunicaci\u00f3n Enterprise\n\nINTERNO: Teams + Slack + Broadcast\nEXTERNO: WhatsApp VIP + Twilio SMS + Gmail\nOPERACIONES: ERPNext + Incidentes + Aprobaciones\nESCALACI\u00d3N: Slack \u2192 Teams \u2192 SMS Ejecutivo",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "fe2a08d3-dc7a-41ae-8c92-867bdfd2fbed",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Hub de Comunicaci\u00f3n Enterprise\n\nGestionas la comunicaci\u00f3n corporativa de una gran empresa:\n\n## Comunicaci\u00f3n Interna:\n- Teams para reuniones departamentales y ejecutivas\n- Slack para comunicaci\u00f3n \u00e1gil entre equipos\n- Broadcast de comunicados corporativos en todos los canales\n- Escalaci\u00f3n autom\u00e1tica: Slack \u2192 Teams \u2192 SMS ejecutivo\n- Directorio de empleados integrado con CRM\n\n## Comunicaci\u00f3n Externa:\n- WhatsApp Business para clientes VIP\n- Twilio SMS para notificaciones masivas\n- Gmail para comunicaciones formales\n- CRM para track de todas las interacciones\n- Campa\u00f1as de comunicaci\u00f3n multi-canal\n\n## Centro de Operaciones:\n- ERPNext para procesos empresariales\n- Incidentes y crisis: broadcast en todos los canales\n- Comunicados de direcci\u00f3n: Teams \u2192 Slack \u2192 Email \u2192 SMS\n- Onboarding masivo de empleados\n- Reportes de comunicaci\u00f3n y engagement\n\n## Skills Cargados:\n- multi-channel: Orquestaci\u00f3n multi-canal enterprise\n- data-analysis: M\u00e9tricas de comunicaci\u00f3n y engagement\n- consulting-analysis: Estrategia de comunicaci\u00f3n corporativa\n- deep-research: Mejores pr\u00e1cticas de comunicaci\u00f3n enterprise\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "a02a29fc-6aad-4deb-9796-ebaea080d45a",
+      "name": "Enterprise Comms Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "deae6b2d-8e82-4779-807a-168674d9562d",
+      "name": "GPT-4.1 Enterprise",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "409a80ee-e363-4f9a-9ff7-19991af80e55",
+      "name": "Enterprise Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string",
+              "description": "Canal (teams/slack/twilio/whatsapp/gmail)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "recipients": {
+              "type": "string",
+              "description": "N\u00famero de destinatarios"
+            },
+            "delivery_rate": {
+              "type": "string",
+              "description": "Tasa de entrega (%)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "6fc8f2c9-b0cd-4efa-9f9e-d2cf73e434e7",
+      "name": "Enterprise Output"
+    },
+    {
+      "parameters": {
+        "description": "Enviar comunicado corporativo a todos los canales de Teams con prioridad, categor\u00eda y confirmaci\u00f3n de lectura.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Broadcast_URL', `Teams Broadcast API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "822b4489-f797-41df-85eb-5c9dcb105ac0",
+      "name": "Teams Broadcast"
+    },
+    {
+      "parameters": {
+        "description": "Crear reuni\u00f3n ejecutiva en Teams con agenda confidencial, participantes y minutas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Exec_URL', `Teams Executive API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "8fc8f65d-6dbd-4799-8b18-b0d3dacd827c",
+      "name": "Teams Executive"
+    },
+    {
+      "parameters": {
+        "description": "Crear o gestionar canal departamental en Slack con miembros, prop\u00f3sito y notificaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Dept_URL', `Slack Department API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "93eeb5f9-8541-4d1f-93a4-0d204b0e6eb1",
+      "name": "Slack Department"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar incidente en Slack: crear canal, asignar responsables, track de resoluci\u00f3n y post-mortem.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Incident_URL', `Slack Incident API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "8a8e1d14-9918-43f9-8ff1-c0cc94b0fba0",
+      "name": "Slack Incident"
+    },
+    {
+      "parameters": {
+        "description": "Enviar SMS masivo a empleados o clientes v\u00eda Twilio con personalizaci\u00f3n por segmento y tracking.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_Mass_URL', `Twilio Mass SMS API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "dcf81995-6cc3-4c9c-8c4f-0a04666873a9",
+      "name": "Twilio Mass SMS"
+    },
+    {
+      "parameters": {
+        "description": "Enviar SMS urgente a ejecutivos v\u00eda Twilio para incidentes cr\u00edticos o aprobaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_Urgent_URL', `Twilio Urgent API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "bf53ecad-0526-4cdf-87c6-862a14e6126f",
+      "name": "Twilio Urgent"
+    },
+    {
+      "parameters": {
+        "description": "Consultar y gestionar directorio de empleados en CRM con departamento, rol, contacto y ubicaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Directory_URL', `CRM Employee Directory API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "07476f1e-6dc4-4507-8d7d-52df0c261c20",
+      "name": "CRM Employee Directory"
+    },
+    {
+      "parameters": {
+        "description": "Registrar interacci\u00f3n en CRM: canal, participantes, resultado y follow-up.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Interaction_URL', `CRM Interaction Log API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "8dda8c2d-2475-4245-a558-7362fde4e21a",
+      "name": "CRM Interaction Log"
+    },
+    {
+      "parameters": {
+        "description": "Ejecutar o consultar proceso empresarial en ERPNext: aprobaciones, workflows, reportes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Process_URL', `ERPNext Process API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "7385bf92-dbfb-4028-b23d-06e9c1b900c5",
+      "name": "ERPNext Process"
+    },
+    {
+      "parameters": {
+        "description": "Enviar mensaje a cliente VIP por WhatsApp Business con atenci\u00f3n personalizada y seguimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_VIP_URL', `WA VIP Client API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "809e23e4-3ff2-4fa5-a790-7ebe8d660654",
+      "name": "WA VIP Client"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones de comunicaci\u00f3n, optimizar canales, priorizar incidentes y coordinar respuesta."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "bfedb01d-7d0e-414b-8e0d-98fd1ccf54b9",
+      "name": "Enterprise Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Comms Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Comms Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Enterprise",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Enterprise Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Enterprise Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Teams Broadcast",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Executive",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Department",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Incident",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Mass SMS",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Urgent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Employee Directory",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Interaction Log",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERPNext Process",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA VIP Client",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enterprise Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "enterprise"
+    },
+    {
+      "name": "communication"
+    },
+    {
+      "name": "corporate"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

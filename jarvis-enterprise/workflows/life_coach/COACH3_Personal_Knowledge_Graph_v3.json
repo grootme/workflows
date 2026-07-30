@@ -1,0 +1,637 @@
+{
+  "name": "COACH3 - Personal Knowledge Graph",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Grafo de Conocimiento Personal. Conecto todos tus datos dispersos en múltiples plataformas para revelar patrones ocultos y generar insights que ninguna fuente individual podría mostrar. ¿Quieres descubrir qué conexiones existen entre tus datos?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "08e4d5a4-ae2b-4b24-8f30-b2b5dea4d5aa",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Grafo de Conocimiento Personal\n\nEres un sistema de grafo de conocimiento que conecta TODOS los datos del usuario para generar insights cruzados que revelan patrones ocultos, oportunidades y riesgos.\n\n## Arquitectura del Grafo:\n\n### Nodos (Entidades):\n- **Persona**: El usuario, sus contactos, familiares, colegas\n- **Evento**: Citas, reuniones, viajes, cumpleaños, deadlines\n- **Lugar**: Hogar, oficina, gimnasio, restaurantes frecuentes\n- **Documento**: Contratos, facturas, recetas médicas, certificados\n- **Hábito**: Ejercicio, meditación, lectura, gasto recurrente\n- **Meta**: Objetivos financieros, profesionales, de salud, personales\n- **Emoción**: Estado de ánimo registrado, niveles de estrés, satisfacción\n- **Decisión**: Decisiones tomadas con contexto, resultado y aprendizajes\n- **Recurso**: Libros, cursos, herramientas, contactos clave\n- **Proyecto**: Trabajo, personal, hobbies, mejoras del hogar\n\n### Aristas (Relaciones):\n- **afecta_a**: Una entidad impacta a otra (salud → productividad)\n- **depende_de**: Una entidad requiere otra (meta → recurso)\n- **correlaciona_con**: Dos entidades varían juntas (ejercicio → sueño)\n- **conflictua_con**: Dos entidades compiten (trabajo → ocio)\n- **apoya_a**: Una entidad fortalece otra (meditación → enfoque)\n- **precede_a**: Una entidad ocurre antes que otra (curso → promoción)\n- **genera**: Una entidad produce otra (hábito → resultado)\n- **bloquea**: Una entidad impide otra (deuda → inversión)\n\n## Capacidades del Grafo:\n\n### 1. Descubrimiento de Patrones\n- Detectar patrones de comportamiento que el usuario no ve\n- Ejemplo: 'Cuando duermes < 6h, tu gasto en comida delivery aumenta 40%'\n- Ejemplo: 'Después de cada reunión con X, tu estado de ánimo baja 2 días'\n- Ejemplo: 'Tu productividad es 30% mayor los días que meditas en la mañana'\n\n### 2. Predicción de Riesgos\n- Identificar combinaciones de factores que predicen problemas\n- Ejemplo: 'Si continúas este ritmo de gasto + no hay ingresos extras en 2 meses, entrarás en déficit'\n- Ejemplo: 'Tu patrón de sueño de las últimas 3 semanas predice un possible burnout'\n- Ejemplo: 'No has contactado a tu mejor cliente en 45 días — riesgo de pérdida del 60%'\n\n### 3. Optimización de Recursos\n- Sugerir la mejor asignación de tiempo, dinero y energía\n- Ejemplo: 'Si inviertes 2h más en el curso X, podrías aumentar tu valor de mercado en 20%'\n- Ejemplo: 'Reorganizar tu horario para dormir 30min más te daría 2h más de productividad'\n- Ejemplo: 'Cancelar la suscripción Y y Z te ahorra $50/mes sin impacto en calidad de vida'\n\n### 4. Conexiones Inesperadas\n- Revelar conexiones que el usuario no imaginaba\n- Ejemplo: 'Tu contacto Juan trabaja en la empresa donde acabas de aplicar — ¿quieres que te conecte?'\n- Ejemplo: 'El curso que tomaste en 2023 te califica para la certificación que necesitas ahora'\n- Ejemplo: 'Tu gasto en transporte se reduciría 60% si cambiaras tu rutina de ejercicio de horario'\n\n### 5. Solicitud Proactiva de Datos\n- El grafo IDENTIFICA qué datos faltan para completar conexiones\n- Ejemplo: 'No tengo datos de tu sueño de los últimos 7 días — ¿puedes conectar tu wearable?'\n- Ejemplo: 'Para predecir tu riesgo financiero, necesito datos de tus gastos de los últimos 3 meses'\n- Ejemplo: 'Si registras tu estado de ánimo diario, puedo correlacionarlo con tus hábitos'\n\n## Protocolo de Solicitud de Datos:\n\nEl grafo sigue un protocolo de 'hambre de datos':\n\n1. **Escanear gaps** — ¿Qué nodos y aristas faltan en el grafo?\n2. **Priorizar por impacto** — ¿Qué datos faltantes tendrían mayor impacto en las recomendaciones?\n3. **Identificar fuentes** — ¿De dónde se pueden obtener estos datos?\n4. **Solicitar al usuario** — Pedir datos específicos con justificación de por qué se necesitan\n5. **Configurar recopilación automática** — ¿Se puede automatizar la fuente de datos?\n6. **Integrar al grafo** — Conectar nuevos datos con nodos y aristas existentes\n7. **Generar nuevos insights** — ¿Qué nuevos patrones revelan los datos?\n\n## Skills Cargados:\n- data-analysis: Análisis de grafos y detección de patrones\n- consulting-analysis: Recomendaciones basadas en insights del grafo\n- deep-research: Correlaciones científicas y mejores prácticas\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "651d26bf-af9f-408a-99ef-3927249172b4",
+      "name": "Knowledge Graph Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "d4152820-9da4-46d5-8bb8-9a2d0a138a96",
+      "name": "GPT-4.1 Knowledge",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "3267a13f-abba-4165-946f-4a2b15b7c7dd",
+      "name": "Knowledge Graph Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "insight_type": {
+              "type": "string",
+              "description": "Tipo de insight (pattern/risk/optimization/connection/data_gap/prediction)"
+            },
+            "entities": {
+              "type": "string",
+              "description": "Entidades del grafo involucradas"
+            },
+            "relationships": {
+              "type": "string",
+              "description": "Relaciones entre entidades descubiertas"
+            },
+            "confidence": {
+              "type": "string",
+              "description": "Nivel de confianza del insight (low/medium/high)"
+            },
+            "insight": {
+              "type": "string",
+              "description": "Insight principal descubierto"
+            },
+            "actionable": {
+              "type": "string",
+              "description": "¿Es accionable? ¿Qué acción se recomienda?"
+            },
+            "data_gaps": {
+              "type": "string",
+              "description": "Datos faltantes que mejorarían la confianza del insight"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "7de35513-4053-4457-aa2a-9f4d31ff7026",
+      "name": "Knowledge Graph Output"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos del CRM al grafo: contactos, interacciones, deals, historial. Crear nodos y aristas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Ingest_URL', `CRM Data Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "f5fff417-5be5-4710-b79e-3748e92b4d6e",
+      "name": "CRM Data Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar eventos del calendario al grafo: citas, reuniones, compromisos. Crear nodos de evento y relaciones temporales.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Ingest_URL', `Calendar Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "eab40949-9aeb-462a-bde0-fd38f6ce1347",
+      "name": "Calendar Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar comunicaciones de Gmail al grafo: contactos, temas, frecuencia, sentimiento. Crear nodos de comunicación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Ingest_URL', `Gmail Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "f0de8777-b581-4f8a-9460-8e21ddfea8b0",
+      "name": "Gmail Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos financieros al grafo: transacciones, categorías, tendencias. Crear nodos de hábito financiero.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Finance_Ingest_URL', `Finance Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "0317ee4d-af13-401f-b347-57d85dd41add",
+      "name": "Finance Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar conversaciones de WhatsApp al grafo: contactos, temas, acuerdos, frecuencia. Nodos de comunicación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Ingest_URL', `WhatsApp Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "261df802-80d0-4991-bedf-086f7a217fd0",
+      "name": "WhatsApp Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos de salud al grafo: sueño, ejercicio, alimentación, estado de ánimo. Nodos de hábito y emoción.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Health_Ingest_URL', `Health Data Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "c74d33a4-fbf4-43d3-9a9e-3d50a34861f3",
+      "name": "Health Data Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos estructurados de Airtable al grafo: proyectos, metas, tracking. Crear nodos de proyecto y meta.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Airtable_Ingest_URL', `Airtable Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "b5f8eb55-362b-434d-bad7-db7e507041cf",
+      "name": "Airtable Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos de HubSpot al grafo: deals, pipeline, contactos, actividades. Nodos de negocio y relación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HubSpot_Ingest_URL', `HubSpot Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "cf79e1ce-0ece-4ba8-b47e-87c58b4df590",
+      "name": "HubSpot Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Importar datos de Salesforce al grafo: accounts, opportunities, cases. Nodos de negocio y relación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_Ingest_URL', `Salesforce Ingest API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "9af67552-01e7-4e69-85df-c47f23ff2ce5",
+      "name": "Salesforce Ingest"
+    },
+    {
+      "parameters": {
+        "description": "Detectar patrones en el grafo: correlaciones, secuencias, anomalías, ciclos. Generar insights con nivel de confianza.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pattern_URL', `Pattern Detection API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        700
+      ],
+      "id": "b2aeea25-516b-4aca-b7f6-deaa005c6142",
+      "name": "Pattern Detection"
+    },
+    {
+      "parameters": {
+        "description": "Predecir riesgos basados en patrones del grafo: combinaciones de factores que predicen problemas. Probabilidad y mitigación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Risk_URL', `Risk Prediction API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        700
+      ],
+      "id": "9b9a1875-edef-454f-9321-9ea0f5b9c2a8",
+      "name": "Risk Prediction"
+    },
+    {
+      "parameters": {
+        "description": "Optimizar asignación de recursos basado en el grafo: tiempo, dinero, energía. Sugerir reasignación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resource_URL', `Resource Optimization API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        700
+      ],
+      "id": "208e7d8c-0512-4175-bc73-8e94c5c0f4bc",
+      "name": "Resource Optimization"
+    },
+    {
+      "parameters": {
+        "description": "Descubrir conexiones inesperadas entre entidades del grafo: contactos compartidos, oportunidades ocultas, sinergias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Connection_URL', `Connection Discovery API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        700
+      ],
+      "id": "dfd8aec5-6e3f-4910-9df4-a47c67902e32",
+      "name": "Connection Discovery"
+    },
+    {
+      "parameters": {
+        "description": "Identificar datos faltantes en el grafo que mejorarían la calidad de insights. Priorizar por impacto.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gap_URL', `Data Gap Identification API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "2f859d5d-99de-4f3f-a219-00a351ae3977",
+      "name": "Data Gap Identification"
+    },
+    {
+      "parameters": {
+        "description": "Solicitar datos específicos al usuario para completar gaps en el grafo. Justificar por qué se necesitan.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data_Request_URL', `Request Graph Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "a1f60075-886a-419f-ac5d-2b63f1978b74",
+      "name": "Request Graph Data"
+    },
+    {
+      "parameters": {
+        "description": "Configurar recopilación automática de datos: conectar APIs, wearables, bancos. Automatizar ingesta al grafo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Auto_Source_URL', `Auto Source Setup API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "fec0d3a4-9dc4-494f-8c50-05b3fae14e1b",
+      "name": "Auto Source Setup"
+    },
+    {
+      "parameters": {
+        "description": "Generar insights cruzados entre entidades del grafo. Correlaciones, predicciones, recomendaciones accionables.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Insight_URL', `Insight Generation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "4ab223ee-fd64-48f0-b9df-800fa03c8901",
+      "name": "Insight Generation"
+    },
+    {
+      "parameters": {
+        "description": "Generar visualización del grafo personal: nodos, aristas, clusters. Exportar como imagen o JSON interactivo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Graph_Viz_URL', `Graph Visualization API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "f6c03505-1e84-40df-99af-7f5c8ac1406c",
+      "name": "Graph Visualization"
+    },
+    {
+      "parameters": {
+        "description": "Analizar estructura del grafo, detectar clusters, identificar nodos faltantes, evaluar completitud, generar hipótesis."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "f9ccda01-4bf1-4169-bfd3-2f9b2980df17",
+      "name": "Knowledge Graph Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Grafo de Conocimiento Personal\n\nNODOS: Persona, Evento, Lugar,\nDocumento, Hábito, Meta, Emoción,\nDecisión, Recurso, Proyecto\n\nARISTAS: afecta, depende, correlaciona,\nconflictua, apoya, precede, genera, bloquea\n\nKEY: Hambre de datos → PEDIR lo que falta",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "3e0c8750-0c5e-47ec-88bd-2169c6117761",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Knowledge Graph Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge Graph Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Knowledge",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Knowledge Graph Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Knowledge Graph Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Data Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Data Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Airtable Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Salesforce Ingest",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pattern Detection",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Risk Prediction",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resource Optimization",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Connection Discovery",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Gap Identification",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request Graph Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Auto Source Setup",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insight Generation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Graph Visualization",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Knowledge Graph Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "life-coach",
+    "knowledge-graph",
+    "insights",
+    "personal",
+    "cross-dimensional"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

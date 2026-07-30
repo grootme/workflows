@@ -1,0 +1,453 @@
+{
+  "name": "ENT2 Financial Operations Center v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Centro de Operaciones Financieras. Gestiono Stripe, PayPal, Binance, ERPNext y analytics para operaciones financieras enterprise. \u00bfQu\u00e9 necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "6b763606-4a49-4635-a969-6566dfdba7c3",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Centro Financiero Enterprise\n\nPAGOS: Stripe + PayPal + Binance \u2192 Conciliaci\u00f3n\nTESORER\u00cdA: ERPNext \u2192 Cash Flow \u2192 Proyecci\u00f3n\nREPORTING: P&L \u2192 Ratios \u2192 Dashboard\nALERTAS: Slack \u2192 Anomal\u00edas \u2192 Revisi\u00f3n Teams",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "eddc068d-d35c-4a61-ba70-6b5897d239bb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Centro de Operaciones Financieras Enterprise\n\nGestionas las operaciones financieras de una gran empresa:\n\n## Pagos y Cobros:\n- Stripe para pagos con tarjeta y suscripciones\n- PayPal para pagos internacionales y marketplace\n- Binance para pagos en criptomonedas y conversiones\n- Conciliaci\u00f3n autom\u00e1tica entre plataformas\n- Track de ingresos por fuente y moneda\n\n## Tesorer\u00eda:\n- Gesti\u00f3n de flujo de caja en ERPNext\n- Proyecci\u00f3n de flujo de caja a 30/60/90 d\u00edas\n- Gesti\u00f3n de cuentas por cobrar y pagar\n- Inversiones y rendimientos\n- Compliance y auditor\u00eda financiera\n\n## Reporting y Analytics:\n- P&L en tiempo real\n- Balance general automatizado\n- Ratios financieros: liquidez, rentabilidad, endeudamiento\n- Dashboard ejecutivo con KPIs\n- Reportes regulatorios y de compliance\n\n## Skills Cargados:\n- data-analysis: An\u00e1lisis financiero y forecasting\n- consulting-analysis: Estrategia financiera y optimizaci\u00f3n\n- payment-processing: Conciliaci\u00f3n multi-plataforma\n- deep-research: Tendencias de mercado y regulaciones\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "24c32724-6b96-489c-830c-a79991e17ba6",
+      "name": "Financial Ops Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "58f51109-dfc3-4665-9c41-a820c47f0a08",
+      "name": "GPT-4.1 Finance",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "fa0e1ef0-eaa3-4b00-8ae1-fcb754c0158f",
+      "name": "Financial Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (payments/treasury/reporting/compliance)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "amount": {
+              "type": "string",
+              "description": "Monto si aplica"
+            },
+            "currency": {
+              "type": "string",
+              "description": "Moneda (USD/EUR/BTC/USDT)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "af8eb0d6-f4f3-47fe-bdd5-ebbf0b66dbc8",
+      "name": "Financial Output"
+    },
+    {
+      "parameters": {
+        "description": "Procesar pago en Stripe con m\u00e9todo, monto, moneda, cliente y facturaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Process_URL', `Stripe Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "56f339e3-74ea-4726-b067-cf07850661c7",
+      "name": "Stripe Payment"
+    },
+    {
+      "parameters": {
+        "description": "Conciliar transacciones de Stripe con ERPNext: match de pagos, facturas y transferencias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Reconcile_URL', `Stripe Reconcile API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "c9303b8e-9181-44a4-816e-5819b65a9122",
+      "name": "Stripe Reconcile"
+    },
+    {
+      "parameters": {
+        "description": "Procesar pago internacional en PayPal con conversi\u00f3n de moneda y fees.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PayPal_Intl_URL', `PayPal International API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "85783bff-98ee-4f60-ae8a-862ec46d1b17",
+      "name": "PayPal International"
+    },
+    {
+      "parameters": {
+        "description": "Ejecutar payout masivo en PayPal para proveedores o partners con batch y scheduling.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PayPal_Payout_URL', `PayPal Payout API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "afde0656-8d66-4128-b780-fa0719535f8c",
+      "name": "PayPal Payout"
+    },
+    {
+      "parameters": {
+        "description": "Procesar transacci\u00f3n en Binance: compra, venta, conversi\u00f3n de criptomonedas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binance_Crypto_URL', `Binance Crypto API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "9e2d113e-4b9c-4c64-a6f2-01330d8fcd3b",
+      "name": "Binance Crypto"
+    },
+    {
+      "parameters": {
+        "description": "Convertir entre cripto y fiat en Binance con rate en tiempo real y fees.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binance_Convert_URL', `Binance Convert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "73578aca-73fd-4fc0-aedb-1bf51de9c1e2",
+      "name": "Binance Convert"
+    },
+    {
+      "parameters": {
+        "description": "Consultar y gestionar flujo de caja en ERPNext con proyecci\u00f3n a 30/60/90 d\u00edas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Cashflow_URL', `ERP Cash Flow API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "1a665b49-ea8f-4d19-b442-9976d6f0414b",
+      "name": "ERP Cash Flow"
+    },
+    {
+      "parameters": {
+        "description": "Generar reporte de P&L en ERPNext con ingresos, gastos, margen y comparaci\u00f3n periodos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_PL_URL', `ERP P&L Report API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "9a30d626-1176-4481-b07f-d5ca520c61db",
+      "name": "ERP P&L Report"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta financiera a canal de Slack: pago grande, anomal\u00eda, vencimiento o threshold.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Alert_URL', `Slack Finance Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "87631d4c-2617-4b3b-a9bd-ebbd0b09c8eb",
+      "name": "Slack Finance Alert"
+    },
+    {
+      "parameters": {
+        "description": "Programar revisi\u00f3n financiera en Teams con dashboard, m\u00e9tricas y action items.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Review_URL', `Teams Finance Review API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "5de8e75a-1a44-4e84-989b-b4a51cdc517f",
+      "name": "Teams Finance Review"
+    },
+    {
+      "parameters": {
+        "description": "Analizar flujo de caja, conciliaci\u00f3n, proyecciones y recomendar optimizaciones financieras."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "76db90e8-cd38-4d71-b6fe-b204159be91f",
+      "name": "Financial Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Financial Ops Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial Ops Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Finance",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Financial Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Financial Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Stripe Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Reconcile",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PayPal International",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PayPal Payout",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binance Crypto",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binance Convert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Cash Flow",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP P&L Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Finance Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Finance Review",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Financial Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "enterprise"
+    },
+    {
+      "name": "finance"
+    },
+    {
+      "name": "corporate"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

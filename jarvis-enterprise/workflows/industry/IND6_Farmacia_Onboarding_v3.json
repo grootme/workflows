@@ -1,0 +1,479 @@
+{
+  "name": "IND6 Farmacia Onboarding v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Farmacia (Pharmacy) Onboarding Assistant. I manage patient onboarding from WhatsApp health consultation through CRM registration, Stripe service plan, Teams telemedicine scheduling, and SMS medication reminders. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "d997855f-016a-4cb7-b716-49124af1474c",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Farmacia / Pharmacy Onboarding\n\nFLOW: WhatsApp Consult \u2192 CRM Patient \u2192 Stripe Plan \u2192 Teams Telemedicine \u2192 SMS Reminders\n\nPlatforms: WhatsApp, CRM, Stripe, Twilio SMS, Teams\nTiers: Basic (Rx) / Plus (Telemedicine+Delivery) / Premium (Full Care)\nPipeline: Lead \u2192 Consultation \u2192 Registered \u2192 Payment \u2192 Active",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "d2e58b5a-2aaf-4f3a-99b7-d785e3f44ebb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Farmacia / Pharmacy Onboarding Agent\n\nYou orchestrate pharmacy patient onboarding across multiple platforms:\n\n## Patient Lead Capture:\n- Send health consultation form via WhatsApp interactive messages\n- Collect patient data: name, age, allergies, current medications, conditions\n- Qualify patient by service need: prescription refill, telemedicine, delivery, wellness\n- Verify insurance information and coverage\n- Send pharmacy services overview and pricing via WhatsApp\n\n## Patient Registration:\n- Create patient profile in CRM with medical data and preferences\n- Assign service tier: Basic (prescription), Plus (telemedicine + delivery), Premium (full care)\n- Record allergies, contraindications, and medication interactions\n- Set up emergency contact and preferred pharmacy location\n- Generate patient ID and QR code for easy pickup\n\n## Payment Setup:\n- Create Stripe subscription for recurring service plan\n- Process insurance co-pay and out-of-pocket payments\n- Set up automatic prescription delivery billing\n- Handle prescription discount programs\n- Generate payment receipts for insurance claims\n\n## Telemedicine & Consultation:\n- Schedule telemedicine consultation via Microsoft Teams\n- Send consultation reminders via WhatsApp and SMS\n- Share prescription details and dosage instructions via WhatsApp\n- Record consultation notes in CRM\n- Follow up on treatment adherence\n\n## Medication Reminders:\n- Set up daily medication reminders via Twilio SMS\n- Send refill reminders 5 days before prescription runs out\n- Track medication adherence and report to healthcare provider\n- Alert on drug interactions and contraindications\n- Celebrate adherence milestones\n\n## Pipeline Stages:\nLead \u2192 Consultation \u2192 Registered \u2192 Payment \u2192 Active \u2192 Retained\n\n## Skills Loaded:\n- onboarding-automation: Pharmacy-specific onboarding flows\n- data-analysis: Patient adherence and health outcomes\n- deep-research: Pharmacy industry best practices\n- consulting-analysis: Pharmacy growth and retention strategy\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "07efe1d5-f0df-4a50-b810-d7612552c6aa",
+      "name": "Farmacia Onboarding Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "0212bfbe-6e69-4dcd-bbb9-1a25b8fff470",
+      "name": "GPT-4.1 Farmacia",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "33e98e2f-932c-493e-873f-5d042a19f210",
+      "name": "Farmacia Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (lead/registration/payment/telemedicine/reminders)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "patient_id": {
+              "type": "string",
+              "description": "CRM patient ID if applicable"
+            },
+            "subscription_id": {
+              "type": "string",
+              "description": "Stripe subscription ID if applicable"
+            },
+            "tier": {
+              "type": "string",
+              "description": "Service tier (Basic/Plus/Premium)"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "847a17b5-2805-461a-836d-3b0cd2143343",
+      "name": "Farmacia Output"
+    },
+    {
+      "parameters": {
+        "description": "Send a health consultation form via WhatsApp to collect patient data, symptoms, and medication needs.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Consult_URL', `WA Health Consult API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "67882b93-aae5-417a-af83-851581b64950",
+      "name": "WA Health Consult"
+    },
+    {
+      "parameters": {
+        "description": "Send prescription details, dosage instructions, and side effects via WhatsApp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Prescription_URL', `WA Prescription Info API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "bf6e8143-b3d5-4e54-aaf1-91b344ac6f11",
+      "name": "WA Prescription Info"
+    },
+    {
+      "parameters": {
+        "description": "Send a prescription refill reminder via WhatsApp 5 days before the prescription runs out.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Refill_URL', `WA Refill Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "64dbe0c1-831f-49d1-bbcc-42695e7b17b0",
+      "name": "WA Refill Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Send pharmacy services overview and pricing information via WhatsApp with interactive buttons.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Services_URL', `WA Pharmacy Services API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "cb9aa26f-fb8c-433e-b7e0-a890cd47d0f9",
+      "name": "WA Pharmacy Services"
+    },
+    {
+      "parameters": {
+        "description": "Create a patient profile in CRM with medical data, allergies, medications, and service tier.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Patient_URL', `CRM Register Patient API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "11170ea8-d03c-43cc-a7ab-127af19d3c8f",
+      "name": "CRM Register Patient"
+    },
+    {
+      "parameters": {
+        "description": "Track patient medication adherence and report to healthcare provider. Log missed doses and refill dates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Adherence_URL', `CRM Track Adherence API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "b8a37d52-7149-499f-accf-b519f8301f20",
+      "name": "CRM Track Adherence"
+    },
+    {
+      "parameters": {
+        "description": "Check and log drug interactions and contraindications for a patient's medication list.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Interactions_URL', `CRM Drug Interactions API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "4e7314c2-89fa-4ee4-8f4b-3d327748f6e7",
+      "name": "CRM Drug Interactions"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe subscription for pharmacy service plan with tier, co-pay, and delivery billing.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Plan_URL', `Stripe Service Plan API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "0ddba64f-e192-4f3d-aab9-1b9def14a043",
+      "name": "Stripe Service Plan"
+    },
+    {
+      "parameters": {
+        "description": "Process insurance co-pay and out-of-pocket payments via Stripe with receipt generation.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_CoPay_URL', `Stripe Co-Pay API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "100099c8-12c5-451e-91ef-742d0ead396e",
+      "name": "Stripe Co-Pay"
+    },
+    {
+      "parameters": {
+        "description": "Send a daily medication reminder via Twilio SMS with dosage, timing, and special instructions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Med_URL', `SMS Medication Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "5f6a0bd0-df30-4937-ba42-e2ffb6744fff",
+      "name": "SMS Medication Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Schedule a Microsoft Teams telemedicine consultation with doctor, patient, and notes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Telemed_URL', `Teams Telemedicine API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "cfaafe97-cc85-4dfa-98a8-524b4f610118",
+      "name": "Teams Telemedicine"
+    },
+    {
+      "parameters": {
+        "description": "Think through patient qualification, medication interactions, service tier, and adherence strategy."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "e8a55d20-e6bf-480d-826a-6ca5ace7291b",
+      "name": "Farmacia Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Farmacia Onboarding Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Farmacia Onboarding Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Farmacia",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Farmacia Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Farmacia Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Health Consult",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Prescription Info",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Refill Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Pharmacy Services",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Register Patient",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Track Adherence",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Drug Interactions",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Service Plan",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Co-Pay",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Medication Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Telemedicine",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Farmacia Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "farmacia"
+    },
+    {
+      "name": "pharmacy"
+    },
+    {
+      "name": "onboarding"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

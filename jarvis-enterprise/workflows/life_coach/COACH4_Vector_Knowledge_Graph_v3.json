@@ -1,0 +1,545 @@
+{
+  "name": "COACH4 - Vector Knowledge Graph",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Grafo de Conocimiento Vectorial. Conecto todos tus datos en un grafo persistente con busqueda semantica via Qdrant, traversal de relaciones, y generacion de insights cruzados. Cada dato que ingresas se almacena como vector para busqueda por similitud. ¿Que quieres descubrir sobre los patrones de tu vida?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "8acb08e7-268b-415b-89d2-cffbc20998c5",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Grafo de Conocimiento Vectorial con Qdrant\n\nEres un sistema de grafo de conocimiento persistente que combina almacenamiento de grafos con busqueda vectorial semantica. Cada entidad y relacion se almacena como un vector en Qdrant, permitiendo busqueda por similitud semantica ademas de traversal de grafos.\n\n## Arquitectura Dual: Grafo + Vectores\n\n### Capa de Grafo (Relacional):\n- Nodos: 10 tipos de entidades (Persona, Evento, Lugar, Documento, Habito, Meta, Emocion, Decision, Recurso, Proyecto)\n- Aristas: 8 tipos de relaciones (afecta_a, depende_de, correlaciona_con, conflictua_con, apoya_a, precede_a, genera, bloquea)\n- Traversal: Consultas de caminos, vecinos, comunidades, centralidad\n- Persistencia: PostgreSQL con extension AGE para grafos\n\n### Capa Vectorial (Semantica):\n- Embeddings: Cada nodo y arista se convierte en vector via OpenAI text-embedding-3-small\n- Colecciones Qdrant: entities (nodos), relations (aristas), insights (descubrimientos)\n- Busqueda semantica: Encontrar entidades similares por significado, no solo por texto exacto\n- Busqueda hibrida: Combinar busqueda vectorial + filtros de grafos para resultados precisos\n\n## Capacidades del Sistema:\n\n### 1. Ingesta de Datos con Vectorizacion\n- Cada dato que ingresa se vectoriza automaticamente\n- Se extraen entidades y relaciones con NLP\n- Se almacena en Qdrant (vector) + PostgreSQL (grafo)\n- Duplicados se detectan por similitud vectorial (>0.95 = mismo)\n\n### 2. Busqueda Semantica\n- Buscar entidades por significado, no por texto exacto\n- Ejemplo: 'actividades que me relajan' encuentra meditacion, yoga, lectura\n- Busqueda hibrida: vector + filtros (tipo, fecha, dimension)\n- Re-ranking por relevancia contextual\n\n### 3. Traversal de Grafos\n- Caminos entre entidades: Como A conecta con B?\n- Vecinos de un nodo: Que afecta mi sueno?\n- Comunidades: Grupos de entidades estrechamente conectadas\n- Centralidad: Que entidades son mas influyentes?\n\n### 4. Generacion de Insights Vectoriales\n- Clustering: Agrupar entidades similares por vectores\n- Anomalias: Detectar entidades fuera de lo normal\n- Tendencias: Cambios en patrones vectoriales a lo largo del tiempo\n- Prediccion: Entidades que probablemente se conectaran\n\n### 5. Solicitud Proactiva de Datos\n- Detectar gaps en el grafo comparando con patrones ideales\n- Calcular 'completitud' del grafo por dimension\n- Priorizar datos faltantes por impacto en insights\n- Solicitar datos con justificacion de valor\n\n## Protocolo de Consentimiento:\n\nAntes de recopilar cualquier dato, el sistema verifica:\n1. Tiene el usuario consentimiento activo para esta fuente?\n2. El consentimiento cubre este tipo de dato especifico?\n3. Ha expirado el consentimiento?\n4. Ha revocado el usuario el consentimiento para esta fuente?\nSi no hay consentimiento valido, el sistema solicita permiso antes de proceder.\n\n## Skills Cargados:\n- data-analysis: Analisis de grafos y clustering\n- deep-research: Correlaciones cientificas\n- privacy-consent: Verificacion de consentimiento\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "b986306e-32ca-487f-867f-ac5f2945bb97",
+      "name": "Vector Knowledge Graph Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "e06ba25c-ad8e-4c40-bc60-7e6c55cba5b9",
+      "name": "GPT-4.1 Vector KG",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "bd5e3519-b1bb-46aa-b9e1-33e606ae4c20",
+      "name": "Vector KG Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "query_type": {
+              "type": "string",
+              "description": "Tipo de consulta (semantic_search/graph_traversal/insight/ingest/consent_check)"
+            },
+            "results": {
+              "type": "string",
+              "description": "Resultados de la consulta"
+            },
+            "entities_found": {
+              "type": "string",
+              "description": "Entidades encontradas"
+            },
+            "confidence": {
+              "type": "string",
+              "description": "Nivel de confianza (low/medium/high)"
+            },
+            "insight": {
+              "type": "string",
+              "description": "Insight generado si aplica"
+            },
+            "data_gaps": {
+              "type": "string",
+              "description": "Datos faltantes identificados"
+            },
+            "consent_status": {
+              "type": "string",
+              "description": "Estado de consentimiento (granted/partial/missing/revoked)"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "70b0d917-c833-44c7-8c75-0f9e8100b7db",
+      "name": "Vector KG Output"
+    },
+    {
+      "parameters": {
+        "description": "Insertar o actualizar un vector de entidad en Qdrant. Genera embedding via OpenAI text-embedding-3-small. Almacena metadata: tipo, dimension, timestamps, fuente.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('QDRANT_UPSERT_URL', `Qdrant Upsert Entity API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "4a491637-b681-473e-b8ea-b6f5cf49aebf",
+      "name": "Qdrant Upsert Entity"
+    },
+    {
+      "parameters": {
+        "description": "Buscar entidades por similitud semantica en Qdrant. Busqueda hibrida con filtros: tipo, dimension, fecha, fuente. Re-ranking por relevancia contextual.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('QDRANT_SEARCH_URL', `Qdrant Semantic Search API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "099598d7-8c04-49dd-a08d-c89cfa6e91e6",
+      "name": "Qdrant Semantic Search"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar colecciones Qdrant: entities, relations, insights. Crear, listar, eliminar colecciones con configuracion de vectores.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('QDRANT_COLLECTIONS_URL', `Qdrant Collections API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "020eca39-01ca-4c8e-a2f4-ab52f81f6dca",
+      "name": "Qdrant Collections"
+    },
+    {
+      "parameters": {
+        "description": "Ejecutar clustering de vectores en Qdrant para descubrir grupos de entidades similares. Retorna clusters con centroides y miembros.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('QDRANT_CLUSTERS_URL', `Qdrant Clustering API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "d9b4df14-cdec-48f1-8f6e-9b0befb78891",
+      "name": "Qdrant Clustering"
+    },
+    {
+      "parameters": {
+        "description": "Agregar nodo al grafo en PostgreSQL/AGE: entidad con tipo, propiedades, dimension. Genera embedding y almacena en Qdrant simultaneamente.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GRAPH_ADD_NODE_URL', `Graph Add Node API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "3188ef01-4761-49ba-9658-1558db1e18cb",
+      "name": "Graph Add Node"
+    },
+    {
+      "parameters": {
+        "description": "Agregar arista al grafo en PostgreSQL/AGE: relacion entre nodos con tipo, peso, propiedades. Genera embedding de relacion y almacena en Qdrant.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GRAPH_ADD_EDGE_URL', `Graph Add Edge API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "3cc656cb-a6b1-490d-af04-67a2f0f6b0d8",
+      "name": "Graph Add Edge"
+    },
+    {
+      "parameters": {
+        "description": "Traversal de grafo: caminos entre entidades, vecinos de un nodo, comunidades, centralidad. Soporta BFS, DFS, shortest path.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GRAPH_TRAVERSE_URL', `Graph Traverse API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "99f8bd25-a35e-47b7-b4a1-feed11fad534",
+      "name": "Graph Traverse"
+    },
+    {
+      "parameters": {
+        "description": "Ejecutar consulta Cypher en el grafo PostgreSQL/AGE. Soporta queries complejas de patron matching, agregacion, y filtrado.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GRAPH_QUERY_URL', `Graph Cypher Query API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "ffafabae-574b-4926-b9c5-35bac1c20b48",
+      "name": "Graph Cypher Query"
+    },
+    {
+      "parameters": {
+        "description": "Ingestar datos de wearables (Apple Health, Fitbit, Garmin, etc.) al grafo. Vectorizar metricas de salud como nodos de Habito y Emocion. Verificar consentimiento primero.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INGEST_WEARABLE_URL', `Ingest Wearable Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "0a57d855-75bb-4a13-bd79-af345d8c4f10",
+      "name": "Ingest Wearable Data"
+    },
+    {
+      "parameters": {
+        "description": "Ingestar datos bancarios via Plaid al grafo. Vectorizar transacciones como nodos de Habito financiero. Verificar consentimiento primero.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INGEST_BANKING_URL', `Ingest Banking Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "13b8326b-c66f-43f8-a587-d537f76b0c9e",
+      "name": "Ingest Banking Data"
+    },
+    {
+      "parameters": {
+        "description": "Ingestar datos de redes sociales al grafo. Vectorizar actividad social como nodos de Relacion y Emocion. Verificar consentimiento primero.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INGEST_SOCIAL_URL', `Ingest Social Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        700
+      ],
+      "id": "76610795-2f08-4d80-96f4-e5ec94fa857c",
+      "name": "Ingest Social Data"
+    },
+    {
+      "parameters": {
+        "description": "Generar insights cruzados entre entidades del grafo usando clustering vectorial y traversal. Correlaciones, predicciones, anomalias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INSIGHT_GEN_URL', `Insight Generation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        700
+      ],
+      "id": "6a8b7fd2-3156-472b-9d5d-95e265325915",
+      "name": "Insight Generation"
+    },
+    {
+      "parameters": {
+        "description": "Detectar datos faltantes en el grafo comparando con patrones ideales. Calcular completitud por dimension y priorizar gaps por impacto.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GAP_DETECT_URL', `Gap Detection API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        700
+      ],
+      "id": "4af79149-dd61-4f46-8efd-2faccfd91473",
+      "name": "Gap Detection"
+    },
+    {
+      "parameters": {
+        "description": "Verificar consentimiento del usuario antes de recopilar datos. Chequear: consentimiento activo, tipo de dato cubierto, expiracion, revocacion. Si no hay consentimiento, solicitarlo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_VERIFY_URL', `Consent Verify API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        700
+      ],
+      "id": "d891fff6-6285-4004-bfe6-7d253880dee6",
+      "name": "Consent Verify"
+    },
+    {
+      "parameters": {
+        "description": "Analizar estructura del grafo, detectar clusters, evaluar completitud, generar hipotesis, calcular impacto de datos faltantes."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "b1ca3815-e6bb-4a77-9945-3de577d713b6",
+      "name": "Vector KG Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Vector Knowledge Graph\n\nDUAL: Grafo (PostgreSQL/AGE)\n     + Vectores (Qdrant)\n\nQDRANT: Upsert, Search, Collections,\n        Clustering\nGRAPH: Nodes, Edges, Traverse, Cypher\nINGEST: Wearable, Banking, Social\nINSIGHT: Generation, Gap Detection\nCONSENT: Verify before collecting",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "5c5ab37f-4810-4137-9bdf-077d41294f94",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Vector Knowledge Graph Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Knowledge Graph Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Vector KG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Vector KG Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Vector KG Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Qdrant Upsert Entity",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Qdrant Semantic Search",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Qdrant Collections",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Qdrant Clustering",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Graph Add Node",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Graph Add Edge",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Graph Traverse",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Graph Cypher Query",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ingest Wearable Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ingest Banking Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ingest Social Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insight Generation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gap Detection",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consent Verify",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Vector KG Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "life-coach",
+    "knowledge-graph",
+    "qdrant",
+    "vector-search",
+    "graph-database"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

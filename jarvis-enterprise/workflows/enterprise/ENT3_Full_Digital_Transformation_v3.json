@@ -1,0 +1,476 @@
+{
+  "name": "ENT3 Full Digital Transformation v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Agente de Transformaci\u00f3n Digital. Integro todas las plataformas: CRM, ERPNext, Stripe, Teams, Slack, WhatsApp, Twilio, Gmail, Notion, GitHub. \u00bfQu\u00e9 proceso quieres digitalizar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "34782536-c00c-4ca6-a93c-c927586b0fd5",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Transformaci\u00f3n Digital Enterprise\n\nNEGOCIO: CRM + ERPNext + Stripe \u2192 Automatizaci\u00f3n\nCOMUNICACI\u00d3N: Teams + Slack + WhatsApp + Twilio\nANALYTICS: Dashboard + KPIs + Predicci\u00f3n\nINNOVACI\u00d3N: GitHub + Notion + CI/CD",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "966cfe8d-19d3-4b3b-bf4f-81198a0e0caf",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Transformaci\u00f3n Digital Enterprise\n\nGestionas la transformaci\u00f3n digital completa de una empresa:\n\n## Procesos de Negocio:\n- Automatizar workflows manuales entre departamentos\n- Conectar CRM \u2192 ERPNext \u2192 Stripe para ciclo completo\n- Digitalizar aprobaciones y documentos\n- Eliminar silos de informaci\u00f3n entre sistemas\n- KPIs de automatizaci\u00f3n y eficiencia\n\n## Comunicaci\u00f3n Unificada:\n- Teams para reuniones y decisiones\n- Slack para colaboraci\u00f3n \u00e1gil\n- WhatsApp para clientes\n- Twilio SMS para notificaciones\n- Gmail para comunicaciones formales\n\n## Datos y Analytics:\n- Dashboard unificado de todas las plataformas\n- Reportes consolidados en tiempo real\n- Predicci\u00f3n y forecasting con IA\n- Alertas inteligentes basadas en patrones\n- Auditor\u00eda y compliance automatizado\n\n## Innovaci\u00f3n y Desarrollo:\n- GitHub para gesti\u00f3n de c\u00f3digo y proyectos\n- Notion para documentaci\u00f3n y knowledge base\n- CI/CD para despliegue continuo\n- A/B testing para optimizaci\u00f3n\n- Roadmap de innovaci\u00f3n\n\n## Skills Cargados:\n- data-analysis: Analytics avanzado y ML\n- consulting-analysis: Estrategia de transformaci\u00f3n digital\n- deep-research: Tendencias tecnol\u00f3gicas y benchmarking\n- payment-processing: Automatizaci\u00f3n financiera\n- multi-channel: Orquestaci\u00f3n de comunicaci\u00f3n\n- onboarding-automation: Automatizaci\u00f3n de procesos\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "5b4ec34c-65b1-434d-b1f3-5dce5d8acfe7",
+      "name": "Digital Transformation Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "b8780cfe-b5b9-4ec0-9a04-32663461206d",
+      "name": "GPT-4.1 Digital",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "ed685a88-18d6-4c76-be07-49ccc4c47511",
+      "name": "Digital Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string",
+              "description": "Dominio (business/communication/analytics/innovation)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "platforms": {
+              "type": "string",
+              "description": "Plataformas involucradas"
+            },
+            "automation_level": {
+              "type": "string",
+              "description": "Nivel de automatizaci\u00f3n (0-100%)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "f59e8f30-0e5c-46c2-b209-1ab2ef10d960",
+      "name": "Digital Output"
+    },
+    {
+      "parameters": {
+        "description": "Automatizar proceso de negocio en CRM: lead \u2192 deal \u2192 invoice \u2192 payment \u2192 fulfillment.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Process_URL', `CRM Business Process API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "4ee81a18-f377-4052-bc69-d68e7631c015",
+      "name": "CRM Business Process"
+    },
+    {
+      "parameters": {
+        "description": "Crear o ejecutar workflow en ERPNext: aprobaci\u00f3n, compra, producci\u00f3n, inventario, n\u00f3mina.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Workflow_URL', `ERP Workflow API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "8eb14874-141a-4bb5-958d-a52c96c1cb33",
+      "name": "ERP Workflow"
+    },
+    {
+      "parameters": {
+        "description": "Consultar dashboard unificado en ERPNext con KPIs de todas las \u00e1reas de negocio.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Dashboard_URL', `ERP Dashboard API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "4a3c4fb9-5a66-4c01-b195-5b13c9252bc3",
+      "name": "ERP Dashboard"
+    },
+    {
+      "parameters": {
+        "description": "Configurar facturaci\u00f3n automatizada en Stripe con reglas, triggers y reconciliation.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Auto_URL', `Stripe Automated Billing API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "93a58da8-628d-4a2f-82df-c8391d1eba7b",
+      "name": "Stripe Automated Billing"
+    },
+    {
+      "parameters": {
+        "description": "Crear reuni\u00f3n de decisi\u00f3n en Teams con datos, opciones, votos y minuta autom\u00e1tica.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Decision_URL', `Teams Decision API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "9a9bdf47-45c8-4e74-b5e8-62d9c5dcd878",
+      "name": "Teams Decision"
+    },
+    {
+      "parameters": {
+        "description": "Configurar automatizaci\u00f3n en Slack: notificaciones, aprobaciones, escalaciones y reportes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Auto_URL', `Slack Automation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "a17d6826-919a-40bb-a3a6-51a92309344a",
+      "name": "Slack Automation"
+    },
+    {
+      "parameters": {
+        "description": "Configurar bot de atenci\u00f3n al cliente en WhatsApp con respuestas autom\u00e1ticas y escalaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Bot_URL', `WA Customer Bot API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "a1e4c7d2-e758-42ab-a9b6-15b560e91aaa",
+      "name": "WA Customer Bot"
+    },
+    {
+      "parameters": {
+        "description": "Enviar notificaci\u00f3n inteligente v\u00eda Twilio SMS con timing, personalizaci\u00f3n y tracking.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_Notify_URL', `Twilio Smart Notify API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "73771011-4bee-4666-b0c4-4469ac38fc34",
+      "name": "Twilio Smart Notify"
+    },
+    {
+      "parameters": {
+        "description": "Configurar comunicaci\u00f3n inteligente en Gmail: templates, clasificaci\u00f3n, routing y respuestas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Smart_URL', `Gmail Smart Comms API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "4985407c-1749-42de-9a09-310a54e26016",
+      "name": "Gmail Smart Comms"
+    },
+    {
+      "parameters": {
+        "description": "Crear o consultar art\u00edculo en knowledge base de Notion: procesos, FAQs, onboarding y pol\u00edticas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion_KB_URL', `Notion Knowledge Base API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "f3b8c6d9-5bd8-4e65-8f76-163e11729983",
+      "name": "Notion Knowledge Base"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar pipeline CI/CD en GitHub: build, test, deploy y monitoring de automatizaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GitHub_CI_URL', `GitHub CI CD API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "8460fe83-3964-44f3-946a-ae80a4aa330f",
+      "name": "GitHub CI CD"
+    },
+    {
+      "parameters": {
+        "description": "Analizar procesos manuales, identificar oportunidades de automatizaci\u00f3n, priorizar por impacto y recomendar roadmap."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "d42fb16c-6f7a-4f1f-afd5-6526dbf2480a",
+      "name": "Digital Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Digital Transformation Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Digital Transformation Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Digital",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Digital Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Digital Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Business Process",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Workflow",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Dashboard",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Automated Billing",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Decision",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Automation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Customer Bot",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Smart Notify",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Smart Comms",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notion Knowledge Base",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GitHub CI CD",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Digital Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "enterprise"
+    },
+    {
+      "name": "digital-transformation"
+    },
+    {
+      "name": "corporate"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

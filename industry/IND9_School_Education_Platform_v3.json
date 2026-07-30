@@ -1,0 +1,495 @@
+{
+  "name": "IND9 - School Education Platform",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Plataforma Educativa. Gestiono matrícula, calificaciones, comunicación con padres, asistencia y seguimiento del progreso estudiantil. ¿En qué puedo ayudarte?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "8a2397e2-7db6-4d4f-aacc-ece0602171bb",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Plataforma Educativa\n\nGestionas una institución educativa completa a través de múltiples plataformas:\n\n## Gestión de Matrícula:\n- Proceso de matrícula online vía WhatsApp con documentación requerida\n- Verificación de requisitos: edad, documentos, pagos previos\n- Asignación automática de sección y horario según disponibilidad\n- Generación de carnet estudiantil con código QR\n- Renovación de matrícula para estudiantes existentes\n- Gestión de becas y descuentos con verificación de elegibilidad\n\n## Calificaciones y Evaluación:\n- Registro de calificaciones por materia, parcial y trimestre\n- Cálculo automático de promedios, posición y ranking\n- Generación de boletines de calificaciones en PDF\n- Análisis de rendimiento por estudiante, grupo y materia\n- Detección temprana de estudiantes en riesgo académico\n- Recomendaciones de refuerzo académico personalizado\n\n## Comunicación con Padres:\n- Notificaciones automáticas de calificaciones vía WhatsApp\n- Alertas de inasistencias y llegadas tarde\n- Citas padres-profesores con agendamiento automático\n- Circular escolar con confirmación de lectura\n- Reporte de comportamiento y observaciones\n- Canal de comunicación directa con profesores\n\n## Asistencia y Presencia:\n- Registro de asistencia diario por materia con código QR\n- Reporte de inasistencias acumuladas por estudiante\n- Justificación de ausencias con documentación\n- Alertas automáticas al superar umbral de ausencias\n- Estadísticas de asistencia por grupo, materia y período\n- Integración con calendario de eventos escolares\n\n## Skills Cargados:\n- data-analysis: Análisis de rendimiento académico y tendencias\n- consulting-analysis: Recomendaciones pedagógicas personalizadas\n- deep-research: Mejores prácticas educativas y metodologías\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "652ec739-0f23-4d69-aa59-594e9687c3d7",
+      "name": "School Manager Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "39b6a165-fdd8-4970-923c-a720aa4d4c5f",
+      "name": "GPT-4.1 School",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "d25d3320-ad88-4ec7-91ed-b373a16b66e3",
+      "name": "School Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Acción realizada (enrollment/grades/attendance/communication/report)"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado de la operación"
+            },
+            "student_id": {
+              "type": "string",
+              "description": "ID del estudiante si aplica"
+            },
+            "course_id": {
+              "type": "string",
+              "description": "ID del curso/materia si aplica"
+            },
+            "alert_level": {
+              "type": "string",
+              "description": "Nivel de alerta (none/warning/critical)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "b270bf01-6178-46d0-8d9e-6a7cbad3078c",
+      "name": "School Output"
+    },
+    {
+      "parameters": {
+        "description": "Iniciar proceso de matrícula vía WhatsApp con verificación de requisitos y documentación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Enroll_URL', `WA Enrollment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "38d749a6-b909-4be1-bf64-d783fe742cd2",
+      "name": "WA Enrollment"
+    },
+    {
+      "parameters": {
+        "description": "Enviar notificación a padres vía WhatsApp: calificaciones, inasistencias, circulares, citas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Parents_URL', `WA Parent Notify API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "0b076d64-71b3-48d3-9dc7-45ab0826e162",
+      "name": "WA Parent Notify"
+    },
+    {
+      "parameters": {
+        "description": "Enviar circular escolar a todos los padres con confirmación de lectura y seguimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Circular_URL', `WA School Circular API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "bfef4ef7-3388-4e37-8806-e5f548fa86e4",
+      "name": "WA School Circular"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar ficha de estudiante en CRM: datos personales, académicos, tutores.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Student_URL', `CRM Student Record API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "da1c1ba7-5692-454b-a437-a15a85ad9fda",
+      "name": "CRM Student Record"
+    },
+    {
+      "parameters": {
+        "description": "Registrar calificaciones por materia y período con cálculo automático de promedios y posición.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Grades_URL', `CRM Grades Entry API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "e9044086-5198-4b67-8244-446cd0e3ebbe",
+      "name": "CRM Grades Entry"
+    },
+    {
+      "parameters": {
+        "description": "Generar reporte académico completo con calificaciones, asistencia, comportamiento y recomendaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Report_URL', `CRM Academic Report API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "d19eb03e-4633-4626-9a57-8c35d994bc2a",
+      "name": "CRM Academic Report"
+    },
+    {
+      "parameters": {
+        "description": "Registrar y consultar asistencia por estudiante, grupo y materia. Cálculo de porcentaje de asistencia.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Attendance_URL', `CRM Attendance API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "69f7dba9-a7e7-4377-b4cc-0f2d7e9db040",
+      "name": "CRM Attendance"
+    },
+    {
+      "parameters": {
+        "description": "Detectar estudiantes en riesgo académico basado en calificaciones, inasistencias y comportamiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Risk_URL', `CRM Risk Detection API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "cba51df0-f6d5-462e-a013-c58a6579297b",
+      "name": "CRM Risk Detection"
+    },
+    {
+      "parameters": {
+        "description": "Consultar y gestionar horarios de clases, exámenes y eventos escolares.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Schedule_URL', `Calendar Class Schedule API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "6e8d57d6-8102-4e23-bb8a-35b9ab0dbaf5",
+      "name": "Calendar Class Schedule"
+    },
+    {
+      "parameters": {
+        "description": "Agendar cita padres-profesores con selección de horario disponible y confirmación automática.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Meeting_URL', `Calendar Parent Meeting API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "a4321d2b-4d7f-4cbd-af5d-1c601db7f3c4",
+      "name": "Calendar Parent Meeting"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar documentos escolares en Notion: circulares, manuales, reglamentos, planificaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion_Docs_URL', `Notion Documents API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "340f01fd-b0ed-4384-8790-e63d1e658581",
+      "name": "Notion Documents"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar pagos de matrícula y mensualidades con Stripe: facturación, planes de pago, recordatorios.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Tuition_URL', `Stripe Tuition API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "49e501f7-31ef-4c2d-abf3-e2bc53166581",
+      "name": "Stripe Tuition"
+    },
+    {
+      "parameters": {
+        "description": "Analizar rendimiento académico, detectar patrones de riesgo, optimizar distribución de recursos y horarios."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "268f3734-0bb0-400c-81ff-8f44fb6996d3",
+      "name": "School Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Plataforma Educativa\n\nMATRÍCULA: WhatsApp → Verificación → CRM\nCALIFICACIONES: CRM → Promedios → Reportes\nPADRES: WhatsApp → Notificaciones → Citas\nASISTENCIA: QR → CRM → Alertas → Riesgo",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "713ad07a-d55e-4270-bafc-3bf0ee9cc93b",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "School Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "School Manager Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 School",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "School Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "School Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Enrollment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Parent Notify",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA School Circular",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Student Record",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Grades Entry",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Academic Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Attendance",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Risk Detection",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Class Schedule",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Parent Meeting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notion Documents",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Tuition",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "School Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "industry",
+    "school",
+    "education",
+    "students",
+    "grades"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

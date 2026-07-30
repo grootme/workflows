@@ -1,0 +1,243 @@
+{
+  "name": "MCP - Social Media Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "social-media"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9dc3f4a8-8ffe-4c91-a017-eac4834056ef",
+      "name": "MCP Trigger",
+      "webhookId": "social-media"
+    },
+    {
+      "parameters": {
+        "content": "Social Media MCP Server\n\n8 Tools: Twitter/X, LinkedIn,\nInstagram, Facebook, YouTube,\nReddit, TikTok, Mastodon\n\nOAuth2 required for all\nRead + Write capabilities\nAnalytics & insights\nContent publishing",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "e5d183be-4a38-43c0-8c66-b9e938a49ec1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Fetch and post data from Twitter/X API v2: tweets, user timeline, mentions, followers, following, likes, bookmarks, spaces. Supports tweet creation, retweet, like. Requires OAuth2 with Twitter scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('TWITTER_URL', `Twitter/X Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "94ce1a2b-4b78-4e89-80a9-059191181973",
+      "name": "Twitter/X Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch and post data from LinkedIn API: profile, connections, posts, articles, company pages, job listings, skills endorsements. Supports content creation and job search. Requires OAuth2 with LinkedIn scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('LINKEDIN_URL', `LinkedIn Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "d4f2fc64-1323-4249-b3c6-be0da779d48e",
+      "name": "LinkedIn Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Instagram Graph API: posts, stories, insights, followers, hashtags, mentions, media. Supports content publishing for business accounts. Requires Facebook Login with Instagram scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INSTAGRAM_URL', `Instagram Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "172de5e4-f861-4509-8c47-eeb2915ee58b",
+      "name": "Instagram Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Facebook Graph API: posts, events, groups, pages, marketplace, ads insights. Supports page management and content scheduling. Requires Facebook Login with appropriate scopes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('FACEBOOK_URL', `Facebook Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "8401d9f5-4303-4987-a98c-f100e69a65ac",
+      "name": "Facebook Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from YouTube Data API v3: videos, channels, playlists, comments, search, analytics. Supports content upload and channel management. Requires Google OAuth2 with YouTube scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('YOUTUBE_URL', `YouTube Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "c65180ac-9bf4-49ca-a8ac-1532f1193eb9",
+      "name": "YouTube Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Reddit API: posts, comments, subreddits, search, user activity, saved posts. Supports posting and commenting. Requires OAuth2 with Reddit scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('REDDIT_URL', `Reddit Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "b7ae5a46-9ce7-4a6c-8cb3-84d687c8fc9c",
+      "name": "Reddit Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from TikTok API: videos, user profile, analytics, sounds, hashtags. Supports content publishing for business accounts. Requires TikTok for Business OAuth2.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('TIKTOK_URL', `TikTok Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "866282fb-19af-4045-823b-a63956271c6e",
+      "name": "TikTok Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch and post data from Mastodon API: toots, timelines, notifications, accounts, search, trends. Supports posting, boosting, and favoriting. Requires OAuth2 with Mastodon instance.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('MASTODON_URL', `Mastodon Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "01bd7da0-6fd1-4dba-afa9-620fec508bb8",
+      "name": "Mastodon Data"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Twitter/X Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "LinkedIn Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Instagram Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Facebook Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YouTube Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reddit Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "TikTok Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mastodon Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "social-media",
+    "twitter",
+    "linkedin",
+    "instagram",
+    "youtube"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

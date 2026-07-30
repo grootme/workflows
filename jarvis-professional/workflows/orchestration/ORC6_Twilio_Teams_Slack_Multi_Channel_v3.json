@@ -1,0 +1,480 @@
+{
+  "name": "ORC6 Twilio Teams Slack Multi-Channel v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Multi-Channel Communication Orchestrator. I manage messages across Twilio SMS, Microsoft Teams, and Slack simultaneously. I can broadcast, route, and track communications across all channels. What do you need?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "cf0a4b59-90fd-486d-896a-321f223d08c7",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Multi-Channel Communication\n\nTWILIO: SMS + WhatsApp + Voice + OTP\nTEAMS: Messages + Cards + Meetings\nSLACK: Messages + Blocks + Search + Channels\n\nCROSS-CHANNEL:\n  Broadcast \u2192 Escalation \u2192 Routing \u2192 Sync",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "a8e81c1a-043d-4419-9457-363cf482ff32",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Multi-Channel Communication Orchestrator\n\nYou orchestrate communications across three enterprise platforms:\n\n## Channel 1: Twilio SMS\n- Send SMS messages to any phone number globally\n- Send WhatsApp messages via Twilio Business API\n- Make voice calls with TwiML instructions\n- Verify phone numbers with OTP for security\n- Lookup carrier and line type information\n- Track delivery status and message analytics\n\n## Channel 2: Microsoft Teams\n- Send messages to channels and chats\n- Create and manage team channels\n- Send Adaptive Cards for interactive workflows\n- Schedule and manage online meetings\n- Manage team members and roles\n- Integrate with Microsoft 365 ecosystem\n\n## Channel 3: Slack\n- Send messages with Block Kit formatting\n- Create and manage channels\n- Search messages across workspace\n- Manage thread conversations\n- Set user status for availability\n- Handle Slack Events API webhooks\n\n## Cross-Channel Workflows:\n1. Broadcast: Send same message to SMS + Teams + Slack simultaneously\n2. Escalation: SMS \u2192 Teams channel \u2192 Slack channel escalation path\n3. Routing: Route incoming messages to appropriate channel based on priority\n4. Sync: Mirror important messages across all channels\n5. Analytics: Track delivery, read rates, and response times per channel\n6. Onboarding: Welcome new members across all channels\n7. Incident: Alert teams on all channels for critical incidents\n\n## Skills Loaded:\n- multi-channel: Cross-platform message orchestration\n- deep-research: Communication best practices\n- data-analysis: Channel analytics and metrics\n- consulting-analysis: Communication strategy optimization\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "274b0ce5-e201-41a9-b102-4b3e5233e953",
+      "name": "Multi-Channel Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "cd7f9b39-99b4-4706-ad6f-2530f8852a4d",
+      "name": "GPT-4.1 Multi-Channel",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "113b3b3c-73e5-4c29-bb35-966be06468b3",
+      "name": "Multi-Channel Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string",
+              "description": "Channel used (twilio_sms/teams/slack/multi)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "message_id": {
+              "type": "string",
+              "description": "Message ID if applicable"
+            },
+            "recipients": {
+              "type": "string",
+              "description": "Number of recipients reached"
+            },
+            "delivery_status": {
+              "type": "string",
+              "description": "Delivery status (sent/delivered/failed)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Recommended follow-up actions"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "b3b0e59e-05dc-47a5-9320-269d0b98f452",
+      "name": "Multi-Channel Output"
+    },
+    {
+      "parameters": {
+        "description": "Send an SMS message via Twilio with body, media URL, and status callback.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_SMS_URL', `Twilio Send SMS API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "029eb06b-60fb-4128-b0cc-4ba8382b7eac",
+      "name": "Twilio Send SMS"
+    },
+    {
+      "parameters": {
+        "description": "Send a WhatsApp message via Twilio Business API with template or media.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_WA_URL', `Twilio WhatsApp API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "25798f46-049b-485a-bcd6-2a1cb2bd0a86",
+      "name": "Twilio WhatsApp"
+    },
+    {
+      "parameters": {
+        "description": "Initiate a voice call via Twilio with TwiML URL or application SID.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_Call_URL', `Twilio Call API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "19fdf827-c189-4787-9131-1b4a386e80da",
+      "name": "Twilio Call"
+    },
+    {
+      "parameters": {
+        "description": "Send or verify OTP via Twilio Verify for secure authentication.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Twilio_Verify_URL', `Twilio Verify API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "edaf99cb-e47a-409a-acd0-ba8a63566b4b",
+      "name": "Twilio Verify"
+    },
+    {
+      "parameters": {
+        "description": "Send a message to a Microsoft Teams channel or chat with text and attachments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Msg_URL', `Teams Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "882c7f82-ecae-4e4a-aff1-01772692a6fa",
+      "name": "Teams Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send an Adaptive Card to Teams with interactive buttons and action handlers.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Card_URL', `Teams Send Card API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "6a405d24-94d9-49f8-a482-a1843d559eb3",
+      "name": "Teams Send Card"
+    },
+    {
+      "parameters": {
+        "description": "Create a Teams online meeting with subject, time, participants, and lobby settings.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Meeting_URL', `Teams Meeting API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "1fb2024a-4ac9-4652-b892-444c6eb5ac7d",
+      "name": "Teams Meeting"
+    },
+    {
+      "parameters": {
+        "description": "Post a message to a Slack channel or DM with text, blocks, and thread replies.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Msg_URL', `Slack Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "abaa5960-78d7-4503-b9b5-fb957143442a",
+      "name": "Slack Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send a rich Block Kit message with sections, actions, and interactive components.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Block_URL', `Slack Block Kit API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "38989fea-d644-46f4-93c3-759eb60f7a92",
+      "name": "Slack Block Kit"
+    },
+    {
+      "parameters": {
+        "description": "Search Slack messages across all channels and DMs with query and filters.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Search_URL', `Slack Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "65d9ee8c-f45e-4ae3-af50-ec2b4b246d70",
+      "name": "Slack Search"
+    },
+    {
+      "parameters": {
+        "description": "Create or manage a Slack channel with name, topic, purpose, and members.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Channel_URL', `Slack Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "3b811f7b-220d-4706-8a3b-e4ee9f95e3d8",
+      "name": "Slack Channel"
+    },
+    {
+      "parameters": {
+        "description": "Think through channel selection, message format, priority routing, and delivery optimization."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "1308def2-b347-458d-a8b9-e0099b6e9b7d",
+      "name": "Channel Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Multi-Channel Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multi-Channel Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Multi-Channel",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Multi-Channel Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Multi-Channel Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Twilio Send SMS",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio WhatsApp",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Call",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio Verify",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Send Message",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Send Card",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Meeting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Send Message",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Block Kit",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Search",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Channel",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Channel Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "orchestration"
+    },
+    {
+      "name": "multi-channel"
+    },
+    {
+      "name": "communication"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

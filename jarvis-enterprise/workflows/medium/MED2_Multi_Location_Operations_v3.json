@@ -1,0 +1,430 @@
+{
+  "name": "MED2 Multi Location Operations v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente Multi-Sucursal. Coordino operaciones entre sucursales con WhatsApp, CRM, ERPNext y Stripe. \u00bfQu\u00e9 sucursal necesitas gestionar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "9caf0654-2fb9-4123-ba79-2c4db4193824",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Operaciones Multi-Sucursal\n\nINVENTARIO: ERPNext \u2192 Stock \u2192 Transfer \u2192 Reorder\nVENTAS: CRM \u2192 Por Sucursal \u2192 Comparativa\nPAGOS: Stripe \u2192 Cierre de Caja \u2192 Consolidado\nCOMUNICACI\u00d3N: WhatsApp + Teams + SMS",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "d3555428-9da0-4409-9378-a599a3df808c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Operaciones Multi-Sucursal\n\nGestionas operaciones de una empresa con m\u00faltiples sucursales:\n\n## Gesti\u00f3n de Sucursales:\n- Dashboard de cada sucursal: ventas, inventario, personal\n- Comparaci\u00f3n de rendimiento entre sucursales\n- Alertas de anomal\u00edas por sucursal\n- Transferencia de inventario entre sucursales\n- Reportes consolidados y por sucursal\n\n## Inventario y ERP:\n- Gesti\u00f3n de inventario en ERPNext por sucursal\n- Reorden autom\u00e1tico cuando stock bajo\n- Transferencias entre sucursales\n- Control de mermas y devoluciones\n- Conciliaci\u00f3n de inventario f\u00edsico vs sistema\n\n## Ventas y Pagos:\n- Registro de ventas por sucursal en CRM\n- Pagos centralizados en Stripe\n- Cierre de caja diario por sucursal\n- Reporte de ventas consolidado\n- An\u00e1lisis de rentabilidad por sucursal\n\n## Comunicaci\u00f3n:\n- WhatsApp por sucursal para comunicaci\u00f3n con clientes\n- Teams para comunicaci\u00f3n entre gerentes\n- SMS para alertas de inventario y cierre de caja\n- Reportes ejecutivos por WhatsApp\n\n## Skills Cargados:\n- data-analysis: KPIs por sucursal y comparativas\n- consulting-analysis: Optimizaci\u00f3n de operaciones\n- deep-research: Mejores pr\u00e1cticas de retail multi-sucursal\n- payment-processing: Conciliaci\u00f3n financiera\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "a3f114f2-e64f-492b-94b1-3db6380d257a",
+      "name": "Multi-Location Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "a1a79fbb-69f3-4390-ac43-3654fdbade13",
+      "name": "GPT-4.1 Location",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "2fc32ef4-9841-45f4-970d-abe7b451a141",
+      "name": "Location Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "Sucursal"
+            },
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (inventory/sales/payments/communication)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "metric": {
+              "type": "string",
+              "description": "M\u00e9trica relevante"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "ac3cea24-11bb-4ddf-9ed0-dc69d6b9607f",
+      "name": "Location Output"
+    },
+    {
+      "parameters": {
+        "description": "Consultar y gestionar inventario en ERPNext por sucursal con stock, reorden y transferencias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Inventory_URL', `ERP Inventory API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "c009ee24-6d75-4107-84d5-04eaed357704",
+      "name": "ERP Inventory"
+    },
+    {
+      "parameters": {
+        "description": "Crear transferencia de inventario entre sucursales en ERPNext con productos y cantidades.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Transfer_URL', `ERP Stock Transfer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "ebdb910f-2e24-459c-9c6f-611e6290a49f",
+      "name": "ERP Stock Transfer"
+    },
+    {
+      "parameters": {
+        "description": "Generar orden de reposici\u00f3n autom\u00e1tica en ERPNext cuando inventario alcanza punto de reorden.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Reorder_URL', `ERP Auto Reorder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "1c60ffe9-f86a-4e52-a7b7-ff133ec939bc",
+      "name": "ERP Auto Reorder"
+    },
+    {
+      "parameters": {
+        "description": "Registrar y consultar ventas por sucursal en CRM con productos, monto y m\u00e9todo de pago.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Sales_URL', `CRM Location Sales API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "4a9d76da-8190-4b06-9e0c-2209e6aeb718",
+      "name": "CRM Location Sales"
+    },
+    {
+      "parameters": {
+        "description": "Comparar rendimiento entre sucursales: ventas, ticket promedio, conversi\u00f3n y tendencias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Compare_URL', `CRM Compare Locations API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "1922f303-d3a1-4abd-81e2-e91c3cfdfa2b",
+      "name": "CRM Compare Locations"
+    },
+    {
+      "parameters": {
+        "description": "Registrar cierre de caja diario por sucursal en Stripe con ventas, devoluciones y diferencia.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Close_URL', `Stripe Cash Close API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "58d8433a-9705-4231-b600-134ee5bcde73",
+      "name": "Stripe Cash Close"
+    },
+    {
+      "parameters": {
+        "description": "Generar reporte financiero consolidado desde Stripe con ventas por sucursal y m\u00e9todo de pago.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Report_URL', `Stripe Consolidated API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "8051aa94-098c-4a02-bc0c-c3f9ba9be4a8",
+      "name": "Stripe Consolidated"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta por WhatsApp a gerente de sucursal: inventario bajo, cierre de caja, o anomal\u00eda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Alert_URL', `WA Location Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "c9e5735f-b149-40bf-b2e2-2d9e397a0913",
+      "name": "WA Location Alert"
+    },
+    {
+      "parameters": {
+        "description": "Publicar o comunicar en canal de gerentes de Teams: actualizaci\u00f3n, directiva o reporte.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Managers_URL', `Teams Managers API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "6328f6e3-be53-46e9-8dd5-9d6b6f03b019",
+      "name": "Teams Managers"
+    },
+    {
+      "parameters": {
+        "description": "Analizar rendimiento por sucursal, optimizar inventario, identificar sucursales con problemas y recomendar acciones."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "cb44a2d1-8dfb-4074-9b61-81723e11ec84",
+      "name": "Location Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Multi-Location Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multi-Location Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Location",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Location Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Location Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "ERP Inventory",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Stock Transfer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Auto Reorder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Location Sales",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Compare Locations",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Cash Close",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Consolidated",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Location Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Managers",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Location Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "medium-business"
+    },
+    {
+      "name": "multi-location"
+    },
+    {
+      "name": "enterprise"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

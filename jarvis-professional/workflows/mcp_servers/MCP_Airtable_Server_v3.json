@@ -1,0 +1,242 @@
+{
+  "name": "MCP - Airtable Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "airtable"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7e6a6fd1-e169-4f9c-b8a8-2a1fb3f3b621",
+      "name": "MCP Trigger",
+      "webhookId": "airtable"
+    },
+    {
+      "parameters": {
+        "content": "Airtable MCP Server\n\n8 Tools: Bases, Tables, Records,\nCreate, Update, Delete, Webhooks,\nAttachments\n\nFormula-based filtering\nBatch operations\nReal-time webhooks",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "b883d9cd-36c8-47d5-8cfd-114746bb509d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "List all Airtable bases accessible with current credentials. Returns base IDs, names, and permission levels.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_BASES_URL', `List Bases API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "17677b2c-02ba-413e-8137-fdb665621866",
+      "name": "List Bases"
+    },
+    {
+      "parameters": {
+        "description": "List all tables in a specified Airtable base with schema information: fields, types, views.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_TABLES_URL', `List Tables API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "2c795182-0316-47a0-92ed-aa01eabc409a",
+      "name": "List Tables"
+    },
+    {
+      "parameters": {
+        "description": "Query records from an Airtable table with filtering, sorting, and field selection. Supports formula-based filtering.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_RECORDS_URL', `List Records API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "3c42da42-0a94-44a9-bc33-52d34b0596ce",
+      "name": "List Records"
+    },
+    {
+      "parameters": {
+        "description": "Create a new record in an Airtable table with specified field values. Supports all field types including attachments and lookups.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_CREATE_URL', `Create Record API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "17c74b4b-e23c-43d1-98d5-1e888eea94e8",
+      "name": "Create Record"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing record in an Airtable table. Supports partial updates and atomic operations on number/currency fields.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_UPDATE_URL', `Update Record API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "65aea80d-1b3d-47e4-be60-1e56939e0509",
+      "name": "Update Record"
+    },
+    {
+      "parameters": {
+        "description": "Delete one or more records from an Airtable table by record IDs. Supports batch deletion up to 10 records.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_DELETE_URL', `Delete Records API endpoint URL`, 'string') }",
+        "method": "DELETE",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "b1f99f0b-ebb9-4ca6-b505-d1d0a9cc38b6",
+      "name": "Delete Records"
+    },
+    {
+      "parameters": {
+        "description": "Create, list, or delete Airtable webhooks for real-time change notifications. Supports table-specific and view-specific webhooks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_WEBHOOK_URL', `Webhook Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "727a97d0-759e-48d2-8c83-43e8e9f7c17d",
+      "name": "Webhook Management"
+    },
+    {
+      "parameters": {
+        "description": "Upload a file attachment to an Airtable record. Supports images, PDFs, documents. Returns attachment URL and metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AIRTABLE_ATTACH_URL', `Attach File API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "c0d8b2a9-f7ca-4a6d-90a2-d19790cda56b",
+      "name": "Attach File"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "List Bases",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Tables",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete Records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Attach File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "airtable",
+    "database",
+    "no-code",
+    "automation"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

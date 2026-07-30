@@ -1,0 +1,243 @@
+{
+  "name": "MCP - Banking Plaid Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "banking-plaid"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f188536b-5991-4a58-b53e-9cf117b88f33",
+      "name": "MCP Trigger",
+      "webhookId": "banking-plaid"
+    },
+    {
+      "parameters": {
+        "content": "Banking/Plaid MCP Server\n\n8 Tools: Accounts, Transactions,\nBalances, Investments, Liabilities,\nIncome, Auth, Identity\n\nPlaid API (real integration)\nOAuth2 + Plaid Link\nTransaction webhooks\nMulti-bank support",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "cfeaa9cf-b8f9-42d6-8775-0493770ffacf",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Fetch bank accounts via Plaid API: checking, savings, credit cards, investment accounts. Returns balances, account numbers (masked), institution info. Requires Plaid access token.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_ACCOUNTS_URL', `Bank Accounts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "23b27e1a-988f-4871-9a99-3def9b162e8a",
+      "name": "Bank Accounts"
+    },
+    {
+      "parameters": {
+        "description": "Fetch transaction history via Plaid API: date, amount, merchant, category, pending status. Supports date range filtering, category filtering, and pagination. Real-time transaction webhooks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_TRANSACTIONS_URL', `Transactions History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "d78780bf-0eaf-4a35-b252-30a41b0b7901",
+      "name": "Transactions History"
+    },
+    {
+      "parameters": {
+        "description": "Fetch real-time balances via Plaid API: current, available, limit for each account. Supports balance change webhooks for low balance alerts and budget tracking.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_BALANCES_URL', `Account Balances API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "72b1bb5e-2272-4aab-b02c-fb7262601552",
+      "name": "Account Balances"
+    },
+    {
+      "parameters": {
+        "description": "Fetch investment holdings via Plaid API: securities, quantities, cost basis, current value, unrealized gains/losses. Supports portfolio analysis and rebalancing recommendations.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_INVESTMENTS_URL', `Investment Holdings API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "ce60680e-66f2-4d51-949e-40097e993b8f",
+      "name": "Investment Holdings"
+    },
+    {
+      "parameters": {
+        "description": "Fetch liability data via Plaid API: student loans, mortgages, credit cards with APR, payment schedules, outstanding balances. Supports debt payoff optimization.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_LIABILITIES_URL', `Liabilities Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "02faafdf-732e-42fa-9699-f31afa58cc29",
+      "name": "Liabilities Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch income data via Plaid API: projected yearly income, income streams, employer info, pay frequency. Supports income verification and financial planning.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_INCOME_URL', `Income Insights API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "87369d7c-059f-4adf-acbe-85d60243d9ef",
+      "name": "Income Insights"
+    },
+    {
+      "parameters": {
+        "description": "Initiate Plaid Link flow for bank account authentication. Returns access token for subsequent API calls. Supports multiple auth methods: micro-deposits, instant, automated.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_AUTH_URL', `Plaid Auth API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "78913686-35af-4424-b7ca-c43f2e922b92",
+      "name": "Plaid Auth"
+    },
+    {
+      "parameters": {
+        "description": "Fetch identity data via Plaid API: names, emails, phone numbers, addresses associated with bank accounts. Supports KYC compliance and identity verification workflows.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PLAID_IDENTITY_URL', `Identity Verification API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "aadd2e94-715f-4972-ad24-67091e4e255c",
+      "name": "Identity Verification"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Bank Accounts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transactions History",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Account Balances",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Investment Holdings",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Liabilities Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Income Insights",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plaid Auth",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Identity Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "banking",
+    "plaid",
+    "finance",
+    "fintech",
+    "open-banking"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

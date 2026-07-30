@@ -1,0 +1,506 @@
+{
+  "name": "IND7 Abogados Onboarding v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Abogados (Law Firm) Onboarding Assistant. I manage client onboarding from WhatsApp legal consultation through CRM case registration, Stripe retainer payment, Teams consultation scheduling, and Slack internal collaboration. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "f1453657-1038-4d36-ae3a-f8312f13ae79",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Abogados / Law Firm Onboarding\n\nFLOW: WhatsApp Consult \u2192 CRM Case \u2192 Stripe Retainer \u2192 Teams Meeting \u2192 Slack Collaboration\n\nPlatforms: WhatsApp, CRM, Stripe, Slack, Teams, Twilio SMS\nTiers: Consultation / Representation / Premium\nPractice: Civil, Criminal, Family, Corporate, Immigration, Labor, IP\nPipeline: Lead \u2192 Consultation \u2192 Conflict Check \u2192 Retainer \u2192 Active \u2192 Resolution",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "da01a73b-76c4-4146-b279-7f3dc08c3f7e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Abogados / Law Firm Onboarding Agent\n\nYou orchestrate law firm client onboarding across multiple platforms:\n\n## Client Lead Capture:\n- Send legal consultation form via WhatsApp interactive messages\n- Collect client data: name, case type, urgency, opposing party\n- Qualify by practice area: Civil, Criminal, Family, Corporate, Immigration, Labor, IP\n- Assess case urgency: Emergency, Urgent, Standard, Consultation Only\n- Send confidentiality agreement and engagement letter via WhatsApp\n- Verify client identity and conflict of interest check\n\n## Case Registration:\n- Create client profile in CRM with case details and legal metadata\n- Assign service tier: Consultation (one-time), Representation (full case), Premium (priority + 24/7)\n- Record case type, jurisdiction, and key dates\n- Assign attorney based on practice area and availability\n- Create matter number and case folder\n- Set up conflict check and ethical walls\n\n## Payment Setup:\n- Create Stripe invoice for retainer or consultation fee\n- Set up recurring billing for ongoing representation\n- Process contingency fee agreements (if applicable)\n- Handle payment plans and installment schedules\n- Generate trust account and operating account records\n- Track billable hours and expenses\n\n## Consultation & Communication:\n- Schedule initial consultation via Microsoft Teams meeting\n- Send document checklist via WhatsApp (ID, contracts, evidence, etc.)\n- Create Slack channel for internal case collaboration\n- Set up SMS reminders for court dates and deadlines\n- Send case status updates via WhatsApp\n- Track billable time and client communications\n\n## Deadline & Compliance:\n- Track statute of limitations and filing deadlines\n- Send court date reminders via SMS and WhatsApp\n- Generate compliance reports and status updates\n- Flag approaching deadlines and escalation requirements\n- Maintain audit trail of all communications\n\n## Pipeline Stages:\nLead \u2192 Consultation \u2192 Conflict Check \u2192 Retainer \u2192 Active \u2192 Resolution\n\n## Skills Loaded:\n- onboarding-automation: Law firm-specific onboarding flows\n- data-analysis: Case metrics and billable hours tracking\n- deep-research: Legal industry trends and best practices\n- consulting-analysis: Law firm growth and client retention strategy\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "40462af9-99f3-4fd4-bd28-ccb1620fdcab",
+      "name": "Abogados Onboarding Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "3253c1e0-b756-4b54-a6f4-20acd20115b3",
+      "name": "GPT-4.1 Abogados",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "98817b09-c665-49a7-8f29-cb5dced6ee79",
+      "name": "Abogados Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (lead/registration/payment/consultation/compliance)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "client_id": {
+              "type": "string",
+              "description": "CRM client ID if applicable"
+            },
+            "case_id": {
+              "type": "string",
+              "description": "CRM case/matter ID if applicable"
+            },
+            "payment_id": {
+              "type": "string",
+              "description": "Stripe payment ID if applicable"
+            },
+            "practice_area": {
+              "type": "string",
+              "description": "Practice area (Civil/Criminal/Family/Corporate/Immigration/Labor/IP)"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "44eaafe6-6e75-42f4-8a46-8ea2fc0bce66",
+      "name": "Abogados Output"
+    },
+    {
+      "parameters": {
+        "description": "Send a legal consultation form via WhatsApp to collect case type, urgency, and client details.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Consult_URL', `WA Legal Consult API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "7c2c1130-1575-4a82-b027-1a66dcdedfa8",
+      "name": "WA Legal Consult"
+    },
+    {
+      "parameters": {
+        "description": "Send a document checklist via WhatsApp based on case type (ID, contracts, evidence, financial records).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Docs_URL', `WA Document Checklist API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "b5909ec6-adba-438b-aea1-d6650772a397",
+      "name": "WA Document Checklist"
+    },
+    {
+      "parameters": {
+        "description": "Send a case status update via WhatsApp with key milestones, next steps, and deadline reminders.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Status_URL', `WA Case Status API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "e807c630-25f6-4802-9da3-12e701fadfc7",
+      "name": "WA Case Status"
+    },
+    {
+      "parameters": {
+        "description": "Send confidentiality agreement and engagement letter via WhatsApp for client signature.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Confidential_URL', `WA Confidentiality API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "21951c35-07ae-4b82-a5f2-a2712ad4b510",
+      "name": "WA Confidentiality"
+    },
+    {
+      "parameters": {
+        "description": "Create a law firm client profile in CRM with case type, urgency, practice area, and assigned attorney.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Client_URL', `CRM Register Client API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "00544caa-4a0e-4a83-933a-c587f3ad6169",
+      "name": "CRM Register Client"
+    },
+    {
+      "parameters": {
+        "description": "Create a legal case/matter in CRM with matter number, jurisdiction, key dates, and conflict check results.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Case_URL', `CRM Create Case API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "6a7ce0b8-25e8-44d7-84bd-9b1ed6dacaf8",
+      "name": "CRM Create Case"
+    },
+    {
+      "parameters": {
+        "description": "Track statute of limitations, filing deadlines, and court dates. Flag approaching deadlines.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Deadline_URL', `CRM Track Deadlines API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "1ac256ad-a602-4b28-9636-f614b19ae3e0",
+      "name": "CRM Track Deadlines"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe invoice for retainer fee or consultation charge with payment plan options.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Retainer_URL', `Stripe Retainer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "fa133a5c-6b5d-4f52-ae62-af8695d25c78",
+      "name": "Stripe Retainer"
+    },
+    {
+      "parameters": {
+        "description": "Set up recurring billing for ongoing representation, track billable hours, and process expenses.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Billing_URL', `Stripe Billing API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "728532ad-5611-4aab-91b6-79619bd243b8",
+      "name": "Stripe Billing"
+    },
+    {
+      "parameters": {
+        "description": "Create a Slack channel for internal case collaboration with attorney, paralegal, and support staff.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Channel_URL', `Slack Case Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "56ac31d4-b824-4686-a3d5-c7fd9a2b3557",
+      "name": "Slack Case Channel"
+    },
+    {
+      "parameters": {
+        "description": "Schedule a Microsoft Teams consultation meeting with client, attorney, and case notes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Meeting_URL', `Teams Consultation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "d0e6bc64-0015-413a-b9a6-f4df8865a8b9",
+      "name": "Teams Consultation"
+    },
+    {
+      "parameters": {
+        "description": "Send a Twilio SMS alert for court dates, filing deadlines, and statute of limitations approaching.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Deadline_URL', `SMS Deadline Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "200240e1-50ce-4f26-95a9-9951cc982869",
+      "name": "SMS Deadline Alert"
+    },
+    {
+      "parameters": {
+        "description": "Think through case qualification, conflict check, practice area assignment, retainer structure, and deadline management."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "291ac4f3-e778-4690-aa42-a42beaa84b23",
+      "name": "Abogados Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Abogados Onboarding Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Abogados Onboarding Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Abogados",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Abogados Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Abogados Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Legal Consult",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Document Checklist",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Case Status",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Confidentiality",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Register Client",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Create Case",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Track Deadlines",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Retainer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Billing",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Case Channel",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Consultation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Deadline Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Abogados Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "abogados"
+    },
+    {
+      "name": "law-firm"
+    },
+    {
+      "name": "onboarding"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

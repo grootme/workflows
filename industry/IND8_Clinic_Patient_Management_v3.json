@@ -1,0 +1,491 @@
+{
+  "name": "IND8 - Clinic Patient Management",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Gestión Clínica. Gestiono citas, historial de pacientes, recordatorios, facturación y seguimiento post-consulta. ¿En qué puedo ayudarte?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "b69fb889-760b-4d3b-963b-38730d3dc56c",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Gestión Clínica\n\nGestionas una clínica médica completa a través de múltiples plataformas:\n\n## Gestión de Citas:\n- Agendar citas vía WhatsApp con selección de médico, especialidad y horario\n- Verificar disponibilidad en tiempo real del calendario\n- Confirmar, reprogramar o cancelar citas automáticamente\n- Recordatorios: 24h antes, 2h antes, y 30min antes vía SMS/WhatsApp\n- Lista de espera inteligente para cancelaciones de última hora\n- Gestión de citas urgentes con prioridad automática\n\n## Historial de Pacientes:\n- Crear y actualizar fichas de pacientes en CRM\n- Registrar antecedentes médicos, alergias, medicamentos actuales\n- Historial de consultas anteriores con diagnósticos y tratamientos\n- Subir documentos médicos (resultados de laboratorio, imágenes)\n- Alertas de interacciones medicamentosas y alergias conocidas\n\n## Facturación y Pagos:\n- Generar facturas por consulta en Stripe\n- Gestión de seguros médicos con verificación de cobertura\n- Planes de pago para tratamientos costosos\n- Recordatorios de pagos pendientes\n- Reportes de ingresos por médico, especialidad y período\n\n## Seguimiento Post-Consulta:\n- Mensaje automático 24h después de la consulta\n- Recordatorio de medicamentos recetados\n- Encuesta de satisfacción vía WhatsApp\n- Alertas si el paciente no retira medicamentos\n- Programación de citas de seguimiento según indicación médica\n\n## Skills Cargados:\n- data-analysis: Análisis de patrones de citas, pacientes frecuentes\n- consulting-analysis: Optimización de horarios y recursos\n- deep-research: Referencias médicas y protocolos actualizados\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "71cd5678-d539-4ae4-ac77-df1aa5e7e5b2",
+      "name": "Clinic Manager Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "8571e7cf-4d73-45cc-b1ab-c37324ad2ebf",
+      "name": "GPT-4.1 Clinic",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "e5c108c7-5c10-457a-a8a1-1330a146faab",
+      "name": "Clinic Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Acción realizada (appointment/patient/billing/followup/reminder)"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado de la operación"
+            },
+            "patient_id": {
+              "type": "string",
+              "description": "ID del paciente si aplica"
+            },
+            "appointment_id": {
+              "type": "string",
+              "description": "ID de la cita si aplica"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "0702bc1b-494d-49a7-b631-1e8bfbbaae13",
+      "name": "Clinic Output"
+    },
+    {
+      "parameters": {
+        "description": "Agendar cita médica vía WhatsApp con selección de médico, especialidad, fecha y hora. Verifica disponibilidad.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Book_URL', `WA Book Appointment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "f340a61b-1d62-4fd6-a063-c3d567835454",
+      "name": "WA Book Appointment"
+    },
+    {
+      "parameters": {
+        "description": "Confirmar, reprogramar o cancelar cita existente. Envía confirmación al paciente por WhatsApp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Confirm_URL', `WA Confirm Appointment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "dc199619-cac5-4aa2-ba80-971c20fb6390",
+      "name": "WA Confirm Appointment"
+    },
+    {
+      "parameters": {
+        "description": "Enviar mensaje de seguimiento post-consulta con instrucciones, recordatorio de medicamentos y encuesta de satisfacción.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Followup_URL', `WA Post-Consultation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "d93dcb06-04f0-448c-ad25-dbafba5b1707",
+      "name": "WA Post-Consultation"
+    },
+    {
+      "parameters": {
+        "description": "Consultar disponibilidad de médicos en calendario por especialidad, fecha y rango horario.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Availability_URL', `Calendar Availability API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "2a1b04ba-8bfd-49b8-9515-35c98bd88be1",
+      "name": "Calendar Availability"
+    },
+    {
+      "parameters": {
+        "description": "Reservar slot en calendario del médico con datos de paciente, tipo de consulta y duración estimada.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Book_URL', `Calendar Book Slot API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "56a8852b-4a2e-44b9-a975-ead730ae16e4",
+      "name": "Calendar Book Slot"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar ficha de paciente en CRM: datos personales, antecedentes, alergias, medicamentos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Patient_URL', `CRM Patient Record API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "1032012b-a7b1-43c5-8cf3-bbf7dde921e4",
+      "name": "CRM Patient Record"
+    },
+    {
+      "parameters": {
+        "description": "Consultar historial de consultas del paciente: fechas, diagnósticos, tratamientos, médicos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_History_URL', `CRM Consultation History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "388f0c18-e32e-4102-b3b2-7d8720b6e11e",
+      "name": "CRM Consultation History"
+    },
+    {
+      "parameters": {
+        "description": "Subir o consultar documentos médicos del paciente: resultados de laboratorio, imágenes, informes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Docs_URL', `CRM Medical Documents API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "e6f5f85e-567c-4a53-881b-05db0f89c264",
+      "name": "CRM Medical Documents"
+    },
+    {
+      "parameters": {
+        "description": "Generar factura por consulta médica con datos del paciente, médico, servicios y seguro médico.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Clinic Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "b1f74caa-9127-4f67-b549-1ffa9b1216f7",
+      "name": "Stripe Clinic Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Verificar cobertura de seguro médico del paciente y calcular copago.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Insurance_URL', `Stripe Insurance Verify API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "10b2a5ae-cafb-4f73-a070-889b0b7d1187",
+      "name": "Stripe Insurance Verify"
+    },
+    {
+      "parameters": {
+        "description": "Enviar recordatorio SMS de cita próxima con fecha, hora, médico y dirección de la clínica.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Reminder_URL', `SMS Appointment Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "2ce171fc-e548-4d52-9395-fb849ea06e16",
+      "name": "SMS Appointment Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Recordatorio SMS de medicamentos recetados con dosis, frecuencia y duración del tratamiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Med_URL', `SMS Medication Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "c8a9dfbc-0ef4-439d-bd2d-3677f96b4330",
+      "name": "SMS Medication Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones de citas, optimizar horarios, detectar pacientes frecuentes, evaluar carga de trabajo por médico."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "081a8d0e-2241-4f1e-bee2-0a9342fddc3f",
+      "name": "Clinic Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Gestión Clínica\n\nCITAS: WhatsApp → Calendario → Confirmación\nPACIENTES: CRM → Historial → Documentos\nFACTURACIÓN: Stripe → Seguros → Copago\nSEGUIMIENTO: Post-consulta → Medicamentos → Encuesta",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "be2c8e34-defe-45fe-99b7-09dc4371d1e3",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clinic Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clinic Manager Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Clinic",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Clinic Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Clinic Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Book Appointment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Confirm Appointment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Post-Consultation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Availability",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Book Slot",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Patient Record",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Consultation History",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Medical Documents",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Clinic Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Insurance Verify",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Appointment Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Medication Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clinic Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "industry",
+    "clinic",
+    "healthcare",
+    "medical",
+    "appointments"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

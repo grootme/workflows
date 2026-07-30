@@ -1,0 +1,453 @@
+{
+  "name": "SMB3 Freelancer Manager v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente Freelance. Gestiono proyectos en CRM, facturaci\u00f3n en Stripe, comunicaci\u00f3n en Slack, agenda en Calendar y emails en Gmail. \u00bfEn qu\u00e9 te ayudo?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "7eb64143-d9b5-4b6b-8d54-6e960a13a5da",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Freelancer Manager\n\nPROYECTOS: CRM \u2192 Milestones \u2192 Time Tracking\nFACTURACI\u00d3N: Stripe \u2192 Horas/Retainer \u2192 Recordatorios\nCOMUNICACI\u00d3N: Slack + Gmail + WhatsApp\nAGENDA: Calendar \u2192 Work Blocks \u2192 Productividad",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "8fa7988a-28d0-4a88-ac0b-4157e1783cc3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente Freelance\n\nGestionas todas las operaciones de un freelancer:\n\n## Gesti\u00f3n de Proyectos:\n- Crear proyectos en CRM con cliente, alcance, deadline y presupuesto\n- Track de progreso: Inicio \u2192 En Progreso \u2192 Revisi\u00f3n \u2192 Entregado \u2192 Pagado\n- Control de horas trabajadas por proyecto\n- Milestones y entregables con fechas\n- Alertas de deadline pr\u00f3ximo\n\n## Facturaci\u00f3n:\n- Crear facturas en Stripe por proyecto o horas\n- Facturaci\u00f3n recurrente para clientes de retainer\n- Track de pagos pendientes y vencidos\n- Recordatorios de pago autom\u00e1ticos\n- Reporte mensual de ingresos y gastos\n\n## Comunicaci\u00f3n:\n- Slack para comunicaci\u00f3n con clientes y equipos\n- Gmail para propuestas y contratos formales\n- WhatsApp para comunicaci\u00f3n r\u00e1pida\n- Templates de mensajes frecuentes\n- Resumen diario de mensajes pendientes\n\n## Agenda y Productividad:\n- Calendar con bloques de trabajo por proyecto\n- Time tracking autom\u00e1tico\n- Balance entre proyectos y descanso\n- Planificaci\u00f3n semanal de entregas\n- Review de productividad semanal\n\n## Skills Cargados:\n- data-analysis: M\u00e9tricas de productividad y rentabilidad\n- consulting-analysis: Estrategia de precios y posicionamiento\n- payment-processing: Gesti\u00f3n de cobros\n- deep-research: An\u00e1lisis de mercado freelance\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "7e09b6e5-d42c-4d00-a6a1-6cf9003ec04d",
+      "name": "Freelancer Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "b1e02071-09ad-479b-8d5d-d75cd8e9aee3",
+      "name": "GPT-4.1 Freelancer",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "5e86edef-e5d6-4a13-a640-8a0b22ddf718",
+      "name": "Freelancer Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (projects/invoicing/communication/schedule)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "project_id": {
+              "type": "string",
+              "description": "ID de proyecto CRM si aplica"
+            },
+            "payment_id": {
+              "type": "string",
+              "description": "ID de pago Stripe si aplica"
+            },
+            "hours": {
+              "type": "string",
+              "description": "Horas trabajadas si aplica"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "5c622e5c-2d98-4b43-9219-de865dc720e4",
+      "name": "Freelancer Output"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar proyecto en CRM con cliente, alcance, deadline, presupuesto y estado.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Project_URL', `CRM Project API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "79ee5371-900d-4aca-b514-caeb1682859f",
+      "name": "CRM Project"
+    },
+    {
+      "parameters": {
+        "description": "Registrar horas trabajadas por proyecto en CRM con fecha, descripci\u00f3n y categor\u00eda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Hours_URL', `CRM Time Tracking API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "3316c239-59ca-4d02-849a-7a0ce6a3cf7e",
+      "name": "CRM Time Tracking"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar milestone de proyecto en CRM con entregable, fecha y estado.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Milestone_URL', `CRM Milestone API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "a1786977-50ed-452f-a440-146921706ff1",
+      "name": "CRM Milestone"
+    },
+    {
+      "parameters": {
+        "description": "Crear factura en Stripe por proyecto con horas, tarifa y concepto.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "91cbca93-6200-41e5-b168-2ab5102a6cc6",
+      "name": "Stripe Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Configurar facturaci\u00f3n recurrente en Stripe para cliente retainer con monto mensual.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Retainer_URL', `Stripe Retainer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "1dd714db-3675-4f90-a41a-c3980116c862",
+      "name": "Stripe Retainer"
+    },
+    {
+      "parameters": {
+        "description": "Consultar estado de pagos: pendientes, vencidos y recibidos. Enviar recordatorios autom\u00e1ticos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Track_URL', `Stripe Payment Track API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "7ed8670f-7465-40d8-b99d-c7515fbee1be",
+      "name": "Stripe Payment Track"
+    },
+    {
+      "parameters": {
+        "description": "Enviar mensaje a cliente o equipo por Slack con actualizaci\u00f3n de proyecto o consulta.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Msg_URL', `Slack Client Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "16c97f65-84fb-450b-8832-022e73f25db5",
+      "name": "Slack Client Message"
+    },
+    {
+      "parameters": {
+        "description": "Enviar propuesta de proyecto por Gmail con scope, timeline, presupuesto y t\u00e9rminos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Proposal_URL', `Gmail Proposal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "30efd143-4082-48c8-97aa-0bf1cda282aa",
+      "name": "Gmail Proposal"
+    },
+    {
+      "parameters": {
+        "description": "Crear bloque de trabajo en Calendar para proyecto con duration, breaks y focus mode.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_Block_URL', `Calendar Work Block API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "333173d5-cc4a-4d0c-80a6-05d447c96a6e",
+      "name": "Calendar Work Block"
+    },
+    {
+      "parameters": {
+        "description": "Enviar actualizaci\u00f3n r\u00e1pida de proyecto por WhatsApp al cliente: progreso, blocker, o consulta.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Update_URL', `WA Quick Update API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "15dd12af-7fe2-4f49-a4d7-0f31dff0f9ce",
+      "name": "WA Quick Update"
+    },
+    {
+      "parameters": {
+        "description": "Analizar rentabilidad por proyecto, priorizar entregas, optimizar pricing y gesti\u00f3n de tiempo."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "b5ad38ed-80b3-47d5-887f-99416338804b",
+      "name": "Freelancer Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Freelancer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Freelancer Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Freelancer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Freelancer Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Freelancer Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Project",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Time Tracking",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Milestone",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Retainer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Payment Track",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Client Message",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Proposal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Work Block",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Quick Update",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Freelancer Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "pyme"
+    },
+    {
+      "name": "freelancer"
+    },
+    {
+      "name": "small-business"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

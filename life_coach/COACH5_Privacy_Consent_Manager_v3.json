@@ -1,0 +1,477 @@
+{
+  "name": "COACH5 - Privacy Consent Manager",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Gestor de Privacidad y Consentimiento. Gestiono tus permisos de datos de forma granular: que datos compartes, con que proposito, por cuanto tiempo, y como se procesan. Puedes ver, modificar o revocar cualquier consentimiento en cualquier momento. Tu privacidad es tu derecho, no mi opcion. ¿Que quieres gestionar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "91f158a8-e9a1-4864-bade-0d455c0c802c",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Gestor de Privacidad y Consentimiento Granular\n\nEres un sistema de gestion de privacidad que da al usuario control total sobre sus datos. Sigues los principios de GDPR, CCPA y mejores practicas de privacidad por diseno.\n\n## Principios Fundamentales:\n\n### 1. Consentimiento Explicito\n- Ningun dato se recopila sin consentimiento explicito del usuario\n- El consentimiento es granular: por fuente, tipo de dato, proposito y duracion\n- El usuario puede revocar cualquier consentimiento en cualquier momento\n- La revocacion es inmediata y elimina datos asociados si el usuario lo solicita\n\n### 2. Minimizacion de Datos\n- Solo se solicitan los datos estrictamente necesarios para el proposito declarado\n- No se recopilan datos 'por si acaso'\n- Los datos se eliminan cuando ya no son necesarios para el proposito\n- Se prefieren datos agregados y anonimizados cuando es posible\n\n### 3. Transparencia Total\n- El usuario siempre sabe que datos tiene el sistema y de donde provienen\n- Cada solicitud de datos incluye: que datos, por que, como se usan, cuanto tiempo\n- Los logs de auditoria registran cada acceso a datos del usuario\n- El usuario puede solicitar un reporte completo de sus datos en cualquier momento\n\n### 4. Derechos del Usuario\n- Derecho de acceso: Ver todos los datos que el sistema tiene\n- Derecho de rectificacion: Corregir datos inexactos\n- Derecho de eliminacion: Borrar todos los datos\n- Derecho de portabilidad: Exportar datos en formato estandar\n- Derecho de oposicion: Oponerse a procesamiento especifico\n- Derecho de limitacion: Restringir procesamiento temporalmente\n\n## Modelo de Consentimiento Granular:\n\n### Fuentes de Datos:\n- wearable_health: Apple Health, Fitbit, Garmin, etc.\n- banking: Plaid, bancos, tarjetas de credito\n- social_media: Twitter, LinkedIn, Instagram, etc.\n- communication: WhatsApp, Gmail, Slack\n- calendar: Google Calendar, Outlook\n- crm: HubSpot, Salesforce, Airtable\n- ecommerce: WooCommerce, Shopify, Stripe\n- search_web: Web search, scraping\n- manual_input: Datos ingresados manualmente por el usuario\n\n### Tipos de Datos por Fuente:\n- health_metrics: Peso, sueno, ejercicio, frecuencia cardiaca\n- financial_transactions: Ingresos, gastos, inversiones\n- personal_identity: Nombre, email, direccion, telefono\n- behavioral_patterns: Habitos, rutinas, preferencias\n- social_connections: Contactos, relaciones, interacciones\n- location_data: Ubicaciones frecuentes, viajes\n- communication_content: Mensajes, emails, conversaciones\n- emotional_state: Estado de animo, estres, satisfaccion\n\n### Propositos de Procesamiento:\n- life_coaching: Recomendaciones de coaching de vida\n- decision_support: Apoyo en toma de decisiones\n- pattern_analysis: Analisis de patrones y tendencias\n- risk_prediction: Prediccion de riesgos\n- resource_optimization: Optimizacion de recursos\n- personal_insights: Generacion de insights personalizados\n- anonymized_analytics: Analiticas anonimizadas (opt-in)\n\n### Duracion del Consentimiento:\n- session: Solo durante la sesion actual\n- daily: Hasta final del dia\n- weekly: Por 7 dias\n- monthly: Por 30 dias\n- quarterly: Por 90 dias\n- annual: Por 1 ano\n- ongoing: Hasta revocacion explicita\n\n## Flujo de Verificacion de Consentimiento:\n\nAntes de cada recopilacion o procesamiento de datos:\n1. Verificar si existe consentimiento para esta fuente + tipo + proposito\n2. Si existe y no ha expirado, proceder\n3. Si no existe, solicitar consentimiento con informacion completa\n4. Si el usuario rechaza, no proceder y buscar alternativa\n5. Si el consentimiento ha expirado, solicitar renovacion\n6. Registrar la verificacion en el log de auditoria\n\n## Skills Cargados:\n- privacy-consent: Verificacion y gestion de consentimiento\n- consulting-analysis: Recomendaciones de privacidad\n- deep-research: Normativas de privacidad y mejores practicas\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "29b16f63-1234-47aa-9387-fbc42426403e",
+      "name": "Privacy Consent Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "fc787a75-2763-475f-93ff-bc042e0d9bc8",
+      "name": "GPT-4.1 Privacy",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "62c7a803-1e09-4bec-aaa4-dc7938712c42",
+      "name": "Privacy Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Accion realizada (grant/revoke/check/audit/export/delete/anonymize)"
+            },
+            "source": {
+              "type": "string",
+              "description": "Fuente de datos afectada"
+            },
+            "data_type": {
+              "type": "string",
+              "description": "Tipo de datos afectado"
+            },
+            "purpose": {
+              "type": "string",
+              "description": "Proposito del procesamiento"
+            },
+            "consent_status": {
+              "type": "string",
+              "description": "Estado del consentimiento (granted/denied/revoked/expired/partial)"
+            },
+            "expiry": {
+              "type": "string",
+              "description": "Fecha de expiracion del consentimiento"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado de la operacion"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "5a3e89ac-85e4-4610-a0f1-80f4f2e1be04",
+      "name": "Privacy Output"
+    },
+    {
+      "parameters": {
+        "description": "Otorgar consentimiento granular para una fuente de datos, tipo de dato, proposito y duracion. Requiere confirmacion explicita del usuario. Registra timestamp, IP y userAgent.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_GRANT_URL', `Consent Grant API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "5aa4cee6-0ad7-4547-94c8-013f5201297e",
+      "name": "Consent Grant"
+    },
+    {
+      "parameters": {
+        "description": "Revocar consentimiento para una fuente de datos. Opcionalmente eliminar datos asociados. La revocacion es inmediata y se registra en auditoria.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_REVOKE_URL', `Consent Revoke API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "f2121b72-341c-41df-8201-cd3ea76a95f3",
+      "name": "Consent Revoke"
+    },
+    {
+      "parameters": {
+        "description": "Verificar si existe consentimiento valido para una fuente + tipo + proposito. Retorna: estado, fecha de otorgamiento, expiracion, restricciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_CHECK_URL', `Consent Check API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "c9eeb54f-8034-473e-a0c7-2832fe594590",
+      "name": "Consent Check"
+    },
+    {
+      "parameters": {
+        "description": "Listar todos los consentimientos activos del usuario con estado, fuente, tipo, proposito y expiracion. Incluye consentimientos expirados y revocados.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_LIST_URL', `Consent List All API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "8ecb9a8a-0b80-4ba4-9ba0-35cd5c55a45a",
+      "name": "Consent List All"
+    },
+    {
+      "parameters": {
+        "description": "Renovar un consentimiento que ha expirado o esta por expirar. Requiere confirmacion del usuario. Actualiza duracion y timestamp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSENT_RENEW_URL', `Consent Renew API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "fa4d109e-8f35-4afd-b284-0d58e36b7324",
+      "name": "Consent Renew"
+    },
+    {
+      "parameters": {
+        "description": "Inventario completo de datos del usuario: que datos tiene el sistema, de donde provienen, cuando se recopilaron, con que proposito, y su estado de consentimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('DATA_INVENTORY_URL', `Data Inventory API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "9a7ef34a-9547-4c6f-9cf4-59ec8c3bf37c",
+      "name": "Data Inventory"
+    },
+    {
+      "parameters": {
+        "description": "Exportar todos los datos del usuario en formato estandar (JSON/CSV). Cumple con derecho de portabilidad GDPR. Incluye metadatos de consentimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('DATA_EXPORT_URL', `Data Export API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "b3ee55dc-9bc5-4d64-9dea-746d27e68345",
+      "name": "Data Export"
+    },
+    {
+      "parameters": {
+        "description": "Eliminar datos del usuario por fuente, tipo o todos. Cumple con derecho de eliminacion GDPR. Verifica consentimiento revocado antes de eliminar. Backup opcional.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('DATA_DELETE_URL', `Data Delete API endpoint URL`, 'string') }",
+        "method": "DELETE",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "967b84d9-2af6-4f56-bdf5-f15c3bfdd750",
+      "name": "Data Delete"
+    },
+    {
+      "parameters": {
+        "description": "Anonimizar datos del usuario: remover PII, agregar a nivel de categoria, seudonimizar. Permite analiticas sin datos identificables.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('DATA_ANONYMIZE_URL', `Data Anonymize API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "d154b836-b447-45cd-8991-1e4116ee6292",
+      "name": "Data Anonymize"
+    },
+    {
+      "parameters": {
+        "description": "Consultar log de auditoria: cada acceso, procesamiento, otorgamiento y revocacion de consentimiento. Filtrable por fecha, fuente, tipo, accion.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('AUDIT_LOG_URL', `Audit Log API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        700
+      ],
+      "id": "32b2c3fb-1c1f-4e39-9fa2-920d56a93d89",
+      "name": "Audit Log"
+    },
+    {
+      "parameters": {
+        "description": "Generar reporte de privacidad: resumen de consentimientos, datos almacenados, accesos recientes, recomendaciones de privacidad. Cumplimiento GDPR/CCPA.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PRIVACY_REPORT_URL', `Privacy Report API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        700
+      ],
+      "id": "2a8e98ce-4da7-4cd1-82e9-6b6f5d64ace1",
+      "name": "Privacy Report"
+    },
+    {
+      "parameters": {
+        "description": "Evaluar solicitudes de datos contra consentimiento, identificar riesgos de privacidad, recomendar configuraciones optimas de privacidad, verificar cumplimiento."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "15cfb239-6288-4dfc-9476-18dfa82da30f",
+      "name": "Privacy Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Privacy Consent Manager\n\nCONSENT: Grant, Revoke, Check,\n         List, Renew\nDATA: Inventory, Export, Delete,\n      Anonymize\nAUDIT: Log, Privacy Report\n\nGDPR + CCPA compliant\nConsentimiento granular\n9 fuentes x 8 tipos x 7 propositos\n7 duraciones configurables",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "91de8a05-00ec-47ea-8776-ccede34009f1",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Privacy Consent Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Privacy Consent Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Privacy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Privacy Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Privacy Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Grant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consent Revoke",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consent Check",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consent List All",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consent Renew",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Inventory",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Export",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Delete",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Anonymize",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Audit Log",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Privacy Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Privacy Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "life-coach",
+    "privacy",
+    "consent",
+    "gdpr",
+    "ccpa",
+    "data-protection"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,7 +1,7 @@
 {
   "package": "jarvis-enterprise",
   "name": "JARVIS Enterprise",
-  "version": "5.0.0",
+  "version": "7.0.0",
   "price": 399,
   "zero_debt": true,
   "workflows": {
@@ -49,7 +49,10 @@
       "MCP_Binance_Server_v3.json",
       "MCP_WhatsApp_Business_Server_v3.json",
       "MCP_Telegram_Bot_Server_v3.json",
-      "MCP_Discord_Server_v3.json"
+      "MCP_Discord_Server_v3.json",
+      "MCP_Twilio_SMS_Server_v3.json",
+      "MCP_Microsoft_Teams_Server_v3.json",
+      "MCP_Slack_Events_Server_v3.json"
     ],
     "templates": [
       "T1_Single_Agent_Chat_v2.json",
@@ -80,13 +83,40 @@
       "ORC2_Booking_Expedia_CRM_Travel_v3.json",
       "ORC3_WooCommerce_Shopify_ERPNext_Commerce_v3.json",
       "ORC4_Stripe_PayPal_Binance_Payments_v3.json",
-      "ORC5_WhatsApp_CRM_Stripe_Sales_Cycle_v3.json"
+      "ORC5_WhatsApp_CRM_Stripe_Sales_Cycle_v3.json",
+      "ORC6_Twilio_Teams_Slack_Multi_Channel_v3.json",
+      "ORC7_Multi_Industry_Onboarding_v3.json"
     ],
     "industry": [
       "IND1_Real_Estate_Automation_v3.json",
       "IND2_Restaurant_Operations_v3.json",
       "IND3_SaaS_Subscription_Engine_v3.json",
-      "IND4_Agency_Client_Portal_v3.json"
+      "IND4_Agency_Client_Portal_v3.json",
+      "IND5_Gym_Onboarding_v3.json",
+      "IND6_Farmacia_Onboarding_v3.json",
+      "IND7_Abogados_Onboarding_v3.json"
+    ],
+    "personal": [
+      "PERS1_Personal_Finance_Manager_v3.json",
+      "PERS2_Job_Search_Career_Agent_v3.json",
+      "PERS3_Health_Wellness_Tracker_v3.json",
+      "PERS4_Smart_Daily_Life_Agent_v3.json",
+      "PERS5_Learning_Study_Automation_v3.json"
+    ],
+    "pyme": [
+      "SMB1_Solopreneur_Hub_v3.json",
+      "SMB2_Small_Retail_Store_v3.json",
+      "SMB3_Freelancer_Manager_v3.json"
+    ],
+    "medium": [
+      "MED1_Multi_Department_Hub_v3.json",
+      "MED2_Multi_Location_Operations_v3.json",
+      "MED3_Customer_Success_Platform_v3.json"
+    ],
+    "enterprise": [
+      "ENT1_Enterprise_Communication_Hub_v3.json",
+      "ENT2_Financial_Operations_Center_v3.json",
+      "ENT3_Full_Digital_Transformation_v3.json"
     ]
   },
   "docker_services": [
@@ -102,7 +132,7 @@
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash \u2192 GPT-4.1 \u2192 Claude Sonnet (full tiered)",
   "estimated_monthly_cost": "$75-250/month (depending on usage and scale)",
   "generated_at": "2026-07-29T23:01:25.289839",
-  "total_workflows": 69,
+  "total_workflows": 91,
   "cognitive_capital": {
     "skills": [
       "deep-research",

@@ -1,0 +1,433 @@
+{
+  "name": "SMB2 Small Retail Store v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Tienda. Gestiono productos en WooCommerce, pedidos por WhatsApp, clientes en CRM y pagos en Stripe. \u00bfQu\u00e9 necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "c2455862-2b42-43a5-8e57-488c22f2c77a",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Tienda Peque\u00f1a\n\nCAT\u00c1LOGO: WooCommerce \u2192 Productos \u2192 Stock\nPEDIDOS: WhatsApp \u2192 Confirmar \u2192 Enviar \u2192 Entregar\nCLIENTES: CRM \u2192 Fidelizaci\u00f3n \u2192 Promociones\nPAGOS: Stripe \u2192 Conciliaci\u00f3n \u2192 Reporte",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "efc0fdca-465d-4129-b271-d8c3ccd8e01c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Tienda Peque\u00f1a\n\nGestionas una tienda peque\u00f1a con presencia online y offline:\n\n## Cat\u00e1logo y Productos:\n- Gestionar productos en WooCommerce: nombre, precio, stock, fotos\n- Actualizar inventario en tiempo real (ventas y reposici\u00f3n)\n- Publicar nuevos productos y promociones\n- Alertas de stock bajo para reposici\u00f3n\n- Sincronizar precios entre tienda f\u00edsica y online\n\n## Pedidos y Ventas:\n- Recibir pedidos por WhatsApp con confirmaci\u00f3n autom\u00e1tica\n- Procesar pagos v\u00eda Stripe (tarjeta, transferencia, efectivo)\n- Track de estado: Recibido \u2192 Preparando \u2192 Enviado \u2192 Entregado\n- Gestionar devoluciones y reembolsos\n- Reporte diario de ventas\n\n## Clientes y Fidelizaci\u00f3n:\n- Registrar clientes en CRM con historial de compras\n- Programa de puntos y recompensas\n- Promociones personalizadas por WhatsApp\n- Campa\u00f1as de cumplea\u00f1os y aniversarios\n- Encuestas de satisfacci\u00f3n post-compra\n\n## Skills Cargados:\n- data-analysis: An\u00e1lisis de ventas y productos m\u00e1s vendidos\n- deep-research: Tendencias de mercado y productos\n- consulting-analysis: Estrategia de crecimiento comercial\n- payment-processing: Conciliaci\u00f3n de pagos\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "1e2adab9-c3cc-46f0-a006-854f5e9654d4",
+      "name": "Small Retail Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "9f16226b-983d-4194-9ac9-05c4e216abd0",
+      "name": "GPT-4.1 Retail",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "0846ff9d-1e9f-42b9-96db-ec53e6d0094d",
+      "name": "Retail Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (catalog/orders/customers/payments)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "product_id": {
+              "type": "string",
+              "description": "ID de producto si aplica"
+            },
+            "order_id": {
+              "type": "string",
+              "description": "ID de pedido si aplica"
+            },
+            "total": {
+              "type": "string",
+              "description": "Monto total si aplica"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "f3d9f097-c2c5-468d-8fff-e83f67b70b21",
+      "name": "Retail Output"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar producto en WooCommerce con nombre, precio, stock, categor\u00eda e im\u00e1genes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WC_Product_URL', `WC Manage Product API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "00bf4455-eca8-4f37-a3d1-a0cde8674e1b",
+      "name": "WC Manage Product"
+    },
+    {
+      "parameters": {
+        "description": "Consultar stock y generar alertas de productos con inventario bajo para reposici\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WC_Inventory_URL', `WC Inventory Alert API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "a2472ee1-e2c1-4232-83f8-bf5f6e624799",
+      "name": "WC Inventory Alert"
+    },
+    {
+      "parameters": {
+        "description": "Listar pedidos de WooCommerce con filtros por estado, fecha y cliente.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WC_Orders_URL', `WC List Orders API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "096f3d7a-b0c7-4934-b6ea-79daf8cfb3f9",
+      "name": "WC List Orders"
+    },
+    {
+      "parameters": {
+        "description": "Recibir pedido por WhatsApp con productos, cantidad, direcci\u00f3n y m\u00e9todo de pago.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Order_URL', `WA Take Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "be2094e9-3887-496a-9748-40673e804a42",
+      "name": "WA Take Order"
+    },
+    {
+      "parameters": {
+        "description": "Enviar actualizaci\u00f3n de estado de pedido por WhatsApp: confirmaci\u00f3n, env\u00edo, entrega.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Confirm_URL', `WA Order Status API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "373aabf7-e5bb-417a-a7aa-fe6a0cc4fea2",
+      "name": "WA Order Status"
+    },
+    {
+      "parameters": {
+        "description": "Enviar promoci\u00f3n personalizada por WhatsApp basada en historial de compras del cliente.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Promo_URL', `WA Promo API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "60b7be06-29d3-4339-822c-a2a65a256a24",
+      "name": "WA Promo"
+    },
+    {
+      "parameters": {
+        "description": "Registrar o actualizar cliente en CRM con historial de compras, preferencias y puntos de fidelidad.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Customer_URL', `CRM Customer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "f9dcdf05-fc08-4e9e-88c3-253fc487f147",
+      "name": "CRM Customer"
+    },
+    {
+      "parameters": {
+        "description": "Procesar pago de pedido v\u00eda Stripe con m\u00e9todo de pago, monto y facturaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Pay_URL', `Stripe Process Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "5110d215-d930-4ecd-a6a3-0d8ae1d717d7",
+      "name": "Stripe Process Payment"
+    },
+    {
+      "parameters": {
+        "description": "Generar reporte diario de ventas desde Stripe con total, m\u00e9todos y tendencias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Report_URL', `Stripe Daily Sales API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "0faa44b9-6669-4bee-adea-0d36dccdc1d5",
+      "name": "Stripe Daily Sales"
+    },
+    {
+      "parameters": {
+        "description": "Analizar ventas, inventario, tendencias de productos y recomendar promociones y reposici\u00f3n."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "67f4fdb0-07a8-4698-8f09-d7417fcad8ce",
+      "name": "Retail Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Small Retail Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Small Retail Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Retail",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Retail Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Retail Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WC Manage Product",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WC Inventory Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WC List Orders",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Take Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Order Status",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Promo",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Customer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Process Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Daily Sales",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Retail Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "pyme"
+    },
+    {
+      "name": "retail"
+    },
+    {
+      "name": "ecommerce"
+    },
+    {
+      "name": "small-business"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

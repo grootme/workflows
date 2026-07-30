@@ -1,0 +1,456 @@
+{
+  "name": "PERS5 Learning Study Automation v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Aprendizaje. Organizo tu plan de estudio en Calendar, gestiono notas en Notion, te env\u00edo recordatorios por WhatsApp y trackeo tu progreso en CRM. \u00bfQu\u00e9 quieres aprender?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "31405c4d-dfbd-4322-ba3e-f4713333ee63",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Aprendizaje y Estudio\n\nPLAN: Calendar \u2192 Pomodoro \u2192 Repaso Espaciado\nNOTAS: Notion \u2192 Flashcards \u2192 Biblioteca\nPROGRESO: CRM \u2192 Quizzes \u2192 \u00c1reas D\u00e9biles\nMOTIVACI\u00d3N: WhatsApp tips + SMS exam alerts",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "57c0796d-3218-49c4-8ad2-3464eaadb298",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Aprendizaje y Estudio\n\nGestionas el aprendizaje de una persona a trav\u00e9s de m\u00faltiples plataformas:\n\n## Plan de Estudio:\n- Crear plan de estudio personalizado por tema y nivel\n- Programar sesiones de estudio en Calendar con bloques de tiempo\n- T\u00e9cnica Pomodoro: 25min estudio + 5min descanso\n- Reparto espaciado para mejor retenci\u00f3n\n- Ajuste de plan seg\u00fan progreso y ritmo\n\n## Notas y Contenido:\n- Crear y organizar notas en Notion por materia y tema\n- Generar res\u00famenes y mapas mentales\n- Crear flashcards para revisi\u00f3n espaciada\n- Biblioteca de recursos y referencias\n- Conexi\u00f3n entre temas y conceptos\n\n## Progreso y Seguimiento:\n- Track de progreso en CRM: % completado, horas invertidas\n- Evaluar comprensi\u00f3n con quizzes autom\u00e1ticos\n- Identificar \u00e1reas d\u00e9biles y reforzar\n- Celebrar hitos: m\u00f3dulo completado, certificaci\u00f3n obtenida\n- Reporte semanal de avance\n\n## Recordatorios y Motivaci\u00f3n:\n- WhatsApp recordatorio de sesi\u00f3n de estudio\n- WhatsApp tip del d\u00eda y curiosidad del tema\n- Mensaje motivacional cuando se pierde racha\n- SMS recordatorio de fecha de examen\n- Notificaci\u00f3n de nuevo contenido disponible\n\n## Skills Cargados:\n- deep-research: B\u00fasqueda de recursos educativos\n- data-analysis: An\u00e1lisis de progreso y optimizaci\u00f3n\n- consulting-analysis: Estrategia de aprendizaje\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "3ffe0545-c4f2-47db-9771-ed3b429698b6",
+      "name": "Learning Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "2ff08f2d-b4c0-4b7d-b26b-bb41b371c228",
+      "name": "GPT-4.1 Learning",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "e20473c5-c395-4204-a54a-46924579b0b7",
+      "name": "Learning Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (plan/notes/progress/quiz/reminders)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "subject": {
+              "type": "string",
+              "description": "Materia o tema"
+            },
+            "completion": {
+              "type": "string",
+              "description": "% de completado"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "43db8ff5-7e4d-4b3d-a5b0-33fa914f7e1a",
+      "name": "Learning Output"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar notas de estudio en Notion con t\u00edtulo, contenido, tags y materia.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion_Notes_URL', `Notion Create Notes API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "626c813b-aa30-4441-b3f2-3bc27dd70326",
+      "name": "Notion Create Notes"
+    },
+    {
+      "parameters": {
+        "description": "Crear flashcards en Notion para revisi\u00f3n espaciada con pregunta, respuesta y categor\u00eda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion_Flashcards_URL', `Notion Flashcards API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "03de07ad-9153-4938-ad7c-2f045cc75aef",
+      "name": "Notion Flashcards"
+    },
+    {
+      "parameters": {
+        "description": "Agregar recurso educativo a biblioteca en Notion: URL, tipo, dificultad y materia.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notion_Resources_URL', `Notion Resources API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "fe8b5da5-6b2c-4604-8ab9-e47712712653",
+      "name": "Notion Resources"
+    },
+    {
+      "parameters": {
+        "description": "Programar sesiones de estudio en Calendar con t\u00e9cnica Pomodoro, materia y bloques de tiempo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_Study_URL', `Calendar Study Plan API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "92a74535-15bc-4a3d-8a79-b0c4be9e3f15",
+      "name": "Calendar Study Plan"
+    },
+    {
+      "parameters": {
+        "description": "Registrar fecha de examen o entrega en Calendar con plan de preparaci\u00f3n previo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_Exam_URL', `Calendar Exam Date API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "fa3e4efe-4170-4898-a3e9-b1370ff57625",
+      "name": "Calendar Exam Date"
+    },
+    {
+      "parameters": {
+        "description": "Registrar y consultar progreso de estudio en CRM: % completado, horas, quizzes aprobados.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Progress_URL', `CRM Study Progress API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "adfa11a0-c9d9-490e-9b22-54246feee0d0",
+      "name": "CRM Study Progress"
+    },
+    {
+      "parameters": {
+        "description": "Registrar resultado de quiz o evaluaci\u00f3n en CRM con puntuaci\u00f3n, \u00e1reas d\u00e9biles y recomendaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Quiz_URL', `CRM Quiz Result API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "e8961e45-5606-4138-bad7-ed4054fac0e2",
+      "name": "CRM Quiz Result"
+    },
+    {
+      "parameters": {
+        "description": "Enviar recordatorio de sesi\u00f3n de estudio por WhatsApp con materia, tiempo y objetivo del d\u00eda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Reminder_URL', `WA Study Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "adb51ee5-b2e1-42dd-ac36-058064a0504d",
+      "name": "WA Study Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Enviar tip del d\u00eda y curiosidad del tema por WhatsApp para mantener motivaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Tip_URL', `WA Daily Tip API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "aa437bab-45c7-4899-afc5-e95669955441",
+      "name": "WA Daily Tip"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta SMS de fecha de examen pr\u00f3xima con countdown y plan de repaso.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Exam_URL', `SMS Exam Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "473c4268-5ecd-409d-b068-e5094f399ab0",
+      "name": "SMS Exam Alert"
+    },
+    {
+      "parameters": {
+        "description": "Analizar progreso, identificar \u00e1reas d\u00e9biles, optimizar plan de estudio y recomendar t\u00e9cnicas de aprendizaje."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "82696309-8115-4086-bc1a-1781bdabb9bd",
+      "name": "Learning Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Learning Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Learning Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Learning",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Learning Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Learning Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Notion Create Notes",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notion Flashcards",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notion Resources",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Study Plan",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Exam Date",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Study Progress",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Quiz Result",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Study Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Daily Tip",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Exam Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Learning Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "personal"
+    },
+    {
+      "name": "learning"
+    },
+    {
+      "name": "education"
+    },
+    {
+      "name": "personas-naturales"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,781 @@
+{
+  "version": "6.0.0",
+  "generated_at": "2026-07-30T01:33:48.919137",
+  "stats": {
+    "total_categories": 10,
+    "total_items": 102,
+    "total_value": 3337,
+    "total_workflows": 85,
+    "total_mcp_servers": 35,
+    "total_tools": 240,
+    "total_ai_connections": 400
+  },
+  "categories": {
+    "base-templates": {
+      "name": "Base Templates",
+      "description": "Plantillas base para comenzar con automatización AI",
+      "icon": "🧱",
+      "pricing_tier": "starter",
+      "items": [
+        {
+          "id": "T1",
+          "name": "Single Agent Chat",
+          "price": 15,
+          "tier": "starter"
+        },
+        {
+          "id": "T2",
+          "name": "Agent + MCP Tool",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "T3",
+          "name": "RAG Agent",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "T4",
+          "name": "Multi-Agent Orchestrator",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "T5",
+          "name": "Error Handler",
+          "price": 12,
+          "tier": "starter"
+        },
+        {
+          "id": "T6",
+          "name": "MCP Server Template",
+          "price": 15,
+          "tier": "starter"
+        }
+      ]
+    },
+    "consolidated": {
+      "name": "Consolidated Suites",
+      "description": "Suites completas que combinan múltiples funcionalidades",
+      "icon": "📦",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "G1",
+          "name": "MCP Calendar Suite",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "G2",
+          "name": "MCP Gmail Suite",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "G3",
+          "name": "MCP Contactos Suite",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "G4",
+          "name": "Ecommerce Agent Suite",
+          "price": 39,
+          "tier": "professional"
+        },
+        {
+          "id": "G5",
+          "name": "Marketing MultiAgent Suite",
+          "price": 45,
+          "tier": "professional"
+        },
+        {
+          "id": "G6",
+          "name": "Asistente Platform",
+          "price": 49,
+          "tier": "professional"
+        },
+        {
+          "id": "G7",
+          "name": "Imagenes y Citas Suite",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "G8",
+          "name": "Video Viral Suite",
+          "price": 39,
+          "tier": "professional"
+        },
+        {
+          "id": "G9",
+          "name": "Social Scraper Suite",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "G10",
+          "name": "HR AI Agent",
+          "price": 45,
+          "tier": "professional"
+        },
+        {
+          "id": "G11",
+          "name": "WhatsApp AI Agent",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "G12",
+          "name": "Flowise RAG Suite",
+          "price": 39,
+          "tier": "professional"
+        },
+        {
+          "id": "G13",
+          "name": "Global Error Handler",
+          "price": 19,
+          "tier": "starter"
+        }
+      ]
+    },
+    "mcp-servers": {
+      "name": "MCP Servers",
+      "description": "Servidores MCP para integrar con plataformas externas",
+      "icon": "🔌",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "MCP-CAL",
+          "name": "Calendar Server",
+          "price": 15,
+          "tier": "starter"
+        },
+        {
+          "id": "MCP-GML",
+          "name": "Gmail Server",
+          "price": 15,
+          "tier": "starter"
+        },
+        {
+          "id": "MCP-CTC",
+          "name": "Contacts Server",
+          "price": 15,
+          "tier": "starter"
+        },
+        {
+          "id": "MCP-KB",
+          "name": "Knowledge Base Server",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "MCP-SLK",
+          "name": "Slack Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-NTN",
+          "name": "Notion Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-GH",
+          "name": "GitHub Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-TRL",
+          "name": "Trello Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-HS",
+          "name": "HubSpot Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-HSA",
+          "name": "HubSpot Advanced Server",
+          "price": 35,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-SF",
+          "name": "Salesforce Server",
+          "price": 35,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-AT",
+          "name": "Airtable Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-GW",
+          "name": "Google Workspace Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-CRM",
+          "name": "CRM Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-WC",
+          "name": "WooCommerce Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-SHP",
+          "name": "Shopify Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-WP",
+          "name": "WordPress Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-BKG",
+          "name": "Booking Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-EXP",
+          "name": "Expedia Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-ERP",
+          "name": "ERPNext Server",
+          "price": 29,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-HR",
+          "name": "HR Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-EC",
+          "name": "ECommerce Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-WA",
+          "name": "WhatsApp Business Server",
+          "price": 25,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-TG",
+          "name": "Telegram Bot Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-DC",
+          "name": "Discord Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-STR",
+          "name": "Stripe Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-PP",
+          "name": "PayPal Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-QVP",
+          "name": "Qvapay Server",
+          "price": 19,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-BRF",
+          "name": "Bitrefill Server",
+          "price": 19,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-TPP",
+          "name": "TropiPay Server",
+          "price": 19,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-CX",
+          "name": "CoinEx Server",
+          "price": 19,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-BNC",
+          "name": "Binance Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-TWL",
+          "name": "Twilio SMS Server",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MCP-MSF",
+          "name": "Microsoft Teams Server",
+          "price": 25,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MCP-SLE",
+          "name": "Slack Events Server",
+          "price": 19,
+          "tier": "professional"
+        }
+      ]
+    },
+    "anthropic-patterns": {
+      "name": "Anthropic Patterns",
+      "description": "Patrones de agentes basados en investigación de Anthropic",
+      "icon": "🧠",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "P1",
+          "name": "Prompt Chaining Agent",
+          "price": 25,
+          "tier": "starter"
+        },
+        {
+          "id": "P2",
+          "name": "Smart Routing Agent",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "P3",
+          "name": "Orchestrator-Workers Agent",
+          "price": 39,
+          "tier": "professional"
+        },
+        {
+          "id": "P4",
+          "name": "Evaluator-Optimizer Agent",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "P5",
+          "name": "Parallelization Agent",
+          "price": 35,
+          "tier": "professional"
+        },
+        {
+          "id": "P6",
+          "name": "Cognitive Capital MCP Server",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "P7",
+          "name": "SOUL Bootstrap Agent",
+          "price": 29,
+          "tier": "starter"
+        },
+        {
+          "id": "P8",
+          "name": "Router-Orchestrator",
+          "price": 49,
+          "tier": "professional"
+        },
+        {
+          "id": "P9",
+          "name": "Evaluator-Parallel",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "P10",
+          "name": "Cognitive-SOUL Pipeline",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ZEUS",
+          "name": "Zeus Meta-Orchestrator",
+          "price": 79,
+          "tier": "enterprise"
+        }
+      ]
+    },
+    "industry": {
+      "name": "Industry Solutions",
+      "description": "Soluciones verticales para industrias específicas",
+      "icon": "🏗️",
+      "pricing_tier": "enterprise",
+      "items": [
+        {
+          "id": "IND1",
+          "name": "Real Estate Automation",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND2",
+          "name": "Restaurant Operations",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND3",
+          "name": "SaaS Subscription Engine",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND4",
+          "name": "Agency Client Portal",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND5",
+          "name": "Gym Onboarding",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND6",
+          "name": "Farmacia Onboarding",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND7",
+          "name": "Abogados Onboarding",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND8",
+          "name": "Clinic Patient Management",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND9",
+          "name": "School Education Platform",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "IND10",
+          "name": "Construction Project Manager",
+          "price": 49,
+          "tier": "enterprise"
+        }
+      ]
+    },
+    "orchestration": {
+      "name": "Orchestration Workflows",
+      "description": "Flujos de orquestación multi-plataforma",
+      "icon": "🔄",
+      "pricing_tier": "enterprise",
+      "items": [
+        {
+          "id": "ORC1",
+          "name": "Google + CRM + WordPress Marketing",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC2",
+          "name": "Booking + Expedia + CRM Travel",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC3",
+          "name": "WooCommerce + Shopify + ERPNext Commerce",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC4",
+          "name": "Stripe + PayPal + Binance Payments",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC5",
+          "name": "WhatsApp + CRM + Stripe Sales Cycle",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC6",
+          "name": "Twilio + Teams + Slack Multi-Channel",
+          "price": 45,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ORC7",
+          "name": "Multi-Industry Onboarding",
+          "price": 49,
+          "tier": "enterprise"
+        }
+      ]
+    },
+    "personal": {
+      "name": "Personal Workflows",
+      "description": "Workflows para personas naturales y vida diaria",
+      "icon": "👤",
+      "pricing_tier": "starter",
+      "items": [
+        {
+          "id": "PERS1",
+          "name": "Personal Finance Manager",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "PERS2",
+          "name": "Job Search Career Agent",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "PERS3",
+          "name": "Health Wellness Tracker",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "PERS4",
+          "name": "Smart Daily Life Agent",
+          "price": 19,
+          "tier": "starter"
+        },
+        {
+          "id": "PERS5",
+          "name": "Learning Study Automation",
+          "price": 19,
+          "tier": "starter"
+        }
+      ]
+    },
+    "life-coach": {
+      "name": "Life Coach System",
+      "description": "Sistema de coaching integral de vida con IA",
+      "icon": "🌟",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "COACH1",
+          "name": "Holistic Life Coach",
+          "price": 59,
+          "tier": "professional"
+        },
+        {
+          "id": "COACH2",
+          "name": "Data-Driven Decision Engine",
+          "price": 69,
+          "tier": "enterprise"
+        },
+        {
+          "id": "COACH3",
+          "name": "Personal Knowledge Graph",
+          "price": 79,
+          "tier": "enterprise"
+        }
+      ]
+    },
+    "business": {
+      "name": "Business Workflows",
+      "description": "Workflows por nivel de complejidad empresarial",
+      "icon": "💼",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "SMB1",
+          "name": "Solopreneur Hub",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "SMB2",
+          "name": "Small Retail Store",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "SMB3",
+          "name": "Freelancer Manager",
+          "price": 29,
+          "tier": "professional"
+        },
+        {
+          "id": "MED1",
+          "name": "Multi-Department Hub",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MED2",
+          "name": "Multi-Location Operations",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "MED3",
+          "name": "Customer Success Platform",
+          "price": 39,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ENT1",
+          "name": "Enterprise Communication Hub",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ENT2",
+          "name": "Financial Operations Center",
+          "price": 49,
+          "tier": "enterprise"
+        },
+        {
+          "id": "ENT3",
+          "name": "Full Digital Transformation",
+          "price": 59,
+          "tier": "enterprise"
+        }
+      ]
+    },
+    "memory": {
+      "name": "Memory Architecture",
+      "description": "Sistemas de memoria para agentes con contexto persistente",
+      "icon": "💾",
+      "pricing_tier": "professional",
+      "items": [
+        {
+          "id": "MEM1",
+          "name": "Buffer Memory Starter",
+          "price": 9,
+          "tier": "starter"
+        },
+        {
+          "id": "MEM2",
+          "name": "Professional Enhanced Memory",
+          "price": 19,
+          "tier": "professional"
+        },
+        {
+          "id": "MEM3",
+          "name": "Enterprise Full Memory",
+          "price": 29,
+          "tier": "enterprise"
+        }
+      ]
+    }
+  },
+  "bundles": {
+    "starter-bundle": {
+      "name": "JARVIS Starter Bundle",
+      "price": 49,
+      "original_value": 156,
+      "includes": [
+        "T1",
+        "T2",
+        "T5",
+        "T6",
+        "G1",
+        "G2",
+        "G3",
+        "G7",
+        "G12",
+        "G13",
+        "MCP-CAL",
+        "MCP-GML",
+        "MCP-CTC",
+        "MCP-KB",
+        "MCP-SLK",
+        "P1",
+        "P7",
+        "MEM1",
+        "PERS1",
+        "PERS2",
+        "PERS3",
+        "PERS4",
+        "PERS5"
+      ],
+      "tier": "starter"
+    },
+    "professional-bundle": {
+      "name": "JARVIS Professional Bundle",
+      "price": 149,
+      "original_value": 847,
+      "includes": [
+        "ALL starter items + G4-G11, MCP-SLK through MCP-EC, P1-P5, P7-P8, Zeus, ORC1, ORC5, ORC6, ORC7, SMB1-SMB3, MEM2, COACH1"
+      ],
+      "tier": "professional"
+    },
+    "enterprise-bundle": {
+      "name": "JARVIS Enterprise Bundle",
+      "price": 399,
+      "original_value": 2400,
+      "includes": [
+        "ALL items — unlimited access to entire catalog"
+      ],
+      "tier": "enterprise"
+    }
+  },
+  "pricing_tiers": {
+    "starter": {
+      "name": "Starter",
+      "color": "#22c55e",
+      "price_range": "$9 - $29",
+      "target": "Personas naturales",
+      "description": "Workflows básicos para automatización personal"
+    },
+    "professional": {
+      "name": "Professional",
+      "color": "#3b82f6",
+      "price_range": "$25 - $69",
+      "target": "PYMEs y profesionales",
+      "description": "Workflows avanzados con múltiples integraciones"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "color": "#a855f7",
+      "price_range": "$35 - $79",
+      "target": "Empresas medianas y grandes",
+      "description": "Workflows complejos con orquestación multi-plataforma"
+    }
+  }
+}

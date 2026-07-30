@@ -1,0 +1,242 @@
+{
+  "name": "MCP - HubSpot Advanced Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "hubspot-advanced"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "db533689-cc48-428f-abbd-d453a104a5f4",
+      "name": "MCP Trigger",
+      "webhookId": "hubspot-advanced"
+    },
+    {
+      "parameters": {
+        "content": "HubSpot Advanced MCP Server\n\n8 Tools: Companies, Pipeline,\nMarketing Emails, Forms, Analytics,\nWorkflows, Custom Objects,\nAssociations\n\nMulti-pipeline support\nCustom objects & associations",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "d29d24f5-9cfd-4127-97f8-81d5634b1da8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or search companies in HubSpot CRM. Supports custom properties, domain matching, and batch operations.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_COMPANIES_URL', `Manage Companies API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "da495179-75ce-4f12-aac2-e5b7c37d7fc4",
+      "name": "Manage Companies"
+    },
+    {
+      "parameters": {
+        "description": "Manage deal pipeline stages, move deals between stages, set amounts and close dates. Supports multiple pipelines.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_DEALS_URL', `Deals Pipeline API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "268e338f-d724-4619-a5ec-a22a66b5bd7d",
+      "name": "Deals Pipeline"
+    },
+    {
+      "parameters": {
+        "description": "Create, send, and analyze marketing email campaigns. Supports templates, A/B testing, personalization tokens.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_EMAILS_URL', `Marketing Emails API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "bfaf90cd-de77-48bb-8414-c516fbe3e4e6",
+      "name": "Marketing Emails"
+    },
+    {
+      "parameters": {
+        "description": "Create and manage HubSpot forms for lead capture. Supports embedded forms, pop-ups, and multi-step forms.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_FORMS_URL', `Forms Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "ad4c93a1-c200-4a84-9b63-43e0aa725d15",
+      "name": "Forms Management"
+    },
+    {
+      "parameters": {
+        "description": "Retrieve marketing and sales analytics: website traffic, email performance, deal conversion rates, attribution reports.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_ANALYTICS_URL', `Analytics Dashboard API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "6d983acb-e88a-4486-804d-18651b766fe0",
+      "name": "Analytics Dashboard"
+    },
+    {
+      "parameters": {
+        "description": "Create and manage HubSpot automation workflows: enrollment triggers, actions, delays, branching logic.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_WORKFLOWS_URL', `Workflow Automation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "7beb4b1f-057b-45f5-a5aa-6f639f3f10a3",
+      "name": "Workflow Automation"
+    },
+    {
+      "parameters": {
+        "description": "Create and manage custom CRM objects with custom properties. Supports custom relationships and associations with standard objects.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_CUSTOM_URL', `Custom Objects API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "08f3b8de-a642-4926-990f-1015a1d05030",
+      "name": "Custom Objects"
+    },
+    {
+      "parameters": {
+        "description": "Create and manage associations between HubSpot records: contacts-companies, deals-companies, tickets-contacts, custom associations.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HUBSPOT_ASSOC_URL', `Record Associations API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "ef503015-fe21-4751-b039-887f0027c4dd",
+      "name": "Record Associations"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Manage Companies",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deals Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marketing Emails",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Forms Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analytics Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Automation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Custom Objects",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Associations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "hubspot",
+    "crm",
+    "marketing",
+    "sales"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

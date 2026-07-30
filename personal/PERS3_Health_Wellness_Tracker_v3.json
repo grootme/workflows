@@ -1,0 +1,456 @@
+{
+  "name": "PERS3 Health Wellness Tracker v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Salud y Bienestar. Registro tus datos de salud por WhatsApp, controlo tu progreso en CRM, te env\u00edo recordatorios de medicaci\u00f3n por SMS y programo consultas m\u00e9dicas. \u00bfC\u00f3mo te ayudo?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "11ea0160-12b8-46e2-8f8d-d35e9a1070c1",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Salud y Bienestar\n\nREGISTRO: WhatsApp \u2192 Vitals/Comida/Ejercicio/\u00c1nimo\nMETAS: CRM \u2192 Progreso \u2192 Celebraci\u00f3n\nRECORDATORIOS: SMS Medicaci\u00f3n + Citas\nREPORTES: WhatsApp semanal",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "64110a71-3eed-443b-a391-9f0d696f233d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Salud y Bienestar Personal\n\nGestionas la salud y bienestar de una persona a trav\u00e9s de m\u00faltiples plataformas:\n\n## Registro de Salud:\n- Registrar peso, presi\u00f3n arterial, glucosa, sue\u00f1o v\u00eda WhatsApp\n- Log de comidas y calor\u00edas con foto de alimentos\n- Registro de ejercicio: tipo, duraci\u00f3n, intensidad\n- Tracking de estado de \u00e1nimo y estr\u00e9s\n- Historial de s\u00edntomas y malestares\n- Captura de resultados de laboratorio\n\n## Metas de Salud:\n- Definir metas de peso, ejercicio, nutrici\u00f3n en CRM\n- Seguimiento de progreso con gr\u00e1ficos\n- Celebraci\u00f3n de hitos (5kg perdidos, 30 d\u00edas seguidos, etc.)\n- Ajuste de metas seg\u00fan progreso\n- Recomendaciones personalizadas de actividad f\u00edsica\n\n## Medicaci\u00f3n y Citas:\n- Recordatorios de medicaci\u00f3n por SMS (hora, dosis, instrucciones)\n- Alertas de receta m\u00e9dica por vencer\n- Programar citas m\u00e9dicas en Calendar\n- Recordatorios de cita 24h y 1h antes\n- Consultas de telemedicina v\u00eda Teams\n\n## Reportes y An\u00e1lisis:\n- Reporte semanal de salud por WhatsApp\n- Tendencias de peso, ejercicio y h\u00e1bitos\n- Alertas de valores fuera de rango\n- Preparar resumen para visita m\u00e9dica\n- Recomendaciones de estilo de vida\n\n## Skills Cargados:\n- data-analysis: An\u00e1lisis de tendencias de salud\n- deep-research: Recomendaciones de bienestar basadas en evidencia\n- consulting-analysis: Plan de mejora de h\u00e1bitos\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "e3d33673-f137-4027-acb2-1f833be715c4",
+      "name": "Health Wellness Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "ffef2c77-9687-4500-a121-4e0439fda6e2",
+      "name": "GPT-4.1 Health",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "e18e19f4-1ddc-4dd9-9812-2d46a61bc623",
+      "name": "Health Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (vitals/exercise/nutrition/medication/appointment)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "value": {
+              "type": "string",
+              "description": "Valor medido si aplica"
+            },
+            "goal_status": {
+              "type": "string",
+              "description": "Estado de meta (on_track/behind/achieved)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "84b5ea62-91e8-4523-81c2-1784badb4b6d",
+      "name": "Health Output"
+    },
+    {
+      "parameters": {
+        "description": "Registrar signos vitales por WhatsApp: peso, presi\u00f3n arterial, glucosa, temperatura, horas de sue\u00f1o.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Vitals_URL', `WA Log Vitals API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "d9ab8a1c-5a18-4324-8279-706f5a5ff2ed",
+      "name": "WA Log Vitals"
+    },
+    {
+      "parameters": {
+        "description": "Registrar comida por WhatsApp con foto, descripci\u00f3n, calor\u00edas estimadas y macronutrientes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Meal_URL', `WA Log Meal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "231c5ce4-b9c5-48d8-afef-fa752520df8c",
+      "name": "WA Log Meal"
+    },
+    {
+      "parameters": {
+        "description": "Registrar ejercicio por WhatsApp: tipo, duraci\u00f3n, intensidad, calor\u00edas quemadas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Exercise_URL', `WA Log Exercise API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "02fe5462-b637-47ce-996c-f52a9a14aa90",
+      "name": "WA Log Exercise"
+    },
+    {
+      "parameters": {
+        "description": "Registrar estado de \u00e1nimo y nivel de estr\u00e9s por WhatsApp con escala 1-10 y notas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Mood_URL', `WA Log Mood API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "0a782c94-c5dc-4c3f-a371-7c80fe0362e5",
+      "name": "WA Log Mood"
+    },
+    {
+      "parameters": {
+        "description": "Definir y consultar metas de salud en CRM: peso objetivo, ejercicio semanal, h\u00e1bitos de sue\u00f1o.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Goals_URL', `CRM Health Goals API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "6525c182-f195-42bc-bf0c-ae39fc7a7bbf",
+      "name": "CRM Health Goals"
+    },
+    {
+      "parameters": {
+        "description": "Consultar progreso de salud en CRM: tendencia de peso, racha de ejercicio, cumplimiento de metas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Progress_URL', `CRM Health Progress API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "c2273f91-f28e-4427-b5e8-465d9d02d7b9",
+      "name": "CRM Health Progress"
+    },
+    {
+      "parameters": {
+        "description": "Consultar historial m\u00e9dico en CRM: alergias, condiciones, medicamentos, cirug\u00edas previas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_History_URL', `CRM Medical History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "5b448849-2250-4cb0-b474-80e7116a1175",
+      "name": "CRM Medical History"
+    },
+    {
+      "parameters": {
+        "description": "Enviar recordatorio de medicaci\u00f3n por SMS con nombre, dosis, hora y instrucciones especiales.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Med_URL', `SMS Medication Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "f47a68eb-5754-4425-a663-7bb79d9d1028",
+      "name": "SMS Medication Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta SMS de cita m\u00e9dica pr\u00f3xima con fecha, hora, doctor y ubicaci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Appointment_URL', `SMS Appointment Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "6bcfebcf-386c-4b71-854c-47e14fccf6e0",
+      "name": "SMS Appointment Alert"
+    },
+    {
+      "parameters": {
+        "description": "Enviar reporte semanal de salud por WhatsApp con resumen de vitals, ejercicio y recomendaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Report_URL', `WA Health Report API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "870729ce-81cf-4eff-b33e-7c5e8a1391df",
+      "name": "WA Health Report"
+    },
+    {
+      "parameters": {
+        "description": "Analizar tendencias de salud, cumplimiento de metas, patrones de ejercicio y h\u00e1bitos, y recomendar mejoras."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "8b935dcb-5d3b-4009-9ac9-7691eb526563",
+      "name": "Health Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Health Wellness Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Wellness Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Health",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Health Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Health Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Log Vitals",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Log Meal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Log Exercise",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Log Mood",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Health Goals",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Health Progress",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Medical History",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Medication Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Appointment Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Health Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "personal"
+    },
+    {
+      "name": "health"
+    },
+    {
+      "name": "wellness"
+    },
+    {
+      "name": "personas-naturales"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

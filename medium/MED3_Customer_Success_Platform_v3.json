@@ -1,0 +1,453 @@
+{
+  "name": "MED3 Customer Success Platform v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Plataforma de \u00c9xito del Cliente. Trackeo health scores en CRM, gestiono onboarding en Teams, monitoreo pagos en Stripe y coordino equipos en Slack. \u00bfQu\u00e9 cliente necesitas gestionar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "a2d8426e-4374-4f01-a659-9d459128587f",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "\u00c9xito del Cliente\n\nHEALTH: CRM \u2192 Score \u2192 Segmentaci\u00f3n \u2192 Churn Prediction\nONBOARDING: Teams \u2192 Gu\u00edas WhatsApp \u2192 Adopci\u00f3n\nCUENTAS: Teams QBR \u2192 Stripe Upsell \u2192 NPS\nALERTAS: Slack \u2192 Riesgo \u2192 Acci\u00f3n",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "a7d1213c-7982-4f49-8d40-be7e49fdec8a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Plataforma de \u00c9xito del Cliente\n\nGestionas el ciclo de vida del cliente en una empresa mediana:\n\n## Health Score y Monitoreo:\n- Calcular health score por cliente: uso, engagement, soporte, pagos\n- Alertas de riesgo de churn: health score < 60%\n- Segmentaci\u00f3n: Champions, Promotores, En Riesgo, Cr\u00edticos\n- Predicci\u00f3n de churn basada en patrones\n- Dashboard de salud de cartera\n\n## Onboarding y Adopci\u00f3n:\n- Track de onboarding en CRM: % completado, d\u00edas activos\n- Programar sesiones de onboarding en Teams\n- Enviar gu\u00edas y tutoriales por WhatsApp\n- Celebrar milestones de adopci\u00f3n\n- Identificar features no utilizadas\n\n## Gesti\u00f3n de Cuentas:\n- Review trimestral de cuenta en Teams\n- Upsell y cross-sell basado en uso\n- Renegociaci\u00f3n de contratos en Stripe\n- Seguimiento de NPS y feedback\n- Escalaci\u00f3n de issues a Slack\n\n## Skills Cargados:\n- data-analysis: Health scores, churn prediction, NPS\n- consulting-analysis: Estrategia de retenci\u00f3n y crecimiento\n- deep-research: Best practices de Customer Success\n- payment-processing: Gesti\u00f3n de suscripciones\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "3dc30944-a28c-4c66-8609-2ed2f2da1849",
+      "name": "Customer Success Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "4b86e9c9-c205-40c1-b639-98b05ffc3d69",
+      "name": "GPT-4.1 CS",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "d7f9e5c6-6d9a-4299-b798-68009926012b",
+      "name": "CS Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (health/onboarding/account/retention)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "client_id": {
+              "type": "string",
+              "description": "ID de cliente CRM"
+            },
+            "health_score": {
+              "type": "string",
+              "description": "Health score (0-100)"
+            },
+            "risk_level": {
+              "type": "string",
+              "description": "Nivel de riesgo (low/medium/high/critical)"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "240284b7-715f-42b3-9946-931b810c0e84",
+      "name": "CS Output"
+    },
+    {
+      "parameters": {
+        "description": "Calcular y consultar health score de cliente en CRM basado en uso, engagement, soporte y pagos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Health_URL', `CRM Health Score API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "a6b54b07-3429-4982-b1b1-a96d5fee4112",
+      "name": "CRM Health Score"
+    },
+    {
+      "parameters": {
+        "description": "Segmentar clientes en CRM: Champions, Promotores, En Riesgo, Cr\u00edticos. Generar listas por segmento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Segment_URL', `CRM Segment API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "9b485a19-f7ec-46e7-99d5-18bd55651e08",
+      "name": "CRM Segment"
+    },
+    {
+      "parameters": {
+        "description": "Predecir riesgo de churn basado en patrones de uso, soporte y pagos. Generar lista de clientes en riesgo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Churn_URL', `CRM Churn Prediction API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "956a9111-5b5f-44f0-914f-a9be69a258d9",
+      "name": "CRM Churn Prediction"
+    },
+    {
+      "parameters": {
+        "description": "Enviar y trackear encuesta NPS en CRM. Registrar score, feedback y acci\u00f3n de follow-up.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_NPS_URL', `CRM NPS Survey API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "1f4415d6-0e1e-4bb9-88cc-fb364249914e",
+      "name": "CRM NPS Survey"
+    },
+    {
+      "parameters": {
+        "description": "Programar sesi\u00f3n de onboarding en Teams para cliente con agenda, objetivos y materiales.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Onboard_URL', `Teams Onboarding API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "84d6b517-c7d3-4bc1-8239-08aac2f60e6d",
+      "name": "Teams Onboarding"
+    },
+    {
+      "parameters": {
+        "description": "Programar Quarterly Business Review en Teams con m\u00e9tricas, roadmap y action items.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_QBR_URL', `Teams QBR API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "b3176071-678b-42b5-92a6-423369ac1beb",
+      "name": "Teams QBR"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar suscripci\u00f3n en Stripe: crear, modificar, renovar o cancelar. Track de MRR.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Sub_URL', `Stripe Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "0d4a2388-3aff-44c4-a4fe-29885f9ca8de",
+      "name": "Stripe Subscription"
+    },
+    {
+      "parameters": {
+        "description": "Procesar upgrade de plan en Stripe con nuevo tier, precio y features adicionales.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Upsell_URL', `Stripe Upsell API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "f7f1dff0-0833-4500-b34b-edd59ddbc8ec",
+      "name": "Stripe Upsell"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta de riesgo de cliente a canal de Slack de Customer Success con contexto y acci\u00f3n recomendada.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Alert_URL', `Slack Risk Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "38c5d4a8-13b5-4562-9129-651dbf5fb7c8",
+      "name": "Slack Risk Alert"
+    },
+    {
+      "parameters": {
+        "description": "Enviar gu\u00eda o tutorial por WhatsApp al cliente para mejorar adopci\u00f3n de features.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Guide_URL', `WA Client Guide API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "1b5ac5bf-96bb-4d69-b8fd-bfccf0f55f06",
+      "name": "WA Client Guide"
+    },
+    {
+      "parameters": {
+        "description": "Analizar health score, identificar se\u00f1ales de churn, recomendar acciones de retenci\u00f3n y oportunidades de upsell."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "33f818b0-df93-445a-8eea-7bde76163932",
+      "name": "CS Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Customer Success Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Success Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 CS",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "CS Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "CS Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Health Score",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Segment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Churn Prediction",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM NPS Survey",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Onboarding",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams QBR",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Subscription",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Upsell",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Risk Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Client Guide",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CS Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "medium-business"
+    },
+    {
+      "name": "customer-success"
+    },
+    {
+      "name": "enterprise"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

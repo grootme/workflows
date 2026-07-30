@@ -1,0 +1,277 @@
+{
+  "name": "MCP Microsoft Teams Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "teams-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "35dbe79a-6eb3-4c1e-b5dd-3e25e39b1bdb",
+      "name": "MCP Trigger",
+      "webhookId": "teams-mcp"
+    },
+    {
+      "parameters": {
+        "content": "Microsoft Teams MCP Server\n\n8 Tools: Send Message, Create Channel, List Channels, Send Card, Manage Members, Get Chat, Create Meeting, List Chats\n\nAuth: Microsoft Graph API OAuth2\nOAuth2: Azure AD \u2192 Client Credentials / Authorization Code\nScopes: Chat.ReadWrite, Channel.ReadWrite.All, TeamMember.ReadWrite.All, OnlineMeetings.ReadWrite\nAPI: graph.microsoft.com/v1.0",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "7764b7e7-757b-4918-bcb7-57d74d83e614",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Send a message to a Microsoft Teams channel or chat. Supports text, mentions, and attachments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "bd7cf815-a9cd-441f-bead-2833177e23d9",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Create a new channel in a Microsoft Teams team. Supports standard, private, and shared channels.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Channel_URL', `Create Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "36f683c8-fc42-445e-9494-e7f98949b188",
+      "name": "Create Channel"
+    },
+    {
+      "parameters": {
+        "description": "List all channels in a Microsoft Teams team with details including display name, description, and membership.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Channels_URL', `List Channels API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "368aaf41-3376-4aaa-b489-75b8f8948533",
+      "name": "List Channels"
+    },
+    {
+      "parameters": {
+        "description": "Send an Adaptive Card to a Teams channel or chat. Supports interactive buttons, inputs, and action handlers.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Card_URL', `Send Card API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "e878f0c6-1095-46b9-9d5b-157b3227565f",
+      "name": "Send Card"
+    },
+    {
+      "parameters": {
+        "description": "Add, remove, or update members in a Teams team or channel. Supports role assignment (owner/member).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Members_URL', `Manage Members API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "0b0664e4-1f5d-4e24-9190-32ead171f3df",
+      "name": "Manage Members"
+    },
+    {
+      "parameters": {
+        "description": "Get messages from a Microsoft Teams chat with filters for date, sender, and content.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Chat_URL', `Get Chat API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "b669ce81-d786-428c-bb40-f3a2e3377fcd",
+      "name": "Get Chat"
+    },
+    {
+      "parameters": {
+        "description": "Create an online meeting via Microsoft Teams. Supports subject, start/end time, participants, and lobby settings.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Meeting_URL', `Create Meeting API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "9ebfea07-da60-40bb-9dbd-79c909eaa901",
+      "name": "Create Meeting"
+    },
+    {
+      "parameters": {
+        "description": "List all Microsoft Teams chats for the authenticated user. Supports filters for type and members.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Chats_URL', `List Chats API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "207c6d65-f8f6-49c1-921c-248ea13a3860",
+      "name": "List Chats"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Channel": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Channels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Card": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Members": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Chat": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Meeting": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Chats": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "microsoft-teams"
+    },
+    {
+      "name": "communication"
+    },
+    {
+      "name": "enterprise"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

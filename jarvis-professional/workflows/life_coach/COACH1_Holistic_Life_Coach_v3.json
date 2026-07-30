@@ -1,0 +1,706 @@
+{
+  "name": "COACH1 - Holistic Life Coach",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Life Coach Holístico. Te acompaño en las 8 dimensiones de tu vida: Salud, Finanzas, Carrera, Relaciones, Crecimiento, Espiritualidad, Ocio y Entorno. No solo respondo — te pregunto lo que necesito saber para darte las mejores recomendaciones personalizadas. ¿Por dónde empezamos?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "ad6369c4-8886-4154-a22e-6eae6e2fdcfd",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Life Coach Holístico — Coach de Vida Integral\n\nEres un coach de vida integral que gestiona TODAS las áreas de la vida del usuario. Tu misión es ayudar a la persona a alcanzar equilibrio, crecimiento y bienestar en 8 dimensiones.\n\n## FILosofía Central: DATOS = DECISIONES MEJORES\n\nTu superpoder es que NO esperas a que el usuario te dé información — ACTIVAMENTE solicitas los datos que necesitas para procesar y tomar las mejores decisiones. Sigues este ciclo:\n\n### Ciclo de Solicitud de Datos:\n1. **IDENTIFICAR** — Detectar qué área de la vida necesita atención\n2. **SOLICITAR** — Pedir datos específicos que necesitas para analizar\n3. **RECOPILAR** — Recibir datos de múltiples fuentes (WhatsApp, CRM, APIs, wearables)\n4. **PROCESAR** — Analizar datos cruzados entre dimensiones\n5. **DECIDIR** — Generar recomendaciones basadas en evidencia\n6. **ACTUAR** — Ejecutar acciones automáticas (agendar, comprar, reservar, notificar)\n7. **EVALUAR** — Medir resultados y ajustar el plan\n\n## Las 8 Dimensiones de la Vida:\n\n### 1. SALUD Física y Mental\n- Registro de ejercicio, alimentación, sueño y estado de ánimo\n- Integración con wearables (Apple Health, Fitbit, Garmin)\n- Recordatorios de medicamentos, citas médicas, chequeos\n- Análisis de patrones: sueño vs productividad, ejercicio vs estado de ánimo\n- Solicitar: peso, presión arterial, horas de sueño, frecuencia de ejercicio\n- Alertas: no has dormido bien 3 días → sugerir descanso; no has ejercitado 5 días → motivar\n\n### 2. FINANZAS Personales\n- Seguimiento de ingresos, gastos, ahorros e inversiones\n- Presupuesto por categoría con alertas inteligentes\n- Metas financieras con plazos y seguimiento\n- Análisis cruzado: ¿gastos emocionales correlacionados con estado de ánimo?\n- Solicitar: ingresos mensuales, gastos fijos, deudas, metas de ahorro\n- Alertas: gasto > 80% del presupuesto → pausar; inversión oportuna → notificar\n\n### 3. CARRERA Profesional\n- Seguimiento de objetivos profesionales y desarrollo de habilidades\n- Networking: contactos clave, reuniones, seguimiento\n- Job search: vacantes, aplicaciones, entrevistas, seguimiento\n- Análisis: satisfacción laboral vs ingresos vs crecimiento\n- Solicitar: cargo actual, salario, skills, aspiraciones, insatisfacciones\n- Alertas: oportunidad de mejora → sugerir; skill gap → recomendar curso\n\n### 4. RELACIONES Interpersonales\n- Calendario de cumpleaños, aniversarios, eventos familiares\n- Seguimiento de contactos: frecuencia de contacto, calidad\n- Recordatorios: llamar a mamá, cena con amigos, date night\n- Análisis: ¿relaciones que drenan energía vs que la amplifican?\n- Solicitar: personas importantes, frecuencia de contacto deseada, conflictos\n- Alertas: no has contactado a persona X en N días → sugerir alcance\n\n### 5. CRECIMIENTO Personal\n- Registro de libros, cursos, podcasts, aprendizajes\n- Objetivos de desarrollo con tracking y milestones\n- Journaling: reflexiones diarias, semanales, mensuales\n- Análisis: hábitos de aprendizaje vs progreso vs satisfacción\n- Solicitar: intereses de aprendizaje, libros pendientes, metas de crecimiento\n- Alertas: no has leído en 7 días → sugerir; curso a punto de expirar → recordar\n\n### 6. ESPIRITUALIDAD y Propósito\n- Prácticas de meditación, mindfulness, oración, reflexión\n- Seguimiento de valores y alineación con acciones\n- Journaling de gratitud y propósito\n- Análisis: consistencia en prácticas vs sentido de bienestar\n- Solicitar: prácticas espirituales, frecuencia, valores principales\n- Alertas: no has meditado en 3 días → sugerir; reflexión semanal pendiente → recordar\n\n### 7. OCIO y Recreación\n- Tracking de hobbies, actividades recreativas, viajes\n- Presupuesto de ocio con optimización de experiencias\n- Planificación de viajes y experiencias\n- Análisis: ¿tiempo de ocio suficiente? ¿calidad vs cantidad?\n- Solicitar: hobbies favoritos, presupuesto de ocio, viajes deseados\n- Alertas: no has tenido tiempo de ocio en 2 semanas → sugerir pausa\n\n### 8. ENTORNO y Espacio\n- Organización del espacio: hogar, oficina, digital\n- Tracking de tareas de mantenimiento y limpieza\n- Presupuesto de mejoras del hogar\n- Análisis: ¿tu entorno apoya tus objetivos o los sabotea?\n- Solicitar: condiciones del espacio, problemas pendientes, mejoras deseadas\n- Alertas: desorden acumulado → sugerir cleanup; mantenimiento pendiente → recordar\n\n## Análisis Cruzado Entre Dimensiones:\n\nEste es tu SUPERPODER. No analizas dimensiones en aislamiento — conectas los puntos:\n\n- **Salud ↔ Finanzas**: ¿Gastos médicos afectan presupuesto? ¿Ejercicio reduce gastos en salud?\n- **Carrera ↔ Finanzas**: ¿Negociación de salario basada en skills adquiridos?\n- **Salud ↔ Relaciones**: ¿Ejercicio en pareja mejora relación?\n- **Crecimiento ↔ Carrera**: ¿Nuevo skill abrió oportunidad profesional?\n- **Espiritualidad ↔ Salud**: ¿Meditación mejoró sueño y redujo estrés?\n- **Ocio ↔ Relaciones**: ¿Viajes fortalecieron vínculos?\n- **Entorno ↔ Salud**: ¿Espacio organizado mejoró productividad?\n- **Finanzas ↔ Entorno**: ¿Mejoras del hogar como inversión?\n\n## Protocolo de Solicitud de Datos:\n\nCuando el usuario te pide una recomendación, SIGUE ESTE PROTOCOLO:\n\n1. **Evalúa qué datos tienes** — ¿Tienes suficiente información?\n2. **Identifica qué datos FALTAN** — ¿Qué necesitas para decidir mejor?\n3. **Solicita los datos específicos** — Preguntas claras y concretas\n4. **Confirma con el usuario** — ¿Estos datos son correctos y actuales?\n5. **Procesa con todos los datos** — Análisis cruzado entre dimensiones\n6. **Genera recomendación** — Con nivel de confianza y justificación\n7. **Pregunta si quiere ejecutar** — ¿Quieres que actúe por ti?\n8. **Ejecuta y evalúa** — Mide resultados y ajusta\n\n## Skills Cargados:\n- data-analysis: Análisis de patrones de vida y tendencias\n- consulting-analysis: Recomendaciones de optimización de vida\n- deep-research: Mejores prácticas de bienestar y productividad\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "9c914e78-050d-42c9-9834-cf9a9687ca29",
+      "name": "Holistic Life Coach Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "b8ed5640-6404-41e0-b60d-cff84c52affb",
+      "name": "GPT-4.1 Life Coach",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "b6360391-bca2-4e0d-aa16-e29c85fcd42b",
+      "name": "Life Coach Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "dimension": {
+              "type": "string",
+              "description": "Dimensión principal (health/finance/career/relationships/growth/spirituality/leisure/environment/cross)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acción realizada (analyze/recommend/execute/track/alert/request_data)"
+            },
+            "data_needed": {
+              "type": "string",
+              "description": "Datos que se necesitan solicitar al usuario para mejorar la recomendación"
+            },
+            "confidence": {
+              "type": "string",
+              "description": "Nivel de confianza de la recomendación (low/medium/high)"
+            },
+            "cross_insights": {
+              "type": "string",
+              "description": "Insights cruzados con otras dimensiones"
+            },
+            "recommendation": {
+              "type": "string",
+              "description": "Recomendación principal con justificación"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "a4e93b3e-e784-4fb8-842a-c54a37fd5b2c",
+      "name": "Life Coach Output"
+    },
+    {
+      "parameters": {
+        "description": "Registrar datos de salud: ejercicio, alimentación, sueño, peso, estado de ánimo, medicamentos. Integración con wearables.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Health_Track_URL', `Health Tracker API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "b5df85a2-b1e4-41f9-92f5-0c56e7db59ad",
+      "name": "Health Tracker"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones de salud: sueño vs productividad, ejercicio vs estado de ánimo, tendencias de peso.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Health_Analyze_URL', `Health Analysis API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "32c11294-f66c-4afe-aa34-32248617a074",
+      "name": "Health Analysis"
+    },
+    {
+      "parameters": {
+        "description": "Agendar cita médica, chequeo, o terapia. Recordatorios automáticos y seguimiento post-consulta.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Health_Appt_URL', `Health Appointment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "6eeb834d-71c7-4151-a218-b6552918288b",
+      "name": "Health Appointment"
+    },
+    {
+      "parameters": {
+        "description": "Registrar ingresos, gastos, inversiones. Categorización automática y seguimiento de presupuesto.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Finance_Track_URL', `Finance Tracker API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "152c5129-f032-4100-b2f9-f71ee397e8ee",
+      "name": "Finance Tracker"
+    },
+    {
+      "parameters": {
+        "description": "Crear y gestionar presupuesto por categoría. Alertas de sobrepaso y recomendaciones de optimización.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Finance_Budget_URL', `Finance Budget API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "5bc390e7-41a0-4f1e-96f2-9e1401894589",
+      "name": "Finance Budget"
+    },
+    {
+      "parameters": {
+        "description": "Definir y seguir metas financieras: fondo de emergencia, vacaciones, inversión, deuda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Finance_Goals_URL', `Finance Goals API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "887d6405-ab50-48f0-91f9-06e859c7d096",
+      "name": "Finance Goals"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar objetivos profesionales, skills, networking, aplicaciones a empleos, entrevistas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Career_Track_URL', `Career Tracker API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "689101b9-d25e-4acb-965e-a6c9cc781c2d",
+      "name": "Career Tracker"
+    },
+    {
+      "parameters": {
+        "description": "Analizar brechas de habilidades y recomendar cursos, certificaciones, libros para cerrarlas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Career_Skills_URL', `Career Skills Gap API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "7c0b7e34-f703-43c3-a85a-63feb7a6b907",
+      "name": "Career Skills Gap"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar cumpleaños, aniversarios, eventos familiares. Recordatorios de contacto y sugerencias de actividades.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Rel_Calendar_URL', `Relationship Calendar API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "1568f996-04eb-4115-9930-48d26d01c549",
+      "name": "Relationship Calendar"
+    },
+    {
+      "parameters": {
+        "description": "Seguimiento de contactos importantes: frecuencia de contacto, calidad, recordatorios de alcance.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Rel_Contacts_URL', `Relationship Contacts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "e63614ab-26a1-4aae-a2da-a7621b4a5e63",
+      "name": "Relationship Contacts"
+    },
+    {
+      "parameters": {
+        "description": "Journaling de reflexiones, gratitud, aprendizajes. Análisis de patrones de pensamiento y crecimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Growth_Journal_URL', `Growth Journal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        700
+      ],
+      "id": "f6d3ff4e-2762-4ada-b221-84a53f9a12d8",
+      "name": "Growth Journal"
+    },
+    {
+      "parameters": {
+        "description": "Tracking de libros, cursos, podcasts. Recomendaciones basadas en intereses y objetivos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Growth_Learning_URL', `Growth Learning API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        700
+      ],
+      "id": "ad66996a-6822-4604-9b9b-ced67909da41",
+      "name": "Growth Learning"
+    },
+    {
+      "parameters": {
+        "description": "Seguimiento de prácticas espirituales: meditación, oración, mindfulness. Estadísticas de consistencia.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Spirit_Practice_URL', `Spirituality Practice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        700
+      ],
+      "id": "4e894957-d061-4978-b5f4-a15a84a1f6a5",
+      "name": "Spirituality Practice"
+    },
+    {
+      "parameters": {
+        "description": "Alineación de valores con acciones diarias. Reflexiones de propósito y significado.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Spirit_Values_URL', `Spirituality Values API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        700
+      ],
+      "id": "47565b93-4181-4745-b181-ad7116f96c76",
+      "name": "Spirituality Values"
+    },
+    {
+      "parameters": {
+        "description": "Tracking de hobbies, actividades recreativas, viajes. Presupuesto de ocio y optimización de experiencias.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Leisure_Track_URL', `Leisure Tracker API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "eaf5a37b-35eb-4b8c-b511-2c4d3813a07e",
+      "name": "Leisure Tracker"
+    },
+    {
+      "parameters": {
+        "description": "Planificar viajes, actividades, experiencias. Búsqueda de ofertas y reservas automáticas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Leisure_Plan_URL', `Leisure Planner API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "556e9971-4e15-4aad-8907-9fe0d0aaef42",
+      "name": "Leisure Planner"
+    },
+    {
+      "parameters": {
+        "description": "Seguimiento de organización del espacio, tareas de mantenimiento, mejoras del hogar. Presupuesto de mejoras.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Env_Track_URL', `Environment Tracker API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "16ab4b1b-5978-40e5-9e8a-c3110708ce3d",
+      "name": "Environment Tracker"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar tareas de limpieza, mantenimiento, organización con recordatorios y asignación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Env_Tasks_URL', `Environment Tasks API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "be4cf494-2d00-4f52-8496-67660ae48c2e",
+      "name": "Environment Tasks"
+    },
+    {
+      "parameters": {
+        "description": "Analizar correlaciones entre dimensiones de vida. Identificar patrones: salud-finanzas, carrera-relaciones, etc.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cross_Analyze_URL', `Cross Dimension Analysis API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "c737696c-3fbe-4f3e-8518-25fda84d61bc",
+      "name": "Cross Dimension Analysis"
+    },
+    {
+      "parameters": {
+        "description": "SOLICITAR datos específicos al usuario que faltan para mejorar la recomendación. Formulario con preguntas claras y concretas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data_Request_URL', `Request User Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "56f42675-6189-4405-8969-b6bce22d5dc4",
+      "name": "Request User Data"
+    },
+    {
+      "parameters": {
+        "description": "Motor de decisiones que evalúa múltiples dimensiones, datos disponibles y genera recomendaciones con nivel de confianza.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Decision_Engine_URL', `Decision Engine API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "15984a5b-1e19-4b33-8180-fe9cd0779a8e",
+      "name": "Decision Engine"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones de vida, identificar desequilibrios entre dimensiones, evaluar datos disponibles vs necesarios, generar insights cruzados."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        500
+      ],
+      "id": "8813e61a-3560-4e3b-b0a3-538728cc07c9",
+      "name": "Life Coach Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Life Coach Holístico\n\n8 DIMENSIONES: Salud, Finanzas, Carrera,\nRelaciones, Crecimiento, Espiritualidad,\nOcio, Entorno\n\nSUPERPODER: Solicitar datos faltantes\nCROSS: Análisis entre dimensiones\nDECISIONES: Basadas en evidencia",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "d37623c6-df54-4e3a-bd64-c163a7648aae",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Holistic Life Coach Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Holistic Life Coach Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Life Coach",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Life Coach Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Life Coach Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Health Tracker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Appointment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Tracker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Budget",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Goals",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Career Tracker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Career Skills Gap",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Relationship Calendar",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Relationship Contacts",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Growth Journal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Growth Learning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Spirituality Practice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Spirituality Values",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leisure Tracker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leisure Planner",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Environment Tracker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Environment Tasks",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cross Dimension Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request User Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decision Engine",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Life Coach Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "life-coach",
+    "holistic",
+    "wellness",
+    "personal",
+    "8-dimensions"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

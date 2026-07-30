@@ -1,0 +1,495 @@
+{
+  "name": "IND10 - Construction Project Manager",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Gestión de Construcción. Gestiono proyectos, materiales, presupuesto, personal y cronogramas de obra. ¿En qué puedo ayudarte?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "ecb2e338-330a-477f-9982-90e0d4d2c9ec",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Gestión de Construcción\n\nGestionas proyectos de construcción completos a través de múltiples plataformas:\n\n## Gestión de Proyectos:\n- Crear y gestionar proyectos con fases, hitos y entregables\n- Cronograma de obra con diagrama de Gantt interactivo\n- Seguimiento de avance físico vs planificado por fase\n- Gestión de permisos y licencias de construcción\n- Documentación técnica: planos, especificaciones, contratos\n- Integración con calendario para hitos clave y fechas de entrega\n\n## Control de Materiales:\n- Inventario de materiales en tiempo real con stock mínimo\n- Órdenes de compra automáticas cuando el stock baja del mínimo\n- Registro de entradas y salidas de materiales con QR\n- Comparación de precios entre proveedores\n- Control de desperdicios y mermas por fase\n- Alertas de materiales próximos a vencer o caducar\n\n## Presupuesto y Costos:\n- Presupuesto por partida: mano de obra, materiales, equipos, subcontratos\n- Seguimiento de costos reales vs presupuestados por partida\n- Gestión de órdenes de cambio y modificaciones\n- Valuaciones y estimaciones de avance de obra\n- Control de pagos a contratistas y proveedores\n- Reportes financieros: flujo de caja, EVM (Earned Value Management)\n\n## Personal y Seguridad:\n- Registro de asistencia de trabajadores con QR\n- Control de horas trabajadas y cálculo de nómina\n- Gestión de EPP (Equipos de Protección Personal)\n- Inspecciones de seguridad con checklist digital\n- Reporte de incidentes y accidentes con seguimiento\n- Certificaciones y capacitaciones vigentes por trabajador\n\n## Skills Cargados:\n- data-analysis: Análisis de costos, rendimientos, desperdicios\n- consulting-analysis: Optimización de procesos constructivos\n- deep-research: Normativas de construcción y mejores prácticas\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "2270eb0a-d9b1-410a-9e15-519d5aa29c61",
+      "name": "Construction Manager Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "a9985605-2f36-45c9-9994-45d3f3f995a4",
+      "name": "GPT-4.1 Construction",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "93b95776-b7d9-48fa-86b5-80986b8387ef",
+      "name": "Construction Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Acción realizada (project/materials/budget/workers/safety/report)"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado de la operación"
+            },
+            "project_id": {
+              "type": "string",
+              "description": "ID del proyecto si aplica"
+            },
+            "phase": {
+              "type": "string",
+              "description": "Fase del proyecto si aplica"
+            },
+            "budget_status": {
+              "type": "string",
+              "description": "Estado del presupuesto (ok/warning/exceeded)"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "a18d3f01-df35-4b64-ae22-20158a82071e",
+      "name": "Construction Output"
+    },
+    {
+      "parameters": {
+        "description": "Enviar reporte diario de obra por WhatsApp: avance, problemas, clima, personal, materiales usados.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Daily_URL', `WA Daily Report API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "9da8e553-3805-4a66-b622-8ac4fd990428",
+      "name": "WA Daily Report"
+    },
+    {
+      "parameters": {
+        "description": "Reportar problema o incidencia en obra vía WhatsApp con foto, ubicación y severidad.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Issue_URL', `WA Issue Report API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "ca45ad41-a3ce-4cba-9e3a-60a70e895f45",
+      "name": "WA Issue Report"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar proyecto en CRM: fases, hitos, entregables, estado, porcentaje de avance.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Project_URL', `CRM Project API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "96c1b35e-6475-4e41-9599-cc4769170e93",
+      "name": "CRM Project"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar presupuesto por partida: materiales, mano de obra, equipos, subcontratos. Costos reales vs presupuestados.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Budget_URL', `CRM Budget Partida API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "d2d4629f-5f86-4077-9bb6-2676b95629fd",
+      "name": "CRM Budget Partida"
+    },
+    {
+      "parameters": {
+        "description": "Generar valuación de avance de obra para pago a contratistas con desglose por partida.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Valuation_URL', `CRM Valuation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "df1b03ab-5b13-4e4c-b8ce-40d9e1b337bd",
+      "name": "CRM Valuation"
+    },
+    {
+      "parameters": {
+        "description": "Consultar y gestionar inventario de materiales en ERPNext: stock, entradas, salidas, mínimo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Materials_URL', `ERP Materials Inventory API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "38fc3822-6a40-4128-826c-c1dd97283112",
+      "name": "ERP Materials Inventory"
+    },
+    {
+      "parameters": {
+        "description": "Crear orden de compra de materiales en ERPNext con proveedor, cantidades, precios y fecha de entrega.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Purchase_URL', `ERP Purchase Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "41e1ba62-d85f-4676-9b62-79baa55df846",
+      "name": "ERP Purchase Order"
+    },
+    {
+      "parameters": {
+        "description": "Calcular nómina semanal basada en horas trabajadas, tarifas, deducciones y bonificaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Payroll_URL', `ERP Payroll API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "b3117acd-ad56-4405-9944-ed3869d0863f",
+      "name": "ERP Payroll"
+    },
+    {
+      "parameters": {
+        "description": "Registrar inspección de seguridad con checklist digital: EPP, condiciones, señalización, primeros auxilios.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('ERP_Safety_URL', `ERP Safety Inspection API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        500
+      ],
+      "id": "925fd192-cc3d-40d6-897c-e43c9a94e118",
+      "name": "ERP Safety Inspection"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar hitos del proyecto en calendario: fechas clave, entregas, inspecciones, permisos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Milestone_URL', `Calendar Milestone API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "a6adb22f-d4e1-4e22-a229-5dbebbfe77ea",
+      "name": "Calendar Milestone"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar pagos a contratistas y proveedores con Stripe: valuaciones, retenciones, facturas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Payment_URL', `Stripe Contractor Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "d84a3156-b8ac-4cfa-9fee-c7daee4a2283",
+      "name": "Stripe Contractor Payment"
+    },
+    {
+      "parameters": {
+        "description": "Seguimiento de presupuesto del proyecto con Stripe: costos reales, comprometidos, disponibles.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Budget_URL', `Stripe Budget Tracking API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "6f22fad9-4641-428a-9a0a-62d3791c807f",
+      "name": "Stripe Budget Tracking"
+    },
+    {
+      "parameters": {
+        "description": "Analizar rendimientos, costos, desperdicios, riesgos. Optimizar cronograma y recursos. Evaluar EVM."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "0a38c4d3-5745-4b88-b698-11e9a5d2a7f3",
+      "name": "Construction Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Gestión de Construcción\n\nPROYECTOS: CRM → Fases → Hitos → Avance\nMATERIALES: ERPNext → Stock → Compras → Desperdicios\nPRESUPUESTO: Partidas → Costos → Valuaciones → EVM\nSEGURIDAD: Inspecciones → EPP → Incidentes",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "26271206-2be4-4627-926f-d222d1a3a0bd",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Construction Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construction Manager Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Construction",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Construction Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Construction Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Daily Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Issue Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Project",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Budget Partida",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Valuation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Materials Inventory",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Purchase Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Payroll",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERP Safety Inspection",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Milestone",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Contractor Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Budget Tracking",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Construction Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "industry",
+    "construction",
+    "project-management",
+    "budget",
+    "materials"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

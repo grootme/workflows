@@ -1,0 +1,456 @@
+{
+  "name": "PERS4 Smart Daily Life Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Asistente de Vida Diaria. Organizo tu agenda en Calendar, gestiono tareas por WhatsApp, filtro emails importantes en Gmail y te env\u00edo recordatorios SMS. \u00bfQu\u00e9 necesitas organizar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "7b9f3710-a01d-4c04-aa37-a874246ee2bd",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Vida Diaria Inteligente\n\nAGENDA: Calendar \u2192 Conflictos \u2192 Optimizaci\u00f3n\nTAREAS: WhatsApp \u2192 Priorizar \u2192 Recordar\nEMAIL: Gmail \u2192 Filtrar \u2192 Resumir \u2192 WhatsApp\nRUTINAS: Matutina + Nocturna por WhatsApp",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "d1ac6937-0113-4fd9-b357-a0371129a85c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agente de Vida Diaria Inteligente\n\nGestionas la vida diaria de una persona a trav\u00e9s de m\u00faltiples plataformas:\n\n## Agenda y Calendario:\n- Crear y gestionar eventos en Calendar\n- Optimizar horarios considerando prioridades y desplazamientos\n- Recordatorios inteligentes: 1 d\u00eda, 1 hora, 15 minutos antes\n- Detectar conflictos de horarios y sugerir alternativas\n- Sincronizar eventos personales y profesionales\n\n## Gesti\u00f3n de Tareas:\n- Crear y organizar tareas por WhatsApp con prioridad y fecha l\u00edmite\n- Categor\u00edas: Trabajo, Personal, Hogar, Compras, Salud, Social\n- Listas de compra autom\u00e1ticas compartidas por WhatsApp\n- Recordatorios de tareas vencidas y pr\u00f3ximas\n- Delegaci\u00f3n de tareas a familiares\n\n## Email Inteligente:\n- Filtrar emails importantes vs spam en Gmail\n- Res\u00famenes diarios de emails por WhatsApp\n- Respuestas autom\u00e1ticas para emails simples\n- Clasificar por urgencia: Cr\u00edtico, Importante, Normal, Bajo\n- Escalar emails cr\u00edticos a SMS inmediato\n\n## Recordatorios y Rutinas:\n- Rutinas matutinas y nocturnas por WhatsApp\n- Recordatorios de cumplea\u00f1os, aniversarios y eventos sociales\n- Alertas de pagos de servicios y vencimientos\n- Recordatorios de mantenimiento del hogar y veh\u00edculo\n- Preparaci\u00f3n del d\u00eda siguiente cada noche\n\n## Skills Cargados:\n- data-analysis: Optimizaci\u00f3n de tiempo y productividad\n- deep-research: Recomendaciones de herramientas y h\u00e1bitos\n- consulting-analysis: Estrategia de productividad personal\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "e4a6888e-5227-4ff5-9f32-46ad65609e6d",
+      "name": "Daily Life Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "cafb2e23-b475-4bd5-8a6e-bf7368461b83",
+      "name": "GPT-4.1 Daily",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "32b10777-8327-455c-a4ac-2992b8f86a51",
+      "name": "Daily Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (calendar/tasks/email/reminders/routines)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "priority": {
+              "type": "string",
+              "description": "Prioridad (critical/high/medium/low)"
+            },
+            "due_date": {
+              "type": "string",
+              "description": "Fecha l\u00edmite si aplica"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "640c6c8d-806f-4109-bb0b-d31910c3f064",
+      "name": "Daily Output"
+    },
+    {
+      "parameters": {
+        "description": "Crear o modificar evento en Calendar con t\u00edtulo, fecha, hora, ubicaci\u00f3n, participantes y recordatorios.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_Event_URL', `Calendar Event API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "f4d89ffd-72e5-434d-aeee-7748d716a204",
+      "name": "Calendar Event"
+    },
+    {
+      "parameters": {
+        "description": "Consultar agenda del d\u00eda o semana con lista de eventos, conflictos y tiempos libres.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_View_URL', `Calendar Day View API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "cd16f425-a179-4d35-92d7-a9c25d6edfd4",
+      "name": "Calendar Day View"
+    },
+    {
+      "parameters": {
+        "description": "Crear tarea por WhatsApp con t\u00edtulo, categor\u00eda, prioridad, fecha l\u00edmite y notas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Task_URL', `WA Create Task API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "5a42f288-cbe8-4308-bf6c-d7b14e96fb70",
+      "name": "WA Create Task"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar lista de compras por WhatsApp con items, cantidades y tienda.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Shopping_URL', `WA Shopping List API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "ff972f30-592a-4f4c-b224-b50de8c5480d",
+      "name": "WA Shopping List"
+    },
+    {
+      "parameters": {
+        "description": "Enviar rutina matutina o nocturna por WhatsApp con checklist de actividades.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Routine_URL', `WA Daily Routine API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "af678959-970b-45ff-978d-b530f330e13e",
+      "name": "WA Daily Routine"
+    },
+    {
+      "parameters": {
+        "description": "Filtrar emails en Gmail por importancia, remitente y categor\u00eda. Clasificar urgencia y generar resumen.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Filter_URL', `Gmail Filter API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "ef04c052-c447-4f00-94bf-98b707908c22",
+      "name": "Gmail Filter"
+    },
+    {
+      "parameters": {
+        "description": "Enviar respuesta autom\u00e1tica por Gmail para emails simples con confirmaci\u00f3n de recepci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Reply_URL', `Gmail Auto Reply API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "cb406f03-49ce-47a3-831a-b5e9c6607ba0",
+      "name": "Gmail Auto Reply"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar contactos personales en CRM: familiares, amigos, servicios, con cumplea\u00f1os y notas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Contacts_URL', `CRM Personal Contacts API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "1bb61088-e3c5-4b5d-84a8-5edc466f071d",
+      "name": "CRM Personal Contacts"
+    },
+    {
+      "parameters": {
+        "description": "Enviar recordatorio SMS urgente para eventos cr\u00edticos, pagos vencidos o tareas de alta prioridad.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Reminder_URL', `SMS Urgent Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "08a13053-c229-44d7-a68b-6c8761563266",
+      "name": "SMS Urgent Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Enviar alerta SMS de cumplea\u00f1os o aniversario con sugerencia de regalo y mensaje.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Birthday_URL', `SMS Birthday Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "e1ace04c-be61-4dbe-a360-9db636e6c632",
+      "name": "SMS Birthday Alert"
+    },
+    {
+      "parameters": {
+        "description": "Analizar prioridades, optimizar agenda, detectar conflictos, y sugerir mejoras de productividad."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "4ce55cf2-dbdd-45c5-ad32-473ad84209d4",
+      "name": "Daily Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Daily Life Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Life Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Daily",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Daily Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Daily Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Event",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Day View",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Create Task",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Shopping List",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Daily Routine",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Filter",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Auto Reply",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Personal Contacts",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Urgent Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Birthday Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Daily Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "personal"
+    },
+    {
+      "name": "productivity"
+    },
+    {
+      "name": "daily-life"
+    },
+    {
+      "name": "personas-naturales"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

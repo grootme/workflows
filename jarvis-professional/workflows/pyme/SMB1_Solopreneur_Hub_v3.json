@@ -1,0 +1,453 @@
+{
+  "name": "SMB1 Solopreneur Hub v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Hub de Emprendedor. Gestiono clientes en CRM, facturaci\u00f3n en Stripe, comunicaci\u00f3n por WhatsApp, agenda en Calendar y emails en Gmail. Todo en un solo lugar. \u00bfQu\u00e9 necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "117cfc18-c150-447b-b141-0eb5b137d6b3",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Hub del Emprendedor\n\nCLIENTES: CRM \u2192 Pipeline \u2192 Seguimiento\nPAGOS: Stripe \u2192 Facturas \u2192 Links \u2192 Suscripciones\nAGENDA: Calendar \u2192 Reuniones \u2192 Follow-up\nCOMUNICACI\u00d3N: WhatsApp + Gmail + SMS",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "9fca6ce2-5430-4e62-bcd8-212ee2629528",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Hub del Emprendedor / Solopreneur\n\nGestionas todas las operaciones de un emprendedor individual:\n\n## Gesti\u00f3n de Clientes:\n- Registrar leads y clientes en CRM con fuente, estado y valor\n- Pipeline: Lead \u2192 Contactado \u2192 Propuesta \u2192 Negociaci\u00f3n \u2192 Ganado/Perdido\n- Seguimiento de comunicaci\u00f3n por WhatsApp y Gmail\n- Etiquetar por tipo: Cliente, Prospecto, Partner, Proveedor\n- Notas de reuni\u00f3n y seguimiento\n\n## Facturaci\u00f3n y Pagos:\n- Crear facturas y cobros en Stripe\n- Links de pago para servicios y productos\n- Suscripciones para servicios recurrentes\n- Seguimiento de pagos pendientes y vencidos\n- Reporte mensual de ingresos\n\n## Agenda y Productividad:\n- Gestionar reuniones en Calendar con recordatorios\n- Bloques de trabajo profundo y descanso\n- Follow-ups autom\u00e1ticos post-reuni\u00f3n\n- Planificaci\u00f3n semanal de objetivos\n- Balance trabajo/vida personal\n\n## Comunicaci\u00f3n:\n- WhatsApp para comunicaci\u00f3n r\u00e1pida con clientes\n- Gmail para comunicaci\u00f3n formal y propuestas\n- SMS para recordatorios y confirmaciones\n- Templates de mensajes frecuentes\n- Resumen diario de comunicaciones pendientes\n\n## Skills Cargados:\n- data-analysis: M\u00e9tricas de negocio y pipeline\n- consulting-analysis: Estrategia de crecimiento\n- deep-research: An\u00e1lisis de mercado y competencia\n- payment-processing: Optimizaci\u00f3n de cobros\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "7ca2ef6b-5c22-4a4d-a64c-ce88d86a7081",
+      "name": "Solopreneur Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "6880b1dd-3c77-4f63-994e-75733130c4a4",
+      "name": "GPT-4.1 Solopreneur",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "b292f6fc-cb7c-441f-9ab0-e741fe75d8e5",
+      "name": "Solopreneur Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categor\u00eda (clients/invoicing/schedule/communication)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "client_id": {
+              "type": "string",
+              "description": "ID de cliente CRM si aplica"
+            },
+            "payment_id": {
+              "type": "string",
+              "description": "ID de pago Stripe si aplica"
+            },
+            "revenue": {
+              "type": "string",
+              "description": "Monto de ingreso si aplica"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "8aa0f962-3ca8-4802-8184-967d162a76ca",
+      "name": "Solopreneur Output"
+    },
+    {
+      "parameters": {
+        "description": "Registrar o actualizar lead/cliente en CRM con nombre, empresa, estado, valor estimado y fuente.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Lead_URL', `CRM Manage Lead API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "4345547b-cd40-4b0c-b39c-9ed112881a2f",
+      "name": "CRM Manage Lead"
+    },
+    {
+      "parameters": {
+        "description": "Consultar pipeline de ventas con estados, valores y conversi\u00f3n por etapa.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Pipeline_URL', `CRM Pipeline View API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "d0061abe-c5de-428d-a5ea-b999426f6ddf",
+      "name": "CRM Pipeline View"
+    },
+    {
+      "parameters": {
+        "description": "Registrar actividad en CRM: llamada, email, reuni\u00f3n, nota con cliente y fecha.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Activity_URL', `CRM Log Activity API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "583b0ddb-134c-4aca-b2bc-6fdec1df8619",
+      "name": "CRM Log Activity"
+    },
+    {
+      "parameters": {
+        "description": "Crear factura en Stripe con concepto, monto, cliente y fecha de vencimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Create Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "67f737ed-a66a-4769-acfd-bdf69de788fd",
+      "name": "Stripe Create Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Generar link de pago en Stripe para servicio o producto con precio y descripci\u00f3n.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Link_URL', `Stripe Payment Link API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "10c29964-50e5-469b-b006-f3eedcc20f18",
+      "name": "Stripe Payment Link"
+    },
+    {
+      "parameters": {
+        "description": "Crear suscripci\u00f3n recurrente en Stripe con plan, intervalo y periodo de prueba.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Sub_URL', `Stripe Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "36156ee4-5ce0-46c1-8f81-ba779be281f1",
+      "name": "Stripe Subscription"
+    },
+    {
+      "parameters": {
+        "description": "Enviar mensaje a cliente por WhatsApp: confirmaci\u00f3n, seguimiento, propuesta o recordatorio.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Client_URL', `WA Client Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "01265388-443a-4610-85c6-4e8c0bebfae7",
+      "name": "WA Client Message"
+    },
+    {
+      "parameters": {
+        "description": "Enviar propuesta comercial por Gmail con personalizaci\u00f3n, adjuntos y seguimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Proposal_URL', `Gmail Proposal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "66b9bf55-9320-4c15-b418-c3784a1d8886",
+      "name": "Gmail Proposal"
+    },
+    {
+      "parameters": {
+        "description": "Programar reuni\u00f3n con cliente en Calendar con agenda, ubicaci\u00f3n y recordatorios.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar_Meeting_URL', `Calendar Meeting API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "b70c11a0-43f2-4e6e-b3d9-8e04d2151bf3",
+      "name": "Calendar Meeting"
+    },
+    {
+      "parameters": {
+        "description": "Enviar SMS de seguimiento a cliente: confirmaci\u00f3n, recordatorio o agradecimiento.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Followup_URL', `SMS Follow Up API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "c1a58368-c843-4c3f-80df-1c1c8cc73e86",
+      "name": "SMS Follow Up"
+    },
+    {
+      "parameters": {
+        "description": "Analizar pipeline, priorizar leads, optimizar facturaci\u00f3n y planificar agenda."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "23ae2b44-d62f-4c49-878f-5cc5606842e5",
+      "name": "Solopreneur Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Solopreneur Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solopreneur Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Solopreneur",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Solopreneur Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Solopreneur Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Manage Lead",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Pipeline View",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Log Activity",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Create Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Payment Link",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Subscription",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Client Message",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Proposal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Meeting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Follow Up",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Solopreneur Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "pyme"
+    },
+    {
+      "name": "solopreneur"
+    },
+    {
+      "name": "small-business"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

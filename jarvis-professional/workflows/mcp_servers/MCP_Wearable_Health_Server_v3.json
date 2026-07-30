@@ -1,0 +1,244 @@
+{
+  "name": "MCP - Wearable Health Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "wearable-health"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a0cfbcb3-e54f-410b-af3f-e29ff1f00031",
+      "name": "MCP Trigger",
+      "webhookId": "wearable-health"
+    },
+    {
+      "parameters": {
+        "content": "Wearable Health MCP Server\n\n8 Tools: Apple Health, Fitbit,\nGarmin, Withings, Oura Ring,\nWhoop, Google Fit, Samsung Health\n\nOAuth2 required for all\nReal-time health data\nBiometric integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "3b22db5d-1570-42cd-851e-1a9ba8ae0507",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Fetch health data from Apple HealthKit via HealthStack API: steps, heart rate, sleep, calories, workouts, blood oxygen, ECG. Requires OAuth2 with HealthKit scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('APPLE_HEALTH_URL', `Apple Health Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "fea8b985-65d1-4335-96cb-7307a477431c",
+      "name": "Apple Health Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Fitbit API: steps, distance, calories, sleep stages, heart rate zones, active minutes, weight, water intake. Requires OAuth2 with Fitbit scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('FITBIT_URL', `Fitbit Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "9f952972-1546-48c2-be3e-fe8e26c1781a",
+      "name": "Fitbit Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Garmin Connect API: activities, sleep, stress score, body battery, hydration, respiration, SpO2, HRV. Requires OAuth1/Garmin ConnectIQ.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GARMIN_URL', `Garmin Connect Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "70ce7301-a22a-4413-801c-e3cf89080562",
+      "name": "Garmin Connect Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Withings API: weight, blood pressure, heart rate, sleep, temperature, SpO2, ECG. Requires OAuth2 with Withings scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WITHINGS_URL', `Withings Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "a046cb5c-a5ed-49fd-9397-ff3cff73ef1f",
+      "name": "Withings Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Oura Ring API: readiness score, sleep score, activity score, HRV, respiratory rate, body temperature, sleep stages. Requires Oura personal access token.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('OURA_URL', `Oura Ring Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "7137aa56-f620-4c1c-b925-cd5ca46f453e",
+      "name": "Oura Ring Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Whoop API: recovery score, strain, sleep performance, HRV, resting heart rate, respiratory rate, journal entries. Requires OAuth2 with Whoop scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WHOOP_URL', `Whoop Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "5dec6856-78e7-4228-97bf-05110d9bc606",
+      "name": "Whoop Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Google Fit API: steps, calories, heart rate, sleep, activities, weight, nutrition, blood pressure. Requires OAuth2 with Google Fitness scope.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('GOOGLE_FIT_URL', `Google Fit Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "d15b3bd3-6950-425f-964b-4ac13651ec16",
+      "name": "Google Fit Data"
+    },
+    {
+      "parameters": {
+        "description": "Fetch data from Samsung Health API: steps, heart rate, sleep, stress, SpO2, exercise, nutrition, blood pressure. Requires Samsung Health SDK access.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SAMSUNG_HEALTH_URL', `Samsung Health Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "bccef221-2860-4231-9dd7-c4c06bcc380a",
+      "name": "Samsung Health Data"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Apple Health Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fitbit Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Garmin Connect Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Withings Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Oura Ring Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Whoop Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Fit Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Samsung Health Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "wearable",
+    "health",
+    "apple-health",
+    "fitbit",
+    "garmin",
+    "oura"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

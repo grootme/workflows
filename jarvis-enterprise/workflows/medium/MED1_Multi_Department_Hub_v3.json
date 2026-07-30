@@ -1,0 +1,449 @@
+{
+  "name": "MED1 Multi Department Hub v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Hub Multi-Departamento. Coordino Ventas, Marketing, Soporte y RRHH a trav\u00e9s de Teams, Slack, CRM y Stripe. \u00bfQu\u00e9 departamento necesitas?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "f56edd71-cc35-474d-958c-0c4d86c8f307",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Hub Multi-Departamento\n\nVENTAS: CRM \u2192 Pipeline \u2192 Stripe \u2192 WhatsApp\nMARKETING: CRM \u2192 Campaigns \u2192 Slack\nSOPORTE: CRM \u2192 Tickets \u2192 Slack \u2192 Teams\nRRHH: Teams \u2192 Stripe N\u00f3mina \u2192 Onboarding",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "e987255f-9f66-45c6-b1ff-5d0213e00674",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Hub Multi-Departamento\n\nGestionas la coordinaci\u00f3n de m\u00faltiples departamentos en una empresa mediana:\n\n## Ventas:\n- Pipeline CRM con leads, oportunidades y deals\n- Comunicaci\u00f3n con clientes v\u00eda WhatsApp y Gmail\n- Facturaci\u00f3n y cobros en Stripe\n- Reportes de ventas y forecasting\n- Comisiones y bonificaciones\n\n## Marketing:\n- Campa\u00f1as por WhatsApp y Slack\n- Content calendar en Notion\n- M\u00e9tricas de campaign en CRM\n- Lead generation y nurturing\n- Social media y newsletter\n\n## Soporte al Cliente:\n- Tickets en Slack channels por prioridad\n- Escalaci\u00f3n a Teams para issues complejos\n- Base de conocimiento en Notion\n- SLA tracking y m\u00e9tricas\n- Encuestas de satisfacci\u00f3n\n\n## Recursos Humanos:\n- Onboarding de nuevos empleados en Teams\n- Gesti\u00f3n de vacaciones y permisos\n- Evaluaciones de desempe\u00f1o\n- N\u00f3mina y pagos en Stripe\n- Comunicaci\u00f3n interna en Slack\n\n## Skills Cargados:\n- data-analysis: KPIs por departamento\n- consulting-analysis: Optimizaci\u00f3n organizacional\n- deep-research: Mejores pr\u00e1cticas por industria\n- payment-processing: Gesti\u00f3n financiera\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "ea26925f-7bea-46b2-a130-ca2f6482eda8",
+      "name": "Multi-Department Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "c757a18e-ac52-4359-8a79-f1c927eefb13",
+      "name": "GPT-4.1 Dept",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "c3c32ca8-48e8-4e1c-871b-4648fc816ff2",
+      "name": "Dept Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "department": {
+              "type": "string",
+              "description": "Departamento (sales/marketing/support/hr)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Acci\u00f3n realizada"
+            },
+            "result": {
+              "type": "string",
+              "description": "Resultado resumen"
+            },
+            "metric": {
+              "type": "string",
+              "description": "M\u00e9trica relevante"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Siguientes acciones recomendadas"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "9400c7fd-d486-4374-8c34-5b5b13153325",
+      "name": "Dept Output"
+    },
+    {
+      "parameters": {
+        "description": "Gestionar deal de ventas en CRM con cliente, monto, etapa y probabilidad de cierre.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Deal_URL', `CRM Sales Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "99a83c02-f34b-4206-8b17-5a1c4e90852b",
+      "name": "CRM Sales Deal"
+    },
+    {
+      "parameters": {
+        "description": "Crear o consultar campa\u00f1a de marketing en CRM con canal, presupuesto, m\u00e9tricas y leads generados.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Campaign_URL', `CRM Campaign API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "81d0a79a-9dc4-4b0d-839c-648e1e9373e6",
+      "name": "CRM Campaign"
+    },
+    {
+      "parameters": {
+        "description": "Crear o actualizar ticket de soporte en CRM con prioridad, cliente, issue y SLA.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Ticket_URL', `CRM Support Ticket API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "12087742-d5cf-4c64-a288-8d78afdaa980",
+      "name": "CRM Support Ticket"
+    },
+    {
+      "parameters": {
+        "description": "Publicar en canal de ventas de Slack: deal cerrado, nuevo lead, o m\u00e9trica de ventas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Sales_URL', `Slack Sales Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "697b15c9-1634-497b-b14a-fb5aff6d3632",
+      "name": "Slack Sales Channel"
+    },
+    {
+      "parameters": {
+        "description": "Escalar ticket de soporte a canal de Slack con prioridad, contexto y SLA.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slack_Support_URL', `Slack Support Escalation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "24027f9b-c70a-4ff5-a2b9-96381e948168",
+      "name": "Slack Support Escalation"
+    },
+    {
+      "parameters": {
+        "description": "Publicar en canal de RRHH de Teams: nuevo empleado, permiso, evaluaci\u00f3n o n\u00f3mina.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_HR_URL', `Teams HR Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "d762bb66-46ce-447d-aaca-e2b05ec74d7b",
+      "name": "Teams HR Channel"
+    },
+    {
+      "parameters": {
+        "description": "Programar reuni\u00f3n de departamento en Teams con agenda, participantes y notas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Meeting_URL', `Teams Dept Meeting API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "302b74d4-e3e1-4f77-a61a-df00cff4d8d9",
+      "name": "Teams Dept Meeting"
+    },
+    {
+      "parameters": {
+        "description": "Crear factura en Stripe para cliente con detalle por departamento, proyecto o servicio.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Dept Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "7f93526d-39b3-4c0a-ac76-5155047cf15b",
+      "name": "Stripe Dept Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Procesar n\u00f3mina de empleados v\u00eda Stripe con salario, deducciones y dep\u00f3sito directo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Payroll_URL', `Stripe Payroll API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "5126dbf0-6b8c-431d-86c5-4aa12f892396",
+      "name": "Stripe Payroll"
+    },
+    {
+      "parameters": {
+        "description": "Enviar actualizaci\u00f3n a cliente por WhatsApp desde cualquier departamento: ventas, soporte o billing.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Client_URL', `WA Client Update API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "0578fffa-fc1b-49f8-9017-2b46329dc46f",
+      "name": "WA Client Update"
+    },
+    {
+      "parameters": {
+        "description": "Analizar KPIs por departamento, identificar cuellos de botella, optimizar coordinaci\u00f3n y recursos."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "96956802-ff60-4e5a-800a-1bcb824577e9",
+      "name": "Dept Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Multi-Department Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multi-Department Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Dept",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Dept Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Dept Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM Sales Deal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Campaign",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Support Ticket",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Sales Channel",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Support Escalation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams HR Channel",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Dept Meeting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Dept Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Payroll",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Client Update",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dept Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "medium-business"
+    },
+    {
+      "name": "multi-department"
+    },
+    {
+      "name": "enterprise"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

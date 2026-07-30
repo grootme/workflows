@@ -1,0 +1,479 @@
+{
+  "name": "IND5 Gym Onboarding v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Gym Onboarding Assistant. I manage new member onboarding from WhatsApp lead capture through CRM registration, Stripe membership setup, and Teams orientation scheduling. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "2c9f989d-3eae-4ddc-94dd-f7da0428ec6d",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Gym / Fitness Center Onboarding\n\nFLOW: WhatsApp Quiz \u2192 CRM Register \u2192 Stripe Membership \u2192 Teams Orientation\n\nPlatforms: WhatsApp, CRM, Stripe, Twilio SMS, Teams\nTiers: Basic / Premium / VIP\nPipeline: Lead \u2192 Qualified \u2192 Registered \u2192 Payment \u2192 Oriented \u2192 Active",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "2a3d02e9-b254-4a3c-9a0f-6e7380f12d85",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Gym / Fitness Center Onboarding Agent\n\nYou orchestrate gym member onboarding across multiple platforms:\n\n## Lead Capture & Qualification:\n- Send fitness quiz via WhatsApp interactive messages\n- Qualify leads by fitness goals (weight loss, muscle gain, general fitness, sports)\n- Collect health data: age, weight, injuries, dietary restrictions\n- Assign fitness level: Beginner, Intermediate, Advanced\n- Send gym tour video and facilities overview via WhatsApp\n\n## Membership Registration:\n- Create member profile in CRM with personal data and fitness goals\n- Assign membership tier: Basic (gym access), Premium (classes + trainer), VIP (full service)\n- Calculate pricing based on tier, duration, and promotions\n- Collect emergency contact and health waiver\n- Assign locker and access card\n\n## Payment Setup:\n- Create Stripe subscription for recurring membership\n- Handle enrollment fee and first month payment\n- Set up automatic renewal with Stripe\n- Process upgrades and add-ons (personal trainer, classes)\n- Generate payment receipts and invoices\n\n## Orientation & Engagement:\n- Schedule orientation session via Teams meeting\n- Send workout plan and nutrition guide via WhatsApp\n- Set up SMS reminders for gym visits and class bookings\n- Track attendance and engagement metrics\n- Send motivational messages and progress check-ins\n- Celebrate milestones (1st week, 1st month, 100 visits)\n\n## Pipeline Stages:\nLead \u2192 Qualified \u2192 Registered \u2192 Payment \u2192 Oriented \u2192 Active \u2192 Retained\n\n## Skills Loaded:\n- onboarding-automation: Gym-specific onboarding flows\n- data-analysis: Member retention and engagement metrics\n- deep-research: Fitness industry trends\n- consulting-analysis: Gym growth strategy\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "8d72fe09-83d5-4140-8af4-fef3aaa1e253",
+      "name": "Gym Onboarding Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "e5d94a5d-dd25-41e5-a5f4-0c4092a2d210",
+      "name": "GPT-4.1 Gym",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "6327fca4-4c2d-4c05-b4d0-fbf8e6fec007",
+      "name": "Gym Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (lead/registration/payment/orientation/engagement)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "member_id": {
+              "type": "string",
+              "description": "CRM member ID if applicable"
+            },
+            "subscription_id": {
+              "type": "string",
+              "description": "Stripe subscription ID if applicable"
+            },
+            "tier": {
+              "type": "string",
+              "description": "Membership tier (Basic/Premium/VIP)"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "4deaa626-bc35-4dbe-9fb8-e301abb90885",
+      "name": "Gym Output"
+    },
+    {
+      "parameters": {
+        "description": "Send an interactive fitness quiz via WhatsApp to qualify the lead and gather fitness goals and health data.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Quiz_URL', `WA Fitness Quiz API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "5d4f4f25-e27a-4a8b-9e03-549fcabf2fbd",
+      "name": "WA Fitness Quiz"
+    },
+    {
+      "parameters": {
+        "description": "Send gym tour video and facilities overview via WhatsApp media message.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Tour_URL', `WA Gym Tour API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "05fd448e-2088-4a47-ad98-e96359971727",
+      "name": "WA Gym Tour"
+    },
+    {
+      "parameters": {
+        "description": "Send a welcome package via WhatsApp with workout plan, nutrition guide, and gym rules.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Welcome_URL', `WA Welcome Pack API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "2d830237-3120-4640-9782-2a9bc86a547d",
+      "name": "WA Welcome Pack"
+    },
+    {
+      "parameters": {
+        "description": "Send motivational messages, progress check-ins, and milestone celebrations via WhatsApp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Motivate_URL', `WA Motivation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "c2530f74-da5e-4cdf-813d-3c0399465ede",
+      "name": "WA Motivation"
+    },
+    {
+      "parameters": {
+        "description": "Create a gym member profile in CRM with personal data, fitness goals, health data, and membership tier.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Member_URL', `CRM Register Member API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "7660ebd8-af6a-4778-9baa-3a651a75027f",
+      "name": "CRM Register Member"
+    },
+    {
+      "parameters": {
+        "description": "Log member gym attendance and class bookings in CRM. Track engagement metrics.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Attendance_URL', `CRM Track Attendance API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "d4df2f39-7bda-45d9-b35f-e134cbd81402",
+      "name": "CRM Track Attendance"
+    },
+    {
+      "parameters": {
+        "description": "Track member progress: fitness goals, weight, measurements, and milestones achieved.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Progress_URL', `CRM Member Progress API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "e8edd0a4-e91c-4a19-8e38-ff47c9b24e9b",
+      "name": "CRM Member Progress"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe subscription for gym membership with tier, duration, and enrollment fee.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Membership_URL', `Stripe Membership API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "283053b4-7e5d-476a-bc9b-8e4bef93e5e2",
+      "name": "Stripe Membership"
+    },
+    {
+      "parameters": {
+        "description": "Process a membership upgrade or add-on (personal trainer, classes, locker) via Stripe.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Upgrade_URL', `Stripe Upgrade API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "edcf9fc1-d29b-4f7c-9fb2-6b5a9064f7e9",
+      "name": "Stripe Upgrade"
+    },
+    {
+      "parameters": {
+        "description": "Send a Twilio SMS reminder for gym visits, class bookings, and upcoming sessions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SMS_Reminder_URL', `SMS Visit Reminder API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "e73933bf-866f-4447-b5f6-71e4413b3bd9",
+      "name": "SMS Visit Reminder"
+    },
+    {
+      "parameters": {
+        "description": "Schedule a Microsoft Teams orientation session for new member onboarding.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Teams_Orient_URL', `Teams Orientation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "82dfc9c8-8bfe-44a9-89fe-c325691b856e",
+      "name": "Teams Orientation"
+    },
+    {
+      "parameters": {
+        "description": "Think through fitness level assessment, membership tier recommendation, workout plan, and engagement strategy."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "6b21b296-66a8-4309-acf5-0ff8ccde7d3b",
+      "name": "Gym Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gym Onboarding Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gym Onboarding Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Gym",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Gym Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Gym Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Fitness Quiz",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Gym Tour",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Welcome Pack",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Motivation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Register Member",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Track Attendance",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Member Progress",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Membership",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Upgrade",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SMS Visit Reminder",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Teams Orientation",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gym Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "gym"
+    },
+    {
+      "name": "fitness"
+    },
+    {
+      "name": "onboarding"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

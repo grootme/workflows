@@ -1,0 +1,641 @@
+{
+  "name": "COACH2 - Data-Driven Decision Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Soy tu Motor de Decisiones. No tomo decisiones a ciegas — recopilo datos de todas tus fuentes disponibles, analizo patrones cruzados, evalúo opciones y te recomiendo el mejor camino con nivel de confianza. Si me faltan datos, TE LOS PIDO. ¿Qué decisión necesitas tomar?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "d097e3fb-c2cd-4980-81d7-2e880922ab4b",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Motor de Decisiones Basado en Datos\n\nEres un motor de decisiones que NUNCA recomienda sin datos suficientes. Tu proceso es:\n\n## Pipeline de Decisión (5 Fases):\n\n### Fase 1: RECOPILAR\nAntes de recomendar algo, recopilas datos de TODAS las fuentes disponibles:\n- **CRM**: Historial del usuario, preferencias, interacciones previas\n- **Calendario**: Disponibilidad, compromisos, conflictos de horario\n- **Gmail/Email**: Comunicaciones relevantes, confirmaciones, ofertas\n- **Stripe/Pagos**: Historial financiero, presupuestos, capacidad de pago\n- **WhatsApp**: Conversaciones recientes, acuerdos, pendientes\n- **Airtable/Notion**: Datos estructurados, proyectos, metas\n- **HubSpot/Salesforce**: Datos de CRM empresarial si aplica\n- **Wearables/Salud**: Datos biométricos relevantes\n- **Redes Sociales**: Sentimiento, tendencias, oportunidades\n- **Web Search**: Información actualizada, precios, alternativas\n\n### Fase 2: ANALIZAR\nCon los datos recopilados, ejecutas análisis:\n- **Análisis de patrones**: ¿Qué ha funcionado antes en situaciones similares?\n- **Análisis de riesgo**: ¿Cuáles son los riesgos de cada opción?\n- **Análisis de costo-beneficio**: ¿Cuál opción maximiza valor?\n- **Análisis temporal**: ¿Cuál es el momento óptimo para actuar?\n- **Análisis de impacto**: ¿Cómo afecta cada decisión a las 8 dimensiones?\n- **Análisis de escenarios**: ¿Qué pasa si...? (best case, worst case, most likely)\n\n### Fase 3: EVALUAR\nEvalúas cada opción con un framework estructurado:\n- **Criterios de decisión**: ¿Qué es más importante para el usuario?\n- **Puntuación multicriterio**: Cada opción recibe score en cada criterio\n- **Matriz de decisión**: Comparación visual de opciones\n- **Trade-offs**: ¿Qué se sacrifica con cada opción?\n- **Reversibilidad**: ¿La decisión es reversible? ¿Cuánto cuesta revertir?\n- **Confidence level**: ¿Qué tan confiado estás en la recomendación?\n\n### Fase 4: RECOMENDAR\nGeneras una recomendación completa:\n- **Recomendación principal**: La mejor opción con justificación\n- **Alternativas**: Opción 2 y 3 con pros/cons\n- **Datos que faltan**: ¿Qué información adicional mejoraría la confianza?\n- **Acción sugerida**: Paso a paso para ejecutar la decisión\n- **Timeline**: Cuándo ejecutar cada paso\n- **Métricas de éxito**: Cómo medir si la decisión fue correcta\n\n### Fase 5: ACTUAR y EVALUAR\nEjecutas la decisión y mides resultados:\n- **Ejecutar**: Automatizar acciones (comprar, reservar, contactar, agendar)\n- **Monitorear**: Seguimiento de métricas de éxito\n- **Ajustar**: Si los resultados no son los esperados, ajustar el plan\n- **Aprender**: Registrar la decisión, resultado y aprendizajes para futuras decisiones\n\n## Protocolo de Solicitud de Datos:\n\nCUANDO DETECTAS que faltan datos para una recomendación de alta confianza:\n\n1. **Identificar gaps**: ¿Qué datos específicos faltan?\n2. **Priorizar gaps**: ¿Cuáles son los más críticos para la decisión?\n3. **Solicitar al usuario**: Preguntar de forma clara y específica\n4. **Buscar en fuentes**: ¿Puedo obtener estos datos de alguna integración?\n5. **Estimar si no hay datos**: Si no hay datos, ser transparente sobre la incertidumbre\n6. **Proponer recopilación**: ¿Podemos configurar una fuente de datos para futuras decisiones?\n\n## Skills Cargados:\n- data-analysis: Análisis cuantitativo de opciones\n- consulting-analysis: Frameworks de decisión estratégica\n- deep-research: Información actualizada para decisiones informadas\n\nFecha actual: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "5b21ea6f-8bbf-465c-b07d-4f6aa92664e2",
+      "name": "Decision Engine Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "0ad80eeb-7d63-4560-bd4d-f030321d4cf9",
+      "name": "GPT-4.1 Decision",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "5e79c353-9ede-4e67-9306-8b4e91963d91",
+      "name": "Decision Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "decision_type": {
+              "type": "string",
+              "description": "Tipo de decisión (financial/career/health/relationship/lifestyle/major_purchase/travel)"
+            },
+            "phase": {
+              "type": "string",
+              "description": "Fase del pipeline (collect/analyze/evaluate/recommend/act)"
+            },
+            "data_sources": {
+              "type": "string",
+              "description": "Fuentes de datos consultadas"
+            },
+            "data_gaps": {
+              "type": "string",
+              "description": "Datos faltantes que mejorarían la confianza"
+            },
+            "confidence": {
+              "type": "string",
+              "description": "Nivel de confianza (low/medium/high/very_high)"
+            },
+            "recommendation": {
+              "type": "string",
+              "description": "Recomendación principal con justificación"
+            },
+            "alternatives": {
+              "type": "string",
+              "description": "Alternativas consideradas con pros/cons"
+            },
+            "action_plan": {
+              "type": "string",
+              "description": "Plan de acción paso a paso"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "ea707d0c-13b0-40e4-b15d-1439ef2a3aeb",
+      "name": "Decision Output"
+    },
+    {
+      "parameters": {
+        "description": "Consultar datos del usuario en CRM: historial, preferencias, interacciones previas, metas establecidas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Query_URL', `CRM User Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "a913e226-281f-46f8-9554-e10705f9621a",
+      "name": "CRM User Data"
+    },
+    {
+      "parameters": {
+        "description": "Consultar disponibilidad del usuario en calendario: slots libres, conflictos, compromisos próximos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cal_Query_URL', `Calendar Availability API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "53ee0681-3edf-4639-b68c-472ec17558b2",
+      "name": "Calendar Availability"
+    },
+    {
+      "parameters": {
+        "description": "Buscar emails relevantes del usuario: ofertas, confirmaciones, comunicaciones importantes sobre el tema de decisión.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Search_URL', `Gmail Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "bea69dff-d23e-4a40-bf54-5f97ade921fd",
+      "name": "Gmail Search"
+    },
+    {
+      "parameters": {
+        "description": "Consultar estado financiero del usuario: saldo, presupuesto disponible, gastos recientes, capacidad de pago.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Finance_Query_URL', `Finance Status API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "d3c3771d-bcec-4e93-8ea4-e0502144754a",
+      "name": "Finance Status"
+    },
+    {
+      "parameters": {
+        "description": "Buscar en historial de WhatsApp conversaciones relevantes al tema de decisión: acuerdos, pendientes, compromisos.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Search_URL', `WhatsApp History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "a02d3b46-6f66-4553-98b2-c5369a4cbf33",
+      "name": "WhatsApp History"
+    },
+    {
+      "parameters": {
+        "description": "Consultar datos estructurados en Airtable: proyectos, metas, tracking, inventarios, listas.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Airtable_Query_URL', `Airtable Query API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "c7755cbc-742b-4a32-9b18-5d04f2b2d664",
+      "name": "Airtable Query"
+    },
+    {
+      "parameters": {
+        "description": "Consultar datos en HubSpot: deals, pipeline, contactos, actividades, analytics.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('HubSpot_Query_URL', `HubSpot Query API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "ba966636-d830-46f3-8588-d5d1951b3e16",
+      "name": "HubSpot Query"
+    },
+    {
+      "parameters": {
+        "description": "Consultar datos en Salesforce: accounts, opportunities, cases, leads, campaigns.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_Query_URL', `Salesforce Query API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "fee11b1c-f227-4e77-a889-d199cf2ce4a0",
+      "name": "Salesforce Query"
+    },
+    {
+      "parameters": {
+        "description": "Buscar información actualizada en web: precios, alternativas, reviews, tendencias, comparaciones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Web_Search_URL', `Web Search Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "e36ac4bb-e2f3-40f9-ae8b-06508b07a929",
+      "name": "Web Search Data"
+    },
+    {
+      "parameters": {
+        "description": "Analizar patrones históricos del usuario: qué ha funcionado antes, qué no, preferencias recurrentes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pattern_URL', `Pattern Analysis API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        700
+      ],
+      "id": "3a5777ca-14b6-4cd2-82f0-68557798db48",
+      "name": "Pattern Analysis"
+    },
+    {
+      "parameters": {
+        "description": "Evaluar riesgos de cada opción: probabilidad, impacto, mitigación. Generar matriz de riesgo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Risk_URL', `Risk Analysis API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        700
+      ],
+      "id": "6552070d-0435-48ef-9600-e673023f0822",
+      "name": "Risk Analysis"
+    },
+    {
+      "parameters": {
+        "description": "Análisis costo-beneficio de cada opción: costos directos, indirectos, oportunidad, valor a largo plazo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CostBenefit_URL', `Cost Benefit Analysis API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        700
+      ],
+      "id": "11715ac3-f5db-45f5-814e-9fad2ecd34ef",
+      "name": "Cost Benefit Analysis"
+    },
+    {
+      "parameters": {
+        "description": "Modelar escenarios: best case, worst case, most likely. Análisis de sensibilidad y robustez.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Scenario_URL', `Scenario Modeling API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        700
+      ],
+      "id": "13d00b49-39ab-4cce-b390-283e89f8c659",
+      "name": "Scenario Modeling"
+    },
+    {
+      "parameters": {
+        "description": "Generar matriz de decisión multicriterio con scoring ponderado por prioridades del usuario.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Matrix_URL', `Decision Matrix API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "ef1b5205-ba93-410f-89c4-9a887e645645",
+      "name": "Decision Matrix"
+    },
+    {
+      "parameters": {
+        "description": "Solicitar datos faltantes al usuario: formulario con preguntas claras y específicas para mejorar la recomendación.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data_Request_URL', `Request Missing Data API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "59fc6c46-57e8-436b-b21d-af19c80610da",
+      "name": "Request Missing Data"
+    },
+    {
+      "parameters": {
+        "description": "Ejecutar la decisión tomada: comprar, reservar, contactar, agendar, transferir. Confirmación con el usuario primero.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Execute_URL', `Execute Decision API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "263e5fd3-cc29-489b-b7af-fb3c16c18941",
+      "name": "Execute Decision"
+    },
+    {
+      "parameters": {
+        "description": "Monitorear resultados de la decisión: métricas de éxito, desviaciones, ajustes necesarios.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Track_URL', `Track Decision Result API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "a61fc785-5ae4-498c-acca-2c362b69e575",
+      "name": "Track Decision Result"
+    },
+    {
+      "parameters": {
+        "description": "Registrar decisión, resultado y aprendizajes en base de conocimiento para mejorar futuras decisiones.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Learn_URL', `Decision Learning Log API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        700
+      ],
+      "id": "2fdfb315-d205-451f-8576-0f90973b8e35",
+      "name": "Decision Learning Log"
+    },
+    {
+      "parameters": {
+        "description": "Evaluar datos disponibles vs necesarios, calcular nivel de confianza, identificar gaps críticos, generar insights."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        700
+      ],
+      "id": "0e7a2e17-dcbd-46f4-aac4-ab0afe5fc3b1",
+      "name": "Decision Reasoning"
+    },
+    {
+      "parameters": {
+        "content": "Motor de Decisiones\n\nPIPELINE: Recopilar → Analizar →\nEvaluar → Recomendar → Actuar\n\n9 FUENTES: CRM, Cal, Gmail, Finance,\nWA, Airtable, HubSpot, SF, Web\n\n4 ANÁLISIS: Patrones, Riesgo,\nCosto-Beneficio, Escenarios\n\nKEY: Si faltan datos → PEDIRLOS",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "726a0f0c-4e62-463d-8e9f-e611519e3809",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Decision Engine Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Engine Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Decision",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Decision Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Decision Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "CRM User Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calendar Availability",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Search",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finance Status",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp History",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Airtable Query",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot Query",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Salesforce Query",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Web Search Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pattern Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Risk Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cost Benefit Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scenario Modeling",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decision Matrix",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request Missing Data",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Decision",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Track Decision Result",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decision Learning Log",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decision Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "life-coach",
+    "decision-engine",
+    "data-driven",
+    "analytics",
+    "personal"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

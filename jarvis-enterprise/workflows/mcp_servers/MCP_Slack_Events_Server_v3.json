@@ -1,0 +1,277 @@
+{
+  "name": "MCP Slack Events Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "slack-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "65d0c182-fc82-4346-9fe9-43c83e41b659",
+      "name": "MCP Trigger",
+      "webhookId": "slack-mcp"
+    },
+    {
+      "parameters": {
+        "content": "Slack Events MCP Server\n\n8 Tools: Send Message, List Channels, Create Channel, Manage Members, Search Messages, Send Block Kit, Get Thread, Set Status\n\nAuth: Slack Bot Token (xoxb-) + OAuth2\nOAuth2: Slack OAuth2 \u2192 Authorization Code with bot + chat + channels scopes\nScopes: chat:write, channels:read, channels:manage, users:read, search:read, users.profile:write\nAPI: slack.com/api",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "111af2b8-a4b5-4754-8413-4efe8623fcf7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Post a message to a Slack channel or DM. Supports text, blocks, attachments, and thread replies.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "4d8ae874-62f6-4fd2-95e6-b5b4c7473a7b",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "List all Slack channels in the workspace with details including name, purpose, members, and topic.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Channels_URL', `List Channels API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "9873464b-a6e4-4712-ab59-75cef5c765bd",
+      "name": "List Channels"
+    },
+    {
+      "parameters": {
+        "description": "Create a new Slack channel (public or private). Supports name, topic, purpose, and initial members.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Channel_URL', `Create Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "5016e36c-4a89-407d-9e35-81d86cf7a34c",
+      "name": "Create Channel"
+    },
+    {
+      "parameters": {
+        "description": "Invite, kick, or list members in a Slack channel. Supports single and bulk operations.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Members_URL', `Manage Members API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "95bc7738-c642-4606-9450-9ed3f2e7c37f",
+      "name": "Manage Members"
+    },
+    {
+      "parameters": {
+        "description": "Search Slack messages across all channels and DMs. Supports query, sort, count, and highlight.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Messages_URL', `Search Messages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "53b49fc2-ae9c-4837-becc-40dbe31a5f93",
+      "name": "Search Messages"
+    },
+    {
+      "parameters": {
+        "description": "Send a rich Block Kit message with sections, actions, inputs, and interactive components.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Block_Kit_URL', `Send Block Kit API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "c8ccd6a8-1517-4ea1-99e2-d44b406d9cbd",
+      "name": "Send Block Kit"
+    },
+    {
+      "parameters": {
+        "description": "Get all replies in a Slack message thread. Supports chronological sorting and pagination.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Thread_URL', `Get Thread API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "5ba43877-e8c2-432b-94be-48ffad1422de",
+      "name": "Get Thread"
+    },
+    {
+      "parameters": {
+        "description": "Set or clear a user's Slack profile status with emoji and expiration. Useful for availability signals.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Set_Status_URL', `Set Status API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "bd683dc5-a900-4b31-937a-cc8c1ad2465b",
+      "name": "Set Status"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Channels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Channel": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Members": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Block Kit": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thread": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Status": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "slack"
+    },
+    {
+      "name": "communication"
+    },
+    {
+      "name": "events"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

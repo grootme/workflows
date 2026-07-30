@@ -1,0 +1,242 @@
+{
+  "name": "MCP - Salesforce Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "salesforce"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "54c52405-1bfe-42e1-9477-a467e19558dc",
+      "name": "MCP Trigger",
+      "webhookId": "salesforce"
+    },
+    {
+      "parameters": {
+        "content": "Salesforce MCP Server\n\n8 Tools: Accounts, Opportunities,\nCases, Leads, Campaigns, Reports,\nTasks, Knowledge Base\n\nSOQL query support\nLead conversion & routing\nCase escalation rules",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "c2992e4f-6e59-48bd-a277-c0c51a18509e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or query Salesforce accounts with industry, revenue, and custom fields. Supports SOQL queries.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_ACCOUNTS_URL', `Manage Accounts API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "9d6b6949-4270-4846-8b19-bb36e21b3339",
+      "name": "Manage Accounts"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or query opportunities with stage, amount, probability, and close date. Supports pipeline management.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_OPPS_URL', `Manage Opportunities API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "519d5dc2-62a2-4b3e-b46c-0a11e6feb3a1",
+      "name": "Manage Opportunities"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or query support cases with priority, status, and assignment. Supports case escalation and routing.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_CASES_URL', `Case Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "8ab6fb85-0413-479c-8393-69c9c52adbbf",
+      "name": "Case Management"
+    },
+    {
+      "parameters": {
+        "description": "Create, convert, or query leads with source, score, and status. Supports lead assignment rules and web-to-lead.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_LEADS_URL', `Lead Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "120c8c42-69d1-464b-9fdb-5b6fa9699f94",
+      "name": "Lead Management"
+    },
+    {
+      "parameters": {
+        "description": "Create and manage marketing campaigns with members, status, and ROI tracking. Supports campaign hierarchy.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_CAMPAIGNS_URL', `Campaign Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        600
+      ],
+      "id": "ff5783db-3ebc-4ee4-b461-7c6898a6fd1f",
+      "name": "Campaign Management"
+    },
+    {
+      "parameters": {
+        "description": "Execute Salesforce reports and dashboards. Supports custom report types, filters, and grouped/summary results.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_REPORTS_URL', `Run Reports API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "3ece5ce6-e6bd-447c-9c2d-ce1f767d6c84",
+      "name": "Run Reports"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or query tasks and activities related to any Salesforce object. Supports recurring tasks and reminders.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_TASKS_URL', `Task Management API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1000
+      ],
+      "id": "d99c6a86-8e55-42df-a2fb-85850bf4acbb",
+      "name": "Task Management"
+    },
+    {
+      "parameters": {
+        "description": "Search and manage Salesforce Knowledge articles. Supports categories, versions, and article assignment rules.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('SF_KNOWLEDGE_URL', `Knowledge Base API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        1200
+      ],
+      "id": "6df1c743-ac31-45aa-8a42-2948f867a101",
+      "name": "Knowledge Base"
+    }
+  ],
+  "connections": {
+    "MCP Trigger": {
+      "main": [
+        [
+          {
+            "node": "Manage Accounts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manage Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Case Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Lead Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Campaign Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Run Reports",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Task Management",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp-server",
+    "salesforce",
+    "crm",
+    "enterprise",
+    "sales"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
