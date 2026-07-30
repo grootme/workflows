@@ -1,0 +1,269 @@
+{
+  "name": "MCP Stripe Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "stripe-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "60260cc9-c955-4b8b-a1a7-64117a2828ff",
+      "name": "MCP Trigger",
+      "webhookId": "stripe-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe payment intent. Supports one-time payments with amount, currency, and metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Payment_URL', `Create Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "d65c6486-52cb-461c-b5cd-286915f9b752",
+      "name": "Create Payment"
+    },
+    {
+      "parameters": {
+        "description": "Create a recurring subscription with plan, interval, trial period, and customer.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Subscription_URL', `Create Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "f51bceca-7e8b-471a-8910-1074ee832680",
+      "name": "Create Subscription"
+    },
+    {
+      "parameters": {
+        "description": "List all Stripe customers with pagination. Filter by email, created date, or metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Customers_URL', `List Customers API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "2fb19c72-5696-4a82-aaaa-f5f2e003e322",
+      "name": "List Customers"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe invoice for a customer. Supports line items, discounts, and auto-advance.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Invoice_URL', `Create Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "dd28c102-3ed4-4a7d-bfd7-b7220959d951",
+      "name": "Create Invoice"
+    },
+    {
+      "parameters": {
+        "description": "List Stripe payouts with status filter (pending, paid, failed, canceled).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Payouts_URL', `List Payouts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "a8dea6c0-afef-4ac9-80c9-545875da5031",
+      "name": "List Payouts"
+    },
+    {
+      "parameters": {
+        "description": "Refund a Stripe payment. Supports full or partial refund with reason.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Refund_Payment_URL', `Refund Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "f4fb953f-53e3-4e8b-8e43-ac4758b920af",
+      "name": "Refund Payment"
+    },
+    {
+      "parameters": {
+        "description": "Get current Stripe account balance including available and pending amounts per currency.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Balance_URL', `Get Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "2b3f4810-d68b-479e-b63f-e35703ce14f0",
+      "name": "Get Balance"
+    },
+    {
+      "parameters": {
+        "description": "List Stripe products with pricing information. Filter by active status or type.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Products_URL', `List Products API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "e50e9254-7a75-4aa5-b688-ea3a8e29cea0",
+      "name": "List Products"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Stripe Server v3\n\nIBM Governance + DeerFlow Commerce Pattern\n8 Tools: Create Payment/Subscription, List Customers, Create Invoice, List Payouts, Refund, Get Balance, List Products\n\nFull payment processing",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "e36ac73f-e674-4271-99e9-91094e339111",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Create Payment": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Subscription": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Customers": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Invoice": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Payouts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Refund Payment": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "stripe",
+    "payments",
+    "fintech"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

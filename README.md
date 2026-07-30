@@ -1,20 +1,22 @@
 # JARVIS AI Automation — n8n Workflows
 
-> 51+ zero-debt n8n workflows → 3 product packages + 11 Anthropic Patterns + 19 MCP Servers + Cognitive Capital
+> 62+ zero-debt n8n workflows → 3 product packages + 11 Anthropic Patterns + 26 MCP Servers + 4 Orchestration Flows + Cognitive Capital
 
 [![Zero Debt](https://img.shields.io/badge/Zero-Debt-brightgreen)]()
 [![n8n](https://img.shields.io/badge/n8n-Compatible-orange)](https://n8n.io)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://docker.com)
 [![Anthropic Patterns](https://img.shields.io/badge/Anthropic-P11_Patterns-purple)]()
-[![MCP](https://img.shields.io/badge/MCP-19_Servers-blue)]()
+[![MCP](https://img.shields.io/badge/MCP-26_Servers-blue)]()
+[![Payments](https://img.shields.io/badge/Payments-Stripe_PayPal_Binance-green)]()
+[![Dashboard](https://img.shields.io/badge/Dashboard-Monitoring-cyan)]()
 
 ## 🚀 JARVIS Packages
 
 | Package | Price | Workflows | MCP Servers | Anthropic Patterns | Best For |
 |---------|-------|-----------|-------------|-------------------|----------|
 | [**Starter**](./jarvis-starter/) | **$49** | 17 | 5 | 3 | Individuals & freelancers |
-| [**Professional**](./jarvis-professional/) | **$149** | 43 | 13 | 10 | SMBs & agencies |
-| [**Enterprise**](./jarvis-enterprise/) | **$399** | 50+ | 19 | 11 | Enterprises & SaaS |
+| [**Professional**](./jarvis-professional/) | **$149** | 44 | 13 | 10 | SMBs & agencies |
+| [**Enterprise**](./jarvis-enterprise/) | **$399** | 61 | 26 | 11 | Enterprises & SaaS |
 
 👉 **[Interactive Pricing Page](./pricing.html)** — Open in browser for the full experience
 📖 **[Architecture Documentation](./ARCHITECTURE.md)** — Flow diagrams, pattern guide, quick reference
@@ -24,32 +26,35 @@
 | Category | Count | Zero-Debt | Tools | AI Connections |
 |----------|-------|-----------|-------|----------------|
 | Consolidated Suites | 13 | ✅ | — | 47 |
-| MCP Server Workflows | 19 | ✅ | 134 | 76 |
+| MCP Server Workflows | 26 | ✅ | 189 | 133 |
 | Base Templates | 6 | ✅ | — | 16 |
 | Anthropic Pattern Workflows | 11 | ✅ | — | 50+ |
 | Memory Architecture Workflows | 3 | ✅ | — | 12 |
-| **Total** | **51+** | **✅** | **134** | **250+** |
+| Orchestration Workflows | 4 | ✅ | — | 38 |
+| **Total** | **62+** | **✅** | **189** | **300+** |
+
 
 ## 🏗️ Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    JARVIS AI Automation Ecosystem v4.0           │
+│                    JARVIS AI Automation Ecosystem v4.1           │
 │                                                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
 │  │    Starter    │  │ Professional │  │     Enterprise        │  │
 │  │  $49         │  │  $149        │  │     $399              │  │
 │  │              │  │              │  │                        │  │
-│  │ • 5 MCP      │  │ • 13 MCP     │  │ • 19 MCP Servers      │  │
+│  │ • 5 MCP      │  │ • 13 MCP     │  │ • 26 MCP Servers      │  │
 │  │ • 3 Patterns │  │ • 10 Patterns│  │ • 11 Patterns         │  │
-│  │ • 2 Skills   │  │ • 6 Skills   │  │ • 10 Skills           │  │
+│  │ • 2 Skills   │  │ • 6 Skills   │  │ • 12 Skills           │  │
 │  │ • Buffer Mem │  │ • Redis/Zep  │  │ • Full Stack Memory   │  │
 │  │              │  │ • Google+CRM │  │ • Booking+Expedia     │  │
 │  │ 2 services   │  │ • Woo+WP     │  │ • Shopify+ERPNext     │  │
+│  │              │  │ • ORC1 Marketing│  │ • Stripe+PayPal+Binance│  │
 │  │ n8n+PG       │  │ 4 services   │  │ 8 services + monitor  │  │
 │  └──────────────┘  └──────────────┘  └──────────────────────┘  │
 │                                                                  │
-│  51+ Workflows • 19 MCP Servers • 134 Tools • 250+ Connections  │
+│  62+ Workflows • 26 MCP Servers • 189 Tools • 300+ Connections   │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,7 +74,7 @@
 | P10 Cognitive-SOUL | Personality + skills | P6+P7 |
 | **Zeus** | **Meta-orchestrator (selects P1-P10)** | **All** |
 
-### MCP Server Ecosystem (19 Servers, 134 Tools)
+### MCP Server Ecosystem (26 Servers, 189 Tools)
 
 | Category | Servers |
 |----------|---------|
@@ -77,6 +82,8 @@
 | **E-Commerce** | WooCommerce (8), Shopify (8), ECommerce (6) |
 | **Travel** | Booking.com (8), Expedia (8) |
 | **CRM & Sales** | HubSpot (7), CRM Universal (8), Trello (6) |
+| **Payments & Fintech** | Stripe (8), PayPal (8), QvaPay (6), TropiPay (6) |
+| **Crypto** | Binance (9), CoinEx (8), Bitrefill (6) |
 | **DevOps** | GitHub (7) |
 | **CMS** | WordPress (8) |
 | **ERP** | ERPNext (8) |
@@ -89,6 +96,15 @@
 | **Starter** | Buffer Window (k=10) | In-session only, no persistence |
 | **Professional** | Buffer + Redis/Zep | Cross-session, summarization, structured output |
 | **Enterprise** | Buffer + Redis + Qdrant + Cognitive Capital | Semantic retrieval, skills, audit trail, governance |
+
+### Orchestration Workflows (4 Multi-MCP Flows)
+
+| ID | Name | Platforms | Tools |
+|----|------|-----------|-------|
+| ORC1 | Marketing Automation | Google + CRM + WordPress | 8 |
+| ORC2 | Travel Orchestration | Booking.com + Expedia + CRM | 9 |
+| ORC3 | Commerce Orchestration | WooCommerce + Shopify + ERPNext | 10 |
+| ORC4 | Payments Orchestration | Stripe + PayPal + Binance + QvaPay + TropiPay | 11 |
 
 ### Tiered LLM Strategy
 
@@ -218,4 +234,4 @@ MIT License — Use, modify, and distribute freely.
 
 ---
 
-*Built with JARVIS Package Builder v4.0 — 51+ workflows • 19 MCP servers • 134 tools • 0 technical debt*
+*Built with JARVIS Package Builder v4.1 — 62+ workflows • 26 MCP servers • 189 tools • 0 technical debt*

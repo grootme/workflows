@@ -1,0 +1,297 @@
+{
+  "name": "MCP Binance Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "binance-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b0d1b7f8-f003-4a28-a5cb-00fb0385ffcc",
+      "name": "MCP Trigger",
+      "webhookId": "binance-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance 24h ticker for a symbol. Returns price, volume, change, high, low.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Ticker_URL', `Get Ticker API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "0459adb7-6ecc-474c-adf4-024e7713ae0b",
+      "name": "Get Ticker"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance order book for a symbol. Returns bids and asks with configurable depth.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Order_Book_URL', `Get Order Book API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "0957bcf3-9086-4eab-bbb9-611891882deb",
+      "name": "Get Order Book"
+    },
+    {
+      "parameters": {
+        "description": "Place a Binance spot order. Supports LIMIT, MARKET, STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Place_Spot_Order_URL', `Place Spot Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "fbf06f8c-2d8b-4d60-a3da-a64947807cb2",
+      "name": "Place Spot Order"
+    },
+    {
+      "parameters": {
+        "description": "Place a Binance USDT-M futures order. Supports leverage, margin type, and position side.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Place_Futures_Order_URL', `Place Futures Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "4a020bdc-2452-4eeb-8f52-85b99d610598",
+      "name": "Place Futures Order"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance account information including balances, permissions, and commission rates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Account_Info_URL', `Get Account Info API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "9fe60e4e-2989-4667-8187-0f6598c61f68",
+      "name": "Get Account Info"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance trade history for a symbol. Filter by time range and order ID.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Trade_History_URL', `Get Trade History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "928a1a92-3931-4084-a877-49b7ddaa2ff7",
+      "name": "Get Trade History"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance deposit history. Filter by coin, status, and time range.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Deposit_History_URL', `Get Deposit History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "d3c95df4-79f5-47e0-8296-b2a9b3199d90",
+      "name": "Get Deposit History"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance withdrawal history. Filter by coin, status, and time range.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Withdrawal_History_URL', `Get Withdrawal History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "94c221dc-302a-4aa8-84c8-9a8148822b99",
+      "name": "Get Withdrawal History"
+    },
+    {
+      "parameters": {
+        "description": "List Binance P2P advertisements. Filter by coin, fiat, trade type, and payment method.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('P2P_List_Ads_URL', `P2P List Ads API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        400
+      ],
+      "id": "cab335ea-b028-4152-9c56-632d81cc7d2c",
+      "name": "P2P List Ads"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Binance Server v3\n\nIBM Governance + DeerFlow Specialist Pattern\n9 Tools: Ticker, Order Book, Spot/Futures Order, Account Info, Trade/Deposit/Withdrawal History, P2P Ads\n\nFull crypto exchange + P2P",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "0dfb06af-757c-4d94-a244-743896853366",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Get Ticker": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Book": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Place Spot Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Place Futures Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Account Info": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Trade History": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Deposit History": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Withdrawal History": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "P2P List Ads": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "binance",
+    "crypto",
+    "exchange",
+    "p2p"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

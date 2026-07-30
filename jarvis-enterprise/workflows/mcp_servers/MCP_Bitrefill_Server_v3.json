@@ -1,0 +1,215 @@
+{
+  "name": "MCP Bitrefill Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "bitrefill-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ba1a1f5d-46d8-4ac6-9678-26c85e9944a4",
+      "name": "MCP Trigger",
+      "webhookId": "bitrefill-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List available Bitrefill products: gift cards, mobile refills, game cards. Filter by country or category.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Products_URL', `List Products API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "ceec8b83-e2bd-4385-86db-37a7b369dbed",
+      "name": "List Products"
+    },
+    {
+      "parameters": {
+        "description": "Get detailed information about a Bitrefill product: price, denominations, processing time, instructions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Product_URL', `Get Product API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "7fb41e61-b4f5-41cb-aede-e16f80a0b8d0",
+      "name": "Get Product"
+    },
+    {
+      "parameters": {
+        "description": "Create a Bitrefill order for a product. Supports crypto payment with Lightning or on-chain.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Order_URL', `Create Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "0335725e-211c-4fca-bdd8-4b4163a3755a",
+      "name": "Create Order"
+    },
+    {
+      "parameters": {
+        "description": "Check the status of a Bitrefill order. Returns payment status, delivery status, and PIN/code.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Order_Status_URL', `Get Order Status API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "82e7ba98-4378-49e0-81ea-50473dafa44e",
+      "name": "Get Order Status"
+    },
+    {
+      "parameters": {
+        "description": "List Bitrefill product categories: gaming, food, shopping, travel, phone, bill pay.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Categories_URL', `List Categories API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "1b6f371b-701c-476b-9856-947302ff8db8",
+      "name": "List Categories"
+    },
+    {
+      "parameters": {
+        "description": "Get Bitrefill account balance. Shows available crypto balance for purchases.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Account_Balance_URL', `Get Account Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "3368c137-e6ee-4f98-905d-749845bc1f4a",
+      "name": "Get Account Balance"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Bitrefill Server v3\n\nIBM Perception + Crypto Commerce Pattern\n6 Tools: List/Get Products, Create Order, Get Order Status, List Categories, Get Balance\n\nCrypto gift cards & refills",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "488e54ba-dbf4-4548-9afd-c80c7cdc4189",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Product": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Status": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Categories": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Account Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "bitrefill",
+    "crypto",
+    "giftcards"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS AI — Monitoring Dashboard</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e0;
+            --muted: #6b7280;
+            --accent: #6366f1;
+            --accent2: #8b5cf6;
+            --green: #22c55e;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --blue: #3b82f6;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header .badge { font-size: 12px; padding: 4px 12px; border-radius: 20px; background: var(--green); color: #000; font-weight: 600; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px 32px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .stat-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .value { font-size: 32px; font-weight: 700; margin-top: 4px; }
+        .stat-card .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 0 32px 32px; }
+        .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; overflow: hidden; }
+        .panel h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .panel h2 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .mcp-list { display: flex; flex-direction: column; gap: 8px; max-height: 500px; overflow-y: auto; }
+        .mcp-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .mcp-item .name { font-size: 13px; font-weight: 500; }
+        .mcp-item .tools { font-size: 12px; color: var(--muted); }
+        .mcp-item .tier { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .tier-starter { background: #22c55e20; color: var(--green); }
+        .tier-pro { background: #6366f120; color: var(--accent); }
+        .tier-enterprise { background: #ec489920; color: var(--pink); }
+        .conn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+        .conn-node { padding: 10px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); text-align: center; font-size: 11px; }
+        .conn-node .count { font-size: 20px; font-weight: 700; color: var(--accent); }
+        .conn-node .label { color: var(--muted); margin-top: 2px; }
+        .pattern-list { display: flex; flex-direction: column; gap: 8px; }
+        .pattern-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .pattern-item .code { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 40px; }
+        .pattern-item .name { font-size: 13px; flex: 1; }
+        .pattern-item .complexity { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .complexity-low { background: #22c55e20; color: var(--green); }
+        .complexity-med { background: #f59e0b20; color: var(--orange); }
+        .complexity-high { background: #ef444420; color: var(--red); }
+        .orch-list { display: flex; flex-direction: column; gap: 8px; }
+        .orch-item { padding: 12px 14px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .orch-item .name { font-size: 13px; font-weight: 600; }
+        .orch-item .platforms { font-size: 12px; color: var(--muted); margin-top: 4px; }
+        .orch-item .tools-count { font-size: 11px; color: var(--accent); margin-top: 2px; }
+        .full-width { grid-column: 1 / -1; }
+        .mem-bar { display: flex; height: 24px; border-radius: 8px; overflow: hidden; margin-top: 8px; }
+        .mem-bar div { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+        .footer { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>JARVIS AI — Monitoring Dashboard</h1>
+        <span class="badge">LIVE v4.0.0</span>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="label">Total Workflows</div>
+            <div class="value" style="color: var(--accent)">62+</div>
+            <div class="sub">Zero technical debt</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">MCP Servers</div>
+            <div class="value" style="color: var(--blue)">26</div>
+            <div class="sub">189 tools total</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">AI Connections</div>
+            <div class="value" style="color: var(--cyan)">300+</div>
+            <div class="sub">ai_* typed connections</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Anthropic Patterns</div>
+            <div class="value" style="color: var(--accent2)">11</div>
+            <div class="sub">P1-P10 + Zeus</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Orchestration Flows</div>
+            <div class="value" style="color: var(--pink)">4</div>
+            <div class="sub">Multi-MCP combos</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Cognitive Skills</div>
+            <div class="value" style="color: var(--green)">10</div>
+            <div class="sub">SKILL.md + SOUL</div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- MCP Servers Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> MCP Servers (26)</h2>
+            <div class="mcp-list">
+                <div class="mcp-item"><span class="name">Stripe</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">PayPal</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Binance</span><span class="tools">9 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">CoinEx</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">QvaPay</span><span class="tools">6 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">TropiPay</span><span class="tools">6 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Bitrefill</span><span class="tools">6 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Google Workspace</span><span class="tools">8 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">CRM Universal</span><span class="tools">8 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">WooCommerce</span><span class="tools">8 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">WordPress</span><span class="tools">8 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">Notion</span><span class="tools">7 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">GitHub</span><span class="tools">7 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">Slack</span><span class="tools">7 tools</span><span class="tier tier-starter">Starter</span></div>
+                <div class="mcp-item"><span class="name">Booking.com</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Expedia</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Shopify</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">ERPNext</span><span class="tools">8 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">HubSpot</span><span class="tools">7 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Trello</span><span class="tools">6 tools</span><span class="tier tier-enterprise">Enterprise</span></div>
+                <div class="mcp-item"><span class="name">Calendar</span><span class="tools">6 tools</span><span class="tier tier-starter">Starter</span></div>
+                <div class="mcp-item"><span class="name">Gmail</span><span class="tools">6 tools</span><span class="tier tier-starter">Starter</span></div>
+                <div class="mcp-item"><span class="name">Contacts</span><span class="tools">6 tools</span><span class="tier tier-starter">Starter</span></div>
+                <div class="mcp-item"><span class="name">ECommerce</span><span class="tools">6 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">HR</span><span class="tools">6 tools</span><span class="tier tier-pro">Professional</span></div>
+                <div class="mcp-item"><span class="name">Knowledge Base</span><span class="tools">6 tools</span><span class="tier tier-starter">Starter</span></div>
+            </div>
+        </div>
+
+        <!-- Anthropic Patterns Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> Anthropic Patterns (11)</h2>
+            <div class="pattern-list">
+                <div class="pattern-item"><span class="code">P1</span><span class="name">Prompt Chaining</span><span class="complexity complexity-med">Medium</span></div>
+                <div class="pattern-item"><span class="code">P2</span><span class="name">Smart Routing</span><span class="complexity complexity-med">Med-High</span></div>
+                <div class="pattern-item"><span class="code">P3</span><span class="name">Orchestrator-Workers</span><span class="complexity complexity-high">High</span></div>
+                <div class="pattern-item"><span class="code">P4</span><span class="name">Evaluator-Optimizer</span><span class="complexity complexity-med">Med-High</span></div>
+                <div class="pattern-item"><span class="code">P5</span><span class="name">Parallelization</span><span class="complexity complexity-med">Medium</span></div>
+                <div class="pattern-item"><span class="code">P6</span><span class="name">Cognitive Capital MCP</span><span class="complexity complexity-med">Medium</span></div>
+                <div class="pattern-item"><span class="code">P7</span><span class="name">SOUL Bootstrap</span><span class="complexity complexity-low">Low</span></div>
+                <div class="pattern-item"><span class="code">P8</span><span class="name">Router-Orchestrator (P2+P3)</span><span class="complexity complexity-high">High</span></div>
+                <div class="pattern-item"><span class="code">P9</span><span class="name">Evaluator-Parallel (P4+P5)</span><span class="complexity complexity-high">High</span></div>
+                <div class="pattern-item"><span class="code">P10</span><span class="name">Cognitive-SOUL (P6+P7)</span><span class="complexity complexity-med">Medium</span></div>
+                <div class="pattern-item"><span class="code">Zeus</span><span class="name">Meta-Orchestrator (All)</span><span class="complexity complexity-high">Very High</span></div>
+            </div>
+
+            <h2 style="margin-top: 24px"><span class="dot"></span> Orchestration Workflows (4)</h2>
+            <div class="orch-list">
+                <div class="orch-item"><div class="name">ORC1: Marketing Automation</div><div class="platforms">Google Workspace + CRM + WordPress</div><div class="tools-count">8 tools connected</div></div>
+                <div class="orch-item"><div class="name">ORC2: Travel Orchestration</div><div class="platforms">Booking.com + Expedia + CRM</div><div class="tools-count">9 tools connected</div></div>
+                <div class="orch-item"><div class="name">ORC3: Commerce Orchestration</div><div class="platforms">WooCommerce + Shopify + ERPNext</div><div class="tools-count">10 tools connected</div></div>
+                <div class="orch-item"><div class="name">ORC4: Payments Orchestration</div><div class="platforms">Stripe + PayPal + Binance + QvaPay + TropiPay</div><div class="tools-count">11 tools connected</div></div>
+            </div>
+        </div>
+
+        <!-- Connection Types Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> Connection Types</h2>
+            <div class="conn-grid">
+                <div class="conn-node"><div class="count">ai_languageModel</div><div class="label">LLM binding</div></div>
+                <div class="conn-node"><div class="count">ai_memory</div><div class="label">Context store</div></div>
+                <div class="conn-node"><div class="count">ai_tool</div><div class="label">MCP tools</div></div>
+                <div class="conn-node"><div class="count">ai_outputParser</div><div class="label">Structured output</div></div>
+                <div class="conn-node"><div class="count">ai_embedding</div><div class="label">Vector embed</div></div>
+                <div class="conn-node"><div class="count">main</div><div class="label">Data flow</div></div>
+            </div>
+        </div>
+
+        <!-- Memory Architecture Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> Memory Architecture</h2>
+            <div style="margin-bottom: 16px">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px">Starter — Buffer Window</div>
+                <div class="mem-bar">
+                    <div style="width: 100%; background: var(--green); color: #000">k=10 exchanges</div>
+                </div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px">In-session only, no persistence</div>
+            </div>
+            <div style="margin-bottom: 16px">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px">Professional — Enhanced</div>
+                <div class="mem-bar">
+                    <div style="width: 40%; background: var(--green); color: #000">Buffer</div>
+                    <div style="width: 60%; background: var(--blue); color: #fff">Redis/Zep</div>
+                </div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px">Cross-session, summarization, structured output</div>
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px">Enterprise — Full Stack</div>
+                <div class="mem-bar">
+                    <div style="width: 20%; background: var(--green); color: #000">Buffer</div>
+                    <div style="width: 25%; background: var(--blue); color: #fff">Redis</div>
+                    <div style="width: 30%; background: var(--accent); color: #fff">Qdrant</div>
+                    <div style="width: 25%; background: var(--pink); color: #fff">Cognitive</div>
+                </div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px">Semantic retrieval, skills, audit trail, governance</div>
+            </div>
+        </div>
+
+        <!-- LLM Tiering Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> LLM Tiering Strategy</h2>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--green)">
+                    <div style="font-size: 13px; font-weight: 600">GPT-4o-mini</div>
+                    <div style="font-size: 11px; color: var(--muted)">$0.15/$0.60 per 1M tokens — Routing, simple tasks</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--blue)">
+                    <div style="font-size: 13px; font-weight: 600">GPT-4.1-mini</div>
+                    <div style="font-size: 11px; color: var(--muted)">$0.40/$1.60 per 1M tokens — Agent tasks, mid-complexity</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--accent)">
+                    <div style="font-size: 13px; font-weight: 600">GPT-4.1</div>
+                    <div style="font-size: 11px; color: var(--muted)">$2.00/$8.00 per 1M tokens — Orchestration, quality evaluation</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--pink)">
+                    <div style="font-size: 13px; font-weight: 600">Claude Sonnet</div>
+                    <div style="font-size: 11px; color: var(--muted)">$3.00/$15.00 per 1M tokens — Governance, synthesis, final review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Categories Panel -->
+        <div class="panel">
+            <h2><span class="dot"></span> Platform Categories</h2>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">Payments & Fintech</span>
+                    <span style="font-size: 12px; color: var(--accent)">7 servers, 51 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">E-Commerce</span>
+                    <span style="font-size: 12px; color: var(--accent)">3 servers, 22 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">Travel & Hospitality</span>
+                    <span style="font-size: 12px; color: var(--accent)">2 servers, 16 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">Productivity & Collaboration</span>
+                    <span style="font-size: 12px; color: var(--accent)">4 servers, 27 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">CRM & Sales</span>
+                    <span style="font-size: 12px; color: var(--accent)">3 servers, 21 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">CMS & Content</span>
+                    <span style="font-size: 12px; color: var(--accent)">2 servers, 14 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">ERP & Finance</span>
+                    <span style="font-size: 12px; color: var(--accent)">1 server, 8 tools</span>
+                </div>
+                <div style="padding: 10px; background: var(--bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 13px; font-weight: 600">Core Services</span>
+                    <span style="font-size: 12px; color: var(--accent)">4 servers, 24 tools</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        JARVIS AI Automation Platform v4.0.0 — 62+ workflows — 26 MCP servers — 189 tools — 300+ connections — 0 technical debt
+    </div>
+</body>
+</html>

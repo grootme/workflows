@@ -1,0 +1,215 @@
+{
+  "name": "MCP TropiPay Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "tropipay-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7384c768-5032-43a9-9e1b-198b6e00ab23",
+      "name": "MCP Trigger",
+      "webhookId": "tropipay-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Create a TropiPay payment link. Supports amount, currency, concept, and expiration.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Payment_Link_URL', `Create Payment Link API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "591a0fc3-5953-409b-902c-88816a6b656e",
+      "name": "Create Payment Link"
+    },
+    {
+      "parameters": {
+        "description": "List TropiPay account movements. Filter by date, type, or status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Movements_URL', `List Movements API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "51c39ac2-18ea-4dfc-bc5a-b2ea3283f0a3",
+      "name": "List Movements"
+    },
+    {
+      "parameters": {
+        "description": "Get TropiPay account balance. Returns available and pending amounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Balance_URL', `Get Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "3eb9b9ac-08be-4d6e-a27b-517c63999663",
+      "name": "Get Balance"
+    },
+    {
+      "parameters": {
+        "description": "Create a TropiPay transfer to another account. Supports multiple currencies.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Transfer_URL', `Create Transfer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "1c4ffade-692f-4cc3-8fe5-d4745640dd0a",
+      "name": "Create Transfer"
+    },
+    {
+      "parameters": {
+        "description": "Generate a TropiPay QR code for payment. Returns QR image URL and payment reference.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Generate_QR_URL', `Generate QR API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "7d75fb6a-cea2-4d0b-b39b-8d82c237dd1e",
+      "name": "Generate QR"
+    },
+    {
+      "parameters": {
+        "description": "Get supported TropiPay currencies and exchange rates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Currencies_URL', `Get Currencies API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "829e760b-4d69-4b9a-afe3-6bc772f7f39c",
+      "name": "Get Currencies"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP TropiPay Server v3\n\nIBM Governance + Regional Fintech Pattern\n6 Tools: Create Payment Link, List Movements, Get Balance, Create Transfer, Generate QR, Get Currencies\n\nCaribbean/LatAm payments",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "b7348175-7e49-45ce-89dc-78e359a2ff78",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Create Payment Link": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Movements": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Transfer": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate QR": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Currencies": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "tropipay",
+    "payments",
+    "caribbean"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,269 @@
+{
+  "name": "MCP CoinEx Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "coinex-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ddab05fc-a948-4aa7-8f0f-bfed42f4f4ae",
+      "name": "MCP Trigger",
+      "webhookId": "coinex-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Get CoinEx market data for a trading pair. Returns price, volume, high, low, and change.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Market_Data_URL', `Get Market Data API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "23bc30ff-5f70-466b-9bcc-3c4844c0e456",
+      "name": "Get Market Data"
+    },
+    {
+      "parameters": {
+        "description": "Get CoinEx order book for a trading pair. Returns bids and asks with depth.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Order_Book_URL', `Get Order Book API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "73d4ed1a-daa7-4a17-a0eb-3c45d811b4f3",
+      "name": "Get Order Book"
+    },
+    {
+      "parameters": {
+        "description": "Place a CoinEx order. Supports limit, market, and stop-limit orders with amount and price.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Place_Order_URL', `Place Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "910d871e-a955-44ca-8eae-7244943f1ef8",
+      "name": "Place Order"
+    },
+    {
+      "parameters": {
+        "description": "Cancel an open CoinEx order by order ID and trading pair.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cancel_Order_URL', `Cancel Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "e2ce0d4c-70ae-4423-958c-ba20f0791fcb",
+      "name": "Cancel Order"
+    },
+    {
+      "parameters": {
+        "description": "Get CoinEx order history for a trading pair. Filter by status (open, closed, cancelled).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Order_History_URL', `Get Order History API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "affed112-e193-402a-9fa8-9945d5078b10",
+      "name": "Get Order History"
+    },
+    {
+      "parameters": {
+        "description": "Get CoinEx account balance for all coins. Returns available and frozen amounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Account_Balance_URL', `Get Account Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "1eac7289-c846-4577-afb0-497ad6b3418c",
+      "name": "Get Account Balance"
+    },
+    {
+      "parameters": {
+        "description": "List all available CoinEx trading pairs with price and volume information.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Markets_URL', `List Markets API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "da98f80f-3703-4bf0-ac1a-17af5ab4f168",
+      "name": "List Markets"
+    },
+    {
+      "parameters": {
+        "description": "Get CoinEx deposit address for a specific coin. Returns address and memo if required.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Deposit_Address_URL', `Get Deposit Address API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "1f3d6afe-8f1a-4283-b130-879c1f8865e0",
+      "name": "Get Deposit Address"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP CoinEx Server v3\n\nIBM Perception + DeerFlow Specialist Pattern\n8 Tools: Market Data, Order Book, Place/Cancel Order, Order History, Balance, Markets, Deposit Address\n\nFull crypto exchange",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "4221cab7-eede-463f-9d55-ce6bfb49973d",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Get Market Data": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order Book": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Place Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Order History": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Account Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Markets": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Deposit Address": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "coinex",
+    "crypto",
+    "exchange"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

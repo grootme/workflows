@@ -1,7 +1,7 @@
 {
   "package": "jarvis-professional",
   "name": "JARVIS Professional",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "price": 149,
   "zero_debt": true,
   "workflows": {
@@ -57,6 +57,9 @@
     ],
     "memory": [
       "Memory_Professional_Enhanced_v3.json"
+    ],
+    "orchestration": [
+      "ORC1_Google_CRM_WordPress_Marketing_v3.json"
     ]
   },
   "docker_services": [
@@ -68,7 +71,7 @@
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash (tiered)",
   "estimated_monthly_cost": "$25-75/month (depending on usage)",
   "generated_at": "2026-07-29T23:01:25.285906",
-  "total_workflows": 43,
+  "total_workflows": 44,
   "cognitive_capital": {
     "skills": [
       "deep-research",

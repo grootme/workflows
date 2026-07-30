@@ -1,0 +1,380 @@
+{
+  "name": "ORC1 Google CRM WordPress Marketing v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Marketing Automation Orchestrator. I combine Google Workspace, CRM, and WordPress to create and distribute marketing campaigns. What campaign would you like to launch?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "8decad74-6228-4a1f-9645-8e4871f231f0",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Marketing Automation Orchestrator\n\nYou are a multi-platform marketing orchestrator that combines Google Workspace, CRM, and WordPress.\n\n## Available Platforms:\n- **Google Workspace**: Drive, Docs, Sheets, Meet, Gmail\n- **CRM Universal**: Contacts, Leads, Pipeline, Deals, Activities, Dashboard\n- **WordPress**: Posts, Pages, Media, Comments, Users, Stats\n\n## Workflow:\n1. Research audience from CRM (segment, pipeline, activity)\n2. Create content brief in Google Docs\n3. Draft and schedule WordPress post\n4. Send email campaign via Gmail\n5. Track results in Google Sheets\n6. Update CRM with campaign results\n\n## Skills Loaded:\n- deep-research: Audience and market research\n- consulting-analysis: Campaign strategy\n- content-management: Multi-platform content distribution\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "4e358178-81f2-4d17-91cc-933ba405d66c",
+      "name": "Marketing Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "c252769e-5f78-479b-aaf2-aee21a9d0eb6",
+      "name": "GPT-4.1 Marketing",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={ $json.sessionId || 'default' }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "b05285ac-3753-45da-95de-4f2bbd541053",
+      "name": "Marketing Memory"
+    },
+    {
+      "parameters": {
+        "description": "Analyze the marketing request: 1) What is the campaign goal? 2) Who is the target audience? 3) Which platforms should be used? 4) What content needs to be created? 5) How should we track results?"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "a9206701-fa52-4f06-852c-bde7c9b4e159",
+      "name": "Marketing Think"
+    },
+    {
+      "parameters": {
+        "description": "Create or update Google Docs for content briefs, campaign plans, and editorial calendars.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Google_Docs_URL', `Google Docs API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        300
+      ],
+      "id": "a4d0fb3f-8a1b-4c12-be99-b529d6e0efd9",
+      "name": "Google Docs"
+    },
+    {
+      "parameters": {
+        "description": "Send marketing emails via Gmail. Supports HTML templates, merge tags, and tracking.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gmail_Send_URL', `Gmail Send API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "8e2d029b-ef13-49c8-b8f2-cf23acf88ee9",
+      "name": "Gmail Send"
+    },
+    {
+      "parameters": {
+        "description": "Read or write campaign data in Google Sheets. Track metrics, budgets, and schedules.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Google_Sheets_URL', `Google Sheets API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        300
+      ],
+      "id": "31c44db0-1227-4933-a1f1-c558419cedd8",
+      "name": "Google Sheets"
+    },
+    {
+      "parameters": {
+        "description": "Query CRM for leads, segments, and pipeline data. Filter by source, status, or score.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Leads_URL', `CRM Leads API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        300
+      ],
+      "id": "a7e2ed8a-e1ac-44d0-8986-60fcee94a613",
+      "name": "CRM Leads"
+    },
+    {
+      "parameters": {
+        "description": "Log marketing activities in CRM. Track campaigns, touchpoints, and conversions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Activities_URL', `CRM Activities API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        300
+      ],
+      "id": "fd77e71b-0fda-4a8c-abb7-d5b23bb98a7e",
+      "name": "CRM Activities"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or schedule WordPress posts. Supports categories, tags, and featured images.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WP_Posts_URL', `WP Posts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "id": "25cdac48-eb1b-4ec4-b91e-89728b8d9c15",
+      "name": "WP Posts"
+    },
+    {
+      "parameters": {
+        "description": "Upload media to WordPress. Supports images, videos, and documents with alt text.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WP_Media_URL', `WP Media API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "5e79379b-5edf-4d24-8a8e-6a777f57f01a",
+      "name": "WP Media"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "campaign_name": {
+              "type": "string",
+              "description": "Name of the marketing campaign"
+            },
+            "platforms_used": {
+              "type": "array",
+              "description": "List of platforms used"
+            },
+            "content_created": {
+              "type": "string",
+              "description": "Summary of content created"
+            },
+            "emails_sent": {
+              "type": "number",
+              "description": "Number of emails sent"
+            },
+            "leads_targeted": {
+              "type": "number",
+              "description": "Number of leads targeted"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Recommended next actions"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "4801aa4a-f445-483c-ad8d-5d4d51710339",
+      "name": "Marketing Output"
+    },
+    {
+      "parameters": {
+        "content": "\ud83c\udfaf ORC1: Marketing Automation\n\nGoogle + CRM + WordPress\n1. Research CRM audience\n2. Create brief in Docs\n3. Draft WP post\n4. Send via Gmail\n5. Track in Sheets\n6. Update CRM\n\nP3 Orchestrator-Workers Pattern",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "4dec8f86-be68-4f6b-8dac-1abf7a33d543",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Marketing Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Marketing",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Marketing Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Docs",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail Send",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Leads",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Activities",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WP Posts",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WP Media",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Marketing Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "orchestration",
+    "marketing",
+    "google",
+    "crm",
+    "wordpress"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

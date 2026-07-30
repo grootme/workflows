@@ -1,0 +1,403 @@
+{
+  "name": "ORC2 Booking Expedia CRM Travel v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Travel Orchestration Assistant. I combine Booking.com, Expedia, and CRM to find the best travel deals and manage reservations. Where would you like to go?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "f18e6aed-044b-4594-a061-cef5f8bd3812",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Travel Orchestration Orchestrator\n\nYou are a multi-platform travel orchestrator combining Booking.com, Expedia, and CRM.\n\n## Available Platforms:\n- **Booking.com**: Properties, reservations, availability, reviews, rates\n- **Expedia**: Hotels, flights, car rentals, packages\n- **CRM Universal**: Customer profiles, booking history, preferences\n\n## Workflow:\n1. Search Booking.com for properties\n2. Search Expedia for flights and packages\n3. Compare prices and availability\n4. Check CRM for customer preferences and history\n5. Recommend best options\n6. Create reservation and update CRM\n\n## Skills Loaded:\n- deep-research: Travel research methodology\n- consulting-analysis: Cost-benefit analysis\n- travel-hospitality: Property and reservation management\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "e3d942f5-e2ad-45e5-827f-9a43af6353c4",
+      "name": "Travel Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "59122de3-866d-4312-8dde-383f11fbd821",
+      "name": "GPT-4.1 Travel",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={ $json.sessionId || 'default' }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "82af841a-beaa-455b-a336-7225cd9a33e8",
+      "name": "Travel Memory"
+    },
+    {
+      "parameters": {
+        "description": "Analyze the travel request: 1) Destination and dates? 2) Budget range? 3) Number of travelers? 4) Preferences (hotel, flight, car)? 5) Past booking history? 6) Best value option?"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "96fc7db4-c578-4f75-a18f-2f5a07e7edf7",
+      "name": "Travel Think"
+    },
+    {
+      "parameters": {
+        "description": "Search Booking.com properties by city, dates, guests, and filters.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Booking_Search_URL', `Booking Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        300
+      ],
+      "id": "d2c2edce-247e-42ff-a6ba-1f53ab7bb975",
+      "name": "Booking Search"
+    },
+    {
+      "parameters": {
+        "description": "Check real-time availability and pricing for a Booking.com property.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Booking_Availability_URL', `Booking Availability API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "963e541b-c29b-45ea-a5b9-52dcaf347224",
+      "name": "Booking Availability"
+    },
+    {
+      "parameters": {
+        "description": "Get guest reviews for a Booking.com property.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Booking_Reviews_URL', `Booking Reviews API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        300
+      ],
+      "id": "8d4b1941-ac3f-45d9-bad8-630338c44069",
+      "name": "Booking Reviews"
+    },
+    {
+      "parameters": {
+        "description": "Search Expedia hotels by destination, dates, and filters.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Expedia_Hotels_URL', `Expedia Hotels API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        300
+      ],
+      "id": "00ab3184-95a2-4aaa-ae3e-1876d242be9c",
+      "name": "Expedia Hotels"
+    },
+    {
+      "parameters": {
+        "description": "Search Expedia flights by origin, destination, dates, and cabin class.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Expedia_Flights_URL', `Expedia Flights API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        300
+      ],
+      "id": "4e2c87e0-cff2-4d90-bb4c-4db71e468587",
+      "name": "Expedia Flights"
+    },
+    {
+      "parameters": {
+        "description": "Get bundled Expedia deals (flight+hotel+car).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Expedia_Packages_URL', `Expedia Packages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "id": "e742055c-7da7-4b92-9817-0c347d72a88f",
+      "name": "Expedia Packages"
+    },
+    {
+      "parameters": {
+        "description": "Get CRM customer profile including booking history and preferences.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Customer_URL', `CRM Customer API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "bd8082fc-4eb1-40c0-91aa-522150e71192",
+      "name": "CRM Customer"
+    },
+    {
+      "parameters": {
+        "description": "Log a new booking in the CRM with travel details and confirmation.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Log_Booking_URL', `CRM Log Booking API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        300
+      ],
+      "id": "1d742a38-bac7-46d3-a641-d62b169d7e79",
+      "name": "CRM Log Booking"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "destination": {
+              "type": "string",
+              "description": "Travel destination"
+            },
+            "best_hotel": {
+              "type": "string",
+              "description": "Recommended hotel with price"
+            },
+            "best_flight": {
+              "type": "string",
+              "description": "Recommended flight with price"
+            },
+            "total_estimated_cost": {
+              "type": "number",
+              "description": "Estimated total cost"
+            },
+            "savings_vs_individual": {
+              "type": "number",
+              "description": "Savings from package deal"
+            },
+            "booking_links": {
+              "type": "array",
+              "description": "Direct booking links"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        0
+      ],
+      "id": "1a6e802f-bac2-4f08-9f6a-35b810248499",
+      "name": "Travel Output"
+    },
+    {
+      "parameters": {
+        "content": "\u2708\ufe0f ORC2: Travel Orchestration\n\nBooking.com + Expedia + CRM\n1. Search Booking properties\n2. Search Expedia flights\n3. Compare prices\n4. Check CRM preferences\n5. Recommend best options\n6. Create reservation\n\nP3 Orchestrator-Workers Pattern",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "080275c4-7737-426a-88f6-0912160ce23f",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Travel Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Travel Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Travel",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Travel Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Travel Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Booking Search",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Booking Availability",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Booking Reviews",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Expedia Hotels",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Expedia Flights",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Expedia Packages",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Customer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Log Booking",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Travel Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "orchestration",
+    "travel",
+    "booking",
+    "expedia",
+    "crm"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

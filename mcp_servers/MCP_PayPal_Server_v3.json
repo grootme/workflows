@@ -1,0 +1,269 @@
+{
+  "name": "MCP PayPal Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "paypal-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "68947cbb-12ce-4665-bfa6-b903d4748930",
+      "name": "MCP Trigger",
+      "webhookId": "paypal-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Create a PayPal order for payment. Supports multiple items, shipping, and custom amounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Order_URL', `Create Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "b0087707-19ba-447e-ad3d-929b8d923f1e",
+      "name": "Create Order"
+    },
+    {
+      "parameters": {
+        "description": "Capture an authorized PayPal order. Completes the payment and moves funds.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Capture_Order_URL', `Capture Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "e8b85b52-5950-4c09-a81f-29697cc72ca1",
+      "name": "Capture Order"
+    },
+    {
+      "parameters": {
+        "description": "Create a PayPal subscription plan with billing cycle, pricing, and trial settings.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Subscription_URL', `Create Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "ca681a47-32a2-40e9-a7de-eb6ef1ec27f0",
+      "name": "Create Subscription"
+    },
+    {
+      "parameters": {
+        "description": "List PayPal transactions with date range filter. Returns amount, status, and payer info.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Transactions_URL', `List Transactions API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "dd5f16ba-9a88-4d6b-b309-47dcf4957835",
+      "name": "List Transactions"
+    },
+    {
+      "parameters": {
+        "description": "Issue a refund for a PayPal transaction. Supports full or partial refund with note.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Refund_URL', `Issue Refund API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "4c403af6-c040-4a2e-b9cd-d8312e6c597e",
+      "name": "Issue Refund"
+    },
+    {
+      "parameters": {
+        "description": "Create a PayPal payout to recipients. Supports batch payouts with email or phone.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Payout_URL', `Create Payout API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "34b30b3e-2cb1-47b5-be7b-0ee9a218e7b0",
+      "name": "Create Payout"
+    },
+    {
+      "parameters": {
+        "description": "Get PayPal invoice details including line items, amounts, status, and payment links.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Invoice_URL', `Get Invoice API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "7c1f3a39-d4b9-4574-bc57-3b8318d5d6c4",
+      "name": "Get Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Get PayPal account balance for all currencies held.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Account_Balance_URL', `Get Account Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "e0d36783-182c-4d07-84e3-5459d90139f3",
+      "name": "Get Account Balance"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP PayPal Server v3\n\nIBM Governance + DeerFlow Commerce Pattern\n8 Tools: Create/Capture Order, Create Subscription, List Transactions, Issue Refund, Create Payout, Get Invoice, Get Balance\n\nFull PayPal integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "a78c087e-987e-43c8-994f-0fdb7cf93f2f",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Create Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Subscription": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Transactions": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Issue Refund": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Payout": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Invoice": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Account Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "paypal",
+    "payments",
+    "fintech"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

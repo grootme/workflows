@@ -1,0 +1,215 @@
+{
+  "name": "MCP QvaPay Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "qvapay-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b37fffb0-5bbb-41bf-97be-aa1a3c234456",
+      "name": "MCP Trigger",
+      "webhookId": "qvapay-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Create a QvaPay invoice for payment. Supports amount, description, and custom reference.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Invoice_URL', `Create Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "736b7667-5acb-4fb9-920d-875442d6fd4a",
+      "name": "Create Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Get QvaPay invoice status and details. Returns payment status, amount, and paid_at timestamp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Invoice_URL', `Get Invoice API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "69bfeb62-3975-4280-8c22-92cd79914411",
+      "name": "Get Invoice"
+    },
+    {
+      "parameters": {
+        "description": "List QvaPay transactions. Filter by date, status, or type (income/expense).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Transactions_URL', `List Transactions API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "9c687a53-a12f-421e-ae3f-0a5becb303fb",
+      "name": "List Transactions"
+    },
+    {
+      "parameters": {
+        "description": "Get QvaPay wallet balance. Returns available and locked amounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Balance_URL', `Get Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "32d8b20a-37a1-45f7-b692-edd71d1b54f2",
+      "name": "Get Balance"
+    },
+    {
+      "parameters": {
+        "description": "Transfer funds between QvaPay wallets. Requires recipient ID and amount.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Transfer_Funds_URL', `Transfer Funds API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "e66eef13-5da1-4b9f-8c12-7b7c99357507",
+      "name": "Transfer Funds"
+    },
+    {
+      "parameters": {
+        "description": "Get QvaPay user profile information including KYC status and verification level.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_User_Info_URL', `Get User Info API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "9495d5a8-4258-4d67-a649-13b29046f985",
+      "name": "Get User Info"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP QvaPay Server v3\n\nIBM Governance + Regional Fintech Pattern\n6 Tools: Create/Get Invoice, List Transactions, Get Balance, Transfer Funds, Get User Info\n\nLatin American payments",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "8e901ed7-de92-4e93-91cb-c9171f1c838b",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Create Invoice": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Invoice": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Transactions": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transfer Funds": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Info": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "qvapay",
+    "payments",
+    "latam"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "name": "ORC4 Stripe PayPal Binance Payments v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Payments Orchestration Assistant. I combine Stripe, PayPal, and Binance to manage payments across fiat and crypto channels. What payment operation do you need?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "eaeaac66-6d7f-42a6-aa09-8692e5ae4ff2",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Payments Orchestration Orchestrator\n\nYou are a multi-platform payments orchestrator combining Stripe, PayPal, and Binance.\n\n## Available Platforms:\n- **Stripe**: Card payments, subscriptions, invoices, payouts, refunds\n- **PayPal**: Orders, captures, subscriptions, payouts, refunds\n- **Binance**: Crypto spot/futures trading, P2P, deposits, withdrawals\n- **QvaPay**: Latin American payments, invoices, transfers\n- **TropiPay**: Caribbean payments, QR, transfers\n- **CoinEx**: Crypto exchange, market data, orders\n- **Bitrefill**: Crypto gift cards, phone refills\n\n## Workflow:\n1. Process incoming payment via appropriate channel\n2. Route to best provider based on currency, region, and fees\n3. Track all transactions across platforms\n4. Reconcile balances\n5. Handle refunds and disputes\n6. Generate financial reports\n\n## Skills Loaded:\n- deep-research: Market and fee analysis\n- data-analysis: Transaction and revenue analysis\n- erp-finance: Financial reconciliation and reporting\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "888ec43a-9e60-4579-aead-c981041bdf6d",
+      "name": "Payments Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "cfc28b12-cd2c-466a-be18-0d01d82ae20c",
+      "name": "GPT-4.1 Payments",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={ $json.sessionId || 'default' }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "384381b5-b747-438a-af6a-58bd4000cbeb",
+      "name": "Payments Memory"
+    },
+    {
+      "parameters": {
+        "description": "Analyze the payment request: 1) Fiat or crypto? 2) Which currency? 3) What region? 4) Lowest fees? 5) Compliance requirements? 6) Reconciliation needed? 7) Risk assessment?"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "620c1c96-654d-47b7-9bb1-e08843482549",
+      "name": "Payments Think"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe payment intent. Supports one-time payments with amount, currency, and metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Payment_URL', `Stripe Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        300
+      ],
+      "id": "6fd0ed00-784d-41fa-96fc-caaadf5280f8",
+      "name": "Stripe Payment"
+    },
+    {
+      "parameters": {
+        "description": "Get current Stripe account balance including available and pending amounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Balance_URL', `Stripe Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "1e56ec74-fce0-46d4-9cd8-5193717e040f",
+      "name": "Stripe Balance"
+    },
+    {
+      "parameters": {
+        "description": "Refund a Stripe payment. Supports full or partial refund with reason.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Refund_URL', `Stripe Refund API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        300
+      ],
+      "id": "60969ed4-8001-425b-89d0-8762b81209a4",
+      "name": "Stripe Refund"
+    },
+    {
+      "parameters": {
+        "description": "Create a PayPal order for payment. Supports multiple items and shipping.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PayPal_Order_URL', `PayPal Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        300
+      ],
+      "id": "899edb10-9dc8-4154-9003-1d2a37008d32",
+      "name": "PayPal Order"
+    },
+    {
+      "parameters": {
+        "description": "Issue a refund for a PayPal transaction. Supports full or partial refund.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('PayPal_Refund_URL', `PayPal Refund API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        300
+      ],
+      "id": "6feba8d4-f934-4650-8d32-ae548abb9035",
+      "name": "PayPal Refund"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance 24h ticker for a crypto pair. Returns price, volume, and change.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binance_Ticker_URL', `Binance Ticker API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "id": "426e7777-e325-426d-83b0-a1e70aa68922",
+      "name": "Binance Ticker"
+    },
+    {
+      "parameters": {
+        "description": "Place a Binance spot order. Supports LIMIT, MARKET, and STOP orders.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binance_Trade_URL', `Binance Trade API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ],
+      "id": "0e1d294a-16d3-4620-85d0-c6380a0df70c",
+      "name": "Binance Trade"
+    },
+    {
+      "parameters": {
+        "description": "Get Binance account information including balances and commission rates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binance_Account_URL', `Binance Account API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        300
+      ],
+      "id": "79e72429-6109-4c49-af64-873908c9a627",
+      "name": "Binance Account"
+    },
+    {
+      "parameters": {
+        "description": "Create a QvaPay invoice for Latin American payments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('QvaPay_Invoice_URL', `QvaPay Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        300
+      ],
+      "id": "9b80d065-966e-41d1-a67c-7cdb7086af89",
+      "name": "QvaPay Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Create a TropiPay payment link for Caribbean payments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('TropiPay_Link_URL', `TropiPay Link API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "526a68d2-1cdd-49ee-a193-7e1509fbb29f",
+      "name": "TropiPay Link"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "payment_processed": {
+              "type": "boolean",
+              "description": "Whether payment was processed successfully"
+            },
+            "provider_used": {
+              "type": "string",
+              "description": "Which payment provider was used"
+            },
+            "amount": {
+              "type": "number",
+              "description": "Payment amount"
+            },
+            "currency": {
+              "type": "string",
+              "description": "Payment currency"
+            },
+            "fees": {
+              "type": "number",
+              "description": "Transaction fees charged"
+            },
+            "transaction_id": {
+              "type": "string",
+              "description": "Transaction reference ID"
+            },
+            "reconciliation_status": {
+              "type": "string",
+              "description": "Reconciliation status: pending, matched, discrepancy"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "c17ad9d8-3bf3-499a-8453-1dcfb272cc52",
+      "name": "Payments Output"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udcb0 ORC4: Payments Orchestration\n\nStripe + PayPal + Binance + QvaPay + TropiPay\n1. Route payment to best provider\n2. Process fiat or crypto\n3. Track all transactions\n4. Reconcile balances\n5. Handle refunds\n6. Generate reports\n\nP3 Orchestrator-Workers + P2 Routing Pattern",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "150676d4-f9a1-4fc7-94a0-8958f5892be7",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Payments Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payments Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Payments",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Payments Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Payments Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Balance",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Refund",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PayPal Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PayPal Refund",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binance Ticker",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binance Trade",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binance Account",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "QvaPay Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "TropiPay Link",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Payments Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "orchestration",
+    "payments",
+    "stripe",
+    "paypal",
+    "binance",
+    "crypto"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
