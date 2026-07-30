@@ -1,7 +1,7 @@
 {
   "package": "jarvis-professional",
   "name": "JARVIS Professional",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "price": 149,
   "zero_debt": true,
   "workflows": {
@@ -48,7 +48,8 @@
       "P7_SOUL_Bootstrap_Agent_v3.json",
       "P8_Router_Orchestrator_v3.json",
       "P9_Evaluator_Parallel_v3.json",
-      "P10_Cognitive_SOUL_Pipeline_v3.json"
+      "P10_Cognitive_SOUL_Pipeline_v3.json",
+      "Zeus_Meta_Orchestrator_v3.json"
     ]
   },
   "docker_services": [
@@ -60,7 +61,7 @@
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash (tiered)",
   "estimated_monthly_cost": "$25-75/month (depending on usage)",
   "generated_at": "2026-07-29T23:01:25.285906",
-  "total_workflows": 37,
+  "total_workflows": 38,
   "cognitive_capital": {
     "skills": [
       "deep-research",
