@@ -1,0 +1,173 @@
+{
+  "name": "P7 SOUL Bootstrap Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "Hello! 👋 I'm your AI personality architect. I'll help you create a personalized SOUL.md for your AI assistant. Let's start — what language would you prefer to use?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5f88f85f-5d38-49dd-9927-34f7dfc1db9b",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# SOUL Bootstrap Agent (Anthropic Skills Pattern)\n\nYou are a conversational onboarding agent that creates personalized SOUL.md files for AI assistants.\n\n## Skills Loaded:\n- bootstrap: Conversational onboarding and SOUL.md generation\n\n## Conversation Phases:\n\n### Phase 1 — Hello (1 round)\nEstablish preferred language. That's it.\n\n### Phase 2 — You (2 rounds)\n- Round A: Learn who they are, what drains them, what they need\n- Round B: Ask for AI name and relationship framing (assistant/partner/co-pilot/second brain)\n\n### Phase 3 — Personality (2 rounds)\n- Round A: Core traits and pushback preference. Should the AI ever disagree?\n- Round B: Communication style and voice\n\n### Phase 4 — Depth (1-2 rounds)\n- Autonomy level, failure philosophy, long-term vision, blind spots, dealbreakers\n\n## Extraction Tracker:\n| Field | Required | Phase |\n|-------|----------|-------|\n| Preferred language | ✅ | 1 |\n| User's name | ✅ | 2 |\n| User's role | ✅ | 2 |\n| AI name | ✅ | 2 |\n| Relationship framing | ✅ | 2 |\n| Core traits (3-5 rules) | ✅ | 3 |\n| Communication style | ✅ | 3 |\n| Pushback preference | ✅ | 3 |\n| Autonomy level | ✅ | 3 |\n| Failure philosophy | ✅ | 4 |\n\n## Generation Rules:\n- One phase at a time, 1-3 questions max per round\n- Converse, don't interrogate\n- Mirror their energy and vocabulary\n- When all required fields are collected, generate SOUL.md\n- SOUL.md must be under 300 words\n- Core Traits are behavioral rules, not adjectives\n- Voice must match the user\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "4471a485-aec2-4a2c-ade0-c14d016a2a5b",
+      "name": "Bootstrap Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "9828361b-5f4c-445d-a48a-be2f8c1d6de8",
+      "name": "GPT-4.1-mini Bootstrap",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'bootstrap' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "334ac69a-5c76-4fdf-a763-75b65a11b7fd",
+      "name": "Bootstrap Memory",
+      "credentials": {
+        "postgresApi": {
+          "id": "",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Track conversation progress, plan next questions, assess extraction completeness"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "97eea8b4-e81b-4b85-bd81-1b2bd8689263",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "content": "🧬 P7: SOUL Bootstrap Agent\n\nAnthropic's Bootstrap Skill pattern adapted for n8n.\n\n4-phase conversation:\n1. Hello (language)\n2. You (identity, pain, AI name)\n3. Personality (traits, voice, pushback)\n4. Depth (autonomy, failure philosophy)\n\nGenerates personalized SOUL.md\nUses PostgresChatHistory for persistence",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -400
+      ],
+      "id": "3f08b458-48d0-4cf1-a84d-551701db367e",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Bootstrap Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini Bootstrap": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Bootstrap Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bootstrap Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Bootstrap Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bootstrap Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,487 @@
+{
+  "name": "P5 Parallelization Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "parallel-analysis",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2000,
+        0
+      ],
+      "id": "a89234b2-25ed-4683-9205-8a66d0d4cdbe",
+      "name": "Webhook",
+      "webhookId": "parallel-analysis"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b345b7a-49e1-469f-8671-ce3538b356fa",
+              "name": "query",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            },
+            {
+              "id": "cb83b55c-028d-4ea0-8e4b-62d32f8907eb",
+              "name": "domain",
+              "value": "={{ $json.body.domain || 'general' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1800,
+        0
+      ],
+      "id": "13c9cc8f-9f7d-451f-aac2-6ad9d0f73a7d",
+      "name": "Split Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Market Analyst (Parallel Track 1)\n\nAnalyze from a market and business perspective.\n\nSkills: consulting-analysis, deep-research\n\nFocus on: market size, competition, trends, opportunities.\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1200,
+        -400
+      ],
+      "id": "28f5265c-840b-4780-98df-192e6f01022c",
+      "name": "Market Analyst"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1000,
+        -400
+      ],
+      "id": "3ca94484-7fa6-4c20-8521-b0984cc41d0f",
+      "name": "Market LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan market analysis strategy"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -400
+      ],
+      "id": "6e791a11-1564-4da5-94b3-d7f27489948b",
+      "name": "Market Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Technical Analyst (Parallel Track 2)\n\nAnalyze from a technical and implementation perspective.\n\nSkills: data-analysis, code-documentation\n\nFocus on: feasibility, architecture, data requirements, technical risks.\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1200,
+        0
+      ],
+      "id": "f6c9e716-6be5-4862-81bc-5a53d262eb5c",
+      "name": "Technical Analyst"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1000,
+        0
+      ],
+      "id": "d05cc76c-3aab-4a84-b276-1ab75233a9e4",
+      "name": "Technical LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan technical analysis strategy"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "15b28d7c-074f-4dea-88cd-e4ccddc5a6f3",
+      "name": "Technical Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Risk Analyst (Parallel Track 3)\n\nAnalyze from a risk and compliance perspective.\n\nSkills: consulting-analysis, academic-paper-review\n\nFocus on: risks, regulatory concerns, ethical considerations, mitigation strategies.\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1200,
+        400
+      ],
+      "id": "38b03994-66ac-49c9-8acd-ea412ebbf104",
+      "name": "Risk Analyst"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1000,
+        400
+      ],
+      "id": "ef1162cb-8b27-4316-8cc0-2ed568f5bbf5",
+      "name": "Risk LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Plan risk analysis strategy"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        400
+      ],
+      "id": "cf7cb487-3ad6-4a0e-81c9-295a804927bd",
+      "name": "Risk Think"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "4641d6d7-042d-4746-b099-30bc59d306f6",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Combine and synthesize the following three analyses:\n\n## Market Analysis:\n{{ $json.market_output || 'Pending' }}\n\n## Technical Analysis:\n{{ $json.technical_output || 'Pending' }}\n\n## Risk Analysis:\n{{ $json.risk_output || 'Pending' }}\n\nCreate a comprehensive executive summary with actionable recommendations.",
+        "options": {
+          "systemMessage": "=# Synthesis Agent\n\nYou combine multiple analysis perspectives into a coherent executive summary.\n\nSkills: consulting-analysis\n\nOutput: Executive summary with key findings, recommendations, and risk assessment.\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -100,
+        0
+      ],
+      "id": "acfce1ce-abee-4bc9-a8cd-9d54528bc971",
+      "name": "Synthesis Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        300
+      ],
+      "id": "f1250dc7-34cd-4624-8964-51477fadf05a",
+      "name": "Synthesis LLM",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "synthesis-session",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        100,
+        300
+      ],
+      "id": "a5355ecd-4fb8-430d-9dc4-0d33ac132170",
+      "name": "Synthesis Memory"
+    },
+    {
+      "parameters": {
+        "content": "⚡ P5: Parallelization (Anthropic Pattern)\n\nWebhook → Split → 3 Parallel Analysts → Aggregate → Synthesis\n\nTrack 1: Market (GPT-4.1-mini)\nTrack 2: Technical (GPT-4.1-mini)\nTrack 3: Risk (GPT-4o-mini)\n\nSynthesis: GPT-4.1\n\nSkills: consulting-analysis, deep-research, data-analysis, academic-paper-review",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2000,
+        -400
+      ],
+      "id": "1bf4b5ac-7ac9-4ad7-ac94-f2bdc1715108",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Input": {
+      "main": [
+        [
+          {
+            "node": "Market Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Technical Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Risk Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Analyst": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Analyst": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Analyst": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Synthesis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Market Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Market Analyst",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Technical Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Technical Analyst",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Risk Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Risk Analyst",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Synthesis LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Synthesis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Synthesis Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Synthesis Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
