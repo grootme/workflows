@@ -1,0 +1,205 @@
+{
+  "name": "Memory Starter Buffer v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your JARVIS Starter assistant. I remember our conversation within this session. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "5afebf17-0d58-4301-9084-ba1f2c80ce09",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# JARVIS Starter Agent\n\nYou are a helpful AI assistant with basic conversation memory.\n\n## Memory Tier: Starter (Buffer Window)\n- You remember the last 10 message exchanges in this session\n- Session context is maintained within a single conversation\n- No cross-session persistence\n- No external knowledge retrieval\n\n## Capabilities:\n- General conversation and Q&A\n- Simple task execution\n- Basic calendar and email operations\n- Prompt chaining for multi-step tasks\n\n## Skills Loaded:\n- deep-research: Basic research methodology\n- consulting-analysis: Simple analysis framework\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "3a0b9b16-eb65-4baa-812a-95abc855313b",
+      "name": "Starter Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "cfd9526f-b4e5-4543-b982-7b792519df38",
+      "name": "GPT-4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "1160d0c4-3988-434b-90bf-c0a97db711ed",
+      "name": "Starter Memory"
+    },
+    {
+      "parameters": {
+        "description": "Think through the user's request step by step. Consider what context from the conversation is relevant."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "8106f03a-bcd3-414e-9ef8-7eeb30536b02",
+      "name": "Starter Think"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "response": {
+              "type": "string",
+              "description": "The assistant's response to the user"
+            },
+            "confidence": {
+              "type": "number",
+              "description": "Confidence level 0-1"
+            },
+            "needs_escalation": {
+              "type": "boolean",
+              "description": "Whether this request needs a higher tier"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        0
+      ],
+      "id": "81bb80c9-bf21-41fc-bd4f-e5df73fad865",
+      "name": "Starter Output"
+    },
+    {
+      "parameters": {
+        "content": "\ud83e\udde0 Starter Memory Architecture\n\nBuffer Window (10 exchanges)\n- In-session only\n- No persistence\n- No RAG\n- No cross-session\n\nTier: Basic\nLLM: GPT-4o-mini\nMemory: BufferWindow k=10",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "fd4a7967-a575-41c6-becc-6d2c009dce51",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Starter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Starter Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4o-mini",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Starter Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Starter Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Starter Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "memory",
+    "starter",
+    "buffer"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

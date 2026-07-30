@@ -1,7 +1,7 @@
 {
   "package": "jarvis-starter",
   "name": "JARVIS Starter",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "price": 49,
   "zero_debt": true,
   "workflows": {
@@ -28,6 +28,9 @@
       "P1_Prompt_Chaining_Agent_v3.json",
       "P7_SOUL_Bootstrap_Agent_v3.json",
       "P10_Cognitive_SOUL_Pipeline_v3.json"
+    ],
+    "memory": [
+      "Memory_Starter_Buffer_v3.json"
     ]
   },
   "docker_services": [
@@ -37,12 +40,13 @@
   "llm_tier": "GPT-4o-mini ($0.15/$0.60 per 1M tokens)",
   "estimated_monthly_cost": "$5-15/month (depending on usage)",
   "generated_at": "2026-07-29T23:01:25.282893",
-  "total_workflows": 16,
+  "total_workflows": 17,
   "cognitive_capital": {
     "skills": [
       "deep-research",
       "consulting-analysis"
     ],
     "soul_template": true
-  }
+  },
+  "memory_tier": "Buffer Window (k=10, in-session only)"
 }

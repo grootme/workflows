@@ -1,0 +1,270 @@
+{
+  "name": "MCP Google Workspace Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "google-workspace-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4316f4b5-56fd-425f-8b36-8ffddc26135a",
+      "name": "MCP Trigger",
+      "webhookId": "google-workspace-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List files in Google Drive. Filter by type (docs, sheets, slides, pdf), owner, or shared status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Drive_Files_URL', `List Drive Files API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "03f7c1d1-2bf4-47ec-80eb-ad7ee7176ef1",
+      "name": "List Drive Files"
+    },
+    {
+      "parameters": {
+        "description": "Upload a file to Google Drive. Supports any MIME type with optional folder placement and sharing.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Upload_to_Drive_URL', `Upload to Drive API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "17b51f5c-1db7-4eb2-9782-058a8382dfd2",
+      "name": "Upload to Drive"
+    },
+    {
+      "parameters": {
+        "description": "Create a new Google Doc with title and content. Supports markdown-to-Doc conversion.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Doc_URL', `Create Doc API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "9539dab9-396a-4b9a-ab8e-1cdfdab379a9",
+      "name": "Create Doc"
+    },
+    {
+      "parameters": {
+        "description": "Read data from a Google Sheets spreadsheet. Specify sheet name, range, and value rendering option.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Read_Sheet_URL', `Read Sheet API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "defbe9f3-41d5-472c-87c8-b364dceea8be",
+      "name": "Read Sheet"
+    },
+    {
+      "parameters": {
+        "description": "Write or append data to a Google Sheets spreadsheet. Supports batch updates and formatting.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Write_Sheet_URL', `Write Sheet API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "7c0e4eac-e1ec-4b22-b1cb-f20c796a7c5b",
+      "name": "Write Sheet"
+    },
+    {
+      "parameters": {
+        "description": "Create a Google Meet video conference. Returns meeting URL, dial-in info, and calendar event.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Meet_URL', `Create Meet API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "c3116e7a-2f8a-451e-8849-a7f414eff5d8",
+      "name": "Create Meet"
+    },
+    {
+      "parameters": {
+        "description": "Send an email via Gmail. Supports HTML body, attachments, CC/BCC, and reply-to threading.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Gmail_URL', `Send Gmail API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "6309c412-af9c-4b1b-bf8e-93899d87b10d",
+      "name": "Send Gmail"
+    },
+    {
+      "parameters": {
+        "description": "Search Gmail messages using Gmail query syntax. Supports labels, date ranges, and full-text search.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Gmail_URL', `Search Gmail API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "bd11bae4-56b6-4401-af72-8b1ee01f855b",
+      "name": "Search Gmail"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Google Workspace Server v3\n\nIBM Perception + DeerFlow Channel Pattern\n8 Tools: Drive (List/Upload), Docs (Create), Sheets (Read/Write), Meet (Create), Gmail (Send/Search)\n\nFull Google ecosystem integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "21238e6f-97a5-4aa8-8ca1-460003606fa7",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Drive Files": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Drive": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Doc": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Meet": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "google",
+    "workspace",
+    "drive",
+    "gmail"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,296 @@
+{
+  "name": "Memory Enterprise Full v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your JARVIS Enterprise assistant. I have full persistent memory, cognitive capital skills, and enterprise-grade governance. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "0e4108b3-2216-47b1-ad4f-b2006b088cae",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# JARVIS Enterprise Agent\n\nYou are a fully-capable enterprise AI assistant with complete memory, cognitive capital, and governance.\n\n## Memory Tier: Enterprise (Full Stack)\n- Buffer Window for immediate context\n- Redis/Zep for persistent cross-session memory\n- Qdrant vector RAG for knowledge retrieval\n- Cognitive Capital skills loaded dynamically\n- Conversation summarization + long-term recall\n- Full audit trail and compliance logging\n\n## Capabilities:\n- All Anthropic patterns (P1-P10) + Zeus Meta-Orchestrator\n- Full MCP server arsenal (19 servers)\n- Dynamic skill loading via Cognitive Capital\n- SOUL personality bootstrap for brand consistency\n- Multi-agent orchestration with quality gates\n- Enterprise governance and compliance\n\n## Skills Loaded:\n- deep-research: Systematic research methodology\n- consulting-analysis: Professional analysis framework\n- data-analysis: Data analysis and visualization\n- newsletter-generation: Content creation and curation\n- code-documentation: Technical documentation\n- podcast-generation: Audio content creation\n\n## Governance:\n- All actions are logged and auditable\n- Compliance checks for data handling\n- Role-based access control\n- Data retention policies enforced\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "0932e845-c57a-4f83-b29f-0a23fc5514f0",
+      "name": "Enterprise Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "16c4fee3-e99a-44e9-986a-c504b764b49a",
+      "name": "GPT-4.1 Enterprise",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={ $json.sessionId || 'default' }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "a6e97880-2f77-4c0a-ad0c-3cffe13d70c1",
+      "name": "Enterprise Memory"
+    },
+    {
+      "parameters": {
+        "description": "Deep analysis of the request. Consider: 1) Domain classification 2) Pattern selection (P1-P10) 3) Required skills from Cognitive Capital 4) Compliance requirements 5) Whether multi-pattern orchestration is needed 6) Quality gate requirements 7) Audit trail needs"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "210310d9-9913-4688-8a3a-51db8ad3c539",
+      "name": "Enterprise Think"
+    },
+    {
+      "parameters": {
+        "description": "Look up persistent context from Redis for this user/session. Returns full conversation history, preferences, and interaction patterns.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Redis_Lookup_URL', `Redis Lookup API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        300
+      ],
+      "id": "3f8fc440-a131-46fb-85ff-b21ac5946ed5",
+      "name": "Redis Lookup"
+    },
+    {
+      "parameters": {
+        "description": "Search the Qdrant vector database for relevant knowledge. Supports semantic search across all indexed documents and cognitive capital.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Qdrant_Search_URL', `Qdrant Search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "e9319331-2fdd-4999-a204-c6e075f08698",
+      "name": "Qdrant Search"
+    },
+    {
+      "parameters": {
+        "description": "Load a specific skill from the Cognitive Capital library. Returns the full SKILL.md with progressive disclosure for the agent.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cognitive_Capital_Loader_URL', `Cognitive Capital Loader API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        300
+      ],
+      "id": "5cff885e-fa10-48eb-a0d8-603284c1653e",
+      "name": "Cognitive Capital Loader"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "response": {
+              "type": "string",
+              "description": "The assistant's response"
+            },
+            "domain": {
+              "type": "string",
+              "description": "Detected domain"
+            },
+            "pattern_used": {
+              "type": "string",
+              "description": "Which Anthropic pattern was applied: P1-P10"
+            },
+            "skills_loaded": {
+              "type": "array",
+              "description": "List of Cognitive Capital skills activated"
+            },
+            "quality_score": {
+              "type": "number",
+              "description": "Self-evaluated quality score 0-1"
+            },
+            "compliance_status": {
+              "type": "string",
+              "description": "Compliance check result: pass, review_required, blocked"
+            },
+            "audit_trail_id": {
+              "type": "string",
+              "description": "Audit trail reference ID"
+            },
+            "needs_escalation": {
+              "type": "boolean",
+              "description": "Whether human review is needed"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "bd64d670-2e54-4312-8a33-2d85a4dd9e8a",
+      "name": "Enterprise Output"
+    },
+    {
+      "parameters": {
+        "content": "\ud83e\udde0 Enterprise Memory Architecture\n\nFull Stack: Buffer + Redis/Zep + Qdrant RAG + Cognitive Capital\n- Persistent cross-session memory\n- Semantic knowledge retrieval\n- Dynamic skill loading\n- Full audit trail\n- Compliance checks\n- Conversation summarization\n- Multi-pattern orchestration\n\nTier: Full\nLLM: GPT-4.1\nMemory: BufferWindow + Redis/Zep + Qdrant\nPatterns: P1-P10 + Zeus\nSkills: All 6 Cognitive Capital",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "2d231b19-71c2-4ea4-ac8e-55d15d908102",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Enterprise",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Enterprise Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Enterprise Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redis Lookup",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Qdrant Search",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cognitive Capital Loader",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Enterprise Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "memory",
+    "enterprise",
+    "full",
+    "qdrant",
+    "rag"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

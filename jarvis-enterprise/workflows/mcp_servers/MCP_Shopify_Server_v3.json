@@ -1,0 +1,269 @@
+{
+  "name": "MCP Shopify Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "shopify-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bcfe04c5-c3a5-4365-b191-d0e700d9832a",
+      "name": "MCP Trigger",
+      "webhookId": "shopify-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List Shopify products with pagination. Filter by status, product type, vendor, collection.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Products_URL', `List Products API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "b973db84-efa5-41a4-abf7-f821b16661c4",
+      "name": "List Products"
+    },
+    {
+      "parameters": {
+        "description": "Create a new Shopify product with title, description, variants, images, and SEO metadata.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Product_URL', `Create Product API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "2c806f3f-1597-431f-bdcf-f5a08249c8da",
+      "name": "Create Product"
+    },
+    {
+      "parameters": {
+        "description": "Update inventory levels for a Shopify product variant. Supports multiple locations.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Inventory_URL', `Update Inventory API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "71c53e62-b1bc-4273-ad36-26ef518ce75d",
+      "name": "Update Inventory"
+    },
+    {
+      "parameters": {
+        "description": "List Shopify orders with status filter (open, closed, cancelled, any). Supports date range.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Orders_URL', `List Orders API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "9f0384eb-8c5c-4c09-86f0-c5ff097fccfb",
+      "name": "List Orders"
+    },
+    {
+      "parameters": {
+        "description": "Create a fulfillment for a Shopify order. Add tracking number, shipping carrier, and notify customer.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fulfill_Order_URL', `Fulfill Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "b0a6effd-b376-49f5-9749-dcd1065c3434",
+      "name": "Fulfill Order"
+    },
+    {
+      "parameters": {
+        "description": "List Shopify customers with search, filtering by total spent, orders count, and tags.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Customers_URL', `List Customers API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "4f14f5cd-e34b-40c7-a257-5db9e8ea76d5",
+      "name": "List Customers"
+    },
+    {
+      "parameters": {
+        "description": "Create a Shopify discount code. Supports percentage, fixed amount, buy X get Y, and free shipping.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Discount_URL', `Create Discount API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "14e03f25-00bf-43e4-beb8-b2b836128b33",
+      "name": "Create Discount"
+    },
+    {
+      "parameters": {
+        "description": "Get Shopify store analytics: total sales, average order value, returning customer rate, top products.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Analytics_URL', `Get Analytics API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "3e4a7956-5d86-4f7f-8a54-4f1c13ddaf13",
+      "name": "Get Analytics"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Shopify Server v3\n\nIBM Governance + DeerFlow Commerce Pattern\n8 Tools: List/Create Products, Update Inventory, List Orders, Fulfill Order, List Customers, Create Discount, Get Analytics\n\nFull Shopify integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "e7237478-2f93-45f2-b73d-7898002bbef1",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Product": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Orders": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fulfill Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Customers": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Discount": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Analytics": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "shopify",
+    "ecommerce",
+    "retail"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

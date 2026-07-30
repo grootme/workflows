@@ -1,0 +1,237 @@
+{
+  "name": "Memory Professional Enhanced v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your JARVIS Professional assistant. I remember our conversations across sessions and can provide deeper analysis. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "8d5b0e4c-95f8-4645-9380-94c5949df733",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# JARVIS Professional Agent\n\nYou are an advanced AI assistant with enhanced memory and multi-domain capabilities.\n\n## Memory Tier: Professional (Enhanced)\n- Redis-backed persistent sessions (survive restarts)\n- Cross-session context with Zep memory server\n- Conversation summarization for long-term recall\n- Structured output parsing for reliable responses\n\n## Capabilities:\n- Multi-domain routing (calendar, email, research, commerce, HR)\n- Orchestrator-Workers pattern for complex task decomposition\n- Evaluator-Optimizer for quality-gated refinement\n- Parallel analysis for multi-perspective insights\n\n## Skills Loaded:\n- deep-research: Systematic research methodology\n- consulting-analysis: Professional analysis framework\n- data-analysis: Data analysis and visualization\n- newsletter-generation: Content creation and curation\n\n## Escalation:\n- If the request requires enterprise-grade governance, compliance, or cognitive capital, recommend Enterprise tier.\n\nCurrent datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "f95a50e9-956a-4f45-9ef3-c7df02ee45c8",
+      "name": "Professional Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "a7b4c78a-1c76-4b5b-9bd1-6a6880ae77e9",
+      "name": "GPT-4.1-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={ $json.sessionId || 'default' }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "84b497a4-e67e-422e-96c0-328cc0f3031c",
+      "name": "Professional Memory"
+    },
+    {
+      "parameters": {
+        "description": "Analyze the request deeply. Consider: 1) What domain does this belong to? 2) Is multi-step processing needed? 3) Should this be parallelized? 4) Does quality need iterative refinement?"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        300
+      ],
+      "id": "0e2437d8-8f90-464d-afcc-c2776801c8a8",
+      "name": "Professional Think"
+    },
+    {
+      "parameters": {
+        "description": "Look up persistent context from Redis for this user/session. Returns previous conversation summaries and preferences.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Redis_Lookup_URL', `Redis Lookup API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        300
+      ],
+      "id": "2856e75f-056c-4e25-ab5a-cc1f648051a0",
+      "name": "Redis Lookup"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "response": {
+              "type": "string",
+              "description": "The assistant's response"
+            },
+            "domain": {
+              "type": "string",
+              "description": "Detected domain: calendar, email, research, commerce, HR, general"
+            },
+            "pattern_used": {
+              "type": "string",
+              "description": "Which Anthropic pattern was applied: P1-P5, P7-P9"
+            },
+            "confidence": {
+              "type": "number",
+              "description": "Confidence level 0-1"
+            },
+            "needs_escalation": {
+              "type": "boolean",
+              "description": "Whether this needs Enterprise tier"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "fcdc9c1a-d677-4531-b859-b8774410147b",
+      "name": "Professional Output"
+    },
+    {
+      "parameters": {
+        "content": "\ud83e\udde0 Professional Memory Architecture\n\nBuffer Window + Redis/Zep Persistence\n- Cross-session memory\n- Conversation summarization\n- Structured output\n- Multi-domain routing\n- No RAG retrieval\n\nTier: Enhanced\nLLM: GPT-4.1-mini\nMemory: BufferWindow + Redis/Zep\nPatterns: P1-P5, P7-P9",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        -300
+      ],
+      "id": "85603039-3996-4180-8d69-3d58381ea814",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Professional Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Professional Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1-mini",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Professional Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Professional Think",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redis Lookup",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Professional Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "memory",
+    "professional",
+    "enhanced",
+    "redis"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

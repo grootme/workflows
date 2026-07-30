@@ -1,0 +1,269 @@
+{
+  "name": "MCP WooCommerce Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "woocommerce-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "48073ae0-9856-4065-b0b9-25a96f4a41cc",
+      "name": "MCP Trigger",
+      "webhookId": "woocommerce-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List WooCommerce products with pagination. Filter by category, status, price range, stock level.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Products_URL', `List Products API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "a1ab8310-fae6-438f-9014-f3454255be4e",
+      "name": "List Products"
+    },
+    {
+      "parameters": {
+        "description": "Create a new WooCommerce product with name, description, price, images, categories, and attributes.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Product_URL', `Create Product API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "2924d625-ee30-40d7-8132-ed3ee408bddf",
+      "name": "Create Product"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing WooCommerce product: change price, stock, description, images, or categories.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Product_URL', `Update Product API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "f56a4aa5-09ac-45ad-857e-0b883b2aca28",
+      "name": "Update Product"
+    },
+    {
+      "parameters": {
+        "description": "List WooCommerce orders with status filter (pending, processing, completed, refunded).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Orders_URL', `List Orders API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "2ed6b437-25ce-444c-ad68-d4609eceaefa",
+      "name": "List Orders"
+    },
+    {
+      "parameters": {
+        "description": "Update a WooCommerce order: change status, add notes, update shipping, process refunds.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Order_URL', `Update Order API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "f05016a3-cc57-4446-be79-a33a1c197feb",
+      "name": "Update Order"
+    },
+    {
+      "parameters": {
+        "description": "List WooCommerce customers with search, pagination, and filtering by spending or orders.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Customers_URL', `List Customers API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "934cf174-c615-4629-bd99-605eab026079",
+      "name": "List Customers"
+    },
+    {
+      "parameters": {
+        "description": "Create, update, or delete WooCommerce coupon codes. Supports percentage, fixed, and free shipping.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Coupons_URL', `Manage Coupons API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "815779a0-4b0f-496e-8056-c99daed8f497",
+      "name": "Manage Coupons"
+    },
+    {
+      "parameters": {
+        "description": "Get WooCommerce store analytics: revenue, orders, products sold, average order value, top products.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Analytics_URL', `Get Analytics API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "af378e57-c5d0-47f6-a65f-f3805756ede5",
+      "name": "Get Analytics"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP WooCommerce Server v3\n\nIBM Governance + DeerFlow Commerce Pattern\n8 Tools: List/Create/Update Products, List/Update Orders, List Customers, Manage Coupons, Get Analytics\n\nFull WordPress e-commerce integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "1c8e3f59-27b9-4c07-9fa1-13ce80b8102b",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Product": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Product": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Orders": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Order": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Customers": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Coupons": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Analytics": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "woocommerce",
+    "ecommerce",
+    "wordpress"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

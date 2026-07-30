@@ -1,0 +1,269 @@
+{
+  "name": "MCP Booking.com Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "booking-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "45e5f1f3-7941-451e-891f-3361ef8dbae0",
+      "name": "MCP Trigger",
+      "webhookId": "booking-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Search Booking.com properties by city, dates, guests, and filters (stars, price, amenities).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Properties_URL', `Search Properties API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "e7672e23-0ef7-45a0-9686-d5c15252dc20",
+      "name": "Search Properties"
+    },
+    {
+      "parameters": {
+        "description": "Get detailed information about a property: description, photos, amenities, policies, room types.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Property_Details_URL', `Get Property Details API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "4f9d8745-a683-4128-a7f2-0f3c759347b8",
+      "name": "Get Property Details"
+    },
+    {
+      "parameters": {
+        "description": "Check real-time availability and pricing for a property on specific dates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Check_Availability_URL', `Check Availability API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "30546688-48a7-45cb-9440-6cfc1916f635",
+      "name": "Check Availability"
+    },
+    {
+      "parameters": {
+        "description": "Create a new booking reservation with guest details, room type, dates, and special requests.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Reservation_URL', `Create Reservation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "8b1c7254-4ef5-4f53-b4c1-4ab3e32952dc",
+      "name": "Create Reservation"
+    },
+    {
+      "parameters": {
+        "description": "List all reservations with status (confirmed, pending, cancelled). Filter by date, guest, property.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Reservations_URL', `List Reservations API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "cc6605c1-17b2-463f-ab2d-76db38cc4325",
+      "name": "List Reservations"
+    },
+    {
+      "parameters": {
+        "description": "Cancel an existing reservation. Returns cancellation policy and refund details.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cancel_Reservation_URL', `Cancel Reservation API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "296e5175-c12a-45e5-b01b-758e92e7bb4f",
+      "name": "Cancel Reservation"
+    },
+    {
+      "parameters": {
+        "description": "Get guest reviews for a property. Filter by rating, language, date, and travel type.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Reviews_URL', `Get Reviews API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "d88383e1-a294-4428-922e-f42c9f20ab1a",
+      "name": "Get Reviews"
+    },
+    {
+      "parameters": {
+        "description": "Update room rates and availability for a property. Supports seasonal pricing and restrictions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Rates_URL', `Update Rates API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "75ff6c7a-1cd1-4a52-8975-7c92bd9d5e2e",
+      "name": "Update Rates"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Booking.com Server v3\n\nIBM Perception + DeerFlow Specialist Pattern\n8 Tools: Search/Get Properties, Check Availability, Create/List/Cancel Reservations, Get Reviews, Update Rates\n\nFull hospitality integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "406c4611-1a08-4567-962c-f9dffd87d52b",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Search Properties": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Property Details": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Reservation": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Reservations": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Reservation": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Reviews": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Rates": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "booking",
+    "hospitality",
+    "travel"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

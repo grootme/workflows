@@ -1,0 +1,269 @@
+{
+  "name": "MCP CRM Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "crm-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8e632934-b12d-41af-a4c8-b8f508ec7f48",
+      "name": "MCP Trigger",
+      "webhookId": "crm-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List all CRM contacts with pagination. Filter by status, owner, date, or custom field.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Contacts_URL', `List Contacts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "4a32318a-ef48-4be0-85a2-478b8d4c269a",
+      "name": "List Contacts"
+    },
+    {
+      "parameters": {
+        "description": "Create a new lead in the CRM with name, email, phone, source, and estimated value.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Lead_URL', `Create Lead API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "77a54ddc-e115-4554-b97b-9e1c887f220b",
+      "name": "Create Lead"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing lead: change status, add notes, reassign owner, update custom fields.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Lead_URL', `Update Lead API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "201f1edc-5c33-443f-95ee-9d90a2f5e00b",
+      "name": "Update Lead"
+    },
+    {
+      "parameters": {
+        "description": "Get the full CRM pipeline with all stages, deal counts, and total values per stage.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Pipeline_URL', `Get Pipeline API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "6f805c6d-7254-4776-8a37-74afa005a2a0",
+      "name": "Get Pipeline"
+    },
+    {
+      "parameters": {
+        "description": "Create a new deal/opportunity in the CRM pipeline with amount, stage, probability, and close date.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Deal_URL', `Create Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "a1fbfc21-b770-47c9-905b-1861ef455522",
+      "name": "Create Deal"
+    },
+    {
+      "parameters": {
+        "description": "Move a deal to a different pipeline stage. Tracks stage history and timestamps.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Move_Deal_Stage_URL', `Move Deal Stage API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "19427c06-a8ae-4d95-952f-44054d90eddb",
+      "name": "Move Deal Stage"
+    },
+    {
+      "parameters": {
+        "description": "Log a CRM activity (call, email, meeting, note) against a contact, lead, or deal.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Log_Activity_URL', `Log Activity API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "13979dd3-2941-44e3-acb6-bee9904bfd86",
+      "name": "Log Activity"
+    },
+    {
+      "parameters": {
+        "description": "Get CRM dashboard metrics: total pipeline value, win rate, average deal size, activity count.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Dashboard_URL', `Get Dashboard API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "4a5b08c0-c16a-4272-9d31-21e6fe689e0f",
+      "name": "Get Dashboard"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP CRM Server v3\n\nIBM Governance + Universal CRM Pattern\n8 Tools: List Contacts, Create/Update Lead, Get Pipeline, Create/Move Deal, Log Activity, Get Dashboard\n\nWorks with any CRM (HubSpot, Salesforce, Pipedrive, etc.)",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "fdc6944b-d48a-4abd-b47e-b6157cffb012",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pipeline": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Deal": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Deal Stage": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Activity": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dashboard": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "crm",
+    "sales",
+    "pipeline"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

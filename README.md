@@ -1,55 +1,94 @@
 # JARVIS AI Automation — n8n Workflows
 
-> 32 zero-debt n8n workflows → 3 product packages + Anthropic Agent Patterns
+> 51+ zero-debt n8n workflows → 3 product packages + 11 Anthropic Patterns + 19 MCP Servers + Cognitive Capital
 
 [![Zero Debt](https://img.shields.io/badge/Zero-Debt-brightgreen)]()
 [![n8n](https://img.shields.io/badge/n8n-Compatible-orange)](https://n8n.io)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://docker.com)
+[![Anthropic Patterns](https://img.shields.io/badge/Anthropic-P11_Patterns-purple)]()
+[![MCP](https://img.shields.io/badge/MCP-19_Servers-blue)]()
 
 ## 🚀 JARVIS Packages
 
-| Package | Price | Workflows | Docker Services | Best For |
-|---------|-------|-----------|-----------------|----------|
-| [**Starter**](./jarvis-starter/) | **$49** | 12 | 2 (n8n + PostgreSQL) | Individuals & freelancers |
-| [**Professional**](./jarvis-professional/) | **$149** | 25 | 4 (n8n + PG + Qdrant + Redis) | SMBs & agencies |
-| [**Enterprise**](./jarvis-enterprise/) | **$399** | 25 | 8 (Full stack + monitoring) | Enterprises & SaaS |
+| Package | Price | Workflows | MCP Servers | Anthropic Patterns | Best For |
+|---------|-------|-----------|-------------|-------------------|----------|
+| [**Starter**](./jarvis-starter/) | **$49** | 17 | 5 | 3 | Individuals & freelancers |
+| [**Professional**](./jarvis-professional/) | **$149** | 43 | 13 | 10 | SMBs & agencies |
+| [**Enterprise**](./jarvis-enterprise/) | **$399** | 50+ | 19 | 11 | Enterprises & SaaS |
 
 👉 **[Interactive Pricing Page](./pricing.html)** — Open in browser for the full experience
+📖 **[Architecture Documentation](./ARCHITECTURE.md)** — Flow diagrams, pattern guide, quick reference
 
 ## 📊 Overview
 
-| Category | Count | Zero-Debt | AI Connections |
-|----------|-------|-----------|----------------|
-| Consolidated Workflows | 13 | ✅ | 47 |
-| MCP Server Workflows | 6 | ✅ | 24 |
-| Base Templates | 6 | ✅ | 16 |
-| Anthropic Pattern Workflows | 7 | ✅ | 50 |
-| **Total** | **32** | **✅** | **118** |
+| Category | Count | Zero-Debt | Tools | AI Connections |
+|----------|-------|-----------|-------|----------------|
+| Consolidated Suites | 13 | ✅ | — | 47 |
+| MCP Server Workflows | 19 | ✅ | 134 | 76 |
+| Base Templates | 6 | ✅ | — | 16 |
+| Anthropic Pattern Workflows | 11 | ✅ | — | 50+ |
+| Memory Architecture Workflows | 3 | ✅ | — | 12 |
+| **Total** | **51+** | **✅** | **134** | **250+** |
 
 ## 🏗️ Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    JARVIS AI Automation Ecosystem                │
+│                    JARVIS AI Automation Ecosystem v4.0           │
 │                                                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
 │  │    Starter    │  │ Professional │  │     Enterprise        │  │
 │  │  $49         │  │  $149        │  │     $399              │  │
 │  │              │  │              │  │                        │  │
-│  │ • Calendar   │  │ • All G1-G13 │  │ • All G1-G13         │  │
-│  │ • Gmail      │  │ • 6 MCP      │  │ • 6 MCP Servers      │  │
-│  │ • Contacts   │  │ • 6 Templates│  │ • 6 Templates        │  │
-│  │ • Images     │  │ • RAG+Vector │  │ • Prometheus+Grafana  │  │
-│  │ • Video      │  │ • WhatsApp   │  │ • Nginx+SSL          │  │
-│  │ • Flowise    │  │ • E-Commerce │  │ • Zep Memory         │  │
-│  │              │  │ • Marketing  │  │ • Multi-tenant       │  │
-│  │ 2 services   │  │ 4 services   │  │ • CI/CD              │  │
-│  │ n8n+PG       │  │ n8n+PG+Q+R  │  │ 8 services           │  │
+│  │ • 5 MCP      │  │ • 13 MCP     │  │ • 19 MCP Servers      │  │
+│  │ • 3 Patterns │  │ • 10 Patterns│  │ • 11 Patterns         │  │
+│  │ • 2 Skills   │  │ • 6 Skills   │  │ • 10 Skills           │  │
+│  │ • Buffer Mem │  │ • Redis/Zep  │  │ • Full Stack Memory   │  │
+│  │              │  │ • Google+CRM │  │ • Booking+Expedia     │  │
+│  │ 2 services   │  │ • Woo+WP     │  │ • Shopify+ERPNext     │  │
+│  │ n8n+PG       │  │ 4 services   │  │ 8 services + monitor  │  │
 │  └──────────────┘  └──────────────┘  └──────────────────────┘  │
 │                                                                  │
-│  25 Workflows • 68 AI Connections • 0 Technical Debt            │
+│  51+ Workflows • 19 MCP Servers • 134 Tools • 250+ Connections  │
 └──────────────────────────────────────────────────────────────────┘
 ```
+
+### Anthropic Pattern Layer (P1-P10 + Zeus)
+
+| Pattern | Description | Combines |
+|---------|-------------|----------|
+| P1 Prompt Chaining | Sequential multi-step pipelines | — |
+| P2 Smart Routing | Multi-domain intent classification | — |
+| P3 Orchestrator-Workers | Complex task decomposition | — |
+| P4 Evaluator-Optimizer | Quality-gated iterative refinement | — |
+| P5 Parallelization | Multi-perspective concurrent analysis | — |
+| P6 Cognitive Capital MCP | Dynamic skill loading | — |
+| P7 SOUL Bootstrap | AI personality creation | — |
+| P8 Router-Orchestrator | Routing + delegation | P2+P3 |
+| P9 Evaluator-Parallel | Analysis + quality gates | P4+P5 |
+| P10 Cognitive-SOUL | Personality + skills | P6+P7 |
+| **Zeus** | **Meta-orchestrator (selects P1-P10)** | **All** |
+
+### MCP Server Ecosystem (19 Servers, 134 Tools)
+
+| Category | Servers |
+|----------|---------|
+| **Productivity** | Google Workspace (8), Slack (7), Notion (7) |
+| **E-Commerce** | WooCommerce (8), Shopify (8), ECommerce (6) |
+| **Travel** | Booking.com (8), Expedia (8) |
+| **CRM & Sales** | HubSpot (7), CRM Universal (8), Trello (6) |
+| **DevOps** | GitHub (7) |
+| **CMS** | WordPress (8) |
+| **ERP** | ERPNext (8) |
+| **Core** | Calendar (6), Gmail (6), Contacts (6), HR (6), Knowledge Base (6) |
+
+### Memory Architecture (3 Tiers)
+
+| Tier | Memory Stack | Features |
+|------|-------------|----------|
+| **Starter** | Buffer Window (k=10) | In-session only, no persistence |
+| **Professional** | Buffer + Redis/Zep | Cross-session, summarization, structured output |
+| **Enterprise** | Buffer + Redis + Qdrant + Cognitive Capital | Semantic retrieval, skills, audit trail, governance |
 
 ### Tiered LLM Strategy
 
@@ -66,71 +105,76 @@
 ```
 workflows/
 ├── jarvis-starter/              # 💚 $49 — Personal AI Assistant
-│   ├── workflows/               # 12 zero-debt workflows
+│   ├── workflows/               # 17 zero-debt workflows
 │   │   ├── consolidated/        # 6 suites (Calendar, Gmail, Contacts, Images, Video, Flowise)
-│   │   ├── mcp_servers/         # 4 MCP servers (Calendar, Gmail, Contacts, KB)
-│   │   └── templates/           # 2 templates (Single Agent, MCP Server)
+│   │   ├── mcp_servers/         # 5 MCP servers (+ Slack)
+│   │   ├── anthropic_patterns/  # 3 patterns (P1, P7, P10)
+│   │   ├── memory/              # 1 (Buffer Window)
+│   │   └── templates/           # 2 templates
+│   ├── cognitive_capital/       # 2 skills + SOUL template
 │   ├── docker-compose.yml       # n8n + PostgreSQL
-│   ├── .env.example             # Environment configuration
-│   ├── setup_guide.md           # Step-by-step setup
-│   └── README.md
+│   └── setup_guide.md
 │
 ├── jarvis-professional/         # 💜 $149 — Business Automation Platform
-│   ├── workflows/               # 32 zero-debt workflows
-│   │   ├── consolidated/        # 13 suites (G1-G13, all)
-│   │   ├── mcp_servers/         # 6 MCP servers
+│   ├── workflows/               # 43 zero-debt workflows
+│   │   ├── consolidated/        # 13 suites (G1-G13)
+│   │   ├── mcp_servers/         # 13 MCP servers (+ Google, CRM, WooCommerce, WordPress)
+│   │   ├── anthropic_patterns/  # 10 patterns (P1-P5, P7-P10, Zeus)
+│   │   ├── memory/              # 1 (Enhanced with Redis/Zep)
 │   │   └── templates/           # 6 templates
-│   ├── docker-compose.yml       # n8n + PostgreSQL + Qdrant + Redis
-│   ├── .env.example             # Environment configuration
-│   ├── setup_guide.md           # Step-by-step setup
-│   └── README.md
+│   ├── cognitive_capital/       # 6 skills + SOUL template
+│   ├── docker-compose.yml       # n8n + PG + Qdrant + Redis
+│   └── setup_guide.md
 │
 ├── jarvis-enterprise/           # 💗 $399 — Full AI Operations Suite
-│   ├── workflows/               # 32 zero-debt workflows
+│   ├── workflows/               # 50+ zero-debt workflows
+│   │   ├── consolidated/        # 13 suites (G1-G13)
+│   │   ├── mcp_servers/         # 19 MCP servers (ALL servers)
+│   │   ├── anthropic_patterns/  # 11 patterns (P1-P10 + Zeus)
+│   │   ├── memory/              # 1 (Full Stack)
+│   │   └── templates/           # 6 templates
+│   ├── cognitive_capital/       # 10 skills + SOUL template
 │   ├── docker-compose.yml       # 8 services (full stack)
 │   ├── nginx/                   # Reverse proxy + SSL
 │   ├── monitoring/              # Prometheus + Grafana
-│   ├── init-db/                 # Database initialization
-│   ├── .env.example             # Environment configuration
-│   ├── setup_guide.md           # Step-by-step setup
-│   └── README.md
+│   └── init-db/                 # Database initialization
 │
-├── anthropic_patterns/          # 7 Anthropic-pattern workflows (Phase 3)
-│   ├── P1_Prompt_Chaining_Agent_v3.json
-│   ├── P2_Smart_Routing_Agent_v3.json
-│   ├── P3_Orchestrator_Workers_Agent_v3.json
-│   ├── P4_Evaluator_Optimizer_Agent_v3.json
-│   ├── P5_Parallelization_Agent_v3.json
-│   ├── P6_Cognitive_Capital_MCP_Server_v3.json
-│   └── P7_SOUL_Bootstrap_Agent_v3.json
-├── cognitive_capital/           # Agent Skills as cognitive capital
-│   ├── deep-research/SKILL.md
-│   ├── consulting-analysis/SKILL.md
-│   ├── data-analysis/SKILL.md
-│   ├── newsletter-generation/SKILL.md
-│   ├── code-documentation/SKILL.md
-│   ├── podcast-generation/SKILL.md
-│   └── SOUL.template.md
-├── consolidated/                # Individual workflow files (G1-G13)
-├── mcp_servers/                 # Individual MCP server files
-├── base_templates/              # Individual template files
+├── anthropic_patterns/          # 11 Anthropic-pattern workflows
+│   ├── P1-P10_v3.json           # Core + combined patterns
+│   └── Zeus_Meta_Orchestrator_v3.json
+├── mcp_servers/                 # 19 MCP server JSONs
+│   ├── MCP_Google_Workspace_Server_v3.json
+│   ├── MCP_CRM_Server_v3.json
+│   ├── MCP_Booking_Server_v3.json
+│   ├── MCP_Expedia_Server_v3.json
+│   ├── MCP_WooCommerce_Server_v3.json
+│   ├── MCP_Shopify_Server_v3.json
+│   ├── MCP_WordPress_Server_v3.json
+│   ├── MCP_ERPNext_Server_v3.json
+│   └── ... (11 more)
+├── memory/                      # 3 tiered memory workflows
+├── cognitive_capital/           # 10 SKILL.md files + SOUL template
+├── consolidated/                # 13 consolidated suite JSONs
+├── base_templates/              # 6 template JSONs
 ├── marketplace_listings/        # n8nmarkets.com listings
+├── ARCHITECTURE.md              # Full architecture documentation
 ├── pricing.html                 # Interactive pricing page
 └── README.md
 ```
 
 ## 🔧 Zero-Debt Standards
 
-All 25 workflows comply with:
+All 51+ workflows comply with:
 - ✅ Valid n8n JSON format with `executionOrder: "v1"`
 - ✅ Correct `ai_*` LangChain sub-type connections (ai_languageModel, ai_memory, ai_tool, ai_outputParser, ai_embedding)
 - ✅ No orphan nodes — every node is wired
-- ✅ Real node types only (googleCalendarTool, gmailTool, etc.)
+- ✅ Real node types only (agent, lmChatOpenAi, memoryBufferWindow, etc.)
 - ✅ `$fromAI()` expressions on all MCP/AI tool parameters
 - ✅ Empty credential IDs (templates, no PLACEHOLDER strings)
 - ✅ Dynamic expressions instead of hardcoded values
 - ✅ No `errorWorkflow` references (for distribution)
 - ✅ Clean tags array
+- ✅ Tiered LLM strategy per pattern complexity
 
 ## 🚀 Quick Start
 
@@ -154,9 +198,9 @@ open http://localhost:5678
 
 | Package | One-Time | Monthly Running Cost | Included |
 |---------|----------|---------------------|----------|
-| Starter | $49 | $5-15 | 12 workflows, 2 Docker services |
-| Professional | $149 | $25-75 | 25 workflows, 4 Docker services |
-| Enterprise | $399 | $75-250 | 25 workflows, 8 Docker services + monitoring |
+| Starter | $49 | $5-15 | 17 workflows, 5 MCP servers, Buffer memory |
+| Professional | $149 | $25-75 | 43 workflows, 13 MCP servers, Redis/Zep memory |
+| Enterprise | $399 | $75-250 | 50+ workflows, 19 MCP servers, Full stack memory |
 
 ## 🔧 Requirements
 
@@ -165,7 +209,8 @@ open http://localhost:5678
 - **API Credentials**: OpenAI, Google Workspace, Gemini (as needed per package)
 - **PostgreSQL**: Included in docker-compose
 - **Qdrant**: For RAG vector store (Professional+)
-- **Redis**: For queue management (Professional+)
+- **Redis**: For session management (Professional+)
+- **Zep**: For long-term memory (Enterprise)
 
 ## 📜 License
 
@@ -173,4 +218,4 @@ MIT License — Use, modify, and distribute freely.
 
 ---
 
-*Built with JARVIS Package Builder v3.0 — 25 workflows • 68 AI connections • 0 technical debt*
+*Built with JARVIS Package Builder v4.0 — 51+ workflows • 19 MCP servers • 134 tools • 0 technical debt*

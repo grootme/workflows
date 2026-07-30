@@ -1,0 +1,269 @@
+{
+  "name": "MCP ERPNext Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "erpnext-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ac7515ad-e679-4566-8fd9-4d2c1282a03b",
+      "name": "MCP Trigger",
+      "webhookId": "erpnext-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Get General Ledger entries from ERPNext. Filter by account, date range, cost center, or voucher.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_GL_Entries_URL', `Get GL Entries API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "ffefe8b3-b48b-449f-80ed-eedb91845a33",
+      "name": "Get GL Entries"
+    },
+    {
+      "parameters": {
+        "description": "Create a Sales Invoice in ERPNext with customer, items, taxes, payment terms, and discounts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Invoice_URL', `Create Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "9d08acbc-6bb6-480a-9119-74cb1e1d1ce8",
+      "name": "Create Invoice"
+    },
+    {
+      "parameters": {
+        "description": "List ERPNext Purchase Orders with status filter (draft, submitted, cancelled).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Purchase_Orders_URL', `List Purchase Orders API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "5334be9c-7a8d-4e1b-a745-1e0c067182af",
+      "name": "List Purchase Orders"
+    },
+    {
+      "parameters": {
+        "description": "Get current stock balance for items in ERPNext warehouses. Filter by item, warehouse, or company.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Stock_Balance_URL', `Get Stock Balance API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "6ab4c6dd-7cb8-487a-89bb-3a299c93e1fb",
+      "name": "Get Stock Balance"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stock Entry in ERPNext for material transfer, receipt, or issue between warehouses.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Stock_Entry_URL', `Create Stock Entry API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "353c3927-0aa9-4794-8829-111c46cf2b54",
+      "name": "Create Stock Entry"
+    },
+    {
+      "parameters": {
+        "description": "List ERPNext employees with department, designation, status, and attendance summary.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Employees_URL', `List Employees API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "360c31c2-1d77-4d5c-959b-f7b568c4785b",
+      "name": "List Employees"
+    },
+    {
+      "parameters": {
+        "description": "Create a new ERPNext project with tasks, milestones, assignees, and timeline.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Project_URL', `Create Project API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "6bebcc55-c517-4b7d-8679-0450656fcc80",
+      "name": "Create Project"
+    },
+    {
+      "parameters": {
+        "description": "Get ERPNext financial reports: Profit & Loss, Balance Sheet, Cash Flow for a period.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Financial_Report_URL', `Get Financial Report API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "b4a48774-9e3f-492d-8214-8157a754bb93",
+      "name": "Get Financial Report"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP ERPNext Server v3\n\nIBM Governance + DeerFlow Operations Pattern\n8 Tools: GL Entries, Create Invoice, Purchase Orders, Stock Balance/Entry, Employees, Projects, Financial Reports\n\nFull ERP integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "2ba46a24-3ca6-4b49-857b-dcd0dd4d85a2",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Get GL Entries": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Invoice": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Purchase Orders": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stock Balance": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Stock Entry": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Employees": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Project": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Financial Report": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "erpnext",
+    "erp",
+    "finance"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

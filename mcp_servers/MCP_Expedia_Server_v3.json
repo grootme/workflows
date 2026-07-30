@@ -1,0 +1,269 @@
+{
+  "name": "MCP Expedia Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "expedia-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4d62bd3f-9f74-4481-b4e0-877a2357f3c0",
+      "name": "MCP Trigger",
+      "webhookId": "expedia-mcp"
+    },
+    {
+      "parameters": {
+        "description": "Search Expedia hotels by destination, dates, guests, and filters (stars, price, brand).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Hotels_URL', `Search Hotels API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "9fc3d199-91f4-41b9-8d02-dd1fd1d8e3b1",
+      "name": "Search Hotels"
+    },
+    {
+      "parameters": {
+        "description": "Search Expedia flights by origin, destination, dates, passengers, and cabin class.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Flights_URL', `Search Flights API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "43b75ddd-587d-479f-9669-6779681c4405",
+      "name": "Search Flights"
+    },
+    {
+      "parameters": {
+        "description": "Search Expedia car rentals by pickup location, dates, car type, and rental company.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Car_Rentals_URL', `Search Car Rentals API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "60cbcbe8-c8d5-4fbc-b0de-3de6d5e7d02f",
+      "name": "Search Car Rentals"
+    },
+    {
+      "parameters": {
+        "description": "Get bundled package deals (flight+hotel, flight+hotel+car) for a destination and dates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Package_Deals_URL', `Get Package Deals API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "6e305822-d053-4d45-ba50-310dd105c2c6",
+      "name": "Get Package Deals"
+    },
+    {
+      "parameters": {
+        "description": "Book a hotel on Expedia with guest details, room preference, payment, and special requests.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Book_Hotel_URL', `Book Hotel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "b095b5e2-a3b9-4019-aea3-30a536aaef95",
+      "name": "Book Hotel"
+    },
+    {
+      "parameters": {
+        "description": "Book a flight on Expedia with passenger details, seat preference, and payment information.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Book_Flight_URL', `Book Flight API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "56408e86-0cb0-4a2a-8378-1f0a8b29dcfd",
+      "name": "Book Flight"
+    },
+    {
+      "parameters": {
+        "description": "Get full itinerary details for a booking including confirmation codes, dates, and contact info.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Itinerary_URL', `Get Itinerary API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "ec305df9-c90e-4bb4-a5b4-be3e2747477c",
+      "name": "Get Itinerary"
+    },
+    {
+      "parameters": {
+        "description": "Cancel an Expedia booking. Returns cancellation policy, refund amount, and timeline.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cancel_Booking_URL', `Cancel Booking API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "1ba8ab58-3467-4939-a49a-f6acd790d9e5",
+      "name": "Cancel Booking"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP Expedia Server v3\n\nIBM Perception + DeerFlow Specialist Pattern\n8 Tools: Search Hotels/Flights/Cars, Get Packages, Book Hotel/Flight, Get Itinerary, Cancel Booking\n\nFull travel integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "257bd34a-d321-4acc-80b9-d6ff89777d76",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Search Hotels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Flights": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Car Rentals": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Package Deals": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Hotel": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Flight": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Itinerary": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Booking": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "expedia",
+    "travel",
+    "flights"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

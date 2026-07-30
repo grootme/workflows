@@ -1,0 +1,269 @@
+{
+  "name": "MCP WordPress Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "wordpress-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ade70680-26d4-48ea-8110-6e7259e842d5",
+      "name": "MCP Trigger",
+      "webhookId": "wordpress-mcp"
+    },
+    {
+      "parameters": {
+        "description": "List WordPress posts with pagination. Filter by status, category, tag, author, or date.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Posts_URL', `List Posts API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "8c9f2e19-1acd-4d3b-93eb-d9d796f85b2c",
+      "name": "List Posts"
+    },
+    {
+      "parameters": {
+        "description": "Create a new WordPress post with title, content (HTML or markdown), categories, tags, and featured image.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Create_Post_URL', `Create Post API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "77b27691-648f-42c2-8bcf-098a77bc9eab",
+      "name": "Create Post"
+    },
+    {
+      "parameters": {
+        "description": "Update an existing WordPress post: edit content, change status, update categories, or modify SEO.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Update_Post_URL', `Update Post API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "c7259220-517c-4c64-948a-f3d521517819",
+      "name": "Update Post"
+    },
+    {
+      "parameters": {
+        "description": "List WordPress pages. Filter by status, author, or parent page. Supports hierarchical structure.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Pages_URL', `List Pages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "9950dffd-971c-42a4-a4cc-98b35b3d3975",
+      "name": "List Pages"
+    },
+    {
+      "parameters": {
+        "description": "Upload media to WordPress media library. Supports images, videos, and documents with alt text.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Upload_Media_URL', `Upload Media API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "66464550-8fbd-455c-b39e-50cb0421e3d5",
+      "name": "Upload Media"
+    },
+    {
+      "parameters": {
+        "description": "List, approve, or delete WordPress comments. Filter by status (pending, approved, spam).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Moderate_Comments_URL', `Moderate Comments API endpoint URL`, 'string') }",
+        "method": "PATCH",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "ae0c52e6-8830-4e50-b30d-238c61ac7738",
+      "name": "Moderate Comments"
+    },
+    {
+      "parameters": {
+        "description": "List WordPress users or update user roles. Supports subscriber, editor, author, administrator.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Users_URL', `Manage Users API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "08285ebe-3de5-4c38-afe9-9ca6d85100a2",
+      "name": "Manage Users"
+    },
+    {
+      "parameters": {
+        "description": "Get WordPress site statistics: total posts, pages, comments, users, and disk usage.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Site_Stats_URL', `Get Site Stats API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "d20d0f6e-d937-43bc-9cf4-a6f7f92d6548",
+      "name": "Get Site Stats"
+    },
+    {
+      "parameters": {
+        "content": "\ud83d\udd17 MCP WordPress Server v3\n\nIBM Communication + DeerFlow Content Pattern\n8 Tools: List/Create/Update Posts, List Pages, Upload Media, Moderate Comments, Manage Users, Get Stats\n\nFull CMS integration",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -300
+      ],
+      "id": "530c9455-0825-4b6a-80dc-fd6b7412714e",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "List Posts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Pages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Media": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moderate Comments": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Users": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Site Stats": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    "mcp",
+    "wordpress",
+    "cms",
+    "blog"
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
