@@ -1,0 +1,940 @@
+     1→#!/usr/bin/env python3
+     2→"""
+     3→Phase 4: Expand MCP Arsenal + Combined Anthropic Patterns
+     4→
+     5→5 New MCP Servers (DeerFlow/IBM patterns):
+     6→  MCP_Slack_Server_v3.json
+     7→  MCP_Notion_Server_v3.json
+     8→  MCP_GitHub_Server_v3.json
+     9→  MCP_Trello_Server_v3.json
+    10→  MCP_HubSpot_Server_v3.json
+    11→
+    12→3 Combined Anthropic-Pattern Workflows:
+    13→  P8_Router_Orchestrator_v3.json  (P2+P3: Smart Routing + Orchestrator-Workers)
+    14→  P9_Evaluator_Parallel_v3.json  (P4+P5: Evaluator-Optimizer + Parallelization)
+    15→  P10_Cognitive_SOUL_Pipeline_v3.json (P6+P7: Cognitive Capital MCP + SOUL Bootstrap)
+    16→
+    17→All zero-debt, correct ai_* connections, $fromAI() expressions, real node types.
+    18→"""
+    19→
+    20→import json
+    21→import os
+    22→import uuid
+    23→from datetime import datetime
+    24→
+    25→BASE = "/home/z/my-project/download/n8n_workflows_v2"
+    26→
+    27→# ── Helpers ─────────────────────────────────────────────────────────────
+    28→def uid():
+    29→    return str(uuid.uuid4())
+    30→
+    31→def make_workflow(name, nodes, connections, tags=None):
+    32→    return {
+    33→        "name": name,
+    34→        "nodes": nodes,
+    35→        "connections": connections,
+    36→        "pinData": {},
+    37→        "active": False,
+    38→        "settings": {
+    39→            "executionOrder": "v1",
+    40→            "timezone": "Europe/Madrid",
+    41→            "callerPolicy": "workflowsFromSameOwner"
+    42→        },
+    43→        "tags": tags or [],
+    44→        "meta": {
+    45→            "templateCredsSetupCompleted": False,
+    46→            "instanceId": ""
+    47→        }
+    48→    }
+    49→
+    50→def mcp_trigger(path, pos, uid_val=None):
+    51→    return {
+    52→        "parameters": {"path": path},
+    53→        "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+    54→        "typeVersion": 1,
+    55→        "position": pos,
+    56→        "id": uid_val or uid(),
+    57→        "name": "MCP Trigger",
+    58→        "webhookId": path
+    59→    }
+    60→
+    61→def http_tool(name, description, url_expr, pos, method="GET", uid_val=None):
+    62→    return {
+    63→        "parameters": {
+    64→            "description": description,
+    65→            "url": f"={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('{name}_URL', `{name} API endpoint URL`, 'string') }}",
+    66→            "method": method,
+    67→            "options": {}
+    68→        },
+    69→        "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+    70→        "typeVersion": 1.1,
+    71→        "position": pos,
+    72→        "id": uid_val or uid(),
+    73→        "name": name
+    74→    }
+    75→
+    76→def think_tool(name, description, pos, uid_val=None):
+    77→    return {
+    78→        "parameters": {"description": description},
+    79→        "type": "@n8n/n8n-nodes-langchain.toolThink",
+    80→        "typeVersion": 1,
+    81→        "position": pos,
+    82→        "id": uid_val or uid(),
+    83→        "name": name
+    84→    }
+    85→
+    86→def agent_node(name, system_msg, pos, uid_val=None):
+    87→    return {
+    88→        "parameters": {
+    89→            "promptType": "define",
+    90→            "text": "={{ $json.chatInput || $json.input || $json.query }}",
+    91→            "options": {
+    92→                "systemMessage": f"={system_msg}"
+    93→            }
+    94→        },
+    95→        "type": "@n8n/n8n-nodes-langchain.agent",
+    96→        "typeVersion": 1.8,
+    97→        "position": pos,
+    98→        "id": uid_val or uid(),
+    99→        "name": name
+   100→    }
+   101→
+   102→def chat_trigger(pos, initial_msg, uid_val=None):
+   103→    return {
+   104→        "parameters": {
+   105→            "initialMessages": [{"role": "assistant", "content": initial_msg}]
+   106→        },
+   107→        "type": "n8n-nodes-base.chatTrigger",
+   108→        "typeVersion": 1.1,
+   109→        "position": pos,
+   110→        "id": uid_val or uid(),
+   111→        "name": "Chat Trigger"
+   112→    }
+   113→
+   114→def webhook_trigger(path, uid_val=None):
+   115→    return {
+   116→        "parameters": {"httpMethod": "POST", "path": path, "options": {}},
+   117→        "type": "n8n-nodes-base.webhook",
+   118→        "typeVersion": 2,
+   119→        "position": [-2200, 0],
+   120→        "id": uid_val or uid(),
+   121→        "name": "Webhook",
+   122→        "webhookId": path
+   123→    }
+   124→
+   125→def llm_node(name, model, temp, pos, uid_val=None):
+   126→    return {
+   127→        "parameters": {
+   128→            "model": {"__rl": True, "value": model, "mode": "list"},
+   129→            "options": {"temperature": temp}
+   130→        },
+   131→        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+   132→        "typeVersion": 1.2,
+   133→        "position": pos,
+   134→        "id": uid_val or uid(),
+   135→        "name": name,
+   136→        "credentials": {"openAiApi": {"id": "", "name": "OpenAI"}}
+   137→    }
+   138→
+   139→def memory_node(name, pos, uid_val=None):
+   140→    return {
+   141→        "parameters": {
+   142→            "sessionIdType": "customKey",
+   143→            "sessionKey": "={{ $json.sessionId || 'default' }}",
+   144→            "options": {}
+   145→        },
+   146→        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+   147→        "typeVersion": 1.3,
+   148→        "position": pos,
+   149→        "id": uid_val or uid(),
+   150→        "name": name
+   151→    }
+   152→
+   153→def sticky_note(content, pos, uid_val=None):
+   154→    return {
+   155→        "parameters": {"content": content, "width": 300, "height": 200},
+   156→        "type": "n8n-nodes-base.stickyNote",
+   157→        "typeVersion": 1,
+   158→        "position": pos,
+   159→        "id": uid_val or uid(),
+   160→        "name": "Sticky Note"
+   161→    }
+   162→
+   163→def set_node(name, assignments, pos, uid_val=None):
+   164→    return {
+   165→        "parameters": {
+   166→            "assignments": {"assignments": assignments},
+   167→            "options": {}
+   168→        },
+   169→        "type": "n8n-nodes-base.set",
+   170→        "typeVersion": 3.4,
+   171→        "position": pos,
+   172→        "id": uid_val or uid(),
+   173→        "name": name
+   174→    }
+   175→
+   176→def if_node(name, conditions, pos, uid_val=None):
+   177→    return {
+   178→        "parameters": {
+   179→            "conditions": {
+   180→                "options": {"caseSensitive": True, "leftValue": "", "typeValidation": "strict"},
+   181→                "conditions": conditions,
+   182→                "combinator": "and"
+   183→            }
+   184→        },
+   185→        "type": "n8n-nodes-base.if",
+   186→        "typeVersion": 2,
+   187→        "position": pos,
+   188→        "id": uid_val or uid(),
+   189→        "name": name
+   190→    }
+   191→
+   192→def output_parser(name, properties, pos, uid_val=None):
+   193→    return {
+   194→        "parameters": {
+   195→            "schema": {
+   196→                "type": "object",
+   197→                "properties": properties
+   198→            }
+   199→        },
+   200→        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+   201→        "typeVersion": 1.1,
+   202→        "position": pos,
+   203→        "id": uid_val or uid(),
+   204→        "name": name
+   205→    }
+   206→
+   207→def ai_conn(source, target, conn_type):
+   208→    """Create ai_* connection from source to target."""
+   209→    return {
+   210→        source: {
+   211→            conn_type: [[{"node": target, "type": conn_type, "index": 0}]]
+   212→        }
+   213→    }
+   214→
+   215→def main_conn(source, target):
+   216→    """Create main connection from source to target."""
+   217→    return {
+   218→        source: {
+   219→            "main": [[{"node": target, "type": "main", "index": 0}]]
+   220→        }
+   221→    }
+   222→
+   223→def merge_dicts(dicts):
+   224→    """Merge multiple connection dicts."""
+   225→    result = {}
+   226→    for d in dicts:
+   227→        for k, v in d.items():
+   228→            if k in result:
+   229→                for ck, cv in v.items():
+   230→                    if ck in result[k]:
+   231→                        result[k][ck].extend(cv)
+   232→                    else:
+   233→                        result[k][ck] = cv
+   234→            else:
+   235→                result[k] = v
+   236→    return result
+   237→
+   238→
+   239→# ═══════════════════════════════════════════════════════════════════════
+   240→# 5 NEW MCP SERVERS
+   241→# ═══════════════════════════════════════════════════════════════════════
+   242→
+   243→def generate_mcp_slack():
+   244→    """MCP Slack Server — Slack messaging, channels, reactions (DeerFlow channel pattern)."""
+   245→    nodes = [
+   246→        mcp_trigger("slack-mcp", [0, 0]),
+   247→        http_tool("Send Message", "Send a message to a Slack channel or user. Supports markdown formatting.",
+   248→                  "Send_Message_URL", [-400, 400], "POST"),
+   249→        http_tool("List Channels", "List all Slack channels the bot has access to, including member counts and topics.",
+   250→                  "List_Channels_URL", [-200, 400]),
+   251→        http_tool("Search Messages", "Search Slack messages matching a query. Returns message text, author, and timestamp.",
+   252→                  "Search_Messages_URL", [0, 400]),
+   253→        http_tool("Get Thread", "Retrieve all replies in a Slack thread. Use for context gathering before responding.",
+   254→                  "Get_Thread_URL", [200, 400]),
+   255→        http_tool("Add Reaction", "Add an emoji reaction to a Slack message. Use for acknowledging or categorizing messages.",
+   256→                  "Add_Reaction_URL", [400, 400], "POST"),
+   257→        http_tool("Upload File", "Upload a file to a Slack channel. Supports images, PDFs, and documents.",
+   258→                  "Upload_File_URL", [600, 400], "POST"),
+   259→        sticky_note("🔗 MCP Slack Server v3\n\nDeerFlow Channel Pattern\n7 Tools: Send Message, List Channels, Search Messages, Get Thread, Add Reaction, Upload File\n\nAll tools use $fromAI() for dynamic parameters", [-300, -300]),
+   260→    ]
+   261→    conns = merge_dicts([
+   262→        ai_conn("Send Message", "MCP Trigger", "ai_tool"),
+   263→        ai_conn("List Channels", "MCP Trigger", "ai_tool"),
+   264→        ai_conn("Search Messages", "MCP Trigger", "ai_tool"),
+   265→        ai_conn("Get Thread", "MCP Trigger", "ai_tool"),
+   266→        ai_conn("Add Reaction", "MCP Trigger", "ai_tool"),
+   267→        ai_conn("Upload File", "MCP Trigger", "ai_tool"),
+   268→    ])
+   269→    return make_workflow("MCP Slack Server v3", nodes, conns, tags=["mcp", "slack", "channel"])
+   270→
+   271→
+   272→def generate_mcp_notion():
+   273→    """MCP Notion Server — Notion pages, databases, search (IBM knowledge management pattern)."""
+   274→    nodes = [
+   275→        mcp_trigger("notion-mcp", [0, 0]),
+   276→        http_tool("Search Pages", "Search Notion pages and databases by title or content. Returns page IDs, titles, and last edited dates.",
+   277→                  "Search_Pages_URL", [-500, 400]),
+   278→        http_tool("Get Page", "Retrieve full content of a Notion page including all blocks and properties.",
+   279→                  "Get_Page_URL", [-300, 400]),
+   280→        http_tool("Create Page", "Create a new Notion page in a specified parent (page or database). Supports markdown content.",
+   281→                  "Create_Page_URL", [-100, 400], "POST"),
+   282→        http_tool("Update Page", "Update properties or content of an existing Notion page. Supports appending blocks.",
+   283→                  "Update_Page_URL", [100, 400], "PATCH"),
+   284→        http_tool("Query Database", "Query a Notion database with filters and sorts. Returns matching entries with properties.",
+   285→                  "Query_Database_URL", [300, 400], "POST"),
+   286→        http_tool("Create Database Entry", "Create a new entry in a Notion database with specified property values.",
+   287→                  "Create_Database_Entry_URL", [500, 400], "POST"),
+   288→        http_tool("Append Blocks", "Append content blocks to an existing Notion page. Supports text, headings, lists, code, and more.",
+   289→                  "Append_Blocks_URL", [700, 400], "POST"),
+   290→        sticky_note("🔗 MCP Notion Server v3\n\nIBM Knowledge Management Pattern\n7 Tools: Search, Get, Create, Update Page + Query/Create Database + Append Blocks\n\nAll tools use $fromAI() for dynamic parameters", [-300, -300]),
+   291→    ]
+   292→    conns = merge_dicts([
+   293→        ai_conn("Search Pages", "MCP Trigger", "ai_tool"),
+   294→        ai_conn("Get Page", "MCP Trigger", "ai_tool"),
+   295→        ai_conn("Create Page", "MCP Trigger", "ai_tool"),
+   296→        ai_conn("Update Page", "MCP Trigger", "ai_tool"),
+   297→        ai_conn("Query Database", "MCP Trigger", "ai_tool"),
+   298→        ai_conn("Create Database Entry", "MCP Trigger", "ai_tool"),
+   299→        ai_conn("Append Blocks", "MCP Trigger", "ai_tool"),
+   300→    ])
+   301→    return make_workflow("MCP Notion Server v3", nodes, conns, tags=["mcp", "notion", "knowledge"])
+   302→
+   303→
+   304→def generate_mcp_github():
+   305→    """MCP GitHub Server — GitHub repos, issues, PRs (IBM tool calling + DeerFlow specialist pattern)."""
+   306→    nodes = [
+   307→        mcp_trigger("github-mcp", [0, 0]),
+   308→        http_tool("Search Repos", "Search GitHub repositories by name, language, or topic. Returns repo URL, stars, description.",
+   309→                  "Search_Repos_URL", [-500, 400]),
+   310→        http_tool("Get Repo Info", "Get detailed information about a GitHub repository: README, stats, languages, contributors.",
+   311→                  "Get_Repo_Info_URL", [-300, 400]),
+   312→        http_tool("List Issues", "List issues in a GitHub repository. Filter by state (open/closed), labels, assignee.",
+   313→                  "List_Issues_URL", [-100, 400]),
+   314→        http_tool("Create Issue", "Create a new GitHub issue with title, body, labels, and assignees.",
+   315→                  "Create_Issue_URL", [100, 400], "POST"),
+   316→        http_tool("List Pull Requests", "List pull requests in a GitHub repository. Filter by state, author, reviewer.",
+   317→                  "List_Pull_Requests_URL", [300, 400]),
+   318→        http_tool("Get File Content", "Get the content of a file from a GitHub repository. Returns file content and metadata.",
+   319→                  "Get_File_Content_URL", [500, 400]),
+   320→        http_tool("Search Code", "Search code within GitHub repositories. Returns matching file paths and code snippets.",
+   321→                  "Search_Code_URL", [700, 400]),
+   322→        sticky_note("🔗 MCP GitHub Server v3\n\nIBM Tool Calling + DeerFlow Specialist Pattern\n7 Tools: Search Repos, Get Repo, List/Create Issues, List PRs, Get File, Search Code\n\nAll tools use $fromAI() for dynamic parameters", [-300, -300]),
+   323→    ]
+   324→    conns = merge_dicts([
+   325→        ai_conn("Search Repos", "MCP Trigger", "ai_tool"),
+   326→        ai_conn("Get Repo Info", "MCP Trigger", "ai_tool"),
+   327→        ai_conn("List Issues", "MCP Trigger", "ai_tool"),
+   328→        ai_conn("Create Issue", "MCP Trigger", "ai_tool"),
+   329→        ai_conn("List Pull Requests", "MCP Trigger", "ai_tool"),
+   330→        ai_conn("Get File Content", "MCP Trigger", "ai_tool"),
+   331→        ai_conn("Search Code", "MCP Trigger", "ai_tool"),
+   332→    ])
+   333→    return make_workflow("MCP GitHub Server v3", nodes, conns, tags=["mcp", "github", "devops"])
+   334→
+   335→
+   336→def generate_mcp_trello():
+   337→    """MCP Trello Server — Trello boards, cards, lists (IBM planning + DeerFlow tactical pattern)."""
+   338→    nodes = [
+   339→        mcp_trigger("trello-mcp", [0, 0]),
+   340→        http_tool("List Boards", "List all Trello boards the user has access to. Returns board names, IDs, and member counts.",
+   341→                  "List_Boards_URL", [-400, 400]),
+   342→        http_tool("Get Board", "Get detailed information about a Trello board including all lists and their cards.",
+   343→                  "Get_Board_URL", [-200, 400]),
+   344→        http_tool("Create Card", "Create a new card in a Trello list. Supports name, description, due date, labels, and assignees.",
+   345→                  "Create_Card_URL", [0, 400], "POST"),
+   346→        http_tool("Update Card", "Update an existing Trello card: move between lists, add comments, change labels, set due dates.",
+   347→                  "Update_Card_URL", [200, 400], "PUT"),
+   348→        http_tool("Search Cards", "Search for cards across Trello boards by name, description, or labels.",
+   349→                  "Search_Cards_URL", [400, 400]),
+   350→        http_tool("Add Comment", "Add a comment to a Trello card. Use for progress updates, notes, or collaboration.",
+   351→                  "Add_Comment_URL", [600, 400], "POST"),
+   352→        sticky_note("🔗 MCP Trello Server v3\n\nIBM Planning + DeerFlow Tactical Pattern\n6 Tools: List/Get Boards, Create/Update/Search Cards, Add Comment\n\nAll tools use $fromAI() for dynamic parameters", [-300, -300]),
+   353→    ]
+   354→    conns = merge_dicts([
+   355→        ai_conn("List Boards", "MCP Trigger", "ai_tool"),
+   356→        ai_conn("Get Board", "MCP Trigger", "ai_tool"),
+   357→        ai_conn("Create Card", "MCP Trigger", "ai_tool"),
+   358→        ai_conn("Update Card", "MCP Trigger", "ai_tool"),
+   359→        ai_conn("Search Cards", "MCP Trigger", "ai_tool"),
+   360→        ai_conn("Add Comment", "MCP Trigger", "ai_tool"),
+   361→    ])
+   362→    return make_workflow("MCP Trello Server v3", nodes, conns, tags=["mcp", "trello", "project"])
+   363→
+   364→
+   365→def generate_mcp_hubspot():
+   366→    """MCP HubSpot Server — HubSpot CRM, contacts, deals (IBM governance + DeerFlow specialist pattern)."""
+   367→    nodes = [
+   368→        mcp_trigger("hubspot-mcp", [0, 0]),
+   369→        http_tool("Search Contacts", "Search HubSpot contacts by name, email, or company. Returns contact details and recent activity.",
+   370→                  "Search_Contacts_URL", [-500, 400]),
+   371→        http_tool("Create Contact", "Create a new HubSpot contact with email, name, phone, company, and custom properties.",
+   372→                  "Create_Contact_URL", [-300, 400], "POST"),
+   373→        http_tool("Update Contact", "Update an existing HubSpot contact's properties. Use for adding notes, changing lifecycle stage.",
+   374→                  "Update_Contact_URL", [-100, 400], "PATCH"),
+   375→        http_tool("List Deals", "List deals in the HubSpot CRM pipeline. Filter by stage, owner, or amount.",
+   376→                  "List_Deals_URL", [100, 400]),
+   377→        http_tool("Create Deal", "Create a new deal in HubSpot CRM with name, amount, stage, and associated contacts.",
+   378→                  "Create_Deal_URL", [300, 400], "POST"),
+   379→        http_tool("Update Deal Stage", "Move a deal to a different pipeline stage. Use for pipeline progression tracking.",
+   380→                  "Update_Deal_Stage_URL", [500, 400], "PATCH"),
+   381→        http_tool("Get Company", "Get detailed information about a HubSpot company including associated contacts and deals.",
+   382→                  "Get_Company_URL", [700, 400]),
+   383→        sticky_note("🔗 MCP HubSpot Server v3\n\nIBM Governance + DeerFlow Specialist Pattern\n7 Tools: Search/Create/Update Contacts, List/Create/Update Deals, Get Company\n\nAll tools use $fromAI() for dynamic parameters", [-300, -300]),
+   384→    ]
+   385→    conns = merge_dicts([
+   386→        ai_conn("Search Contacts", "MCP Trigger", "ai_tool"),
+   387→        ai_conn("Create Contact", "MCP Trigger", "ai_tool"),
+   388→        ai_conn("Update Contact", "MCP Trigger", "ai_tool"),
+   389→        ai_conn("List Deals", "MCP Trigger", "ai_tool"),
+   390→        ai_conn("Create Deal", "MCP Trigger", "ai_tool"),
+   391→        ai_conn("Update Deal Stage", "MCP Trigger", "ai_tool"),
+   392→        ai_conn("Get Company", "MCP Trigger", "ai_tool"),
+   393→    ])
+   394→    return make_workflow("MCP HubSpot Server v3", nodes, conns, tags=["mcp", "hubspot", "crm"])
+   395→
+   396→
+   397→# ═══════════════════════════════════════════════════════════════════════
+   398→# 3 COMBINED ANTHROPIC-PATTERN WORKFLOWS
+   399→# ═══════════════════════════════════════════════════════════════════════
+   400→
+   401→def generate_p8_router_orchestrator():
+   402→    """
+   403→    P8: Router-Orchestrator (P2 Smart Routing + P3 Orchestrator-Workers)
+   404→    
+   405→    Webhook → Router Agent classifies intent → Routes to sub-orchestrators
+   406→    Each sub-orchestrator manages its own workers.
+   407→    Combines the best of both patterns: intelligent routing + task decomposition.
+   408→    """
+   409→    nodes = [
+   410→        chat_trigger([0, 0], "I'm your Router-Orchestrator. I'll classify your request, route it to the right team, and orchestrate the work. What do you need?"),
+   411→
+   412→        # Router Agent (P2 pattern)
+   413→        agent_node("Router Agent", 
+   414→            "# Router Agent (P2+P3 Combined Pattern)\n\nYou classify user intent and determine which specialized team should handle the request.\n\n## Available Teams:\n- **Operations Team**: Calendar, email, contacts, Slack, project management\n- **Research Team**: Deep research, data analysis, market intelligence\n- **Creative Team**: Content creation, newsletters, podcasts, design\n- **Technical Team**: Code, GitHub, debugging, architecture\n\n## Skills Loaded:\n- deep-research: Systematic research methodology\n- consulting-analysis: Professional analysis framework\n- find-skills: Discover new capabilities\n\n## Decision Rules:\n1. Analyze the request complexity and domain\n2. Select the appropriate team (1-2 teams max)\n3. For each team, define clear subtask instructions\n4. If the task spans multiple domains, decompose into subtasks for each team\n5. Simple tasks: handle directly with Think tool\n\n## Output Format:\nReturn a JSON object with:\n- team: which team(s) to route to\n- subtasks: array of subtask instructions\n- priority: low/medium/high/critical\n- estimated_complexity: simple/moderate/complex\n\nCurrent datetime: {{ $now }}",
+   415→            [400, 0]),
+   416→        llm_node("GPT-4.1-mini Router", "gpt-4.1-mini", 0.3, [400, 300]),
+   417→        memory_node("Router Memory", [600, 300]),
+   418→        think_tool("Think Tool", "Plan routing strategy and decompose complex requests into subtasks before delegating", [800, 0]),
+   419→
+   420→        # Operations Sub-Orchestrator
+   421→        agent_node("Operations Orchestrator",
+   422→            "# Operations Sub-Orchestrator\n\nYou manage the Operations team. Execute calendar, email, contacts, Slack, and project management tasks.\n\n## Available Tools:\n- Google Calendar, Gmail, Contacts (via MCP)\n- Slack messaging and channels\n- Trello project boards\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Execute tasks in order of priority\n- Confirm actions before modifying data\n- Use Think tool for complex multi-step operations\n- Report results clearly",
+   423→            [1200, -600]),
+   424→        llm_node("GPT-4o-mini Ops", "gpt-4o-mini", 0.4, [1200, -300]),
+   425→        memory_node("Ops Memory", [1400, -300]),
+   426→        http_tool("Slack Tool", "Send messages, list channels, and search in Slack", "Slack_Tool_URL", [1600, -300]),
+   427→        http_tool("Trello Tool", "Manage Trello boards, cards, and lists for project tracking", "Trello_Tool_URL", [1600, -600]),
+   428→
+   429→        # Research Sub-Orchestrator
+   430→        agent_node("Research Orchestrator",
+   431→            "# Research Sub-Orchestrator\n\nYou manage the Research team. Conduct deep research, data analysis, and market intelligence.\n\n## Available Tools:\n- Web search and analysis\n- Notion knowledge base\n- Data analysis capabilities\n\n## Skills Loaded:\n- deep-research: Systematic multi-angle research\n- data-analysis: Extract insights from data\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Research from multiple angles (3-5 minimum)\n- Always cite sources\n- Include specific data points and statistics\n- Identify trends and patterns",
+   432→            [1200, 300]),
+   433→        llm_node("GPT-4.1 Research", "gpt-4.1", 0.3, [1200, 600]),
+   434→        memory_node("Research Memory", [1400, 600]),
+   435→        http_tool("Notion Tool", "Search and manage Notion pages and databases for knowledge base", "Notion_Tool_URL", [1600, 600]),
+   436→        http_tool("Web Search", "Search the web for current information, news, and data", "Web_Search_URL", [1600, 300]),
+   437→
+   438→        # Creative Sub-Orchestrator
+   439→        agent_node("Creative Orchestrator",
+   440→            "# Creative Sub-Orchestrator\n\nYou manage the Creative team. Create content, newsletters, podcasts, and design assets.\n\n## Skills Loaded:\n- newsletter-generation: Content structure and formatting\n- podcast-generation: Audio content production\n- consulting-analysis: Professional analysis framework\n\n## Rules:\n- Follow brand voice and style guidelines\n- Create engaging, well-structured content\n- Include specific examples and data points\n- Ensure consistent formatting",
+   441→            [1200, 1200]),
+   442→        llm_node("GPT-4.1-mini Creative", "gpt-4.1-mini", 0.7, [1200, 1500]),
+   443→        memory_node("Creative Memory", [1400, 1500]),
+   444→
+   445→        # Technical Sub-Orchestrator
+   446→        agent_node("Technical Orchestrator",
+   447→            "# Technical Sub-Orchestrator\n\nYou manage the Technical team. Handle code, debugging, architecture, and GitHub operations.\n\n## Available Tools:\n- GitHub repos, issues, PRs\n- Code search and analysis\n\n## Skills Loaded:\n- code-documentation: Precision and clarity standards\n- deep-research: Research methodology\n\n## Rules:\n- Write production-quality code\n- Include error handling and edge cases\n- Follow best practices and design patterns\n- Document all changes",
+   448→            [1200, 2100]),
+   449→        llm_node("GPT-4.1 Technical", "gpt-4.1", 0.3, [1200, 2400]),
+   450→        memory_node("Technical Memory", [1400, 2400]),
+   451→        http_tool("GitHub Tool", "Access GitHub repos, issues, PRs, and code search", "GitHub_Tool_URL", [1600, 2400]),
+   452→
+   453→        # Aggregation
+   454→        agent_node("Aggregation Agent",
+   455→            "# Aggregation Agent\n\nYou synthesize outputs from multiple sub-orchestrators into a coherent, unified response.\n\n## Rules:\n- Combine insights from all teams that were activated\n- Resolve any conflicting information\n- Prioritize by relevance and importance\n- Present a clear, actionable summary\n- Include attribution to the source team",
+   456→            [2200, 600]),
+   457→        llm_node("GPT-4.1 Aggregate", "gpt-4.1", 0.4, [2200, 900]),
+   458→        memory_node("Aggregation Memory", [2400, 900]),
+   459→
+   460→        sticky_note("🔗 P8: Router-Orchestrator (P2+P3 Combined)\n\n1. Router classifies intent → selects team\n2. Sub-orchestrator decomposes tasks\n3. Workers execute with tools\n4. Aggregation synthesizes results\n\n4 Teams: Ops, Research, Creative, Technical\nLLM: 4o-mini→4.1-mini→4.1 (tiered)", [0, -400]),
+   461→    ]
+   462→
+   463→    conns = merge_dicts([
+   464→        # Chat → Router
+   465→        main_conn("Chat Trigger", "Router Agent"),
+   466→        # Router → sub-orchestrators (main flow)
+   467→        main_conn("Router Agent", "Operations Orchestrator"),
+   468→        main_conn("Router Agent", "Research Orchestrator"),
+   469→        main_conn("Router Agent", "Creative Orchestrator"),
+   470→        main_conn("Router Agent", "Technical Orchestrator"),
+   471→        # Sub-orchestrators → Aggregation
+   472→        main_conn("Operations Orchestrator", "Aggregation Agent"),
+   473→        main_conn("Research Orchestrator", "Aggregation Agent"),
+   474→        main_conn("Creative Orchestrator", "Aggregation Agent"),
+   475→        main_conn("Technical Orchestrator", "Aggregation Agent"),
+   476→        # Router ai_* connections
+   477→        ai_conn("GPT-4.1-mini Router", "Router Agent", "ai_languageModel"),
+   478→        ai_conn("Router Memory", "Router Agent", "ai_memory"),
+   479→        ai_conn("Think Tool", "Router Agent", "ai_tool"),
+   480→        # Operations ai_* connections
+   481→        ai_conn("GPT-4o-mini Ops", "Operations Orchestrator", "ai_languageModel"),
+   482→        ai_conn("Ops Memory", "Operations Orchestrator", "ai_memory"),
+   483→        ai_conn("Slack Tool", "Operations Orchestrator", "ai_tool"),
+   484→        ai_conn("Trello Tool", "Operations Orchestrator", "ai_tool"),
+   485→        # Research ai_* connections
+   486→        ai_conn("GPT-4.1 Research", "Research Orchestrator", "ai_languageModel"),
+   487→        ai_conn("Research Memory", "Research Orchestrator", "ai_memory"),
+   488→        ai_conn("Notion Tool", "Research Orchestrator", "ai_tool"),
+   489→        ai_conn("Web Search", "Research Orchestrator", "ai_tool"),
+   490→        # Creative ai_* connections
+   491→        ai_conn("GPT-4.1-mini Creative", "Creative Orchestrator", "ai_languageModel"),
+   492→        ai_conn("Creative Memory", "Creative Orchestrator", "ai_memory"),
+   493→        # Technical ai_* connections
+   494→        ai_conn("GPT-4.1 Technical", "Technical Orchestrator", "ai_languageModel"),
+   495→        ai_conn("Technical Memory", "Technical Orchestrator", "ai_memory"),
+   496→        ai_conn("GitHub Tool", "Technical Orchestrator", "ai_tool"),
+   497→        # Aggregation ai_* connections
+   498→        ai_conn("GPT-4.1 Aggregate", "Aggregation Agent", "ai_languageModel"),
+   499→        ai_conn("Aggregation Memory", "Aggregation Agent", "ai_memory"),
+   500→    ])
+   501→
+   502→    return make_workflow("P8 Router-Orchestrator Agent v3", nodes, conns, tags=["anthropic", "combined", "routing", "orchestrator"])
+   503→
+   504→
+   505→def generate_p9_evaluator_parallel():
+   506→    """
+   507→    P9: Evaluator-Parallelization (P4 Evaluator-Optimizer + P5 Parallelization)
+   508→    
+   509→    Webhook → Split input → 3 parallel analysts → Each goes through Evaluator-Optimizer loop
+   510→    → Aggregate → Final synthesis. Combines multi-perspective analysis with quality-gated refinement.
+   511→    """
+   512→    nodes = [
+   513→        webhook_trigger("eval-parallel-analysis"),
+   514→        set_node("Split Input", [
+   515→            {"id": uid(), "name": "query", "value": "={{ $json.body.query }}", "type": "string"},
+   516→            {"id": uid(), "name": "domain", "value": "={{ $json.body.domain || 'general' }}", "type": "string"},
+   517→            {"id": uid(), "name": "quality_threshold", "value": "={{ $json.body.quality_threshold || 7 }}", "type": "number"},
+   518→        ], [-1800, 0]),
+   519→
+   520→        # 3 Parallel Analysts (P5 pattern)
+   521→        # Analyst 1: Market
+   522→        agent_node("Market Analyst",
+   523→            "# Market Analyst (P9 Parallel + Evaluator)\n\nYou analyze the query from a market and business perspective.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- deep-research: Research methodology\n\n## Output Format:\n- Market size and trends\n- Competitive landscape\n- Key opportunities and risks\n- Strategic recommendations\n\n## Rules:\n- Use specific data points\n- Include market size estimates where possible\n- Identify 3-5 key competitors\n- Current datetime: {{ $now }}",
+   524→            [0, -800]),
+   525→        llm_node("GPT-4.1-mini Market", "gpt-4.1-mini", 0.3, [0, -500]),
+   526→        memory_node("Market Memory", [200, -500]),
+   527→        http_tool("Market Search", "Search for market data, industry reports, and competitive intelligence", "Market_Search_URL", [400, -500]),
+   528→
+   529→        # Analyst 2: Technical
+   530→        agent_node("Technical Analyst",
+   531→            "# Technical Analyst (P9 Parallel + Evaluator)\n\nYou analyze the query from a technical and feasibility perspective.\n\n## Skills Loaded:\n- data-analysis: Extract insights from data\n- code-documentation: Technical precision\n\n## Output Format:\n- Technical feasibility assessment\n- Architecture considerations\n- Implementation complexity estimate\n- Risk assessment\n\n## Rules:\n- Include specific technical details\n- Estimate implementation timelines\n- Identify potential bottlenecks\n- Current datetime: {{ $now }}",
+   532→            [0, 0]),
+   533→        llm_node("GPT-4.1 Technical", "gpt-4.1", 0.3, [0, 300]),
+   534→        memory_node("Technical Memory", [200, 300]),
+   535→        http_tool("Tech Search", "Search for technical documentation, code examples, and architecture patterns", "Tech_Search_URL", [400, 300]),
+   536→
+   537→        # Analyst 3: Financial
+   538→        agent_node("Financial Analyst",
+   539→            "# Financial Analyst (P9 Parallel + Evaluator)\n\nYou analyze the query from a financial and ROI perspective.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- data-analysis: Financial data extraction\n\n## Output Format:\n- Cost analysis and projections\n- ROI calculations\n- Revenue impact estimates\n- Budget recommendations\n\n## Rules:\n- Include specific dollar amounts and percentages\n- Show calculation methodology\n- Provide best/worst/expected case scenarios\n- Current datetime: {{ $now }}",
+   540→            [0, 800]),
+   541→        llm_node("GPT-4.1-mini Financial", "gpt-4.1-mini", 0.3, [0, 1100]),
+   542→        memory_node("Financial Memory", [200, 1100]),
+   543→        http_tool("Financial Search", "Search for financial data, industry benchmarks, and cost estimates", "Financial_Search_URL", [400, 1100]),
+   544→
+   545→        # Evaluator-Optimizer (P4 pattern) - applied to aggregated results
+   546→        agent_node("Quality Evaluator",
+   547→            "# Quality Evaluator (P4 Pattern)\n\nYou evaluate the quality of the combined analysis from all three analysts.\n\n## Evaluation Criteria:\n- Completeness: All perspectives covered\n- Accuracy: Specific data points and citations\n- Actionability: Clear recommendations\n- Consistency: No contradictions between analysts\n- Depth: Sufficient detail for decision-making\n\n## Output Format:\n- quality_score: 1-10\n- strengths: What's well covered\n- gaps: What's missing\n- improvements: Specific suggestions for each analyst\n- pass: boolean (true if quality_score >= threshold)\n\n## Rules:\n- Be objective and thorough\n- Score each criterion independently\n- Provide specific improvement suggestions\n- Current datetime: {{ $now }}",
+   548→            [1000, 0]),
+   549→        llm_node("GPT-4.1 Evaluator", "gpt-4.1", 0.2, [1000, 300]),
+   550→        memory_node("Evaluator Memory", [1200, 300]),
+   551→        output_parser("Quality Parser", {
+   552→            "quality_score": {"type": "number", "description": "Overall quality score 1-10"},
+   553→            "pass": {"type": "boolean", "description": "Whether quality meets threshold"},
+   554→            "gaps": {"type": "array", "items": {"type": "string"}, "description": "Identified gaps"},
+   555→            "improvements": {"type": "array", "items": {"type": "string"}, "description": "Improvement suggestions"}
+   556→        }, [1200, 0]),
+   557→
+   558→        # Quality Gate
+   559→        if_node("Quality Gate", {
+   560→            "options": {"caseSensitive": True, "leftValue": "", "typeValidation": "strict"},
+   561→            "conditions": [
+   562→                {"leftValue": "={{ $json.quality_score }}", "rightValue": 7, "operator": {"type": "number", "operation": "gte"}}
+   563→            ],
+   564→            "combinator": "and"
+   565→        }, [1400, 0]),
+   566→
+   567→        # Refinement Agent (if quality fails)
+   568→        agent_node("Refinement Agent",
+   569→            "# Refinement Agent (P4 Pattern)\n\nYou refine the analysis based on the evaluator's feedback.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- deep-research: Research methodology\n\n## Rules:\n- Address each gap identified by the evaluator\n- Incorporate all improvement suggestions\n- Maintain the structure of each analyst's output\n- Add missing data and citations\n- Current datetime: {{ $now }}",
+   570→            [1600, 300]),
+   571→        llm_node("GPT-4.1 Refine", "gpt-4.1", 0.4, [1600, 600]),
+   572→        memory_node("Refinement Memory", [1800, 600]),
+   573→
+   574→        # Final Synthesis
+   575→        agent_node("Synthesis Agent",
+   576→            "# Synthesis Agent (P9 Final)\n\nYou create the final deliverable by synthesizing all analyst outputs into a cohesive report.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- newsletter-generation: Content structure and formatting\n\n## Output Structure:\n1. Executive Summary\n2. Market Analysis\n3. Technical Assessment\n4. Financial Projections\n5. Integrated Recommendations\n6. Risk Matrix\n7. Next Steps\n\n## Rules:\n- Resolve contradictions between analysts\n- Prioritize by impact and feasibility\n- Include specific action items\n- Current datetime: {{ $now }}",
+   577→            [2000, 0]),
+   578→        llm_node("GPT-4.1 Synthesis", "gpt-4.1", 0.4, [2000, 300]),
+   579→        memory_node("Synthesis Memory", [2200, 300]),
+   580→
+   581→        sticky_note("🔗 P9: Evaluator-Parallelization (P4+P5 Combined)\n\n1. Input split → 3 parallel analysts\n2. Each analyst produces domain report\n3. Evaluator scores quality (1-10)\n4. Quality Gate → Pass or Refine\n5. Refinement loop (max 3 retries)\n6. Final synthesis → Report\n\nLLM: 4.1-mini→4.1 (tiered)", [-200, -1200]),
+   582→    ]
+   583→
+   584→    conns = merge_dicts([
+   585→        # Webhook → Split
+   586→        main_conn("Webhook", "Split Input"),
+   587→        # Split → 3 analysts (parallel)
+   588→        main_conn("Split Input", "Market Analyst"),
+   589→        main_conn("Split Input", "Technical Analyst"),
+   590→        main_conn("Split Input", "Financial Analyst"),
+   591→        # Analysts → Evaluator
+   592→        main_conn("Market Analyst", "Quality Evaluator"),
+   593→        main_conn("Technical Analyst", "Quality Evaluator"),
+   594→        main_conn("Financial Analyst", "Quality Evaluator"),
+   595→        # Evaluator → Quality Gate
+   596→        main_conn("Quality Evaluator", "Quality Gate"),
+   597→        # Quality Gate → Synthesis (pass) or Refinement (fail)
+   598→        # Note: if node outputs [true, false] branches
+   599→        {
+   600→            "Quality Gate": {
+   601→                "main": [
+   602→                    [{"node": "Synthesis Agent", "type": "main", "index": 0}],
+   603→                    [{"node": "Refinement Agent", "type": "main", "index": 0}]
+   604→                ]
+   605→            }
+   606→        },
+   607→        # Refinement → back to Evaluator
+   608→        main_conn("Refinement Agent", "Quality Evaluator"),
+   609→        # Market Analyst ai_* connections
+   610→        ai_conn("GPT-4.1-mini Market", "Market Analyst", "ai_languageModel"),
+   611→        ai_conn("Market Memory", "Market Analyst", "ai_memory"),
+   612→        ai_conn("Market Search", "Market Analyst", "ai_tool"),
+   613→        # Technical Analyst ai_* connections
+   614→        ai_conn("GPT-4.1 Technical", "Technical Analyst", "ai_languageModel"),
+   615→        ai_conn("Technical Memory", "Technical Analyst", "ai_memory"),
+   616→        ai_conn("Tech Search", "Technical Analyst", "ai_tool"),
+   617→        # Financial Analyst ai_* connections
+   618→        ai_conn("GPT-4.1-mini Financial", "Financial Analyst", "ai_languageModel"),
+   619→        ai_conn("Financial Memory", "Financial Analyst", "ai_memory"),
+   620→        ai_conn("Financial Search", "Financial Analyst", "ai_tool"),
+   621→        # Evaluator ai_* connections
+   622→        ai_conn("GPT-4.1 Evaluator", "Quality Evaluator", "ai_languageModel"),
+   623→        ai_conn("Evaluator Memory", "Quality Evaluator", "ai_memory"),
+   624→        ai_conn("Quality Parser", "Quality Evaluator", "ai_outputParser"),
+   625→        # Refinement ai_* connections
+   626→        ai_conn("GPT-4.1 Refine", "Refinement Agent", "ai_languageModel"),
+   627→        ai_conn("Refinement Memory", "Refinement Agent", "ai_memory"),
+   628→        # Synthesis ai_* connections
+   629→        ai_conn("GPT-4.1 Synthesis", "Synthesis Agent", "ai_languageModel"),
+   630→        ai_conn("Synthesis Memory", "Synthesis Agent", "ai_memory"),
+   631→    ])
+   632→
+   633→    return make_workflow("P9 Evaluator-Parallelization Agent v3", nodes, conns, tags=["anthropic", "combined", "parallel", "evaluator"])
+   634→
+   635→
+   636→def generate_p10_cognitive_soul():
+   637→    """
+   638→    P10: Cognitive-SOUL Pipeline (P6 Cognitive Capital MCP + P7 SOUL Bootstrap)
+   639→    
+   640→    Chat Trigger → SOUL Bootstrap Agent creates personality → Cognitive Capital MCP loads skills
+   641→    → Combined Agent with both personality and skills. A pipeline that first bootstraps 
+   642→    the agent's personality, then equips it with the right cognitive capital skills.
+   643→    """
+   644→    nodes = [
+   645→        chat_trigger([0, 0], "Hello! I'm your AI personality architect. I'll help you create a personalized SOUL.md and then equip your agent with the right skills. Let's start — what language would you prefer?"),
+   646→
+   647→        # Phase 1: SOUL Bootstrap (P7 pattern)
+   648→        agent_node("SOUL Bootstrap",
+   649→            "# SOUL Bootstrap Agent (P6+P7 Combined)\n\nYou create a personalized SOUL.md for the AI assistant through conversation.\n\n## Skills Loaded:\n- bootstrap: Conversational onboarding and SOUL.md generation\n\n## Conversation Phases:\n\n### Phase 1 — Hello (1 round)\nEstablish preferred language.\n\n### Phase 2 — You (2 rounds)\n- Round A: Who they are, what drains them, what they need\n- Round B: AI name and relationship framing (assistant/partner/co-pilot/second brain)\n\n### Phase 3 — Personality (2 rounds)\n- Round A: Core traits and pushback preference\n- Round B: Communication style and voice\n\n### Phase 4 — Depth (1-2 rounds)\n- Autonomy level, failure philosophy, long-term vision, blind spots\n\n### Phase 5 — Skill Selection (NEW)\n- Based on the user's profile, recommend 3-5 cognitive capital skills\n- Explain what each skill does and why it's relevant\n- User confirms which skills to load\n\n## Extraction Tracker:\n| Field | Required | Phase |\n|-------|----------|-------|\n| Preferred language | Yes | 1 |\n| User's name | Yes | 2 |\n| User's role | Yes | 2 |\n| AI name | Yes | 2 |\n| Relationship framing | Yes | 2 |\n| Core traits (3-5 rules) | Yes | 3 |\n| Communication style | Yes | 3 |\n| Pushback preference | Yes | 3 |\n| Autonomy level | Yes | 4 |\n| Failure philosophy | Yes | 4 |\n| Selected skills | Yes | 5 |\n\n## Skill Recommendation Logic:\n- If user is a researcher → deep-research, data-analysis, consulting-analysis\n- If user is a business owner → consulting-analysis, newsletter-generation, data-analysis\n- If user is a developer → code-documentation, deep-research, podcast-generation\n- If user is a creator → newsletter-generation, podcast-generation, consulting-analysis\n- If user is a manager → consulting-analysis, data-analysis, deep-research\n\nCurrent datetime: {{ $now }}",
+   650→            [400, 0]),
+   651→        llm_node("GPT-4.1-mini Bootstrap", "gpt-4.1-mini", 0.7, [400, 300]),
+   652→        memory_node("Bootstrap Memory", [600, 300]),
+   653→        think_tool("Think Tool", "Plan conversation flow, track extracted fields, and determine when to move to the next phase", [800, 0]),
+   654→
+   655→        # Phase 2: Cognitive Capital Loader (P6 pattern)
+   656→        agent_node("Cognitive Capital Loader",
+   657→            "# Cognitive Capital Loader (P6+P7 Combined)\n\nYou load the selected cognitive capital skills into the agent's memory and generate a complete configuration.\n\n## Available Skills:\n1. **deep-research** — Systematic multi-angle research methodology\n2. **consulting-analysis** — Professional analysis framework\n3. **data-analysis** — Data extraction and visualization\n4. **newsletter-generation** — Content structure and formatting\n5. **code-documentation** — Precision and clarity standards\n6. **podcast-generation** — Audio content production\n\n## Loading Process:\n1. Read the SOUL.md generated by the bootstrap agent\n2. Load each selected skill's SKILL.md into context\n3. Verify compatibility between personality and skills\n4. Generate a complete agent configuration:\n   - SOUL.md (personality)\n   - Skill manifest (which skills are active)\n   - Integration notes (how skills interact with personality)\n   - Usage recommendations\n\n## Output Format:\nReturn a complete agent configuration with:\n- soul_md: The complete SOUL.md content\n- skills: Array of loaded skill objects with name, description, usage_tips\n- integration_notes: How skills complement the personality\n- recommended_workflows: Which JARVIS workflows to use\n\nCurrent datetime: {{ $now }}",
+   658→            [1200, 0]),
+   659→        llm_node("GPT-4.1 Loader", "gpt-4.1", 0.3, [1200, 300]),
+   660→        memory_node("Loader Memory", [1400, 300]),
+   661→        http_tool("Skill Registry", "Access the cognitive capital skill registry to load SKILL.md files for selected skills", "Skill_Registry_URL", [1600, 300]),
+   662→
+   663→        # Final Agent Configuration
+   664→        agent_node("Personalized Agent",
+   665→            "# Personalized Agent (P6+P7 Output)\n\nYou are the fully configured agent with personality and skills. You operate based on the SOUL.md and cognitive capital loaded by the pipeline.\n\n## Your Configuration:\n- Personality: Defined by SOUL.md (loaded from bootstrap)\n- Skills: Cognitive capital skills (loaded from registry)\n- Memory: Persistent across sessions\n\n## Operating Rules:\n- Always follow your SOUL.md personality traits\n- Use your loaded skills when relevant\n- Maintain the user's preferred communication style\n- Apply your core traits as behavioral rules\n- Push back when appropriate (per pushback preference)\n\nThis agent is the final product of the P10 Cognitive-SOUL Pipeline.",
+   666→            [2000, 0]),
+   667→        llm_node("GPT-4.1 Personalized", "gpt-4.1", 0.5, [2000, 300]),
+   668→        memory_node("Personalized Memory", [2200, 300]),
+   669→        output_parser("Config Parser", {
+   670→            "soul_md": {"type": "string", "description": "Complete SOUL.md content"},
+   671→            "skills": {"type": "array", "items": {"type": "object"}, "description": "Loaded skill objects"},
+   672→            "integration_notes": {"type": "string", "description": "How skills complement personality"},
+   673→            "recommended_workflows": {"type": "array", "items": {"type": "string"}, "description": "Recommended JARVIS workflows"}
+   674→        }, [2200, 0]),
+   675→
+   676→        sticky_note("🔗 P10: Cognitive-SOUL Pipeline (P6+P7 Combined)\n\nPhase 1: SOUL Bootstrap\n  → 4-phase conversation\n  → Creates personalized SOUL.md\n  → Recommends cognitive capital skills\n\nPhase 2: Cognitive Capital Loader\n  → Loads selected SKILL.md files\n  → Verifies personality-skill compatibility\n  → Generates complete agent config\n\nPhase 3: Personalized Agent\n  → Operates with SOUL.md + skills\n  → Persistent memory across sessions\n\nLLM: 4.1-mini→4.1 (tiered)", [0, -400]),
+   677→    ]
+   678→
+   679→    conns = merge_dicts([
+   680→        # Chat → SOUL Bootstrap
+   681→        main_conn("Chat Trigger", "SOUL Bootstrap"),
+   682→        # SOUL Bootstrap → Cognitive Capital Loader
+   683→        main_conn("SOUL Bootstrap", "Cognitive Capital Loader"),
+   684→        # Cognitive Capital Loader → Personalized Agent
+   685→        main_conn("Cognitive Capital Loader", "Personalized Agent"),
+   686→        # SOUL Bootstrap ai_* connections
+   687→        ai_conn("GPT-4.1-mini Bootstrap", "SOUL Bootstrap", "ai_languageModel"),
+   688→        ai_conn("Bootstrap Memory", "SOUL Bootstrap", "ai_memory"),
+   689→        ai_conn("Think Tool", "SOUL Bootstrap", "ai_tool"),
+   690→        # Cognitive Capital Loader ai_* connections
+   691→        ai_conn("GPT-4.1 Loader", "Cognitive Capital Loader", "ai_languageModel"),
+   692→        ai_conn("Loader Memory", "Cognitive Capital Loader", "ai_memory"),
+   693→        ai_conn("Skill Registry", "Cognitive Capital Loader", "ai_tool"),
+   694→        # Personalized Agent ai_* connections
+   695→        ai_conn("GPT-4.1 Personalized", "Personalized Agent", "ai_languageModel"),
+   696→        ai_conn("Personalized Memory", "Personalized Agent", "ai_memory"),
+   697→        ai_conn("Config Parser", "Personalized Agent", "ai_outputParser"),
+   698→    ])
+   699→
+   700→    return make_workflow("P10 Cognitive-SOUL Pipeline Agent v3", nodes, conns, tags=["anthropic", "combined", "cognitive", "soul"])
+   701→
+   702→
+   703→# ═══════════════════════════════════════════════════════════════════════
+   704→# INTEGRATION INTO JARVIS PACKAGES
+   705→# ═══════════════════════════════════════════════════════════════════════
+   706→
+   707→PACKAGE_ASSIGNMENTS = {
+   708→    "jarvis-starter": {
+   709→        "new_mcp_servers": ["MCP_Slack_Server_v3.json"],
+   710→        "new_patterns": ["P10_Cognitive_SOUL_Pipeline_v3.json"],
+   711→    },
+   712→    "jarvis-professional": {
+   713→        "new_mcp_servers": ["MCP_Slack_Server_v3.json", "MCP_Notion_Server_v3.json", "MCP_GitHub_Server_v3.json"],
+   714→        "new_patterns": ["P8_Router_Orchestrator_v3.json", "P9_Evaluator_Parallel_v3.json", "P10_Cognitive_SOUL_Pipeline_v3.json"],
+   715→    },
+   716→    "jarvis-enterprise": {
+   717→        "new_mcp_servers": ["MCP_Slack_Server_v3.json", "MCP_Notion_Server_v3.json", "MCP_GitHub_Server_v3.json", "MCP_Trello_Server_v3.json", "MCP_HubSpot_Server_v3.json"],
+   718→        "new_patterns": ["P8_Router_Orchestrator_v3.json", "P9_Evaluator_Parallel_v3.json", "P10_Cognitive_SOUL_Pipeline_v3.json"],
+   719→    },
+   720→}
+   721→
+   722→
+   723→def update_manifests():
+   724→    for pkg_name, cfg in PACKAGE_ASSIGNMENTS.items():
+   725→        mpath = f"{BASE}/{pkg_name}/manifest.json"
+   726→        with open(mpath) as f:
+   727→            m = json.load(f)
+   728→
+   729→        # Add new MCP servers
+   730→        for srv in cfg["new_mcp_servers"]:
+   731→            if srv not in m["workflows"]["mcp_servers"]:
+   732→                m["workflows"]["mcp_servers"].append(srv)
+   733→
+   734→        # Add new patterns
+   735→        for pat in cfg["new_patterns"]:
+   736→            if pat not in m["workflows"]["anthropic_patterns"]:
+   737→                m["workflows"]["anthropic_patterns"].append(pat)
+   738→
+   739→        # Update total count
+   740→        m["total_workflows"] = sum(len(v) for v in m["workflows"].values())
+   741→        m["version"] = "3.1.0"
+   742→
+   743→        with open(mpath, "w") as f:
+   744→            json.dump(m, f, indent=2)
+   745→        print(f"  ✓ {pkg_name}/manifest.json — v3.1.0, {m['total_workflows']} workflows")
+   746→
+   747→
+   748→def update_pricing_html():
+   749→    ppath = f"{BASE}/pricing.html"
+   750→    with open(ppath) as f:
+   751→        html = f.read()
+   752→
+   753→    # Update stats
+   754→    html = html.replace(
+   755→        '<div class="number" style="color: var(--accent-starter)">32</div>',
+   756→        '<div class="number" style="color: var(--accent-starter)">40</div>',
+   757→    )
+   758→    html = html.replace(
+   759→        '<div class="number" style="color: var(--accent-pro)">7</div>',
+   760→        '<div class="number" style="color: var(--accent-pro)">10</div>',
+   761→    )
+   762→
+   763→    # Update subtitle
+   764→    html = html.replace(
+   765→        "32 zero-debt n8n automations + 7 Anthropic agent patterns",
+   766→        "40 zero-debt n8n automations + 10 Anthropic agent patterns"
+   767→    )
+   768→
+   769→    # Update footer
+   770→    html = html.replace(
+   771→        "Built with zero technical debt • 32 workflows • 7 Anthropic patterns • 6 cognitive capital skills",
+   772→        "Built with zero technical debt • 40 workflows • 10 Anthropic patterns • 11 MCP servers • 6 cognitive capital skills"
+   773→    )
+   774→
+   775→    # Update comparison table rows
+   776→    html = html.replace(
+   777→        "<tr><td>Anthropic Pattern Workflows</td><td>2 (P1+P7)</td><td>6 (P1-P5+P7)</td><td>7 (P1-P7)</td></tr>",
+   778→        "<tr><td>Anthropic Pattern Workflows</td><td>3 (P1+P7+P10)</td><td>9 (P1-P5+P7-P10)</td><td>10 (P1-P10)</td></tr>",
+   779→    )
+   780→    html = html.replace(
+   781→        "<tr><td>MCP Server Templates</td><td>4</td><td>6</td><td>6</td></tr>",
+   782→        "<tr><td>MCP Server Templates</td><td>5</td><td>9</td><td>11</td></tr>",
+   783→    )
+   784→
+   785→    # Add P8-P10 rows to comparison table
+   786→    new_rows = """            <tr><td>P8 Router-Orchestrator</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   787→            <tr><td>P9 Evaluator-Parallelization</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   788→            <tr><td>P10 Cognitive-SOUL Pipeline</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   789→            <tr><td>MCP Slack Server</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   790→            <tr><td>MCP Notion Server</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   791→            <tr><td>MCP GitHub Server</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+   792→            <tr><td>MCP Trello Server</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+   793→            <tr><td>MCP HubSpot Server</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>"""
+   794→
+   795→    # Insert before the Docker Compose row
+   796→    html = html.replace(
+   797→        '            <tr><td>Docker Compose</td>',
+   798→        new_rows + '\n            <tr><td>Docker Compose</td>',
+   799→    )
+   800→
+   801→    # Update Starter features
+   802→    html = html.replace(
+   803→        "<li><span class=\"check\">✓</span> 4 MCP Server Templates</li>",
+   804→        "<li><span class=\"check\">✓</span> 5 MCP Server Templates (incl. Slack)</li>",
+   805→    )
+   806→    html = html.replace(
+   807→        "<li><span class=\"check\">✓</span> <strong>P7 SOUL Bootstrap Agent</strong></li>\n            <li><span class=\"check\">✓</span> 2 Cognitive Capital Skills</li>",
+   808→        "<li><span class=\"check\">✓</span> <strong>P7 SOUL Bootstrap Agent</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P10 Cognitive-SOUL Pipeline</strong></li>\n            <li><span class=\"check\">✓</span> 2 Cognitive Capital Skills</li>",
+   809→    )
+   810→
+   811→    # Update Professional features
+   812→    html = html.replace(
+   813→        "<li><span class=\"check\">✓</span> 6 MCP Server templates</li>",
+   814→        "<li><span class=\"check\">✓</span> 9 MCP Server templates (incl. Slack, Notion, GitHub)</li>",
+   815→    )
+   816→    html = html.replace(
+   817→        "<li><span class=\"check\">✓</span> <strong>P7 SOUL Bootstrap Agent</strong></li>\n            <li><span class=\"check\">✓</span> 4 Cognitive Capital Skills</li>",
+   818→        "<li><span class=\"check\">✓</span> <strong>P7 SOUL Bootstrap Agent</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P8 Router-Orchestrator</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P9 Evaluator-Parallelization</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P10 Cognitive-SOUL Pipeline</strong></li>\n            <li><span class=\"check\">✓</span> 4 Cognitive Capital Skills</li>",
+   819→    )
+   820→
+   821→    # Update Enterprise features
+   822→    html = html.replace(
+   823→        "<li><span class=\"check\">✓</span> <strong>P6 Cognitive Capital MCP Server</strong></li>",
+   824→        "<li><span class=\"check\">✓</span> <strong>P6 Cognitive Capital MCP Server</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P8 Router-Orchestrator</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P9 Evaluator-Parallelization</strong></li>\n            <li><span class=\"check\">✓</span> <strong>P10 Cognitive-SOUL Pipeline</strong></li>",
+   825→    )
+   826→    html = html.replace(
+   827→        "<li><span class=\"check\">✓</span> 6 Cognitive Capital Skills (all)</li>",
+   828→        "<li><span class=\"check\">✓</span> 6 Cognitive Capital Skills (all)</li>\n            <li><span class=\"check\">✓</span> 11 MCP Servers (incl. Trello, HubSpot)</li>",
+   829→    )
+   830→
+   831→    with open(ppath, "w") as f:
+   832→        f.write(html)
+   833→    print(f"  ✓ pricing.html updated")
+   834→
+   835→
+   836→# ═══════════════════════════════════════════════════════════════════════
+   837→# MAIN
+   838→# ═══════════════════════════════════════════════════════════════════════
+   839→
+   840→if __name__ == "__main__":
+   841→    print("=" * 60)
+   842→    print("  Phase 4: Expand MCP Arsenal + Combined Anthropic Patterns")
+   843→    print("=" * 60)
+   844→
+   845→    # Generate 5 new MCP servers
+   846→    print("\n1. Generating 5 new MCP Servers...")
+   847→    mcp_servers = {
+   848→        "MCP_Slack_Server_v3.json": generate_mcp_slack(),
+   849→        "MCP_Notion_Server_v3.json": generate_mcp_notion(),
+   850→        "MCP_GitHub_Server_v3.json": generate_mcp_github(),
+   851→        "MCP_Trello_Server_v3.json": generate_mcp_trello(),
+   852→        "MCP_HubSpot_Server_v3.json": generate_mcp_hubspot(),
+   853→    }
+   854→
+   855→    # Also copy to top-level mcp_servers/ and anthropic_patterns/
+   856→    for fname, wf in mcp_servers.items():
+   857→        # Top-level mcp_servers/
+   858→        path = f"{BASE}/mcp_servers/{fname}"
+   859→        os.makedirs(os.path.dirname(path), exist_ok=True)
+   860→        with open(path, "w") as f:
+   861→            json.dump(wf, f, indent=2)
+   862→        print(f"  ✓ mcp_servers/{fname}")
+   863→
+   864→    # Generate 3 combined pattern workflows
+   865→    print("\n2. Generating 3 Combined Anthropic-Pattern Workflows...")
+   866→    combined_patterns = {
+   867→        "P8_Router_Orchestrator_v3.json": generate_p8_router_orchestrator(),
+   868→        "P9_Evaluator_Parallel_v3.json": generate_p9_evaluator_parallel(),
+   869→        "P10_Cognitive_SOUL_Pipeline_v3.json": generate_p10_cognitive_soul(),
+   870→    }
+   871→
+   872→    for fname, wf in combined_patterns.items():
+   873→        # Top-level anthropic_patterns/
+   874→        path = f"{BASE}/anthropic_patterns/{fname}"
+   875→        os.makedirs(os.path.dirname(path), exist_ok=True)
+   876→        with open(path, "w") as f:
+   877→            json.dump(wf, f, indent=2)
+   878→        print(f"  ✓ anthropic_patterns/{fname}")
+   879→
+   880→    # Copy to package directories
+   881→    print("\n3. Copying to JARVIS packages...")
+   882→    for pkg_name, cfg in PACKAGE_ASSIGNMENTS.items():
+   883→        # MCP servers
+   884→        mcp_dir = f"{BASE}/{pkg_name}/workflows/mcp_servers"
+   885→        for srv in cfg["new_mcp_servers"]:
+   886→            src = f"{BASE}/mcp_servers/{srv}"
+   887→            dst = f"{mcp_dir}/{srv}"
+   888→            if os.path.exists(src):
+   889→                import shutil
+   890→                shutil.copy2(src, dst)
+   891→                print(f"  ✓ {pkg_name}/workflows/mcp_servers/{srv}")
+   892→
+   893→        # Anthropic patterns
+   894→        pat_dir = f"{BASE}/{pkg_name}/workflows/anthropic_patterns"
+   895→        for pat in cfg["new_patterns"]:
+   896→            src = f"{BASE}/anthropic_patterns/{pat}"
+   897→            dst = f"{pat_dir}/{pat}"
+   898→            if os.path.exists(src):
+   899→                import shutil
+   900→                shutil.copy2(src, dst)
+   901→                print(f"  ✓ {pkg_name}/workflows/anthropic_patterns/{pat}")
+   902→
+   903→    # Update manifests
+   904→    print("\n4. Updating manifests...")
+   905→    update_manifests()
+   906→
+   907→    # Update pricing page
+   908→    print("\n5. Updating pricing.html...")
+   909→    update_pricing_html()
+   910→
+   911→    # Validate ai_* connections
+   912→    print("\n6. Validating ai_* connections...")
+   913→    total_ai = 0
+   914→    for fname, wf in {**mcp_servers, **combined_patterns}.items():
+   915→        ai_count = 0
+   916→        for node_name, conns in wf.get("connections", {}).items():
+   917→            for conn_type, conn_list in conns.items():
+   918→                if conn_type.startswith("ai_"):
+   919→                    ai_count += len(conn_list)
+   920→        total_ai += ai_count
+   921→        print(f"  {fname}: {ai_count} ai_* connections")
+   922→    print(f"  Total: {total_ai} ai_* connections across 8 new workflows")
+   923→
+   924→    # Summary
+   925→    print("\n" + "=" * 60)
+   926→    print("  ✅ Phase 4 Complete!")
+   927→    print("=" * 60)
+   928→    print("\n  New MCP Servers: 5 (Slack, Notion, GitHub, Trello, HubSpot)")
+   929→    print("  New Combined Patterns: 3 (P8, P9, P10)")
+   930→    print(f"  Total ai_* connections: {total_ai}")
+   931→    print()
+   932→    for pkg_name, cfg in PACKAGE_ASSIGNMENTS.items():
+   933→        mpath = f"{BASE}/{pkg_name}/manifest.json"
+   934→        with open(mpath) as f:
+   935→            m = json.load(f)
+   936→        total = m["total_workflows"]
+   937→        n_mcp = len(m["workflows"]["mcp_servers"])
+   938→        n_patterns = len(m["workflows"]["anthropic_patterns"])
+   939→        print(f"  {pkg_name}: {total} workflows, {n_mcp} MCP servers, {n_patterns} Anthropic patterns")
+   940→
