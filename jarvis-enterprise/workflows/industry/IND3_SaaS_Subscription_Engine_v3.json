@@ -1,0 +1,407 @@
+{
+  "name": "IND3 SaaS Subscription Engine v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your SaaS Subscription Engine. I manage Discord community onboarding, Stripe subscription lifecycle, CRM customer tracking, and Telegram team alerts. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "d5c58038-4818-46ba-a9e9-a8c905b725b9",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "SaaS Subscription Engine\n\nFLOW: Discord Onboard \u2192 Stripe Subscribe \u2192 CRM Track \u2192 Telegram Alert\n\nPlatforms: Discord, Stripe, CRM, Telegram\nLifecycle: Trial \u2192 Active \u2192 Upgrade \u2192 Renewal \u2192 (Churn/Reactivate)",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "b885561e-3b4f-415c-9e8e-f9488bbd54df",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# SaaS Subscription Engine Agent\n\nYou orchestrate SaaS subscription operations across multiple platforms:\n\n## Community Management:\n- Onboard new users to Discord server with role-based access\n- Send welcome messages and onboarding guides\n- Manage premium channels based on subscription tier\n- Handle support tickets via Discord\n- Send product updates and changelog\n\n## Subscription Lifecycle:\n- Create Stripe subscriptions with tiered plans\n- Handle upgrades, downgrades, and plan changes\n- Process trial periods and conversions\n- Manage failed payments and dunning\n- Generate MRR/ARR reports\n\n## Customer Tracking:\n- Track customer lifecycle in CRM: Trial \u2192 Active \u2192 Churned \u2192 Reactivated\n- Log all support interactions and feature requests\n- Calculate churn risk scores\n- Segment customers by plan, usage, and health\n- Generate customer success reports\n\n## Team Alerts:\n- Send Telegram alerts for important events (new signup, churn, payment failure)\n- Daily/weekly metrics digest\n- Real-time error notifications\n- Team performance updates\n\n## Skills Loaded:\n- data-analysis: SaaS metrics (MRR, churn, LTV, CAC)\n- deep-research: Competitive analysis and feature benchmarking\n- payment-processing: Subscription and dunning management\n- consulting-analysis: Growth strategy and pricing optimization\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "104a7fcc-41fa-47e1-97ac-b4e0f5c523c7",
+      "name": "SaaS Subscription Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "ef03dd58-b77d-4fbd-87f9-5e475c075b1a",
+      "name": "GPT-4.1 SaaS",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "2ff613ff-084e-479a-a1a1-51f929854fb0",
+      "name": "SaaS Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (community/subscription/crm/alerts)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "customer_id": {
+              "type": "string",
+              "description": "Customer ID if applicable"
+            },
+            "subscription_id": {
+              "type": "string",
+              "description": "Stripe subscription ID if applicable"
+            },
+            "plan": {
+              "type": "string",
+              "description": "Subscription plan tier"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "130b9fa1-899b-4d96-9c75-1dfb8c931ca1",
+      "name": "SaaS Output"
+    },
+    {
+      "parameters": {
+        "description": "Onboard a new user to Discord server with appropriate role based on subscription tier. Sends welcome message.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Discord_Onboard_URL', `Discord Onboard API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "4fdad13b-ac70-4242-913a-25542b9cb4d9",
+      "name": "Discord Onboard"
+    },
+    {
+      "parameters": {
+        "description": "Update Discord member role when subscription changes (upgrade/downgrade/cancel).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Discord_Role_URL', `Discord Manage Role API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "1907b6c0-1f76-402a-a68d-7ff29815bafa",
+      "name": "Discord Manage Role"
+    },
+    {
+      "parameters": {
+        "description": "Create or update a support ticket in Discord channel with priority and category.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Discord_Support_URL', `Discord Support API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "7b279644-4942-4efa-82b8-c7a1c686b7b9",
+      "name": "Discord Support"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe subscription with plan, trial period, and customer details.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Sub_URL', `Stripe Create Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "95c13239-4832-495a-92dd-bd1874d2a2c6",
+      "name": "Stripe Create Subscription"
+    },
+    {
+      "parameters": {
+        "description": "Manage subscription lifecycle: upgrade, downgrade, cancel, pause, or reactivate.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Manage_URL', `Stripe Manage Sub API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "e21c4668-1ed6-4be2-a576-8bb98a578a6a",
+      "name": "Stripe Manage Sub"
+    },
+    {
+      "parameters": {
+        "description": "Calculate SaaS metrics from Stripe data: MRR, ARR, churn rate, LTV, CAC.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Metrics_URL', `Stripe SaaS Metrics API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "b3d67cc3-4452-4b59-9978-c5e4dadbb32e",
+      "name": "Stripe SaaS Metrics"
+    },
+    {
+      "parameters": {
+        "description": "Create or update SaaS customer in CRM with plan, usage, health score, and lifecycle stage.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_SaaS_URL', `CRM SaaS Customer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "ed7e6f01-3e4c-4f8d-b5d6-acdf304e9e99",
+      "name": "CRM SaaS Customer"
+    },
+    {
+      "parameters": {
+        "description": "Send a team alert via Telegram for important events (new signup, churn, payment failure, error).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telegram_Alert_URL', `Telegram Alert API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "2d4eec8d-523a-497b-bed7-9814574b77a0",
+      "name": "Telegram Alert"
+    },
+    {
+      "parameters": {
+        "description": "Think through subscription lifecycle, churn risk, plan optimization, and customer health."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "a9eac21c-0da2-40ca-8036-efc125b68d05",
+      "name": "SaaS Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "SaaS Subscription Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SaaS Subscription Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 SaaS",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "SaaS Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "SaaS Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "Discord Onboard",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord Manage Role",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord Support",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Create Subscription",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Manage Sub",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe SaaS Metrics",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM SaaS Customer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Alert",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SaaS Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "saas"
+    },
+    {
+      "name": "subscription"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

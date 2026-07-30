@@ -1,7 +1,7 @@
 {
   "package": "jarvis-enterprise",
   "name": "JARVIS Enterprise",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "price": 399,
   "zero_debt": true,
   "workflows": {
@@ -46,7 +46,10 @@
       "MCP_Bitrefill_Server_v3.json",
       "MCP_Tropipay_Server_v3.json",
       "MCP_Coinex_Server_v3.json",
-      "MCP_Binance_Server_v3.json"
+      "MCP_Binance_Server_v3.json",
+      "MCP_WhatsApp_Business_Server_v3.json",
+      "MCP_Telegram_Bot_Server_v3.json",
+      "MCP_Discord_Server_v3.json"
     ],
     "templates": [
       "T1_Single_Agent_Chat_v2.json",
@@ -76,7 +79,14 @@
       "ORC1_Google_CRM_WordPress_Marketing_v3.json",
       "ORC2_Booking_Expedia_CRM_Travel_v3.json",
       "ORC3_WooCommerce_Shopify_ERPNext_Commerce_v3.json",
-      "ORC4_Stripe_PayPal_Binance_Payments_v3.json"
+      "ORC4_Stripe_PayPal_Binance_Payments_v3.json",
+      "ORC5_WhatsApp_CRM_Stripe_Sales_Cycle_v3.json"
+    ],
+    "industry": [
+      "IND1_Real_Estate_Automation_v3.json",
+      "IND2_Restaurant_Operations_v3.json",
+      "IND3_SaaS_Subscription_Engine_v3.json",
+      "IND4_Agency_Client_Portal_v3.json"
     ]
   },
   "docker_services": [
@@ -92,7 +102,7 @@
   "llm_tier": "GPT-4o-mini \u2192 GPT-4.1-mini \u2192 Gemini 2.5 Flash \u2192 GPT-4.1 \u2192 Claude Sonnet (full tiered)",
   "estimated_monthly_cost": "$75-250/month (depending on usage and scale)",
   "generated_at": "2026-07-29T23:01:25.289839",
-  "total_workflows": 61,
+  "total_workflows": 69,
   "cognitive_capital": {
     "skills": [
       "deep-research",
@@ -106,9 +116,13 @@
       "erp-finance",
       "content-management",
       "payment-processing",
-      "crypto-operations"
+      "crypto-operations",
+      "communication-automation",
+      "sales-cycle-automation",
+      "industry-automation"
     ],
     "soul_template": true
   },
-  "memory_tier": "Full Stack: Buffer + Redis + Qdrant + Cognitive Capital (persistent, semantic, governed)"
+  "memory_tier": "Full Stack: Buffer + Redis + Qdrant + Cognitive Capital (persistent, semantic, governed)",
+  "last_updated": "2026-07-30"
 }

@@ -1,0 +1,407 @@
+{
+  "name": "IND2 Restaurant Operations v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Restaurant Operations Assistant. I manage WhatsApp food orders, menu updates on WooCommerce, customer loyalty in CRM, and payment processing via Stripe. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "04015a94-2fe2-4dcb-bf09-86da3dc34d68",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Restaurant Operations\n\nFLOW: WhatsApp Order \u2192 WC Menu \u2192 CRM Loyalty \u2192 Stripe Payment\n\nPlatforms: WhatsApp, WooCommerce, CRM, Stripe\nPipeline: Order \u2192 Prepare \u2192 Deliver \u2192 Payment \u2192 Loyalty",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "740ff12f-c811-4efa-bae8-e936cfd85ca1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Restaurant Operations Agent\n\nYou orchestrate restaurant operations across multiple platforms:\n\n## Order Management:\n- Receive food orders via WhatsApp interactive menus\n- Process orders with items, quantity, and delivery details\n- Send order confirmations and estimated delivery time\n- Track order status: Received \u2192 Preparing \u2192 Ready \u2192 Delivered\n- Handle order modifications and cancellations\n\n## Menu Management:\n- Update WooCommerce product catalog with dishes and prices\n- Manage daily specials and seasonal menu items\n- Update availability (mark items as sold out)\n- Sync menu across WhatsApp and WooCommerce\n\n## Customer Loyalty:\n- Track customer order history in CRM\n- Assign loyalty labels and segments\n- Send personalized promotions via WhatsApp\n- Generate loyalty points and rewards\n- Birthday and anniversary campaigns\n\n## Payment Processing:\n- Process payments via Stripe (card, cash, digital)\n- Generate invoices for corporate/catering orders\n- Handle refunds and disputes\n- Daily sales reconciliation\n- Revenue analytics and reporting\n\n## Skills Loaded:\n- data-analysis: Sales analytics and demand forecasting\n- deep-research: Menu optimization and market trends\n- payment-processing: Payment reconciliation\n- consulting-analysis: Restaurant operations optimization\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "35045ca7-241c-460f-a07c-068074c63627",
+      "name": "Restaurant Operations Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "5ea6d2fd-448d-4d27-957b-2fc61c5bc539",
+      "name": "GPT-4.1 Restaurant",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "105f9b35-483a-43a2-add7-a211c7d6c3fe",
+      "name": "Restaurant Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (order/menu/loyalty/payment)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "order_id": {
+              "type": "string",
+              "description": "Order ID if applicable"
+            },
+            "customer_id": {
+              "type": "string",
+              "description": "Customer ID if applicable"
+            },
+            "total": {
+              "type": "string",
+              "description": "Order total if applicable"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "eb233220-ce1c-4a4c-9b51-60488afb37af",
+      "name": "Restaurant Output"
+    },
+    {
+      "parameters": {
+        "description": "Receive and process a food order via WhatsApp. Captures items, quantity, delivery address, and payment method.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Order_URL', `WA Take Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "fbd27e42-b5af-41ba-a8d1-42a3e5407928",
+      "name": "WA Take Order"
+    },
+    {
+      "parameters": {
+        "description": "Send order confirmation via WhatsApp with estimated delivery time and order total.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Confirm_URL', `WA Confirm Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "226fbc80-373b-4ae2-a7d7-f3c31c678ac0",
+      "name": "WA Confirm Order"
+    },
+    {
+      "parameters": {
+        "description": "Send promotional messages via WhatsApp for daily specials, loyalty rewards, or birthday offers.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Promo_URL', `WA Send Promo API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "e15e67b6-d94a-4e51-8dc3-4fea75cadb66",
+      "name": "WA Send Promo"
+    },
+    {
+      "parameters": {
+        "description": "Update WooCommerce product catalog with menu items, prices, descriptions, and availability.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WC_Menu_URL', `WC Update Menu API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "c4469377-6ad3-4b08-9679-54aee721789f",
+      "name": "WC Update Menu"
+    },
+    {
+      "parameters": {
+        "description": "List WooCommerce orders with filters for status, date, and customer.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WC_Orders_URL', `WC List Orders API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "8151426c-510d-4279-a9db-016ef8c19277",
+      "name": "WC List Orders"
+    },
+    {
+      "parameters": {
+        "description": "Create or update a restaurant customer in CRM with order history, preferences, and loyalty tier.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Customer_URL', `CRM Customer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "2635a2f0-cc8d-4d66-9808-b8bc1a2c0095",
+      "name": "CRM Customer"
+    },
+    {
+      "parameters": {
+        "description": "Process a restaurant order payment via Stripe. Supports card, cash tracking, and digital wallets.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Order_URL', `Stripe Process Order API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "b27853b4-059b-4fed-a5aa-e22f5f1b697f",
+      "name": "Stripe Process Order"
+    },
+    {
+      "parameters": {
+        "description": "Generate daily sales reconciliation report from Stripe transactions.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Report_URL', `Stripe Daily Report API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "f1a756de-8c6a-4e63-9288-4a4f954b15ce",
+      "name": "Stripe Daily Report"
+    },
+    {
+      "parameters": {
+        "description": "Think through order flow, menu optimization, customer loyalty, and payment reconciliation."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "dd932f9f-7e36-4809-bfff-e6d714406390",
+      "name": "Restaurant Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Restaurant Operations Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurant Operations Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Restaurant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Restaurant Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Restaurant Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Take Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Confirm Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Send Promo",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WC Update Menu",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WC List Orders",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Customer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Process Order",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Daily Report",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restaurant Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "restaurant"
+    },
+    {
+      "name": "food-service"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

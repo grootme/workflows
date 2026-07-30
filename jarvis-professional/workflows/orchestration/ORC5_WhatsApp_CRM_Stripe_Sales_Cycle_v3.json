@@ -1,0 +1,507 @@
+{
+  "name": "ORC5 WhatsApp CRM Stripe Sales Cycle v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Sales Cycle Orchestrator. I manage the complete sales pipeline from WhatsApp lead capture through CRM qualification to Stripe payment processing. What sales operation do you need?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "85c500dd-20bf-4fa6-815e-83db40ce00b0",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "WhatsApp \u2192 CRM \u2192 Stripe Sales Cycle\n\nSTAGE 1: WhatsApp Lead Capture\n  Lead \u2192 Qualify \u2192 Label \u2192 Interactive Menu\n\nSTAGE 2: CRM Pipeline Management\n  Contact \u2192 Deal \u2192 Pipeline \u2192 Activity Log\n\nSTAGE 3: Stripe Payment Processing\n  Payment Link \u2192 Invoice \u2192 Subscription \u2192 Status\n\nCROSS-PLATFORM:\n  Lead \u2192 CRM \u2192 Payment \u2192 Confirmation",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "44137c8d-136f-4ee8-9b4c-594451081beb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Sales Cycle Orchestrator \u2014 WhatsApp \u2192 CRM \u2192 Stripe\n\nYou orchestrate the complete sales cycle across three critical platforms:\n\n## Stage 1: Lead Capture (WhatsApp)\n- Receive incoming WhatsApp messages from prospects\n- Qualify leads using conversational AI\n- Send interactive menus for product/service selection\n- Capture contact information and preferences\n- Label contacts for segmentation (hot/warm/cold)\n\n## Stage 2: CRM Pipeline (CRM Universal)\n- Create or update contact in CRM with lead details\n- Move lead through pipeline stages: New \u2192 Qualified \u2192 Proposal \u2192 Negotiation \u2192 Won/Lost\n- Log activities and communication history\n- Create deals with estimated value and probability\n- Schedule follow-up activities and reminders\n- Generate pipeline dashboard and forecasts\n\n## Stage 3: Payment Processing (Stripe)\n- Create payment links for proposals\n- Generate invoices for accepted deals\n- Set up subscriptions for recurring services\n- Process refunds and handle disputes\n- Track payment status and revenue\n- Generate financial reports\n\n## Cross-Platform Workflows:\n1. WhatsApp lead \u2192 CRM contact creation \u2192 Auto-followup\n2. CRM deal Won \u2192 Stripe invoice \u2192 WhatsApp confirmation\n3. Payment failed \u2192 WhatsApp reminder \u2192 CRM activity log\n4. Subscription renewal \u2192 WhatsApp notification \u2192 CRM update\n5. Monthly report \u2192 CRM dashboard \u2192 WhatsApp summary\n\n## Skills Loaded:\n- deep-research: Lead qualification and market analysis\n- data-analysis: Sales pipeline analytics\n- payment-processing: Payment optimization\n- consulting-analysis: Sales strategy recommendations\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "40f48724-2fb9-446f-89a7-b004e6d23325",
+      "name": "Sales Cycle Orchestrator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "48ea9ce1-8401-4c51-a2f5-94235a2d44f4",
+      "name": "GPT-4.1 Sales",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "bc4472a1-817e-4f67-9c1a-6eeeb42f452e",
+      "name": "Sales Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "string",
+              "description": "Sales stage (lead_capture/crm_pipeline/payment_processing/cross_platform)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "platform": {
+              "type": "string",
+              "description": "Platform involved (whatsapp/crm/stripe)"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "next_steps": {
+              "type": "string",
+              "description": "Recommended next actions"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "CRM or WhatsApp contact ID"
+            },
+            "deal_id": {
+              "type": "string",
+              "description": "CRM deal ID if applicable"
+            },
+            "payment_id": {
+              "type": "string",
+              "description": "Stripe payment ID if applicable"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "6ee0baa6-08b2-4086-9c18-7a57c6743727",
+      "name": "Sales Output"
+    },
+    {
+      "parameters": {
+        "description": "Send a WhatsApp message to a lead or customer. Used for follow-ups, confirmations, and notifications.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Send_URL', `WA Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "5c382f0e-c792-4ec7-8c53-9240235dac8b",
+      "name": "WA Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send a WhatsApp template message for initial outreach or appointment reminders.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Template_URL', `WA Send Template API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "ee4f5649-378f-49cf-8375-cd653e2bf987",
+      "name": "WA Send Template"
+    },
+    {
+      "parameters": {
+        "description": "Send interactive WhatsApp message with buttons or lists for product/service selection.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Interactive_URL', `WA Send Interactive API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "2a8ac628-1693-4089-86b3-5c67f084a990",
+      "name": "WA Send Interactive"
+    },
+    {
+      "parameters": {
+        "description": "Assign WhatsApp labels to contacts for lead segmentation (hot/warm/cold/vip).",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Labels_URL', `WA Manage Labels API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "54b88879-8647-4d7e-940b-43faa095650a",
+      "name": "WA Manage Labels"
+    },
+    {
+      "parameters": {
+        "description": "Create or update a contact in the CRM with lead details, source, and qualification status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Contact_URL', `CRM Create Contact API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "f96c327f-dba3-424f-a13b-c096138a37ec",
+      "name": "CRM Create Contact"
+    },
+    {
+      "parameters": {
+        "description": "Create a deal in the CRM pipeline with estimated value, probability, and stage.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Deal_URL', `CRM Create Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "0676dde9-f20c-41f4-85c6-a6b2ba87a1f4",
+      "name": "CRM Create Deal"
+    },
+    {
+      "parameters": {
+        "description": "Move a deal through pipeline stages: New \u2192 Qualified \u2192 Proposal \u2192 Negotiation \u2192 Won/Lost.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Pipeline_URL', `CRM Update Pipeline API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "31b28000-01e8-422a-966d-97d78c896ffb",
+      "name": "CRM Update Pipeline"
+    },
+    {
+      "parameters": {
+        "description": "Log a sales activity (call, email, meeting, note) in the CRM for a contact or deal.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Activity_URL', `CRM Log Activity API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "eb515155-502f-4cb9-93ac-400471da57d9",
+      "name": "CRM Log Activity"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe payment link or payment intent for a deal or invoice.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Payment_URL', `Stripe Create Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "b4e0edce-a566-40cc-8183-5774102a4046",
+      "name": "Stripe Create Payment"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe invoice for a customer with line items, discounts, and due date.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Create Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        700
+      ],
+      "id": "10f3ac40-bb42-48ef-804a-41ee94fc0c51",
+      "name": "Stripe Create Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Create a recurring subscription with plan, interval, and trial period.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Subscription_URL', `Stripe Create Subscription API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        700
+      ],
+      "id": "4653948c-2e6d-47f1-a697-a1b5ac984267",
+      "name": "Stripe Create Subscription"
+    },
+    {
+      "parameters": {
+        "description": "Check the status of a Stripe payment, subscription, or invoice.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Status_URL', `Stripe Payment Status API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        700
+      ],
+      "id": "ee83a0dd-a782-4841-b23c-3e18198610a4",
+      "name": "Stripe Payment Status"
+    },
+    {
+      "parameters": {
+        "description": "Think through the sales cycle step: qualify lead, determine pipeline stage, choose payment method, plan follow-up."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "3e3cb4d9-edd8-4aeb-8d5b-9bad29942162",
+      "name": "Sales Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Sales Cycle Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Cycle Orchestrator": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Sales",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Sales Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Sales Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WA Send Message",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Send Template",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Send Interactive",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Manage Labels",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Create Contact",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Create Deal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Update Pipeline",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Log Activity",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Create Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Create Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Create Subscription",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Payment Status",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sales Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "orchestration"
+    },
+    {
+      "name": "sales"
+    },
+    {
+      "name": "whatsapp-crm-stripe"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

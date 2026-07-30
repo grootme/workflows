@@ -1,0 +1,407 @@
+{
+  "name": "IND4 Agency Client Portal v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Agency Client Portal Assistant. I manage WordPress portfolio updates, CRM client relationships, Stripe invoicing, and team collaboration via Discord/Telegram. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "59ad152c-3765-4014-acd6-0b4a27364ac8",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Agency Client Portal\n\nFLOW: WordPress Portfolio \u2192 CRM Client \u2192 Stripe Invoice \u2192 Discord/Telegram\n\nPlatforms: WordPress, CRM, Stripe, Discord, Telegram\nPipeline: Lead \u2192 Onboarding \u2192 Active \u2192 Completed \u2192 Retainer",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "d6ddaeaf-fefe-4d73-8383-6747abcc0091",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Agency Client Portal Agent\n\nYou orchestrate agency operations across multiple platforms:\n\n## Portfolio & Content:\n- Publish case studies and portfolio pieces on WordPress\n- Update project pages with milestones and deliverables\n- Manage blog content and social media scheduling\n- Share portfolio updates via WhatsApp with clients\n\n## Client Management:\n- Track clients in CRM: Lead \u2192 Onboarding \u2192 Active \u2192 Completed \u2192 Retainer\n- Log all client communications and deliverables\n- Schedule and track client meetings\n- Generate client satisfaction surveys\n- Manage retainer contracts and renewals\n\n## Invoicing & Payments:\n- Create Stripe invoices for project milestones\n- Set up recurring retainer payments\n- Track time and expenses per project\n- Handle late payments and reminders\n- Generate revenue and profitability reports\n\n## Team Collaboration:\n- Manage project channels in Discord\n- Send task updates and deadline alerts via Telegram\n- Share client briefs and creative assets\n- Coordinate team availability and workload\n\n## Skills Loaded:\n- deep-research: Client industry analysis and competitive landscape\n- data-analysis: Project profitability and resource utilization\n- consulting-analysis: Client strategy and growth recommendations\n- content-management: Content creation and publishing workflow\n- payment-processing: Invoice and retainer management\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "29a3d35f-2098-4e2a-a498-4ff65b41c3c8",
+      "name": "Agency Client Portal Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "eedb0c37-abc9-4642-9d8b-ba9c17a9ece4",
+      "name": "GPT-4.1 Agency",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "5efc4215-8f15-49ff-a97e-d57dfd923f64",
+      "name": "Agency Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (portfolio/client/invoicing/collaboration)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "client_id": {
+              "type": "string",
+              "description": "Client ID if applicable"
+            },
+            "project_id": {
+              "type": "string",
+              "description": "Project ID if applicable"
+            },
+            "invoice_id": {
+              "type": "string",
+              "description": "Invoice ID if applicable"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "2c8bb03b-905d-4e58-9c6f-394106e2ad41",
+      "name": "Agency Output"
+    },
+    {
+      "parameters": {
+        "description": "Publish a case study or portfolio piece on WordPress with title, content, images, and categories.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WP_CaseStudy_URL', `WP Publish Case Study API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "866b1c01-cf74-432f-93e1-a7cb8572c059",
+      "name": "WP Publish Case Study"
+    },
+    {
+      "parameters": {
+        "description": "Update a project page on WordPress with milestones, deliverables, and status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WP_Project_URL', `WP Update Project API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "1875d98b-1eae-44ae-a6a0-140a0446479e",
+      "name": "WP Update Project"
+    },
+    {
+      "parameters": {
+        "description": "Create or update an agency client in CRM with project details, contract value, and status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Agency_URL', `CRM Agency Client API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "2a84acd1-dc35-45cb-95fb-2daf5773e467",
+      "name": "CRM Agency Client"
+    },
+    {
+      "parameters": {
+        "description": "Create a project deal in CRM with scope, milestones, timeline, and budget.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Project_URL', `CRM Project Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "5c54cfdf-d2d4-4d18-90a4-27aa941989fd",
+      "name": "CRM Project Deal"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe invoice for a project milestone, retainer, or ad-hoc service.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Invoice_URL', `Stripe Project Invoice API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "289ac548-5d15-427f-b9b1-5cd7ca089e29",
+      "name": "Stripe Project Invoice"
+    },
+    {
+      "parameters": {
+        "description": "Set up a recurring Stripe subscription for monthly retainer contracts.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Retainer_URL', `Stripe Retainer API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "a6bc9b63-6525-4506-8b4e-89ac64d32aaf",
+      "name": "Stripe Retainer"
+    },
+    {
+      "parameters": {
+        "description": "Create or manage a Discord channel for project collaboration with team and client.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Discord_Channel_URL', `Discord Project Channel API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "e0a4bfb5-f508-4cf4-8fc2-c45ca85699dd",
+      "name": "Discord Project Channel"
+    },
+    {
+      "parameters": {
+        "description": "Send a team update via Telegram for project milestones, deadlines, or urgent tasks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telegram_Update_URL', `Telegram Team Update API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "1f85c4cc-0344-46c4-9d1d-833836b0ed32",
+      "name": "Telegram Team Update"
+    },
+    {
+      "parameters": {
+        "description": "Think through client needs, project scope, resource allocation, and invoicing strategy."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "0f3c5a92-5824-4a5a-9646-d7ee8799ffde",
+      "name": "Agency Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Agency Client Portal Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agency Client Portal Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Agency",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Agency Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agency Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WP Publish Case Study",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WP Update Project",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Agency Client",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Project Deal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Project Invoice",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Retainer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord Project Channel",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Team Update",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agency Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "agency"
+    },
+    {
+      "name": "client-portal"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

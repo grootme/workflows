@@ -1,0 +1,274 @@
+{
+  "name": "MCP Discord Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "discord-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "264474cd-adbe-4dd4-9637-2ecabd5fa2ff",
+      "name": "MCP Trigger",
+      "webhookId": "discord-mcp"
+    },
+    {
+      "parameters": {
+        "content": "Discord Bot API MCP Server\n\n8 Tools: Send Message, Send Embed, Manage Channels, Get Server Info, Manage Roles, Send DM, Manage Webhooks, Search Messages\n\nAuth: Bot Token via Discord Developer Portal\nOAuth2: Discord OAuth2 with bot scope + permissions\nAPI: discord.com/api/v10",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "890b8db5-3c52-4648-967b-591a0ec5b9a4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Send a message to a Discord channel. Supports text, embeds, components, and attachments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "3a694a29-564e-4126-8120-a2157dd283b1",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send a rich embed message with title, description, fields, color, thumbnail, and footer.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Embed_URL', `Send Embed API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "416a8c3d-ad8d-43a4-a18c-3174e29ee5c0",
+      "name": "Send Embed"
+    },
+    {
+      "parameters": {
+        "description": "Create, modify, or delete Discord channels. Supports text, voice, category, and announcement types.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Channels_URL', `Manage Channels API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "383bea73-c1ea-4c6a-9bf0-487561eaf1aa",
+      "name": "Manage Channels"
+    },
+    {
+      "parameters": {
+        "description": "Get Discord server (guild) information including name, member count, roles, and channels.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Server_Info_URL', `Get Server Info API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "33e8e073-25b8-49fa-891b-a10ff0afb6af",
+      "name": "Get Server Info"
+    },
+    {
+      "parameters": {
+        "description": "Create, modify, or delete Discord roles. Supports permissions, color, and hierarchy.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Roles_URL', `Manage Roles API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "25002de4-3940-4e01-aa58-9a7eb51a6bea",
+      "name": "Manage Roles"
+    },
+    {
+      "parameters": {
+        "description": "Send a direct message to a Discord user. Requires user ID and mutual server.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_DM_URL', `Send DM API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "f6562dd6-102f-4295-952c-0976ebdb2283",
+      "name": "Send DM"
+    },
+    {
+      "parameters": {
+        "description": "Create, modify, or delete Discord webhooks for channel message posting.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Webhooks_URL', `Manage Webhooks API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "6d3609e0-78d2-4f49-808b-9512483f5733",
+      "name": "Manage Webhooks"
+    },
+    {
+      "parameters": {
+        "description": "Search Discord messages with filters: author, content, channel, date range, and has attachments.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Messages_URL', `Search Messages API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "11a5f89d-7b78-4904-86cb-737c821857af",
+      "name": "Search Messages"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Embed": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Channels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Server Info": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Roles": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send DM": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Webhooks": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "discord"
+    },
+    {
+      "name": "communication"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "name": "MCP WhatsApp Business Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "whatsapp-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "67de351b-7893-4662-a29b-e67abd5b1b5c",
+      "name": "MCP Trigger",
+      "webhookId": "whatsapp-mcp"
+    },
+    {
+      "parameters": {
+        "content": "WhatsApp Business API MCP Server\n\n8 Tools: Send Message, Send Template, Send Media, List Conversations, Get Contact Profile, Manage Labels, Send Interactive, Get Message Status\n\nOAuth2: Meta Business Suite \u2192 WhatsApp Business Account\nAPI: graph.facebook.com/v19.0/{phone_number_id}",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "066a9801-b239-454b-af09-94ee6c1f0286",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Send a text message via WhatsApp Business API. Supports text body, preview URL, and recipient phone number.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "fc635f52-71bd-4fd7-8a99-96003b41aab7",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send a WhatsApp template message with parameters. Supports header, body, button components.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Template_URL', `Send Template API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "3275b103-245c-442d-a19b-4ccc77c1509b",
+      "name": "Send Template"
+    },
+    {
+      "parameters": {
+        "description": "Send media (image, video, document, audio, sticker) via WhatsApp. Supports URL and base64 media.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Media_URL', `Send Media API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "0540b2d1-f3f0-4787-a16d-7843518e0dde",
+      "name": "Send Media"
+    },
+    {
+      "parameters": {
+        "description": "List WhatsApp Business conversations with pagination. Filter by status, contact, and date.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('List_Conversations_URL', `List Conversations API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "6e8c32ce-c133-4747-8fd9-0aba25ddff6b",
+      "name": "List Conversations"
+    },
+    {
+      "parameters": {
+        "description": "Get WhatsApp contact profile information including name, phone, and profile picture.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Contact_Profile_URL', `Get Contact Profile API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "eb5e36e2-f22f-4cc2-a7b5-ca575dfee4b0",
+      "name": "Get Contact Profile"
+    },
+    {
+      "parameters": {
+        "description": "Create, list, and assign labels to WhatsApp contacts for segmentation and organization.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Manage_Labels_URL', `Manage Labels API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "060b1bb5-b30d-431d-aea0-29b87c826b43",
+      "name": "Manage Labels"
+    },
+    {
+      "parameters": {
+        "description": "Send interactive messages (buttons, lists, product items) via WhatsApp Business API.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Interactive_URL', `Send Interactive API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "8e81d47b-84c5-46da-b38b-1c237d102898",
+      "name": "Send Interactive"
+    },
+    {
+      "parameters": {
+        "description": "Check the delivery status of a sent WhatsApp message. Returns read, delivered, sent status.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Message_Status_URL', `Get Message Status API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "567559b3-07f3-46dc-93e0-388985031e89",
+      "name": "Get Message Status"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Template": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Media": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Conversations": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contact Profile": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manage Labels": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Interactive": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Message Status": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "whatsapp"
+    },
+    {
+      "name": "communication"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

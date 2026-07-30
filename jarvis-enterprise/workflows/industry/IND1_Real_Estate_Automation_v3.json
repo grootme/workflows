@@ -1,0 +1,407 @@
+{
+  "name": "IND1 Real Estate Automation v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I am your Real Estate Automation Assistant. I manage property listings, schedule virtual tours via WhatsApp, track buyer leads through the CRM pipeline, and process payments via Stripe. How can I help?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2200,
+        0
+      ],
+      "id": "ffc2bd68-8c12-4554-b1c7-d5230189012a",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "content": "Real Estate Automation\n\nFLOW: Property Listing \u2192 WhatsApp Tour \u2192 CRM Deal \u2192 Stripe Payment\n\nPlatforms: WordPress, WhatsApp, CRM, Stripe\nPipeline: Inquiry \u2192 Showing \u2192 Offer \u2192 Negotiation \u2192 Closing",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        -400
+      ],
+      "id": "1a58297e-b3f0-428b-a4ee-5e4a17554a56",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.input || $json.query }}",
+        "options": {
+          "systemMessage": "=# Real Estate Automation Agent\n\nYou orchestrate real estate operations across multiple platforms:\n\n## Property Management:\n- List properties on WordPress/CRM with photos and details\n- Update availability and pricing in real-time\n- Generate property comparison reports\n- Sync listings across platforms (WordPress, CRM, Booking)\n\n## Lead Management:\n- Capture leads via WhatsApp interactive messages\n- Qualify buyers by budget, location, and preferences\n- Schedule virtual tours and in-person visits\n- Send property recommendations with media (WhatsApp)\n- Label contacts: Buyer/Seller/Renter/Investor\n\n## CRM Pipeline:\n- Track deals: Inquiry \u2192 Showing \u2192 Offer \u2192 Negotiation \u2192 Closing\n- Log all activities and communications\n- Calculate commission and revenue forecasts\n- Generate pipeline reports\n\n## Payment Processing:\n- Create invoices for commissions and fees\n- Process security deposits via Stripe\n- Set up recurring rent payments\n- Generate financial reports\n\n## Skills Loaded:\n- deep-research: Property market analysis\n- data-analysis: Sales metrics and forecasting\n- consulting-analysis: Investment recommendations\n- payment-processing: Commission and deposit handling\n\nCurrent datetime: __DATE__"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        0
+      ],
+      "id": "b58f61e1-f478-44bb-b60a-63e403ec6b71",
+      "name": "Real Estate Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        300
+      ],
+      "id": "0f92611a-11dd-46b7-8700-016e7748cd61",
+      "name": "GPT-4.1 Real Estate",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1300,
+        300
+      ],
+      "id": "87876246-1fe3-4339-a504-558892e76ee7",
+      "name": "Real Estate Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category (property/lead/pipeline/payment)"
+            },
+            "action": {
+              "type": "string",
+              "description": "Action performed"
+            },
+            "result": {
+              "type": "string",
+              "description": "Result summary"
+            },
+            "property_id": {
+              "type": "string",
+              "description": "Property ID if applicable"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "Contact ID if applicable"
+            },
+            "deal_id": {
+              "type": "string",
+              "description": "Deal ID if applicable"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        -1300,
+        0
+      ],
+      "id": "47dd6984-1255-4360-8c2f-490845374a91",
+      "name": "Real Estate Output"
+    },
+    {
+      "parameters": {
+        "description": "Create or update a property listing on WordPress with title, description, price, features, and images.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WP_Listing_URL', `WP Create Listing API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ],
+      "id": "f0a2029c-18de-4c8c-9a45-8903bbeb2512",
+      "name": "WP Create Listing"
+    },
+    {
+      "parameters": {
+        "description": "Send property details via WhatsApp with images, price, and interactive buttons for tour scheduling.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Property_URL', `WA Send Property API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        500
+      ],
+      "id": "2a786a67-7feb-4a14-8e13-f25bb764b8e8",
+      "name": "WA Send Property"
+    },
+    {
+      "parameters": {
+        "description": "Send property photos, virtual tour videos, or floor plans via WhatsApp.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('WA_Media_URL', `WA Send Media API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        500
+      ],
+      "id": "48471a83-9e1f-4c78-9ab5-21010afeff6d",
+      "name": "WA Send Media"
+    },
+    {
+      "parameters": {
+        "description": "Create or update a buyer/seller contact in CRM with preferences, budget, and timeline.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Buyer_URL', `CRM Buyer Contact API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "45d2025f-da70-4ce1-9038-97a7c52713c8",
+      "name": "CRM Buyer Contact"
+    },
+    {
+      "parameters": {
+        "description": "Create a property deal in CRM with price, commission, stage, and closing date.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Deal_URL', `CRM Property Deal API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "caeeff6c-32ac-44ed-ae5c-06ec3f8a4586",
+      "name": "CRM Property Deal"
+    },
+    {
+      "parameters": {
+        "description": "Log a property showing, open house, or viewing activity in CRM.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('CRM_Showing_URL', `CRM Log Showing API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        500
+      ],
+      "id": "fca31664-a9ca-4fd8-a741-9c6878a7dbf5",
+      "name": "CRM Log Showing"
+    },
+    {
+      "parameters": {
+        "description": "Create a Stripe invoice for commission, deposit, or fee payment.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Commission_URL', `Stripe Commission API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        500
+      ],
+      "id": "4a94a570-0a1b-4c4e-8dac-ccdf648c381d",
+      "name": "Stripe Commission"
+    },
+    {
+      "parameters": {
+        "description": "Set up recurring rent or lease payments via Stripe subscription.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stripe_Rent_URL', `Stripe Rent Payment API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ],
+      "id": "82d7dc70-fccd-47f3-b4a3-071bbeb0cf31",
+      "name": "Stripe Rent Payment"
+    },
+    {
+      "parameters": {
+        "description": "Think through property matching, buyer qualification, deal stage, and payment options."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "id": "e1455a60-21d7-4f27-ab7e-1533feebefc2",
+      "name": "Real Estate Reasoning"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Real Estate Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Real Estate Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GPT-4.1 Real Estate",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "Real Estate Memory",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_outputParser": [
+        [
+          {
+            "node": "Real Estate Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "WP Create Listing",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Send Property",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WA Send Media",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Buyer Contact",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Property Deal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Log Showing",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Commission",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stripe Rent Payment",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Real Estate Reasoning",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "industry"
+    },
+    {
+      "name": "real-estate"
+    },
+    {
+      "name": "sales-cycle"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

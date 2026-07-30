@@ -1,0 +1,274 @@
+{
+  "name": "MCP Telegram Bot Server v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "telegram-mcp"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ed4f4983-be23-4f88-80b0-8a576b8a172c",
+      "name": "MCP Trigger",
+      "webhookId": "telegram-mcp"
+    },
+    {
+      "parameters": {
+        "content": "Telegram Bot API MCP Server\n\n8 Tools: Send Message, Send Photo, Send Document, Edit Message, Get Updates, Get Chat Info, Send Inline Keyboard, Pin Message\n\nAuth: Bot Token via @BotFather\nAPI: api.telegram.org/bot{token}",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -300
+      ],
+      "id": "7a777444-cbd7-4b60-a4b2-2313c10c45dd",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "Send a text message via Telegram Bot API. Supports Markdown/HTML parsing, reply-to, and disable notification.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Message_URL', `Send Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        400
+      ],
+      "id": "05a4bc32-72b3-4df8-9c02-30da5477c8ae",
+      "name": "Send Message"
+    },
+    {
+      "parameters": {
+        "description": "Send a photo via Telegram Bot. Supports caption, inline keyboard, and URL/file_id upload.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Photo_URL', `Send Photo API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        400
+      ],
+      "id": "ba2c7c72-9ea8-4c42-8b72-53c6fa4bf2b3",
+      "name": "Send Photo"
+    },
+    {
+      "parameters": {
+        "description": "Send a document file via Telegram Bot. Supports caption, thumbnail, and URL/file_id upload.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Document_URL', `Send Document API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        400
+      ],
+      "id": "c5e47243-7156-47ed-b9a9-6c307c3b0ea5",
+      "name": "Send Document"
+    },
+    {
+      "parameters": {
+        "description": "Edit an existing Telegram message text or caption. Supports inline keyboard updates.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Edit_Message_URL', `Edit Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "a99f6787-ca7f-4304-bd3b-6265bb22a5e0",
+      "name": "Edit Message"
+    },
+    {
+      "parameters": {
+        "description": "Get pending updates (messages, callbacks) from Telegram. Supports offset, limit, and timeout.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Updates_URL', `Get Updates API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "d793065b-b6f1-4b6a-a32c-782a27f02abd",
+      "name": "Get Updates"
+    },
+    {
+      "parameters": {
+        "description": "Get Telegram chat information including type, title, member count, and photo.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Get_Chat_Info_URL', `Get Chat Info API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        400
+      ],
+      "id": "1d6a790b-b05e-45af-aad9-2c7a549a35fb",
+      "name": "Get Chat Info"
+    },
+    {
+      "parameters": {
+        "description": "Send a message with inline keyboard buttons for interactive menus and callbacks.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Send_Inline_Keyboard_URL', `Send Inline Keyboard API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        400
+      ],
+      "id": "f328cb61-353b-416a-b4a9-77926293c32d",
+      "name": "Send Inline Keyboard"
+    },
+    {
+      "parameters": {
+        "description": "Pin or unpin a message in a Telegram chat. Supports notification on pin.",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pin_Message_URL', `Pin Message API endpoint URL`, 'string') }",
+        "method": "POST",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        400
+      ],
+      "id": "714b5bb8-e194-47d1-9d3a-3d287dafa5b9",
+      "name": "Pin Message"
+    }
+  ],
+  "connections": {
+    "Send Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Photo": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Document": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Updates": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Chat Info": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Inline Keyboard": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pin Message": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "telegram"
+    },
+    {
+      "name": "communication"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}
