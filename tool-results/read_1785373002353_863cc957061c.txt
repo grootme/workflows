@@ -1,0 +1,2002 @@
+     1→#!/usr/bin/env python3
+     2→"""
+     3→Phase 7: Communication Integrations + Industry Use Cases + Full Sales Cycle
+     4→
+     5→3 New Communication MCP Servers:
+     6→  MCP_WhatsApp_Business_Server_v3.json  (8 tools)
+     7→  MCP_Telegram_Bot_Server_v3.json       (8 tools)
+     8→  MCP_Discord_Server_v3.json            (8 tools)
+     9→
+    10→1 Full Sales Cycle Orchestration:
+    11→  ORC5_WhatsApp_CRM_Stripe_Sales_Cycle_v3.json
+    12→
+    13→4 Industry Use Case Workflows:
+    14→  IND1_Real_Estate_Automation_v3.json
+    15→  IND2_Restaurant_Operations_v3.json
+    16→  IND3_SaaS_Subscription_Engine_v3.json
+    17→  IND4_Agency_Client_Portal_v3.json
+    18→
+    19→1 Comprehensive Documentation:
+    20→  INTEGRATIONS.md (OAuth2 flows, API details, deployment guides)
+    21→
+    22→All zero-debt, correct ai_* connections, $fromAI() expressions, real node types.
+    23→"""
+    24→
+    25→import json
+    26→import os
+    27→import uuid
+    28→from datetime import datetime
+    29→
+    30→BASE = "/home/z/my-project/download/n8n_workflows_v2"
+    31→
+    32→# ── Helpers ─────────────────────────────────────────────────────────────
+    33→def uid():
+    34→    return str(uuid.uuid4())
+    35→
+    36→def make_workflow(name, nodes, connections, tags=None):
+    37→    return {
+    38→        "name": name,
+    39→        "nodes": nodes,
+    40→        "connections": connections,
+    41→        "pinData": {},
+    42→        "active": False,
+    43→        "settings": {
+    44→            "executionOrder": "v1",
+    45→            "timezone": "Europe/Madrid",
+    46→            "callerPolicy": "workflowsFromSameOwner"
+    47→        },
+    48→        "tags": tags or [],
+    49→        "meta": {
+    50→            "templateCredsSetupCompleted": False,
+    51→            "instanceId": ""
+    52→        }
+    53→    }
+    54→
+    55→def mcp_trigger(path, pos, uid_val=None):
+    56→    return {
+    57→        "parameters": {"path": path},
+    58→        "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+    59→        "typeVersion": 1,
+    60→        "position": pos,
+    61→        "id": uid_val or uid(),
+    62→        "name": "MCP Trigger",
+    63→        "webhookId": path
+    64→    }
+    65→
+    66→def http_tool(name, description, url_key, pos, method="GET", uid_val=None):
+    67→    return {
+    68→        "parameters": {
+    69→            "description": description,
+    70→            "url": f"={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('{url_key}', `{name} API endpoint URL`, 'string') }}",
+    71→            "method": method,
+    72→            "options": {}
+    73→        },
+    74→        "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+    75→        "typeVersion": 1.1,
+    76→        "position": pos,
+    77→        "id": uid_val or uid(),
+    78→        "name": name
+    79→    }
+    80→
+    81→def think_tool(name, description, pos, uid_val=None):
+    82→    return {
+    83→        "parameters": {"description": description},
+    84→        "type": "@n8n/n8n-nodes-langchain.toolThink",
+    85→        "typeVersion": 1,
+    86→        "position": pos,
+    87→        "id": uid_val or uid(),
+    88→        "name": name
+    89→    }
+    90→
+    91→def agent_node(name, system_msg, pos, uid_val=None):
+    92→    return {
+    93→        "parameters": {
+    94→            "promptType": "define",
+    95→            "text": "={{ $json.chatInput || $json.input || $json.query }}",
+    96→            "options": {
+    97→                "systemMessage": f"={system_msg}"
+    98→            }
+    99→        },
+   100→        "type": "@n8n/n8n-nodes-langchain.agent",
+   101→        "typeVersion": 1.8,
+   102→        "position": pos,
+   103→        "id": uid_val or uid(),
+   104→        "name": name
+   105→    }
+   106→
+   107→def chat_trigger(pos, initial_msg, uid_val=None):
+   108→    return {
+   109→        "parameters": {
+   110→            "initialMessages": [{"role": "assistant", "content": initial_msg}]
+   111→        },
+   112→        "type": "n8n-nodes-base.chatTrigger",
+   113→        "typeVersion": 1.1,
+   114→        "position": pos,
+   115→        "id": uid_val or uid(),
+   116→        "name": "Chat Trigger"
+   117→    }
+   118→
+   119→def llm_node(name, model, temp, pos, uid_val=None):
+   120→    return {
+   121→        "parameters": {
+   122→            "model": {"__rl": True, "value": model, "mode": "list"},
+   123→            "options": {"temperature": temp}
+   124→        },
+   125→        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+   126→        "typeVersion": 1.2,
+   127→        "position": pos,
+   128→        "id": uid_val or uid(),
+   129→        "name": name,
+   130→        "credentials": {"openAiApi": {"id": "", "name": "OpenAI"}}
+   131→    }
+   132→
+   133→def memory_node(name, pos, uid_val=None, session_key=None):
+   134→    return {
+   135→        "parameters": {
+   136→            "sessionIdType": "customKey",
+   137→            "sessionKey": f"={{ $json.{session_key} || 'default' }}" if session_key else "={{ $json.sessionId || 'default' }}",
+   138→            "options": {}
+   139→        },
+   140→        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+   141→        "typeVersion": 1.3,
+   142→        "position": pos,
+   143→        "id": uid_val or uid(),
+   144→        "name": name
+   145→    }
+   146→
+   147→def sticky_note(content, pos, uid_val=None):
+   148→    return {
+   149→        "parameters": {"content": content, "width": 300, "height": 200},
+   150→        "type": "n8n-nodes-base.stickyNote",
+   151→        "typeVersion": 1,
+   152→        "position": pos,
+   153→        "id": uid_val or uid(),
+   154→        "name": "Sticky Note"
+   155→    }
+   156→
+   157→def output_parser(name, properties, pos, uid_val=None):
+   158→    props = []
+   159→    for p in properties:
+   160→        props.append({
+   161→            "name": p["name"],
+   162→            "description": p["description"],
+   163→            "type": p.get("type", "string")
+   164→        })
+   165→    return {
+   166→        "parameters": {
+   167→            "schema": {
+   168→                "type": "object",
+   169→                "properties": {p["name"]: {"type": p.get("type", "string"), "description": p["description"]} for p in props}
+   170→            }
+   171→        },
+   172→        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+   173→        "typeVersion": 1.1,
+   174→        "position": pos,
+   175→        "id": uid_val or uid(),
+   176→        "name": name
+   177→    }
+   178→
+   179→def ai_conn(source, target, conn_type):
+   180→    return {
+   181→        source: {
+   182→            "ai_" + conn_type: [[{"node": target, "type": "ai_" + conn_type, "index": 0}]]
+   183→        }
+   184→    }
+   185→
+   186→def main_conn(source, target):
+   187→    return {
+   188→        source: {
+   189→            "main": [[{"node": target, "type": "main", "index": 0}]]
+   190→        }
+   191→    }
+   192→
+   193→def merge_dicts(dicts):
+   194→    """Merge connection dicts, appending lists for same connection types (e.g., ai_tool)."""
+   195→    result = {}
+   196→    for d in dicts:
+   197→        for src, targets in d.items():
+   198→            if src not in result:
+   199→                result[src] = {}
+   200→            for conn_type, conn_list in targets.items():
+   201→                if conn_type in result[src]:
+   202→                    # Append to existing list (for multiple ai_tool connections)
+   203→                    result[src][conn_type].extend(conn_list)
+   204→                else:
+   205→                    result[src][conn_type] = list(conn_list)
+   206→    return result
+   207→
+   208→
+   209→# ═══════════════════════════════════════════════════════════════════════
+   210→# 1. WHATSAPP BUSINESS API MCP SERVER
+   211→# ═══════════════════════════════════════════════════════════════════════
+   212→
+   213→def generate_mcp_whatsapp():
+   214→    """WhatsApp Business API MCP Server with 8 tools."""
+   215→    trigger = mcp_trigger("whatsapp-mcp", [0, 0])
+   216→    note = sticky_note(
+   217→        "WhatsApp Business API MCP Server\n\n8 Tools: Send Message, Send Template, Send Media, List Conversations, "
+   218→        "Get Contact Profile, Manage Labels, Send Interactive, Get Message Status\n\n"
+   219→        "OAuth2: Meta Business Suite → WhatsApp Business Account\n"
+   220→        "API: graph.facebook.com/v19.0/{phone_number_id}",
+   221→        [-400, -300]
+   222→    )
+   223→    tools = [
+   224→        http_tool("Send Message", "Send a text message via WhatsApp Business API. Supports text body, preview URL, and recipient phone number.",
+   225→                  "Send_Message_URL", [-700, 400], "POST"),
+   226→        http_tool("Send Template", "Send a WhatsApp template message with parameters. Supports header, body, button components.",
+   227→                  "Send_Template_URL", [-500, 400], "POST"),
+   228→        http_tool("Send Media", "Send media (image, video, document, audio, sticker) via WhatsApp. Supports URL and base64 media.",
+   229→                  "Send_Media_URL", [-300, 400], "POST"),
+   230→        http_tool("List Conversations", "List WhatsApp Business conversations with pagination. Filter by status, contact, and date.",
+   231→                  "List_Conversations_URL", [-100, 400], "GET"),
+   232→        http_tool("Get Contact Profile", "Get WhatsApp contact profile information including name, phone, and profile picture.",
+   233→                  "Get_Contact_Profile_URL", [100, 400], "GET"),
+   234→        http_tool("Manage Labels", "Create, list, and assign labels to WhatsApp contacts for segmentation and organization.",
+   235→                  "Manage_Labels_URL", [300, 400], "POST"),
+   236→        http_tool("Send Interactive", "Send interactive messages (buttons, lists, product items) via WhatsApp Business API.",
+   237→                  "Send_Interactive_URL", [500, 400], "POST"),
+   238→        http_tool("Get Message Status", "Check the delivery status of a sent WhatsApp message. Returns read, delivered, sent status.",
+   239→                  "Get_Message_Status_URL", [700, 400], "GET"),
+   240→    ]
+   241→
+   242→    nodes = [trigger, note] + tools
+   243→    # MCP server pattern: tools connect TO MCP Trigger via ai_tool
+   244→    connections = merge_dicts([
+   245→        ai_conn("Send Message", "MCP Trigger", "tool"),
+   246→        ai_conn("Send Template", "MCP Trigger", "tool"),
+   247→        ai_conn("Send Media", "MCP Trigger", "tool"),
+   248→        ai_conn("List Conversations", "MCP Trigger", "tool"),
+   249→        ai_conn("Get Contact Profile", "MCP Trigger", "tool"),
+   250→        ai_conn("Manage Labels", "MCP Trigger", "tool"),
+   251→        ai_conn("Send Interactive", "MCP Trigger", "tool"),
+   252→        ai_conn("Get Message Status", "MCP Trigger", "tool"),
+   253→    ])
+   254→    return make_workflow("MCP WhatsApp Business Server v3", nodes, connections,
+   255→                         [{"name": "mcp-server"}, {"name": "whatsapp"}, {"name": "communication"}])
+   256→
+   257→
+   258→# ═══════════════════════════════════════════════════════════════════════
+   259→# 2. TELEGRAM BOT MCP SERVER
+   260→# ═══════════════════════════════════════════════════════════════════════
+   261→
+   262→def generate_mcp_telegram():
+   263→    """Telegram Bot API MCP Server with 8 tools."""
+   264→    trigger = mcp_trigger("telegram-mcp", [0, 0])
+   265→    note = sticky_note(
+   266→        "Telegram Bot API MCP Server\n\n8 Tools: Send Message, Send Photo, Send Document, Edit Message, "
+   267→        "Get Updates, Get Chat Info, Send Inline Keyboard, Pin Message\n\n"
+   268→        "Auth: Bot Token via @BotFather\n"
+   269→        "API: api.telegram.org/bot{token}",
+   270→        [-400, -300]
+   271→    )
+   272→    tools = [
+   273→        http_tool("Send Message", "Send a text message via Telegram Bot API. Supports Markdown/HTML parsing, reply-to, and disable notification.",
+   274→                  "Send_Message_URL", [-700, 400], "POST"),
+   275→        http_tool("Send Photo", "Send a photo via Telegram Bot. Supports caption, inline keyboard, and URL/file_id upload.",
+   276→                  "Send_Photo_URL", [-500, 400], "POST"),
+   277→        http_tool("Send Document", "Send a document file via Telegram Bot. Supports caption, thumbnail, and URL/file_id upload.",
+   278→                  "Send_Document_URL", [-300, 400], "POST"),
+   279→        http_tool("Edit Message", "Edit an existing Telegram message text or caption. Supports inline keyboard updates.",
+   280→                  "Edit_Message_URL", [-100, 400], "POST"),
+   281→        http_tool("Get Updates", "Get pending updates (messages, callbacks) from Telegram. Supports offset, limit, and timeout.",
+   282→                  "Get_Updates_URL", [100, 400], "GET"),
+   283→        http_tool("Get Chat Info", "Get Telegram chat information including type, title, member count, and photo.",
+   284→                  "Get_Chat_Info_URL", [300, 400], "GET"),
+   285→        http_tool("Send Inline Keyboard", "Send a message with inline keyboard buttons for interactive menus and callbacks.",
+   286→                  "Send_Inline_Keyboard_URL", [500, 400], "POST"),
+   287→        http_tool("Pin Message", "Pin or unpin a message in a Telegram chat. Supports notification on pin.",
+   288→                  "Pin_Message_URL", [700, 400], "POST"),
+   289→    ]
+   290→
+   291→    nodes = [trigger, note] + tools
+   292→    connections = merge_dicts([
+   293→        ai_conn("Send Message", "MCP Trigger", "tool"),
+   294→        ai_conn("Send Photo", "MCP Trigger", "tool"),
+   295→        ai_conn("Send Document", "MCP Trigger", "tool"),
+   296→        ai_conn("Edit Message", "MCP Trigger", "tool"),
+   297→        ai_conn("Get Updates", "MCP Trigger", "tool"),
+   298→        ai_conn("Get Chat Info", "MCP Trigger", "tool"),
+   299→        ai_conn("Send Inline Keyboard", "MCP Trigger", "tool"),
+   300→        ai_conn("Pin Message", "MCP Trigger", "tool"),
+   301→    ])
+   302→    return make_workflow("MCP Telegram Bot Server v3", nodes, connections,
+   303→                         [{"name": "mcp-server"}, {"name": "telegram"}, {"name": "communication"}])
+   304→
+   305→
+   306→# ═══════════════════════════════════════════════════════════════════════
+   307→# 3. DISCORD MCP SERVER
+   308→# ═══════════════════════════════════════════════════════════════════════
+   309→
+   310→def generate_mcp_discord():
+   311→    """Discord Bot API MCP Server with 8 tools."""
+   312→    trigger = mcp_trigger("discord-mcp", [0, 0])
+   313→    note = sticky_note(
+   314→        "Discord Bot API MCP Server\n\n8 Tools: Send Message, Send Embed, Manage Channels, Get Server Info, "
+   315→        "Manage Roles, Send DM, Manage Webhooks, Search Messages\n\n"
+   316→        "Auth: Bot Token via Discord Developer Portal\n"
+   317→        "OAuth2: Discord OAuth2 with bot scope + permissions\n"
+   318→        "API: discord.com/api/v10",
+   319→        [-400, -300]
+   320→    )
+   321→    tools = [
+   322→        http_tool("Send Message", "Send a message to a Discord channel. Supports text, embeds, components, and attachments.",
+   323→                  "Send_Message_URL", [-700, 400], "POST"),
+   324→        http_tool("Send Embed", "Send a rich embed message with title, description, fields, color, thumbnail, and footer.",
+   325→                  "Send_Embed_URL", [-500, 400], "POST"),
+   326→        http_tool("Manage Channels", "Create, modify, or delete Discord channels. Supports text, voice, category, and announcement types.",
+   327→                  "Manage_Channels_URL", [-300, 400], "POST"),
+   328→        http_tool("Get Server Info", "Get Discord server (guild) information including name, member count, roles, and channels.",
+   329→                  "Get_Server_Info_URL", [-100, 400], "GET"),
+   330→        http_tool("Manage Roles", "Create, modify, or delete Discord roles. Supports permissions, color, and hierarchy.",
+   331→                  "Manage_Roles_URL", [100, 400], "POST"),
+   332→        http_tool("Send DM", "Send a direct message to a Discord user. Requires user ID and mutual server.",
+   333→                  "Send_DM_URL", [300, 400], "POST"),
+   334→        http_tool("Manage Webhooks", "Create, modify, or delete Discord webhooks for channel message posting.",
+   335→                  "Manage_Webhooks_URL", [500, 400], "POST"),
+   336→        http_tool("Search Messages", "Search Discord messages with filters: author, content, channel, date range, and has attachments.",
+   337→                  "Search_Messages_URL", [700, 400], "GET"),
+   338→    ]
+   339→
+   340→    nodes = [trigger, note] + tools
+   341→    connections = merge_dicts([
+   342→        ai_conn("Send Message", "MCP Trigger", "tool"),
+   343→        ai_conn("Send Embed", "MCP Trigger", "tool"),
+   344→        ai_conn("Manage Channels", "MCP Trigger", "tool"),
+   345→        ai_conn("Get Server Info", "MCP Trigger", "tool"),
+   346→        ai_conn("Manage Roles", "MCP Trigger", "tool"),
+   347→        ai_conn("Send DM", "MCP Trigger", "tool"),
+   348→        ai_conn("Manage Webhooks", "MCP Trigger", "tool"),
+   349→        ai_conn("Search Messages", "MCP Trigger", "tool"),
+   350→    ])
+   351→    return make_workflow("MCP Discord Server v3", nodes, connections,
+   352→                         [{"name": "mcp-server"}, {"name": "discord"}, {"name": "communication"}])
+   353→
+   354→
+   355→# ═══════════════════════════════════════════════════════════════════════
+   356→# 4. WHATSAPP → CRM → STRIPE SALES CYCLE ORCHESTRATION
+   357→# ═══════════════════════════════════════════════════════════════════════
+   358→
+   359→def generate_orc_sales_cycle():
+   360→    """Full sales cycle: WhatsApp → CRM → Stripe orchestration."""
+   361→    trigger = chat_trigger([-2200, 0],
+   362→        "I am your Sales Cycle Orchestrator. I manage the complete sales pipeline from WhatsApp lead capture through CRM qualification to Stripe payment processing. "
+   363→        "What sales operation do you need?")
+   364→
+   365→    # Main orchestrator agent
+   366→    agent = agent_node("Sales Cycle Orchestrator",
+   367→        "# Sales Cycle Orchestrator — WhatsApp → CRM → Stripe\n\n"
+   368→        "You orchestrate the complete sales cycle across three critical platforms:\n\n"
+   369→        "## Stage 1: Lead Capture (WhatsApp)\n"
+   370→        "- Receive incoming WhatsApp messages from prospects\n"
+   371→        "- Qualify leads using conversational AI\n"
+   372→        "- Send interactive menus for product/service selection\n"
+   373→        "- Capture contact information and preferences\n"
+   374→        "- Label contacts for segmentation (hot/warm/cold)\n\n"
+   375→        "## Stage 2: CRM Pipeline (CRM Universal)\n"
+   376→        "- Create or update contact in CRM with lead details\n"
+   377→        "- Move lead through pipeline stages: New → Qualified → Proposal → Negotiation → Won/Lost\n"
+   378→        "- Log activities and communication history\n"
+   379→        "- Create deals with estimated value and probability\n"
+   380→        "- Schedule follow-up activities and reminders\n"
+   381→        "- Generate pipeline dashboard and forecasts\n\n"
+   382→        "## Stage 3: Payment Processing (Stripe)\n"
+   383→        "- Create payment links for proposals\n"
+   384→        "- Generate invoices for accepted deals\n"
+   385→        "- Set up subscriptions for recurring services\n"
+   386→        "- Process refunds and handle disputes\n"
+   387→        "- Track payment status and revenue\n"
+   388→        "- Generate financial reports\n\n"
+   389→        "## Cross-Platform Workflows:\n"
+   390→        "1. WhatsApp lead → CRM contact creation → Auto-followup\n"
+   391→        "2. CRM deal Won → Stripe invoice → WhatsApp confirmation\n"
+   392→        "3. Payment failed → WhatsApp reminder → CRM activity log\n"
+   393→        "4. Subscription renewal → WhatsApp notification → CRM update\n"
+   394→        "5. Monthly report → CRM dashboard → WhatsApp summary\n\n"
+   395→        "## Skills Loaded:\n"
+   396→        "- deep-research: Lead qualification and market analysis\n"
+   397→        "- data-analysis: Sales pipeline analytics\n"
+   398→        "- payment-processing: Payment optimization\n"
+   399→        "- consulting-analysis: Sales strategy recommendations\n\n"
+   400→        "Current datetime: __DATE__",
+   401→        [-1600, 0])
+   402→
+   403→    # LLM
+   404→    llm = llm_node("GPT-4.1 Sales", "gpt-4.1", 0.2, [-1600, 300])
+   405→
+   406→    # Memory
+   407→    memory = memory_node("Sales Memory", [-1300, 300])
+   408→
+   409→    # Output parser
+   410→    parser = output_parser("Sales Output", [
+   411→        {"name": "stage", "description": "Sales stage (lead_capture/crm_pipeline/payment_processing/cross_platform)"},
+   412→        {"name": "action", "description": "Action performed"},
+   413→        {"name": "platform", "description": "Platform involved (whatsapp/crm/stripe)"},
+   414→        {"name": "result", "description": "Result summary"},
+   415→        {"name": "next_steps", "description": "Recommended next actions"},
+   416→        {"name": "contact_id", "description": "CRM or WhatsApp contact ID"},
+   417→        {"name": "deal_id", "description": "CRM deal ID if applicable"},
+   418→        {"name": "payment_id", "description": "Stripe payment ID if applicable"},
+   419→    ], [-1300, 0])
+   420→
+   421→    # WhatsApp tools
+   422→    wa_send = http_tool("WA Send Message", "Send a WhatsApp message to a lead or customer. Used for follow-ups, confirmations, and notifications.",
+   423→                        "WA_Send_URL", [-700, 500], "POST")
+   424→    wa_template = http_tool("WA Send Template", "Send a WhatsApp template message for initial outreach or appointment reminders.",
+   425→                            "WA_Template_URL", [-500, 500], "POST")
+   426→    wa_interactive = http_tool("WA Send Interactive", "Send interactive WhatsApp message with buttons or lists for product/service selection.",
+   427→                               "WA_Interactive_URL", [-300, 500], "POST")
+   428→    wa_labels = http_tool("WA Manage Labels", "Assign WhatsApp labels to contacts for lead segmentation (hot/warm/cold/vip).",
+   429→                          "WA_Labels_URL", [-100, 500], "POST")
+   430→
+   431→    # CRM tools
+   432→    crm_contact = http_tool("CRM Create Contact", "Create or update a contact in the CRM with lead details, source, and qualification status.",
+   433→                            "CRM_Contact_URL", [100, 500], "POST")
+   434→    crm_deal = http_tool("CRM Create Deal", "Create a deal in the CRM pipeline with estimated value, probability, and stage.",
+   435→                         "CRM_Deal_URL", [300, 500], "POST")
+   436→    crm_pipeline = http_tool("CRM Update Pipeline", "Move a deal through pipeline stages: New → Qualified → Proposal → Negotiation → Won/Lost.",
+   437→                             "CRM_Pipeline_URL", [500, 500], "POST")
+   438→    crm_activity = http_tool("CRM Log Activity", "Log a sales activity (call, email, meeting, note) in the CRM for a contact or deal.",
+   439→                             "CRM_Activity_URL", [700, 500], "POST")
+   440→
+   441→    # Stripe tools
+   442→    stripe_payment = http_tool("Stripe Create Payment", "Create a Stripe payment link or payment intent for a deal or invoice.",
+   443→                               "Stripe_Payment_URL", [100, 700], "POST")
+   444→    stripe_invoice = http_tool("Stripe Create Invoice", "Create a Stripe invoice for a customer with line items, discounts, and due date.",
+   445→                               "Stripe_Invoice_URL", [300, 700], "POST")
+   446→    stripe_sub = http_tool("Stripe Create Subscription", "Create a recurring subscription with plan, interval, and trial period.",
+   447→                           "Stripe_Subscription_URL", [500, 700], "POST")
+   448→    stripe_status = http_tool("Stripe Payment Status", "Check the status of a Stripe payment, subscription, or invoice.",
+   449→                              "Stripe_Status_URL", [700, 700], "GET")
+   450→
+   451→    # Think tool for sales reasoning
+   452→    think = think_tool("Sales Reasoning", "Think through the sales cycle step: qualify lead, determine pipeline stage, choose payment method, plan follow-up.",
+   453→                       [900, 500])
+   454→
+   455→    note = sticky_note(
+   456→        "WhatsApp → CRM → Stripe Sales Cycle\n\n"
+   457→        "STAGE 1: WhatsApp Lead Capture\n"
+   458→        "  Lead → Qualify → Label → Interactive Menu\n\n"
+   459→        "STAGE 2: CRM Pipeline Management\n"
+   460→        "  Contact → Deal → Pipeline → Activity Log\n\n"
+   461→        "STAGE 3: Stripe Payment Processing\n"
+   462→        "  Payment Link → Invoice → Subscription → Status\n\n"
+   463→        "CROSS-PLATFORM:\n"
+   464→        "  Lead → CRM → Payment → Confirmation",
+   465→        [-2200, -400]
+   466→    )
+   467→
+   468→    nodes = [trigger, note, agent, llm, memory, parser,
+   469→             wa_send, wa_template, wa_interactive, wa_labels,
+   470→             crm_contact, crm_deal, crm_pipeline, crm_activity,
+   471→             stripe_payment, stripe_invoice, stripe_sub, stripe_status,
+   472→             think]
+   473→
+   474→    connections = merge_dicts([
+   475→        main_conn("Chat Trigger", "Sales Cycle Orchestrator"),
+   476→        ai_conn("Sales Cycle Orchestrator", "GPT-4.1 Sales", "languageModel"),
+   477→        ai_conn("Sales Cycle Orchestrator", "Sales Memory", "memory"),
+   478→        ai_conn("Sales Cycle Orchestrator", "Sales Output", "outputParser"),
+   479→        ai_conn("Sales Cycle Orchestrator", "WA Send Message", "tool"),
+   480→        ai_conn("Sales Cycle Orchestrator", "WA Send Template", "tool"),
+   481→        ai_conn("Sales Cycle Orchestrator", "WA Send Interactive", "tool"),
+   482→        ai_conn("Sales Cycle Orchestrator", "WA Manage Labels", "tool"),
+   483→        ai_conn("Sales Cycle Orchestrator", "CRM Create Contact", "tool"),
+   484→        ai_conn("Sales Cycle Orchestrator", "CRM Create Deal", "tool"),
+   485→        ai_conn("Sales Cycle Orchestrator", "CRM Update Pipeline", "tool"),
+   486→        ai_conn("Sales Cycle Orchestrator", "CRM Log Activity", "tool"),
+   487→        ai_conn("Sales Cycle Orchestrator", "Stripe Create Payment", "tool"),
+   488→        ai_conn("Sales Cycle Orchestrator", "Stripe Create Invoice", "tool"),
+   489→        ai_conn("Sales Cycle Orchestrator", "Stripe Create Subscription", "tool"),
+   490→        ai_conn("Sales Cycle Orchestrator", "Stripe Payment Status", "tool"),
+   491→        ai_conn("Sales Cycle Orchestrator", "Sales Reasoning", "tool"),
+   492→    ])
+   493→    return make_workflow("ORC5 WhatsApp CRM Stripe Sales Cycle v3", nodes, connections,
+   494→                         [{"name": "orchestration"}, {"name": "sales"}, {"name": "whatsapp-crm-stripe"}])
+   495→
+   496→
+   497→# ═══════════════════════════════════════════════════════════════════════
+   498→# 5. INDUSTRY USE CASE: REAL ESTATE AUTOMATION
+   499→# ═══════════════════════════════════════════════════════════════════════
+   500→
+   501→def generate_ind_real_estate():
+   502→    """Real Estate: Property listings → WhatsApp tours → CRM pipeline → Stripe payments."""
+   503→    trigger = chat_trigger([-2200, 0],
+   504→        "I am your Real Estate Automation Assistant. I manage property listings, schedule virtual tours via WhatsApp, "
+   505→        "track buyer leads through the CRM pipeline, and process payments via Stripe. How can I help?")
+   506→
+   507→    agent = agent_node("Real Estate Agent",
+   508→        "# Real Estate Automation Agent\n\n"
+   509→        "You orchestrate real estate operations across multiple platforms:\n\n"
+   510→        "## Property Management:\n"
+   511→        "- List properties on WordPress/CRM with photos and details\n"
+   512→        "- Update availability and pricing in real-time\n"
+   513→        "- Generate property comparison reports\n"
+   514→        "- Sync listings across platforms (WordPress, CRM, Booking)\n\n"
+   515→        "## Lead Management:\n"
+   516→        "- Capture leads via WhatsApp interactive messages\n"
+   517→        "- Qualify buyers by budget, location, and preferences\n"
+   518→        "- Schedule virtual tours and in-person visits\n"
+   519→        "- Send property recommendations with media (WhatsApp)\n"
+   520→        "- Label contacts: Buyer/Seller/Renter/Investor\n\n"
+   521→        "## CRM Pipeline:\n"
+   522→        "- Track deals: Inquiry → Showing → Offer → Negotiation → Closing\n"
+   523→        "- Log all activities and communications\n"
+   524→        "- Calculate commission and revenue forecasts\n"
+   525→        "- Generate pipeline reports\n\n"
+   526→        "## Payment Processing:\n"
+   527→        "- Create invoices for commissions and fees\n"
+   528→        "- Process security deposits via Stripe\n"
+   529→        "- Set up recurring rent payments\n"
+   530→        "- Generate financial reports\n\n"
+   531→        "## Skills Loaded:\n"
+   532→        "- deep-research: Property market analysis\n"
+   533→        "- data-analysis: Sales metrics and forecasting\n"
+   534→        "- consulting-analysis: Investment recommendations\n"
+   535→        "- payment-processing: Commission and deposit handling\n\n"
+   536→        "Current datetime: __DATE__",
+   537→        [-1600, 0])
+   538→
+   539→    llm = llm_node("GPT-4.1 Real Estate", "gpt-4.1", 0.2, [-1600, 300])
+   540→    memory = memory_node("Real Estate Memory", [-1300, 300])
+   541→    parser = output_parser("Real Estate Output", [
+   542→        {"name": "category", "description": "Category (property/lead/pipeline/payment)"},
+   543→        {"name": "action", "description": "Action performed"},
+   544→        {"name": "result", "description": "Result summary"},
+   545→        {"name": "property_id", "description": "Property ID if applicable"},
+   546→        {"name": "contact_id", "description": "Contact ID if applicable"},
+   547→        {"name": "deal_id", "description": "Deal ID if applicable"},
+   548→    ], [-1300, 0])
+   549→
+   550→    # Tools
+   551→    wp_posts = http_tool("WP Create Listing", "Create or update a property listing on WordPress with title, description, price, features, and images.",
+   552→                         "WP_Listing_URL", [-700, 500], "POST")
+   553→    wa_send = http_tool("WA Send Property", "Send property details via WhatsApp with images, price, and interactive buttons for tour scheduling.",
+   554→                        "WA_Property_URL", [-500, 500], "POST")
+   555→    wa_media = http_tool("WA Send Media", "Send property photos, virtual tour videos, or floor plans via WhatsApp.",
+   556→                         "WA_Media_URL", [-300, 500], "POST")
+   557→    crm_contact = http_tool("CRM Buyer Contact", "Create or update a buyer/seller contact in CRM with preferences, budget, and timeline.",
+   558→                            "CRM_Buyer_URL", [-100, 500], "POST")
+   559→    crm_deal = http_tool("CRM Property Deal", "Create a property deal in CRM with price, commission, stage, and closing date.",
+   560→                         "CRM_Deal_URL", [100, 500], "POST")
+   561→    crm_activity = http_tool("CRM Log Showing", "Log a property showing, open house, or viewing activity in CRM.",
+   562→                             "CRM_Showing_URL", [300, 500], "POST")
+   563→    stripe_invoice = http_tool("Stripe Commission", "Create a Stripe invoice for commission, deposit, or fee payment.",
+   564→                               "Stripe_Commission_URL", [500, 500], "POST")
+   565→    stripe_sub = http_tool("Stripe Rent Payment", "Set up recurring rent or lease payments via Stripe subscription.",
+   566→                           "Stripe_Rent_URL", [700, 500], "POST")
+   567→    think = think_tool("Real Estate Reasoning", "Think through property matching, buyer qualification, deal stage, and payment options.",
+   568→                       [900, 500])
+   569→
+   570→    note = sticky_note(
+   571→        "Real Estate Automation\n\n"
+   572→        "FLOW: Property Listing → WhatsApp Tour → CRM Deal → Stripe Payment\n\n"
+   573→        "Platforms: WordPress, WhatsApp, CRM, Stripe\n"
+   574→        "Pipeline: Inquiry → Showing → Offer → Negotiation → Closing",
+   575→        [-2200, -400]
+   576→    )
+   577→
+   578→    nodes = [trigger, note, agent, llm, memory, parser,
+   579→             wp_posts, wa_send, wa_media, crm_contact, crm_deal, crm_activity,
+   580→             stripe_invoice, stripe_sub, think]
+   581→
+   582→    connections = merge_dicts([
+   583→        main_conn("Chat Trigger", "Real Estate Agent"),
+   584→        ai_conn("Real Estate Agent", "GPT-4.1 Real Estate", "languageModel"),
+   585→        ai_conn("Real Estate Agent", "Real Estate Memory", "memory"),
+   586→        ai_conn("Real Estate Agent", "Real Estate Output", "outputParser"),
+   587→        ai_conn("Real Estate Agent", "WP Create Listing", "tool"),
+   588→        ai_conn("Real Estate Agent", "WA Send Property", "tool"),
+   589→        ai_conn("Real Estate Agent", "WA Send Media", "tool"),
+   590→        ai_conn("Real Estate Agent", "CRM Buyer Contact", "tool"),
+   591→        ai_conn("Real Estate Agent", "CRM Property Deal", "tool"),
+   592→        ai_conn("Real Estate Agent", "CRM Log Showing", "tool"),
+   593→        ai_conn("Real Estate Agent", "Stripe Commission", "tool"),
+   594→        ai_conn("Real Estate Agent", "Stripe Rent Payment", "tool"),
+   595→        ai_conn("Real Estate Agent", "Real Estate Reasoning", "tool"),
+   596→    ])
+   597→    return make_workflow("IND1 Real Estate Automation v3", nodes, connections,
+   598→                         [{"name": "industry"}, {"name": "real-estate"}, {"name": "sales-cycle"}])
+   599→
+   600→
+   601→# ═══════════════════════════════════════════════════════════════════════
+   602→# 6. INDUSTRY USE CASE: RESTAURANT OPERATIONS
+   603→# ═══════════════════════════════════════════════════════════════════════
+   604→
+   605→def generate_ind_restaurant():
+   606→    """Restaurant: WhatsApp orders → CRM loyalty → WooCommerce menu → Stripe payments."""
+   607→    trigger = chat_trigger([-2200, 0],
+   608→        "I am your Restaurant Operations Assistant. I manage WhatsApp food orders, menu updates on WooCommerce, "
+   609→        "customer loyalty in CRM, and payment processing via Stripe. How can I help?")
+   610→
+   611→    agent = agent_node("Restaurant Operations Agent",
+   612→        "# Restaurant Operations Agent\n\n"
+   613→        "You orchestrate restaurant operations across multiple platforms:\n\n"
+   614→        "## Order Management:\n"
+   615→        "- Receive food orders via WhatsApp interactive menus\n"
+   616→        "- Process orders with items, quantity, and delivery details\n"
+   617→        "- Send order confirmations and estimated delivery time\n"
+   618→        "- Track order status: Received → Preparing → Ready → Delivered\n"
+   619→        "- Handle order modifications and cancellations\n\n"
+   620→        "## Menu Management:\n"
+   621→        "- Update WooCommerce product catalog with dishes and prices\n"
+   622→        "- Manage daily specials and seasonal menu items\n"
+   623→        "- Update availability (mark items as sold out)\n"
+   624→        "- Sync menu across WhatsApp and WooCommerce\n\n"
+   625→        "## Customer Loyalty:\n"
+   626→        "- Track customer order history in CRM\n"
+   627→        "- Assign loyalty labels and segments\n"
+   628→        "- Send personalized promotions via WhatsApp\n"
+   629→        "- Generate loyalty points and rewards\n"
+   630→        "- Birthday and anniversary campaigns\n\n"
+   631→        "## Payment Processing:\n"
+   632→        "- Process payments via Stripe (card, cash, digital)\n"
+   633→        "- Generate invoices for corporate/catering orders\n"
+   634→        "- Handle refunds and disputes\n"
+   635→        "- Daily sales reconciliation\n"
+   636→        "- Revenue analytics and reporting\n\n"
+   637→        "## Skills Loaded:\n"
+   638→        "- data-analysis: Sales analytics and demand forecasting\n"
+   639→        "- deep-research: Menu optimization and market trends\n"
+   640→        "- payment-processing: Payment reconciliation\n"
+   641→        "- consulting-analysis: Restaurant operations optimization\n\n"
+   642→        "Current datetime: __DATE__",
+   643→        [-1600, 0])
+   644→
+   645→    llm = llm_node("GPT-4.1 Restaurant", "gpt-4.1", 0.2, [-1600, 300])
+   646→    memory = memory_node("Restaurant Memory", [-1300, 300])
+   647→    parser = output_parser("Restaurant Output", [
+   648→        {"name": "category", "description": "Category (order/menu/loyalty/payment)"},
+   649→        {"name": "action", "description": "Action performed"},
+   650→        {"name": "result", "description": "Result summary"},
+   651→        {"name": "order_id", "description": "Order ID if applicable"},
+   652→        {"name": "customer_id", "description": "Customer ID if applicable"},
+   653→        {"name": "total", "description": "Order total if applicable"},
+   654→    ], [-1300, 0])
+   655→
+   656→    # Tools
+   657→    wa_order = http_tool("WA Take Order", "Receive and process a food order via WhatsApp. Captures items, quantity, delivery address, and payment method.",
+   658→                         "WA_Order_URL", [-700, 500], "POST")
+   659→    wa_confirm = http_tool("WA Confirm Order", "Send order confirmation via WhatsApp with estimated delivery time and order total.",
+   660→                           "WA_Confirm_URL", [-500, 500], "POST")
+   661→    wa_promo = http_tool("WA Send Promo", "Send promotional messages via WhatsApp for daily specials, loyalty rewards, or birthday offers.",
+   662→                         "WA_Promo_URL", [-300, 500], "POST")
+   663→    wc_menu = http_tool("WC Update Menu", "Update WooCommerce product catalog with menu items, prices, descriptions, and availability.",
+   664→                        "WC_Menu_URL", [-100, 500], "POST")
+   665→    wc_orders = http_tool("WC List Orders", "List WooCommerce orders with filters for status, date, and customer.",
+   666→                          "WC_Orders_URL", [100, 500], "GET")
+   667→    crm_customer = http_tool("CRM Customer", "Create or update a restaurant customer in CRM with order history, preferences, and loyalty tier.",
+   668→                             "CRM_Customer_URL", [300, 500], "POST")
+   669→    stripe_pay = http_tool("Stripe Process Order", "Process a restaurant order payment via Stripe. Supports card, cash tracking, and digital wallets.",
+   670→                           "Stripe_Order_URL", [500, 500], "POST")
+   671→    stripe_report = http_tool("Stripe Daily Report", "Generate daily sales reconciliation report from Stripe transactions.",
+   672→                              "Stripe_Report_URL", [700, 500], "GET")
+   673→    think = think_tool("Restaurant Reasoning", "Think through order flow, menu optimization, customer loyalty, and payment reconciliation.",
+   674→                       [900, 500])
+   675→
+   676→    note = sticky_note(
+   677→        "Restaurant Operations\n\n"
+   678→        "FLOW: WhatsApp Order → WC Menu → CRM Loyalty → Stripe Payment\n\n"
+   679→        "Platforms: WhatsApp, WooCommerce, CRM, Stripe\n"
+   680→        "Pipeline: Order → Prepare → Deliver → Payment → Loyalty",
+   681→        [-2200, -400]
+   682→    )
+   683→
+   684→    nodes = [trigger, note, agent, llm, memory, parser,
+   685→             wa_order, wa_confirm, wa_promo, wc_menu, wc_orders,
+   686→             crm_customer, stripe_pay, stripe_report, think]
+   687→
+   688→    connections = merge_dicts([
+   689→        main_conn("Chat Trigger", "Restaurant Operations Agent"),
+   690→        ai_conn("Restaurant Operations Agent", "GPT-4.1 Restaurant", "languageModel"),
+   691→        ai_conn("Restaurant Operations Agent", "Restaurant Memory", "memory"),
+   692→        ai_conn("Restaurant Operations Agent", "Restaurant Output", "outputParser"),
+   693→        ai_conn("Restaurant Operations Agent", "WA Take Order", "tool"),
+   694→        ai_conn("Restaurant Operations Agent", "WA Confirm Order", "tool"),
+   695→        ai_conn("Restaurant Operations Agent", "WA Send Promo", "tool"),
+   696→        ai_conn("Restaurant Operations Agent", "WC Update Menu", "tool"),
+   697→        ai_conn("Restaurant Operations Agent", "WC List Orders", "tool"),
+   698→        ai_conn("Restaurant Operations Agent", "CRM Customer", "tool"),
+   699→        ai_conn("Restaurant Operations Agent", "Stripe Process Order", "tool"),
+   700→        ai_conn("Restaurant Operations Agent", "Stripe Daily Report", "tool"),
+   701→        ai_conn("Restaurant Operations Agent", "Restaurant Reasoning", "tool"),
+   702→    ])
+   703→    return make_workflow("IND2 Restaurant Operations v3", nodes, connections,
+   704→                         [{"name": "industry"}, {"name": "restaurant"}, {"name": "food-service"}])
+   705→
+   706→
+   707→# ═══════════════════════════════════════════════════════════════════════
+   708→# 7. INDUSTRY USE CASE: SAAS SUBSCRIPTION ENGINE
+   709→# ═══════════════════════════════════════════════════════════════════════
+   710→
+   711→def generate_ind_saas():
+   712→    """SaaS: Discord community → Stripe subscriptions → CRM tracking → Telegram alerts."""
+   713→    trigger = chat_trigger([-2200, 0],
+   714→        "I am your SaaS Subscription Engine. I manage Discord community onboarding, Stripe subscription lifecycle, "
+   715→        "CRM customer tracking, and Telegram team alerts. How can I help?")
+   716→
+   717→    agent = agent_node("SaaS Subscription Agent",
+   718→        "# SaaS Subscription Engine Agent\n\n"
+   719→        "You orchestrate SaaS subscription operations across multiple platforms:\n\n"
+   720→        "## Community Management:\n"
+   721→        "- Onboard new users to Discord server with role-based access\n"
+   722→        "- Send welcome messages and onboarding guides\n"
+   723→        "- Manage premium channels based on subscription tier\n"
+   724→        "- Handle support tickets via Discord\n"
+   725→        "- Send product updates and changelog\n\n"
+   726→        "## Subscription Lifecycle:\n"
+   727→        "- Create Stripe subscriptions with tiered plans\n"
+   728→        "- Handle upgrades, downgrades, and plan changes\n"
+   729→        "- Process trial periods and conversions\n"
+   730→        "- Manage failed payments and dunning\n"
+   731→        "- Generate MRR/ARR reports\n\n"
+   732→        "## Customer Tracking:\n"
+   733→        "- Track customer lifecycle in CRM: Trial → Active → Churned → Reactivated\n"
+   734→        "- Log all support interactions and feature requests\n"
+   735→        "- Calculate churn risk scores\n"
+   736→        "- Segment customers by plan, usage, and health\n"
+   737→        "- Generate customer success reports\n\n"
+   738→        "## Team Alerts:\n"
+   739→        "- Send Telegram alerts for important events (new signup, churn, payment failure)\n"
+   740→        "- Daily/weekly metrics digest\n"
+   741→        "- Real-time error notifications\n"
+   742→        "- Team performance updates\n\n"
+   743→        "## Skills Loaded:\n"
+   744→        "- data-analysis: SaaS metrics (MRR, churn, LTV, CAC)\n"
+   745→        "- deep-research: Competitive analysis and feature benchmarking\n"
+   746→        "- payment-processing: Subscription and dunning management\n"
+   747→        "- consulting-analysis: Growth strategy and pricing optimization\n\n"
+   748→        "Current datetime: __DATE__",
+   749→        [-1600, 0])
+   750→
+   751→    llm = llm_node("GPT-4.1 SaaS", "gpt-4.1", 0.2, [-1600, 300])
+   752→    memory = memory_node("SaaS Memory", [-1300, 300])
+   753→    parser = output_parser("SaaS Output", [
+   754→        {"name": "category", "description": "Category (community/subscription/crm/alerts)"},
+   755→        {"name": "action", "description": "Action performed"},
+   756→        {"name": "result", "description": "Result summary"},
+   757→        {"name": "customer_id", "description": "Customer ID if applicable"},
+   758→        {"name": "subscription_id", "description": "Stripe subscription ID if applicable"},
+   759→        {"name": "plan", "description": "Subscription plan tier"},
+   760→    ], [-1300, 0])
+   761→
+   762→    # Tools
+   763→    discord_onboard = http_tool("Discord Onboard", "Onboard a new user to Discord server with appropriate role based on subscription tier. Sends welcome message.",
+   764→                                "Discord_Onboard_URL", [-700, 500], "POST")
+   765→    discord_role = http_tool("Discord Manage Role", "Update Discord member role when subscription changes (upgrade/downgrade/cancel).",
+   766→                             "Discord_Role_URL", [-500, 500], "POST")
+   767→    discord_support = http_tool("Discord Support", "Create or update a support ticket in Discord channel with priority and category.",
+   768→                                "Discord_Support_URL", [-300, 500], "POST")
+   769→    stripe_sub = http_tool("Stripe Create Subscription", "Create a Stripe subscription with plan, trial period, and customer details.",
+   770→                           "Stripe_Sub_URL", [-100, 500], "POST")
+   771→    stripe_manage = http_tool("Stripe Manage Sub", "Manage subscription lifecycle: upgrade, downgrade, cancel, pause, or reactivate.",
+   772→                              "Stripe_Manage_URL", [100, 500], "POST")
+   773→    stripe_metrics = http_tool("Stripe SaaS Metrics", "Calculate SaaS metrics from Stripe data: MRR, ARR, churn rate, LTV, CAC.",
+   774→                               "Stripe_Metrics_URL", [300, 500], "GET")
+   775→    crm_customer = http_tool("CRM SaaS Customer", "Create or update SaaS customer in CRM with plan, usage, health score, and lifecycle stage.",
+   776→                             "CRM_SaaS_URL", [500, 500], "POST")
+   777→    telegram_alert = http_tool("Telegram Alert", "Send a team alert via Telegram for important events (new signup, churn, payment failure, error).",
+   778→                               "Telegram_Alert_URL", [700, 500], "POST")
+   779→    think = think_tool("SaaS Reasoning", "Think through subscription lifecycle, churn risk, plan optimization, and customer health.",
+   780→                       [900, 500])
+   781→
+   782→    note = sticky_note(
+   783→        "SaaS Subscription Engine\n\n"
+   784→        "FLOW: Discord Onboard → Stripe Subscribe → CRM Track → Telegram Alert\n\n"
+   785→        "Platforms: Discord, Stripe, CRM, Telegram\n"
+   786→        "Lifecycle: Trial → Active → Upgrade → Renewal → (Churn/Reactivate)",
+   787→        [-2200, -400]
+   788→    )
+   789→
+   790→    nodes = [trigger, note, agent, llm, memory, parser,
+   791→             discord_onboard, discord_role, discord_support,
+   792→             stripe_sub, stripe_manage, stripe_metrics,
+   793→             crm_customer, telegram_alert, think]
+   794→
+   795→    connections = merge_dicts([
+   796→        main_conn("Chat Trigger", "SaaS Subscription Agent"),
+   797→        ai_conn("SaaS Subscription Agent", "GPT-4.1 SaaS", "languageModel"),
+   798→        ai_conn("SaaS Subscription Agent", "SaaS Memory", "memory"),
+   799→        ai_conn("SaaS Subscription Agent", "SaaS Output", "outputParser"),
+   800→        ai_conn("SaaS Subscription Agent", "Discord Onboard", "tool"),
+   801→        ai_conn("SaaS Subscription Agent", "Discord Manage Role", "tool"),
+   802→        ai_conn("SaaS Subscription Agent", "Discord Support", "tool"),
+   803→        ai_conn("SaaS Subscription Agent", "Stripe Create Subscription", "tool"),
+   804→        ai_conn("SaaS Subscription Agent", "Stripe Manage Sub", "tool"),
+   805→        ai_conn("SaaS Subscription Agent", "Stripe SaaS Metrics", "tool"),
+   806→        ai_conn("SaaS Subscription Agent", "CRM SaaS Customer", "tool"),
+   807→        ai_conn("SaaS Subscription Agent", "Telegram Alert", "tool"),
+   808→        ai_conn("SaaS Subscription Agent", "SaaS Reasoning", "tool"),
+   809→    ])
+   810→    return make_workflow("IND3 SaaS Subscription Engine v3", nodes, connections,
+   811→                         [{"name": "industry"}, {"name": "saas"}, {"name": "subscription"}])
+   812→
+   813→
+   814→# ═══════════════════════════════════════════════════════════════════════
+   815→# 8. INDUSTRY USE CASE: AGENCY CLIENT PORTAL
+   816→# ═══════════════════════════════════════════════════════════════════════
+   817→
+   818→def generate_ind_agency():
+   819→    """Agency: WordPress portfolio → CRM clients → Stripe invoicing → Discord/Telegram collaboration."""
+   820→    trigger = chat_trigger([-2200, 0],
+   821→        "I am your Agency Client Portal Assistant. I manage WordPress portfolio updates, CRM client relationships, "
+   822→        "Stripe invoicing, and team collaboration via Discord/Telegram. How can I help?")
+   823→
+   824→    agent = agent_node("Agency Client Portal Agent",
+   825→        "# Agency Client Portal Agent\n\n"
+   826→        "You orchestrate agency operations across multiple platforms:\n\n"
+   827→        "## Portfolio & Content:\n"
+   828→        "- Publish case studies and portfolio pieces on WordPress\n"
+   829→        "- Update project pages with milestones and deliverables\n"
+   830→        "- Manage blog content and social media scheduling\n"
+   831→        "- Share portfolio updates via WhatsApp with clients\n\n"
+   832→        "## Client Management:\n"
+   833→        "- Track clients in CRM: Lead → Onboarding → Active → Completed → Retainer\n"
+   834→        "- Log all client communications and deliverables\n"
+   835→        "- Schedule and track client meetings\n"
+   836→        "- Generate client satisfaction surveys\n"
+   837→        "- Manage retainer contracts and renewals\n\n"
+   838→        "## Invoicing & Payments:\n"
+   839→        "- Create Stripe invoices for project milestones\n"
+   840→        "- Set up recurring retainer payments\n"
+   841→        "- Track time and expenses per project\n"
+   842→        "- Handle late payments and reminders\n"
+   843→        "- Generate revenue and profitability reports\n\n"
+   844→        "## Team Collaboration:\n"
+   845→        "- Manage project channels in Discord\n"
+   846→        "- Send task updates and deadline alerts via Telegram\n"
+   847→        "- Share client briefs and creative assets\n"
+   848→        "- Coordinate team availability and workload\n\n"
+   849→        "## Skills Loaded:\n"
+   850→        "- deep-research: Client industry analysis and competitive landscape\n"
+   851→        "- data-analysis: Project profitability and resource utilization\n"
+   852→        "- consulting-analysis: Client strategy and growth recommendations\n"
+   853→        "- content-management: Content creation and publishing workflow\n"
+   854→        "- payment-processing: Invoice and retainer management\n\n"
+   855→        "Current datetime: __DATE__",
+   856→        [-1600, 0])
+   857→
+   858→    llm = llm_node("GPT-4.1 Agency", "gpt-4.1", 0.2, [-1600, 300])
+   859→    memory = memory_node("Agency Memory", [-1300, 300])
+   860→    parser = output_parser("Agency Output", [
+   861→        {"name": "category", "description": "Category (portfolio/client/invoicing/collaboration)"},
+   862→        {"name": "action", "description": "Action performed"},
+   863→        {"name": "result", "description": "Result summary"},
+   864→        {"name": "client_id", "description": "Client ID if applicable"},
+   865→        {"name": "project_id", "description": "Project ID if applicable"},
+   866→        {"name": "invoice_id", "description": "Invoice ID if applicable"},
+   867→    ], [-1300, 0])
+   868→
+   869→    # Tools
+   870→    wp_post = http_tool("WP Publish Case Study", "Publish a case study or portfolio piece on WordPress with title, content, images, and categories.",
+   871→                        "WP_CaseStudy_URL", [-700, 500], "POST")
+   872→    wp_update = http_tool("WP Update Project", "Update a project page on WordPress with milestones, deliverables, and status.",
+   873→                          "WP_Project_URL", [-500, 500], "POST")
+   874→    crm_client = http_tool("CRM Agency Client", "Create or update an agency client in CRM with project details, contract value, and status.",
+   875→                           "CRM_Agency_URL", [-300, 500], "POST")
+   876→    crm_project = http_tool("CRM Project Deal", "Create a project deal in CRM with scope, milestones, timeline, and budget.",
+   877→                            "CRM_Project_URL", [-100, 500], "POST")
+   878→    stripe_invoice = http_tool("Stripe Project Invoice", "Create a Stripe invoice for a project milestone, retainer, or ad-hoc service.",
+   879→                               "Stripe_Invoice_URL", [100, 500], "POST")
+   880→    stripe_retainer = http_tool("Stripe Retainer", "Set up a recurring Stripe subscription for monthly retainer contracts.",
+   881→                                "Stripe_Retainer_URL", [300, 500], "POST")
+   882→    discord_channel = http_tool("Discord Project Channel", "Create or manage a Discord channel for project collaboration with team and client.",
+   883→                                "Discord_Channel_URL", [500, 500], "POST")
+   884→    telegram_update = http_tool("Telegram Team Update", "Send a team update via Telegram for project milestones, deadlines, or urgent tasks.",
+   885→                                "Telegram_Update_URL", [700, 500], "POST")
+   886→    think = think_tool("Agency Reasoning", "Think through client needs, project scope, resource allocation, and invoicing strategy.",
+   887→                       [900, 500])
+   888→
+   889→    note = sticky_note(
+   890→        "Agency Client Portal\n\n"
+   891→        "FLOW: WordPress Portfolio → CRM Client → Stripe Invoice → Discord/Telegram\n\n"
+   892→        "Platforms: WordPress, CRM, Stripe, Discord, Telegram\n"
+   893→        "Pipeline: Lead → Onboarding → Active → Completed → Retainer",
+   894→        [-2200, -400]
+   895→    )
+   896→
+   897→    nodes = [trigger, note, agent, llm, memory, parser,
+   898→             wp_post, wp_update, crm_client, crm_project,
+   899→             stripe_invoice, stripe_retainer, discord_channel, telegram_update,
+   900→             think]
+   901→
+   902→    connections = merge_dicts([
+   903→        main_conn("Chat Trigger", "Agency Client Portal Agent"),
+   904→        ai_conn("Agency Client Portal Agent", "GPT-4.1 Agency", "languageModel"),
+   905→        ai_conn("Agency Client Portal Agent", "Agency Memory", "memory"),
+   906→        ai_conn("Agency Client Portal Agent", "Agency Output", "outputParser"),
+   907→        ai_conn("Agency Client Portal Agent", "WP Publish Case Study", "tool"),
+   908→        ai_conn("Agency Client Portal Agent", "WP Update Project", "tool"),
+   909→        ai_conn("Agency Client Portal Agent", "CRM Agency Client", "tool"),
+   910→        ai_conn("Agency Client Portal Agent", "CRM Project Deal", "tool"),
+   911→        ai_conn("Agency Client Portal Agent", "Stripe Project Invoice", "tool"),
+   912→        ai_conn("Agency Client Portal Agent", "Stripe Retainer", "tool"),
+   913→        ai_conn("Agency Client Portal Agent", "Discord Project Channel", "tool"),
+   914→        ai_conn("Agency Client Portal Agent", "Telegram Team Update", "tool"),
+   915→        ai_conn("Agency Client Portal Agent", "Agency Reasoning", "tool"),
+   916→    ])
+   917→    return make_workflow("IND4 Agency Client Portal v3", nodes, connections,
+   918→                         [{"name": "industry"}, {"name": "agency"}, {"name": "client-portal"}])
+   919→
+   920→
+   921→# ═══════════════════════════════════════════════════════════════════════
+   922→# 9. COGNITIVE CAPITAL SKILLS FOR NEW INTEGRATIONS
+   923→# ═══════════════════════════════════════════════════════════════════════
+   924→
+   925→def generate_skill_md(skill_key, skill_data):
+   926→    """Generate a SKILL.md for a cognitive capital skill."""
+   927→    content = f"""# {skill_data['name']}
+   928→
+   929→> **Category**: {skill_data['category']} | **Tier**: {skill_data['tier'].title()} | **Version**: 3.0
+   930→
+   931→## Overview
+   932→
+   933→{skill_data['description']}
+   934→
+   935→## Core Capabilities
+   936→
+   937→{skill_data['capabilities']}
+   938→
+   939→## Integration Points
+   940→
+   941→{skill_data['integrations']}
+   942→
+   943→## OAuth2 & Authentication
+   944→
+   945→{skill_data['auth']}
+   946→
+   947→## Workflow Patterns
+   948→
+   949→{skill_data['patterns']}
+   950→
+   951→## Best Practices
+   952→
+   953→{skill_data['best_practices']}
+   954→
+   955→## Error Handling
+   956→
+   957→{skill_data['error_handling']}
+   958→
+   959→## Metrics & KPIs
+   960→
+   961→{skill_data['metrics']}
+   962→
+   963→---
+   964→
+   965→*Generated by JARVIS AI Automation Platform v5.0.0 — Zero Technical Debt*
+   966→"""
+   967→    return content
+   968→
+   969→
+   970→NEW_COGNITIVE_SKILLS = {
+   971→    "communication-automation": {
+   972→        "name": "Communication Automation",
+   973→        "category": "Communication",
+   974→        "tier": "professional",
+   975→        "description": "Multi-channel communication orchestration across WhatsApp Business API, Telegram Bot, and Discord. "
+   976→                       "Manages inbound/outbound messaging, interactive menus, media delivery, contact segmentation, and cross-platform notification routing.",
+   977→        "capabilities": """### WhatsApp Business API
+   978→- **Send Messages**: Text messages with URL preview support
+   979→- **Template Messages**: Pre-approved templates for first-contact outreach (required within 24h window)
+   980→- **Interactive Messages**: Button menus, list selectors, and product cards for self-service flows
+   981→- **Media Delivery**: Images, videos, documents, audio, and stickers
+   982→- **Contact Management**: Profile retrieval, label assignment, segmentation
+   983→- **Message Tracking**: Delivery status, read receipts, and engagement metrics
+   984→
+   985→### Telegram Bot API
+   986→- **Send Messages**: Markdown/HTML formatted text with reply-to and silent mode
+   987→- **Inline Keyboards**: Interactive button menus with callback handling
+   988→- **Media Sharing**: Photos, documents, videos, and audio files
+   989→- **Group Management**: Chat info, member tracking, and message pinning
+   990→- **Update Polling**: Long-polling for incoming messages and callbacks
+   991→- **Team Alerts**: Automated notifications for system events and milestones
+   992→
+   993→### Discord Bot API
+   994→- **Rich Embeds**: Structured messages with fields, thumbnails, and colors
+   995→- **Channel Management**: Create, modify, and organize project channels
+   996→- **Role Management**: Permission-based access control for teams and clients
+   997→- **Webhooks**: Automated posting to channels from external services
+   998→- **Direct Messages**: Private communication with team members
+   999→- **Message Search**: Advanced search with filters for audit and reference""",
+  1000→        "integrations": """### WhatsApp Business API
+  1001→- **API Base**: `https://graph.facebook.com/v19.0/{phone_number_id}`
+  1002→- **OAuth2**: Meta Business Suite → App Review → WhatsApp Business Account
+  1003→- **Token Types**: Permanent system user token or 60-day user token
+  1004→- **Webhook**: Real-time message notifications via webhook endpoint
+  1005→- **Phone Number ID**: Required for all send operations
+  1006→- **WABA ID**: WhatsApp Business Account identifier
+  1007→
+  1008→### Telegram Bot API
+  1009→- **API Base**: `https://api.telegram.org/bot{token}`
+  1010→- **Authentication**: Bot Token from @BotFather (no OAuth2 required)
+  1011→- **Webhook**: Optional webhook for real-time updates (vs. polling)
+  1012→- **Bot Commands**: Register commands via @BotFather for menu integration
+  1013→- **Inline Mode**: Support for inline queries and results
+  1014→
+  1015→### Discord API v10
+  1016→- **API Base**: `https://discord.com/api/v10`
+  1017→- **OAuth2**: Discord Developer Portal → Application → OAuth2
+  1018→- **Scopes**: `bot`, `applications.commands`
+  1019→- **Permissions**: Send Messages, Manage Channels, Embed Links, Manage Roles
+  1020→- **Gateway**: WebSocket connection for real-time events
+  1021→- **Intents**: Required for message content and member events""",
+  1022→        "auth": """### WhatsApp Business API — OAuth2 Flow
+  1023→1. **Register App**: Meta Developer Portal → Create App → WhatsApp Business
+  1024→2. **App Review**: Submit for approval (business verification required)
+  1025→3. **Get Token**: System User → Generate Permanent Token
+  1026→4. **Phone Number**: Link business phone number to WABA
+  1027→5. **Webhook Setup**: Configure webhook URL for incoming messages
+  1028→6. **Token Refresh**: Permanent tokens do not expire; user tokens refresh every 60 days
+  1029→
+  1030→```
+  1031→Authorization: Bearer {access_token}
+  1032→Content-Type: application/json
+  1033→```
+  1034→
+  1035→### Telegram Bot — Token Authentication
+  1036→1. **Create Bot**: Message @BotFather → /newbot → Set name and username
+  1037→2. **Get Token**: BotFather provides API token
+  1038→3. **Set Commands**: /setcommands for interactive menu
+  1039→4. **Webhook (Optional)**: POST /setWebhook with URL and certificate
+  1040→
+  1041→```
+  1042→Authorization: (token in URL path)
+  1043→https://api.telegram.org/bot{token}/sendMessage
+  1044→```
+  1045→
+  1046→### Discord — OAuth2 + Bot Token
+  1047→1. **Create Application**: Discord Developer Portal → New Application
+  1048→2. **Bot Tab**: Create Bot → Copy Token
+  1049→3. **OAuth2 URL Generator**: Select scopes (bot, applications.commands)
+  1050→4. **Permissions**: Select required permissions (Send Messages, Manage Channels, etc.)
+  1051→5. **Invite Bot**: Use generated OAuth2 URL to add bot to server
+  1052→6. **Gateway**: Connect via WebSocket for real-time events
+  1053→
+  1054→```
+  1055→Authorization: Bot {bot_token}
+  1056→Content-Type: application/json
+  1057→```""",
+  1058→        "patterns": """### Pattern 1: Lead Capture (WhatsApp → CRM)
+  1059→```
+  1060→WhatsApp Incoming → Parse Intent → Qualify Lead → CRM Create Contact → WA Send Confirmation
+  1061→```
+  1062→
+  1063→### Pattern 2: Team Notification (CRM → Telegram)
+  1064→```
+  1065→CRM Deal Stage Change → Format Alert → Telegram Send Message → Log Activity
+  1066→```
+  1067→
+  1068→### Pattern 3: Community Onboarding (Discord → Stripe)
+  1069→```
+  1070→New Discord Member → Assign Role → Send Welcome → Stripe Create Subscription → Update CRM
+  1071→```
+  1072→
+  1073→### Pattern 4: Sales Cycle (WhatsApp → CRM → Stripe)
+  1074→```
+  1075→WA Lead → Qualify → CRM Create Contact → CRM Create Deal → Pipeline Update →
+  1076→Stripe Payment Link → WA Send Payment → WA Confirm Payment → CRM Close Deal
+  1077→```
+  1078→
+  1079→### Pattern 5: Multi-Channel Broadcast
+  1080→```
+  1081→Content Created → WordPress Publish → WhatsApp Send Template → Telegram Alert → Discord Embed → CRM Log Activity
+  1082→```""",
+  1083→        "best_practices": """1. **WhatsApp 24h Window**: Free-form messages only within 24h of last user message; use templates outside
+  1084→2. **Telegram Rate Limits**: 30 msg/sec per bot, 20 msg/min per group; use sleep between batches
+  1085→3. **Discord Rate Limits**: 5 req/sec per route; respect X-RateLimit-Remaining headers
+  1086→4. **Template Pre-Approval**: WhatsApp templates must be approved before use (24-48h review)
+  1087→5. **Opt-In Compliance**: Always obtain consent before sending messages on any platform
+  1088→6. **Error Retry**: Implement exponential backoff for rate limit errors (429 status)
+  1089→7. **Message Deduplication**: Track message IDs to prevent duplicate sends
+  1090→8. **Media Optimization**: Compress images/videos before sending; use thumbnails for large files
+  1091→9. **Webhook Security**: Verify webhook signatures (WhatsApp: X-Hub-Signature-256, Discord: signature verification)
+  1092→10. **Session Management**: Track conversation state per user across platforms""",
+  1093→        "error_handling": """### WhatsApp Error Codes
+  1094→- **401**: Invalid access token → Refresh token
+  1095→- **403**: Permission denied → Check app permissions
+  1096→- **429**: Rate limit exceeded → Exponential backoff
+  1097→- **1001**: Template not found → Verify template name and language
+  1098→- **1002**: Message undeliverable → Check phone number format
+  1099→
+  1100→### Telegram Error Codes
+  1101→- **400**: Bad request → Validate parameters
+  1102→- **401**: Unauthorized → Check bot token
+  1103→- **403**: Forbidden → Check bot permissions in chat
+  1104→- **429**: Too many requests → Respect Retry-After header
+  1105→- **FLOOD_WAIT**: Wait specified seconds before retry
+  1106→
+  1107→### Discord Error Codes
+  1108→- **40001**: Unauthorized → Check bot token
+  1109→- **50001**: Missing access → Check bot permissions
+  1110→- **50013**: Missing permissions → Check role permissions
+  1111→- **10003**: Unknown channel → Verify channel ID
+  1112→- **50007**: Cannot send DM → User has DMs disabled
+  1113→- **429**: Rate limited → Use X-RateLimit-Reset-After header""",
+  1114→        "metrics": """### Communication KPIs
+  1115→- **Response Time**: Average time to first response (target: <2 min)
+  1116→- **Resolution Rate**: % of inquiries resolved in first contact (target: >80%)
+  1117→- **Message Volume**: Messages sent/received per day/week/month
+  1118→- **Engagement Rate**: % of messages read/replied (WhatsApp: read receipts)
+  1119→- **Conversion Rate**: % of conversations leading to CRM deal creation
+  1120→- **Channel Distribution**: Message volume by platform (WhatsApp/Telegram/Discord)
+  1121→- **Template Performance**: Open rate and response rate per WhatsApp template
+  1122→- **Bot Accuracy**: % of correctly handled inquiries without human escalation
+  1123→- **Uptime**: Service availability (target: 99.9%)
+  1124→- **Error Rate**: % of API calls resulting in errors (target: <0.1%)"""
+  1125→    },
+  1126→    "sales-cycle-automation": {
+  1127→        "name": "Sales Cycle Automation",
+  1128→        "category": "Sales",
+  1129→        "tier": "professional",
+  1130→        "description": "End-to-end sales cycle automation from lead capture through payment processing. "
+  1131→                       "Combines WhatsApp communication, CRM pipeline management, and Stripe payment processing for a complete sales automation solution.",
+  1132→        "capabilities": """### Lead Capture
+  1133→- **Multi-Channel Ingest**: WhatsApp, Telegram, Discord, web forms
+  1134→- **Lead Qualification**: AI-powered scoring based on engagement, budget, timeline
+  1135→- **Contact Enrichment**: Auto-populate CRM with lead details and preferences
+  1136→- **Segmentation**: Label and categorize leads (hot/warm/cold/vip)
+  1137→
+  1138→### Pipeline Management
+  1139→- **Stage Tracking**: New → Qualified → Proposal → Negotiation → Won/Lost
+  1140→- **Activity Logging**: All communications, meetings, and actions recorded
+  1141→- **Deal Scoring**: Probability-weighted pipeline forecasting
+  1142→- **Automated Follow-ups**: Scheduled reminders and next-best-action suggestions
+  1143→
+  1144→### Payment Processing
+  1145→- **Payment Links**: Generate Stripe payment links for proposals
+  1146→- **Invoicing**: Create invoices with line items, discounts, and due dates
+  1147→- **Subscriptions**: Set up recurring billing for services
+  1148→- **Reconciliation**: Track all payments and generate financial reports""",
+  1149→        "integrations": """### WhatsApp Business API
+  1150→- Lead capture and qualification
+  1151→- Interactive product/service selection
+  1152→- Payment confirmation and receipt delivery
+  1153→- Follow-up and re-engagement campaigns
+  1154→
+  1155→### CRM Universal
+  1156→- Contact and deal management
+  1157→- Pipeline stage tracking
+  1158→- Activity logging and history
+  1159→- Revenue forecasting
+  1160→
+  1161→### Stripe
+  1162→- Payment intent creation
+  1163→- Invoice generation and management
+  1164→- Subscription lifecycle management
+  1165→- Payment status tracking and reporting""",
+  1166→        "auth": """### Complete OAuth2 Flow for Sales Cycle
+  1167→1. **WhatsApp**: Meta Business Suite OAuth2 → Permanent token
+  1168→2. **CRM**: API key or OAuth2 (provider-specific)
+  1169→3. **Stripe**: Secret key + webhook signing secret
+  1170→
+  1171→All three platforms require separate credential configuration in n8n.""",
+  1172→        "patterns": """### Full Sales Cycle
+  1173→```
+  1174→Lead → WA Qualify → CRM Create → CRM Deal → Pipeline → Stripe Payment → WA Confirm → CRM Close
+  1175→```
+  1176→
+  1177→### Failed Payment Recovery
+  1178→```
+  1179→Stripe Payment Failed → WA Reminder → CRM Activity Log → Wait 24h → WA Follow-up → CRM Update
+  1180→```
+  1181→
+  1182→### Subscription Renewal
+  1183→```
+  1184→Stripe Subscription Renewing → CRM Update → WA Notification → Discord/Telegram Alert
+  1185→```""",
+  1186→        "best_practices": """1. Always qualify leads before creating CRM deals
+  1187→2. Use WhatsApp templates for initial outreach
+  1188→3. Log every interaction in CRM for complete audit trail
+  1189→4. Set up Stripe webhooks for real-time payment status
+  1190→5. Use think tool for complex sales reasoning decisions
+  1191→6. Implement retry logic for failed payments
+  1192→7. Track conversion rates per channel for optimization""",
+  1193→        "error_handling": """### Payment Failures
+  1194→- **card_declined**: Send WhatsApp notification, update CRM, schedule retry
+  1195→- **insufficient_funds**: Offer alternative payment method
+  1196→- **processing_error**: Retry with exponential backoff
+  1197→
+  1198→### CRM Sync Issues
+  1199→- **duplicate_contact**: Merge records, keep most recent
+  1200→- **api_error**: Queue for retry, log error for investigation""",
+  1201→        "metrics": """### Sales KPIs
+  1202→- **Lead-to-Deal Rate**: % of leads converted to deals (target: >25%)
+  1203→- **Deal-to-Payment Rate**: % of deals with successful payment (target: >80%)
+  1204→- **Average Deal Size**: Mean deal value in pipeline
+  1205→- **Sales Cycle Length**: Average days from lead to close
+  1206→- **MRR Growth**: Monthly recurring revenue growth rate
+  1207→- **Pipeline Velocity**: Deals moving through stages per week
+  1208→- **Payment Success Rate**: % of payment attempts that succeed
+  1209→- **Customer Acquisition Cost**: Total cost / new customers acquired"""
+  1210→    },
+  1211→    "industry-automation": {
+  1212→        "name": "Industry Automation",
+  1213→        "category": "Industry",
+  1214→        "tier": "enterprise",
+  1215→        "description": "Industry-specific automation templates for real estate, restaurants, SaaS, and agencies. "
+  1216→                       "Each template provides pre-configured workflows, tool integrations, and best practices for vertical-specific operations.",
+  1217→        "capabilities": """### Real Estate
+  1218→- Property listing management (WordPress)
+  1219→- Virtual tour scheduling (WhatsApp)
+  1220→- Buyer/seller pipeline tracking (CRM)
+  1221→- Commission and deposit processing (Stripe)
+  1222→
+  1223→### Restaurant
+  1224→- Food order management (WhatsApp interactive menus)
+  1225→- Menu catalog management (WooCommerce)
+  1226→- Customer loyalty tracking (CRM)
+  1227→- Daily sales reconciliation (Stripe)
+  1228→
+  1229→### SaaS
+  1230→- Community onboarding (Discord)
+  1231→- Subscription lifecycle management (Stripe)
+  1232→- Customer health tracking (CRM)
+  1233→- Team alerting (Telegram)
+  1234→
+  1235→### Agency
+  1236→- Portfolio and case study publishing (WordPress)
+  1237→- Client relationship management (CRM)
+  1238→- Project invoicing and retainers (Stripe)
+  1239→- Team collaboration (Discord/Telegram)""",
+  1240→        "integrations": """### Real Estate
+  1241→- WordPress (property listings), WhatsApp (tours), CRM (deals), Stripe (payments)
+  1242→- Booking.com (property availability), ERPNext (property management)
+  1243→
+  1244→### Restaurant
+  1245→- WhatsApp (orders), WooCommerce (menu), CRM (loyalty), Stripe (payments)
+  1246→- Google Workspace (scheduling), Calendar (reservations)
+  1247→
+  1248→### SaaS
+  1249→- Discord (community), Stripe (subscriptions), CRM (customers), Telegram (alerts)
+  1250→- GitHub (product), Notion (knowledge base)
+  1251→
+  1252→### Agency
+  1253→- WordPress (portfolio), CRM (clients), Stripe (invoices), Discord/Telegram (collaboration)
+  1254→- Google Workspace (documents), Slack (internal)""",
+  1255→        "auth": """### Multi-Platform OAuth2
+  1256→Each industry workflow requires authentication for 3-5 platforms:
+  1257→- **Communication**: WhatsApp/Telegram/Discord (see Communication Automation skill)
+  1258→- **CRM**: API key or OAuth2 (provider-specific)
+  1259→- **Payment**: Stripe secret key + webhook signing secret
+  1260→- **CMS**: WordPress application password or OAuth2
+  1261→- **Commerce**: WooCommerce API key, Shopify access token""",
+  1262→        "patterns": """### Real Estate
+  1263→```
+  1264→Property → WP Listing → WA Tour → CRM Deal → Stripe Commission → WA Confirm
+  1265→```
+  1266→
+  1267→### Restaurant
+  1268→```
+  1269→WA Order → WC Menu → CRM Customer → Stripe Payment → WA Confirm → Daily Report
+  1270→```
+  1271→
+  1272→### SaaS
+  1273→```
+  1274→Discord Onboard → Stripe Subscribe → CRM Track → Telegram Alert → (Churn/Reactivate)
+  1275→```
+  1276→
+  1277→### Agency
+  1278→```
+  1279→WP Portfolio → CRM Client → Stripe Invoice → Discord Channel → Telegram Update
+  1280→```""",
+  1281→        "best_practices": """1. Customize workflow prompts for your specific industry terminology
+  1282→2. Map your pipeline stages to the CRM stages provided
+  1283→3. Set up all platform webhooks before activating workflows
+  1284→4. Test with small data sets before full deployment
+  1285→5. Monitor KPIs daily for the first week after deployment
+  1286→6. Create backup workflows for critical paths (payment processing, order management)
+  1287→7. Use the think tool for complex decision points in your industry""",
+  1288→        "error_handling": """### Industry-Specific Errors
+  1289→- **Real Estate**: Double-booking showings → Use calendar conflict detection
+  1290→- **Restaurant**: Out-of-stock items → Sync WooCommerce availability in real-time
+  1291→- **SaaS**: Subscription downgrade → Update Discord roles before Stripe changes
+  1292→- **Agency**: Late invoice payment → Send WhatsApp reminder, update CRM status""",
+  1293→        "metrics": """### Industry KPIs
+  1294→- **Real Estate**: Properties listed, tours scheduled, offers received, closing rate, average commission
+  1295→- **Restaurant**: Orders/day, average order value, repeat customer rate, daily revenue, food cost %
+  1296→- **SaaS**: MRR, churn rate, trial-to-paid rate, LTV, CAC, support ticket volume
+  1297→- **Agency**: Active clients, project completion rate, revenue per client, retention rate, utilization rate"""
+  1298→    }
+  1299→}
+  1300→
+  1301→
+  1302→# ═══════════════════════════════════════════════════════════════════════
+  1303→# 10. INTEGRATIONS.md — COMPREHENSIVE DOCUMENTATION
+  1304→# ═══════════════════════════════════════════════════════════════════════
+  1305→
+  1306→def generate_integrations_md():
+  1307→    """Generate comprehensive INTEGRATIONS.md with OAuth2 flows, API details, deployment guides."""
+  1308→    date_str = datetime.now().strftime("%Y-%m-%d")
+  1309→    content = """# JARVIS AI Automation — Integrations & OAuth2 Reference
+  1310→
+  1311→> **Version**: 5.0.0 | **Zero Technical Debt** | **26 MCP Servers** | **300+ Connections**
+  1312→> **Last Updated**: __DATE_PLACEHOLDER__
+  1313→> **Communication MCP Servers**: 3 | **Payment MCP Servers**: 7 | **Industry Workflows**: 4
+  1314→
+  1315→---
+  1316→
+  1317→## Table of Contents
+  1318→
+  1319→1. [Communication Integrations](#1-communication-integrations)
+  1320→2. [Payment Integrations](#2-payment-integrations)
+  1321→3. [E-Commerce Integrations](#3-e-commerce-integrations)
+  1322→4. [CRM & Sales Integrations](#4-crm--sales-integrations)
+  1323→5. [Productivity Integrations](#5-productivity-integrations)
+  1324→6. [Travel & Hospitality Integrations](#6-travel--hospitality-integrations)
+  1325→7. [DevOps & Project Management](#7-devops--project-management)
+  1326→8. [Industry Use Cases](#8-industry-use-cases)
+  1327→9. [OAuth2 Reference](#9-oauth2-reference)
+  1328→10. [Webhook Configuration](#10-webhook-configuration)
+  1329→11. [Rate Limits & Quotas](#11-rate-limits--quotas)
+  1330→12. [Error Handling & Retry Strategies](#12-error-handling--retry-strategies)
+  1331→13. [Security Best Practices](#13-security-best-practices)
+  1332→14. [Deployment Guide](#14-deployment-guide)
+  1333→
+  1334→---
+  1335→
+  1336→## 1. Communication Integrations
+  1337→
+  1338→### 1.1 WhatsApp Business API
+  1339→
+  1340→| Property | Value |
+  1341→|----------|-------|
+  1342→| **MCP Server** | `MCP_WhatsApp_Business_Server_v3.json` |
+  1343→| **Tools** | 8 (Send Message, Send Template, Send Media, List Conversations, Get Contact Profile, Manage Labels, Send Interactive, Get Message Status) |
+  1344→| **API Base** | `https://graph.facebook.com/v19.0/{phone_number_id}` |
+  1345→| **Auth Method** | OAuth2 (Meta Business Suite) |
+  1346→| **Tier** | Professional+ |
+  1347→
+  1348→#### OAuth2 Setup
+  1349→
+  1350→```
+  1351→Step 1: Meta Developer Portal → Create App → Business → WhatsApp
+  1352→Step 2: Add WhatsApp Product → Configure Business Account
+  1353→Step 3: Generate System User Token (Permanent)
+  1354→Step 4: Link Phone Number to WABA
+  1355→Step 5: Submit App Review (if going live)
+  1356→Step 6: Configure Webhook for incoming messages
+  1357→```
+  1358→
+  1359→#### Token Types
+  1360→- **System User Token**: Permanent, does not expire. Recommended for production.
+  1361→- **User Token**: Expires in 60 days. Requires refresh mechanism.
+  1362→- **Page Token**: For pages that have linked WhatsApp numbers.
+  1363→
+  1364→#### API Endpoints
+  1365→
+  1366→| Tool | Method | Endpoint |
+  1367→|------|--------|----------|
+  1368→| Send Message | POST | `/messages` |
+  1369→| Send Template | POST | `/messages` (with template type) |
+  1370→| Send Media | POST | `/messages` (with image/document/video/audio type) |
+  1371→| List Conversations | GET | `/{waba_id}/conversations` |
+  1372→| Get Contact Profile | GET | `/{phone_number}/whatsapp_business_profile` |
+  1373→| Manage Labels | POST | `/{waba_id}/message_labels` |
+  1374→| Send Interactive | POST | `/messages` (with interactive type) |
+  1375→| Get Message Status | GET | `/{message_id}` |
+  1376→
+  1377→#### Message Types
+  1378→- **text**: Plain text with optional URL preview
+  1379→- **template**: Pre-approved template with variable parameters
+  1380→- **image/video/document/audio/sticker**: Media with optional caption
+  1381→- **interactive**: Buttons, lists, product items, or CTA URLs
+  1382→- **location**: Location sharing with coordinates
+  1383→- **contacts**: Contact card sharing
+  1384→
+  1385→#### 24-Hour Window Rule
+  1386→Free-form messages can only be sent within 24 hours of the last user message. Outside this window, only approved template messages can be sent. This is a critical constraint for sales cycle automation.
+  1387→
+  1388→---
+  1389→
+  1390→### 1.2 Telegram Bot API
+  1391→
+  1392→| Property | Value |
+  1393→|----------|-------|
+  1394→| **MCP Server** | `MCP_Telegram_Bot_Server_v3.json` |
+  1395→| **Tools** | 8 (Send Message, Send Photo, Send Document, Edit Message, Get Updates, Get Chat Info, Send Inline Keyboard, Pin Message) |
+  1396→| **API Base** | `https://api.telegram.org/bot{token}` |
+  1397→| **Auth Method** | Bot Token (no OAuth2) |
+  1398→| **Tier** | Professional+ |
+  1399→
+  1400→#### Bot Setup
+  1401→
+  1402→```
+  1403→Step 1: Open Telegram → Search @BotFather
+  1404→Step 2: /newbot → Set name and username
+  1405→Step 3: Copy API token
+  1406→Step 4: /setcommands → Register command list
+  1407→Step 5: Configure webhook (optional) or use polling
+  1408→```
+  1409→
+  1410→#### API Endpoints
+  1411→
+  1412→| Tool | Method | Endpoint |
+  1413→|------|--------|----------|
+  1414→| Send Message | POST | `/sendMessage` |
+  1415→| Send Photo | POST | `/sendPhoto` |
+  1416→| Send Document | POST | `/sendDocument` |
+  1417→| Edit Message | POST | `/editMessageText` |
+  1418→| Get Updates | GET | `/getUpdates` |
+  1419→| Get Chat Info | GET | `/getChat` |
+  1420→| Send Inline Keyboard | POST | `/sendMessage` (with reply_markup) |
+  1421→| Pin Message | POST | `/pinChatMessage` |
+  1422→
+  1423→#### Formatting Modes
+  1424→- **MarkdownV2**: Full Markdown with escaping (`*bold*`, `_italic_`, `[link](url)`)
+  1425→- **HTML**: Standard HTML tags (`<b>bold</b>`, `<i>italic</i>`, `<a href="url">link</a>`)
+  1426→
+  1427→---
+  1428→
+  1429→### 1.3 Discord Bot API
+  1430→
+  1431→| Property | Value |
+  1432→|----------|-------|
+  1433→| **MCP Server** | `MCP_Discord_Server_v3.json` |
+  1434→| **Tools** | 8 (Send Message, Send Embed, Manage Channels, Get Server Info, Manage Roles, Send DM, Manage Webhooks, Search Messages) |
+  1435→| **API Base** | `https://discord.com/api/v10` |
+  1436→| **Auth Method** | OAuth2 + Bot Token |
+  1437→| **Tier** | Professional+ |
+  1438→
+  1439→#### OAuth2 Setup
+  1440→
+  1441→```
+  1442→Step 1: Discord Developer Portal → New Application
+  1443→Step 2: Bot Tab → Add Bot → Copy Token
+  1444→Step 3: OAuth2 → URL Generator → Select scopes: bot, applications.commands
+  1445→Step 4: Bot Permissions: Send Messages, Manage Channels, Embed Links, Manage Roles, Read Message History
+  1446→Step 5: Use generated URL to invite bot to server
+  1447→Step 6: Enable Privileged Gateway Intents (Message Content, Server Members)
+  1448→```
+  1449→
+  1450→#### API Endpoints
+  1451→
+  1452→| Tool | Method | Endpoint |
+  1453→|------|--------|----------|
+  1454→| Send Message | POST | `/channels/{channel_id}/messages` |
+  1455→| Send Embed | POST | `/channels/{channel_id}/messages` (with embeds) |
+  1456→| Manage Channels | POST/PATCH/DELETE | `/guilds/{guild_id}/channels` |
+  1457→| Get Server Info | GET | `/guilds/{guild_id}` |
+  1458→| Manage Roles | POST/PATCH/DELETE | `/guilds/{guild_id}/roles` |
+  1459→| Send DM | POST | `/users/@me/channels` then `/channels/{channel_id}/messages` |
+  1460→| Manage Webhooks | POST/PATCH/DELETE | `/channels/{channel_id}/webhooks` |
+  1461→| Search Messages | GET | `/channels/{channel_id}/messages` |
+  1462→
+  1463→#### Rate Limits
+  1464→- **Global**: 50 requests/second
+  1465→- **Per-Route**: 5 requests/second (with bucket-based tracking)
+  1466→- **Headers**: Use `X-RateLimit-Remaining`, `X-RateLimit-Reset-After` for dynamic throttling
+  1467→
+  1468→---
+  1469→
+  1470→## 2. Payment Integrations
+  1471→
+  1472→### 2.1 Stripe
+  1473→
+  1474→| Property | Value |
+  1475→|----------|-------|
+  1476→| **MCP Server** | `MCP_Stripe_Server_v3.json` |
+  1477→| **Tools** | 8 (Create Payment, Create Subscription, List Customers, Create Invoice, Process Refund, Get Balance, List Transactions, Create Payout) |
+  1478→| **API Base** | `https://api.stripe.com/v1` |
+  1479→| **Auth Method** | Secret Key + Webhook Signing Secret |
+  1480→| **Tier** | Professional+ |
+  1481→
+  1482→#### Authentication
+  1483→```
+  1484→Authorization: Bearer sk_live_...
+  1485→Stripe-Version: 2024-06-20
+  1486→```
+  1487→
+  1488→#### Webhook Events (Critical for Sales Cycle)
+  1489→- `payment_intent.succeeded` → Update CRM deal, send WhatsApp confirmation
+  1490→- `payment_intent.payment_failed` → Send WhatsApp reminder, log CRM activity
+  1491→- `invoice.paid` → Update CRM subscription status
+  1492→- `customer.subscription.deleted` → Update CRM, send re-engagement
+  1493→- `charge.refunded` → Log in CRM, send WhatsApp notification
+  1494→
+  1495→---
+  1496→
+  1497→### 2.2 PayPal
+  1498→
+  1499→| Property | Value |
+  1500→|----------|-------|
+  1501→| **MCP Server** | `MCP_PayPal_Server_v3.json` |
+  1502→| **Tools** | 8 (Create Order, Capture Order, Create Subscription, List Transactions, Process Refund, Get Balance, Send Payout, Create Invoice) |
+  1503→| **API Base** | `https://api-m.paypal.com` (live) / `https://api-m.sandbox.paypal.com` (sandbox) |
+  1504→| **Auth Method** | OAuth2 (Client ID + Secret) |
+  1505→| **Tier** | Professional+ |
+  1506→
+  1507→#### OAuth2 Flow
+  1508→```
+  1509→POST /v1/oauth2/token
+  1510→  Grant-Type: client_credentials
+  1511→  Client-ID: {client_id}
+  1512→  Secret: {client_secret}
+  1513→→ Returns: access_token (expires in 9 hours)
+  1514→```
+  1515→
+  1516→---
+  1517→
+  1518→### 2.3 Binance
+  1519→
+  1520→| Property | Value |
+  1521→|----------|-------|
+  1522→| **MCP Server** | `MCP_Binance_Server_v3.json` |
+  1523→| **Tools** | 8 (Get Market Data, Place Order, Get Account Info, Get Trade History, Get Deposit Address, Withdraw, Get Deposit History, Get Withdrawal History) |
+  1524→| **API Base** | `https://api.binance.com` (spot) / `https://fapi.binance.com` (futures) |
+  1525→| **Auth Method** | API Key + HMAC-SHA256 Signature |
+  1526→| **Tier** | Enterprise |
+  1527→
+  1528→---
+  1529→
+  1530→### 2.4 QvaPay
+  1531→
+  1532→| Property | Value |
+  1533→|----------|-------|
+  1534→| **MCP Server** | `MCP_Qvapay_Server_v3.json` |
+  1535→| **Tools** | 8 (Create Invoice, Get Transaction, List Transactions, Get Balance, Send Transfer, Get Currencies, Get Business Info, Get Wallet Info) |
+  1536→| **API Base** | `https://qvapay.com/api/v1` |
+  1537→| **Auth Method** | API Key (Bearer token) |
+  1538→| **Tier** | Enterprise |
+  1539→
+  1540→---
+  1541→
+  1542→### 2.5 TropiPay
+  1543→
+  1544→| Property | Value |
+  1545→|----------|-------|
+  1546→| **MCP Server** | `MCP_Tropipay_Server_v3.json` |
+  1547→| **Tools** | 8 (Create Payment Link, Get Transaction, List Transactions, Get Balance, Create QR Payment, Get Currencies, Send Transfer, Get Business Info) |
+  1548→| **API Base** | `https://tropipay.com/api/v2` |
+  1549→| **Auth Method** | OAuth2 (Client ID + Secret) |
+  1550→| **Tier** | Enterprise |
+  1551→
+  1552→---
+  1553→
+  1554→### 2.6 CoinEx
+  1555→
+  1556→| Property | Value |
+  1557→|----------|-------|
+  1558→| **MCP Server** | `MCP_Coinex_Server_v3.json` |
+  1559→| **Tools** | 8 (Get Market Data, Place Order, Get Account Info, Get Order History, Get Deposit Address, Withdraw, Get Deposit History, Get Withdrawal History) |
+  1560→| **API Base** | `https://api.coinex.com/v2` |
+  1561→| **Auth Method** | API Key + HMAC-SHA256 Signature |
+  1562→| **Tier** | Enterprise |
+  1563→
+  1564→---
+  1565→
+  1566→### 2.7 Bitrefill
+  1567→
+  1568→| Property | Value |
+  1569→|----------|-------|
+  1570→| **MCP Server** | `MCP_Bitrefill_Server_v3.json` |
+  1571→| **Tools** | 8 (List Products, Get Product Info, Create Order, Get Order Status, List Categories, Get Balance, Send Gift Card, Get Transaction History) |
+  1572→| **API Base** | `https://api.bitrefill.com/v1` |
+  1573→| **Auth Method** | API Key + Token |
+  1574→| **Tier** | Enterprise |
+  1575→
+  1576→---
+  1577→
+  1578→## 3. E-Commerce Integrations
+  1579→
+  1580→### 3.1 WooCommerce
+  1581→
+  1582→| Property | Value |
+  1583→|----------|-------|
+  1584→| **MCP Server** | `MCP_WooCommerce_Server_v3.json` |
+  1585→| **Tools** | 8 (Products, Orders, Customers, Coupons, Categories, Tags, Reports, Settings) |
+  1586→| **API Base** | `https://{store}/wp-json/wc/v3` |
+  1587→| **Auth Method** | API Key (Consumer Key + Consumer Secret) |
+  1588→| **Tier** | Professional+ |
+  1589→
+  1590→#### Authentication
+  1591→```
+  1592→URL: https://{store}/wp-json/wc/v3/products
+  1593→Auth: Basic Auth (consumer_key:consumer_secret)
+  1594→```
+  1595→
+  1596→---
+  1597→
+  1598→### 3.2 Shopify
+  1599→
+  1600→| Property | Value |
+  1601→|----------|-------|
+  1602→| **MCP Server** | `MCP_Shopify_Server_v3.json` |
+  1603→| **Tools** | 8 (Products, Inventory, Orders, Fulfillment, Customers, Discounts, Analytics, Themes) |
+  1604→| **API Base** | `https://{shop}.myshopify.com/admin/api/2024-01` |
+  1605→| **Auth Method** | OAuth2 (Access Token) |
+  1606→| **Tier** | Enterprise |
+  1607→
+  1608→#### OAuth2 Flow
+  1609→```
+  1610→1. Redirect: https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={uri}
+  1611→2. User approves → callback with code
+  1612→3. Exchange code for access_token: POST /admin/oauth/access_token
+  1613→4. Use access_token in X-Shopify-Access-Token header
+  1614→```
+  1615→
+  1616→---
+  1617→
+  1618→## 4. CRM & Sales Integrations
+  1619→
+  1620→### 4.1 CRM Universal
+  1621→
+  1622→| Property | Value |
+  1623→|----------|-------|
+  1624→| **MCP Server** | `MCP_CRM_Server_v3.json` |
+  1625→| **Tools** | 8 (Contacts, Leads, Pipeline, Deals, Activities, Companies, Dashboard, Reports) |
+  1626→| **API Base** | Configurable (supports any CRM API) |
+  1627→| **Auth Method** | API Key or OAuth2 (provider-specific) |
+  1628→| **Tier** | Professional+ |
+  1629→
+  1630→#### Pipeline Stages
+  1631→```
+  1632→New → Contacted → Qualified → Proposal → Negotiation → Won / Lost
+  1633→```
+  1634→
+  1635→---
+  1636→
+  1637→### 4.2 HubSpot
+  1638→
+  1639→| Property | Value |
+  1640→|----------|-------|
+  1641→| **MCP Server** | `MCP_HubSpot_Server_v3.json` |
+  1642→| **Tools** | 7 (Contacts, Deals, Companies, Pipelines, Activities, Lists, Reports) |
+  1643→| **API Base** | `https://api.hubapi.com` |
+  1644→| **Auth Method** | OAuth2 (Private App Access Token) |
+  1645→| **Tier** | Enterprise |
+  1646→
+  1647→---
+  1648→
+  1649→## 5. Productivity Integrations
+  1650→
+  1651→### 5.1 Google Workspace
+  1652→
+  1653→| Property | Value |
+  1654→|----------|-------|
+  1655→| **MCP Server** | `MCP_Google_Workspace_Server_v3.json` |
+  1656→| **Tools** | 8 (Drive, Docs, Sheets, Meet, Calendar, Gmail, Tasks, Forms) |
+  1657→| **API Base** | `https://www.googleapis.com` |
+  1658→| **Auth Method** | OAuth2 (Service Account or User Token) |
+  1659→| **Tier** | Professional+ |
+  1660→
+  1661→#### OAuth2 Scopes
+  1662→```
+  1663→https://www.googleapis.com/auth/drive
+  1664→https://www.googleapis.com/auth/documents
+  1665→https://www.googleapis.com/auth/spreadsheets
+  1666→https://www.googleapis.com/auth/calendar
+  1667→https://mail.google.com/
+  1668→```
+  1669→
+  1670→---
+  1671→
+  1672→### 5.2 WordPress
+  1673→
+  1674→| Property | Value |
+  1675→|----------|-------|
+  1676→| **MCP Server** | `MCP_WordPress_Server_v3.json` |
+  1677→| **Tools** | 8 (Posts, Pages, Media, Comments, Users, Categories, Tags, Stats) |
+  1678→| **API Base** | `https://{site}/wp-json/wp/v2` |
+  1679→| **Auth Method** | Application Password or OAuth2 |
+  1680→| **Tier** | Professional+ |
+  1681→
+  1682→#### Authentication
+  1683→```
+  1684→Method 1: Application Password
+  1685→  URL: https://{site}/wp-json/wp/v2/posts
+  1686→  Auth: Basic Auth (username:application_password)
+  1687→
+  1688→Method 2: OAuth2 (with WP OAuth Server plugin)
+  1689→  Redirect: /oauth/authorize
+  1690→  Token: /oauth/token
+  1691→  Use: Bearer token in Authorization header
+  1692→```
+  1693→
+  1694→---
+  1695→
+  1696→## 6. Travel & Hospitality Integrations
+  1697→
+  1698→### 6.1 Booking.com
+  1699→
+  1700→| Property | Value |
+  1701→|----------|-------|
+  1702→| **MCP Server** | `MCP_Booking_Server_v3.json` |
+  1703→| **Tools** | 8 (Properties, Reservations, Availability, Rates, Reviews, Guests, Rooms, Reports) |
+  1704→| **API Base** | `https://providers.booking.com/v1` |
+  1705→| **Auth Method** | OAuth2 (Client Credentials) |
+  1706→| **Tier** | Enterprise |
+  1707→
+  1708→---
+  1709→
+  1710→### 6.2 Expedia
+  1711→
+  1712→| Property | Value |
+  1713→|----------|-------|
+  1714→| **MCP Server** | `MCP_Expedia_Server_v3.json` |
+  1715→| **Tools** | 8 (Hotels, Flights, Cars, Packages, Bookings, Reviews, Availability, Rates) |
+  1716→| **API Base** | `https://api.expediagroup.com/v3` |
+  1717→| **Auth Method** | OAuth2 (Client Credentials) |
+  1718→| **Tier** | Enterprise |
+  1719→
+  1720→---
+  1721→
+  1722→## 7. DevOps & Project Management
+  1723→
+  1724→### 7.1 GitHub
+  1725→
+  1726→| Property | Value |
+  1727→|----------|-------|
+  1728→| **MCP Server** | `MCP_GitHub_Server_v3.json` |
+  1729→| **Tools** | 7 (Repos, Issues, PRs, Code, Files, Actions, Releases) |
+  1730→| **API Base** | `https://api.github.com` |
+  1731→| **Auth Method** | Personal Access Token (PAT) or OAuth2 |
+  1732→| **Tier** | Professional+ |
+  1733→
+  1734→---
+  1735→
+  1736→### 7.2 ERPNext
+  1737→
+  1738→| Property | Value |
+  1739→|----------|-------|
+  1740→| **MCP Server** | `MCP_ERPNext_Server_v3.json` |
+  1741→| **Tools** | 8 (GL, Invoices, POs, Stock, Employees, Projects, Reports, Settings) |
+  1742→| **API Base** | `https://{instance}/api/resource` |
+  1743→| **Auth Method** | API Key + Secret (or OAuth2) |
+  1744→| **Tier** | Enterprise |
+  1745→
+  1746→---
+  1747→
+  1748→## 8. Industry Use Cases
+  1749→
+  1750→### 8.1 Real Estate Automation (IND1)
+  1751→
+  1752→| Aspect | Detail |
+  1753→|--------|--------|
+  1754→| **Workflow** | `IND1_Real_Estate_Automation_v3.json` |
+  1755→| **Platforms** | WordPress, WhatsApp, CRM, Stripe |
+  1756→| **Tools** | 9 (WP Listing, WA Property, WA Media, CRM Buyer, CRM Deal, CRM Showing, Stripe Commission, Stripe Rent, Reasoning) |
+  1757→| **Pipeline** | Inquiry → Showing → Offer → Negotiation → Closing |
+  1758→| **Tier** | Enterprise |
+  1759→
+  1760→#### Sales Flow
+  1761→```
+  1762→1. Property Listed on WordPress → WhatsApp notification to qualified buyers
+  1763→2. Buyer inquires via WhatsApp → CRM contact created → Label as "hot/warm/cold"
+  1764→3. Virtual tour scheduled via WhatsApp interactive → CRM activity logged
+  1765→4. Offer made → CRM deal created → Pipeline stage: Negotiation
+  1766→5. Deal closed → Stripe commission invoice → WhatsApp confirmation
+  1767→6. Recurring rent → Stripe subscription → CRM tracking
+  1768→```
+  1769→
+  1770→---
+  1771→
+  1772→### 8.2 Restaurant Operations (IND2)
+  1773→
+  1774→| Aspect | Detail |
+  1775→|--------|--------|
+  1776→| **Workflow** | `IND2_Restaurant_Operations_v3.json` |
+  1777→| **Platforms** | WhatsApp, WooCommerce, CRM, Stripe |
+  1778→| **Tools** | 9 (WA Order, WA Confirm, WA Promo, WC Menu, WC Orders, CRM Customer, Stripe Payment, Stripe Report, Reasoning) |
+  1779→| **Pipeline** | Order → Prepare → Deliver → Payment → Loyalty |
+  1780→| **Tier** | Enterprise |
+  1781→
+  1782→#### Order Flow
+  1783→```
+  1784→1. Customer sends WhatsApp message → Interactive menu with categories
+  1785→2. Customer selects items → Order captured with quantity and delivery address
+  1786→3. Order confirmation sent via WhatsApp with ETA
+  1787→4. Order synced to WooCommerce for kitchen display
+  1788→5. CRM customer record updated with order history and loyalty points
+  1789→6. Payment processed via Stripe → WhatsApp receipt sent
+  1790→7. Daily reconciliation report generated
+  1791→```
+  1792→
+  1793→---
+  1794→
+  1795→### 8.3 SaaS Subscription Engine (IND3)
+  1796→
+  1797→| Aspect | Detail |
+  1798→|--------|--------|
+  1799→| **Workflow** | `IND3_SaaS_Subscription_Engine_v3.json` |
+  1800→| **Platforms** | Discord, Stripe, CRM, Telegram |
+  1801→| **Tools** | 9 (Discord Onboard, Discord Role, Discord Support, Stripe Subscribe, Stripe Manage, Stripe Metrics, CRM Customer, Telegram Alert, Reasoning) |
+  1802→| **Pipeline** | Trial → Active → Upgrade → Renewal → (Churn/Reactivate) |
+  1803→| **Tier** | Enterprise |
+  1804→
+  1805→#### Subscription Flow
+  1806→```
+  1807→1. New signup → Discord onboarding with role assignment
+  1808→2. Stripe subscription created → Trial period starts
+  1809→3. CRM customer record created with plan and lifecycle stage
+  1810→4. Trial → Paid conversion → Discord role upgrade
+  1811→5. Subscription metrics tracked (MRR, ARR, churn)
+  1812→6. Payment failure → Telegram alert → WhatsApp dunning
+  1813→7. Churn → CRM stage update → Re-engagement campaign
+  1814→```
+  1815→
+  1816→---
+  1817→
+  1818→### 8.4 Agency Client Portal (IND4)
+  1819→
+  1820→| Aspect | Detail |
+  1821→|--------|--------|
+  1822→| **Workflow** | `IND4_Agency_Client_Portal_v3.json` |
+  1823→| **Platforms** | WordPress, CRM, Stripe, Discord, Telegram |
+  1824→| **Tools** | 9 (WP Case Study, WP Project, CRM Client, CRM Deal, Stripe Invoice, Stripe Retainer, Discord Channel, Telegram Update, Reasoning) |
+  1825→| **Pipeline** | Lead → Onboarding → Active → Completed → Retainer |
+  1826→| **Tier** | Enterprise |
+  1827→
+  1828→#### Client Flow
+  1829→```
+  1830→1. New client → CRM contact created → WordPress project page
+  1831→2. Discord channel created for project collaboration
+  1832→3. Milestone reached → Stripe invoice generated → WhatsApp notification
+  1833→4. Project completed → WordPress case study published → CRM update
+  1834→5. Retainer setup → Stripe recurring subscription → Telegram team update
+  1835→6. Monthly report → CRM dashboard → WhatsApp client summary
+  1836→```
+  1837→
+  1838→---
+  1839→
+  1840→## 9. OAuth2 Reference
+  1841→
+  1842→### 9.1 OAuth2 Flows by Platform
+  1843→
+  1844→| Platform | Grant Type | Token Lifetime | Refresh | Scopes |
+  1845→|----------|-----------|---------------|---------|--------|
+  1846→| **WhatsApp (Meta)** | Client Credentials | Permanent (system user) | N/A | whatsapp_business_messaging |
+  1847→| **PayPal** | Client Credentials | 9 hours | Yes | Various |
+  1848→| **Shopify** | Authorization Code | Permanent (offline) | N/A | read_products, write_orders, etc. |
+  1849→| **TropiPay** | Client Credentials | 1 hour | Yes | payments, transfers |
+  1850→| **Google Workspace** | Service Account | 1 hour (auto-refresh) | Yes | drive, docs, sheets, calendar, gmail |
+  1851→| **Discord** | Authorization Code | 7 days | Yes | bot, identify, guilds |
+  1852→| **HubSpot** | Authorization Code | 6 hours | Yes | crm.objects.*, crm.contacts.* |
+  1853→| **WordPress** | Application Password | Permanent | N/A | N/A |
+  1854→
+  1855→### 9.2 Token Management in n8n
+  1856→
+  1857→```
+  1858→1. Store tokens in n8n Credentials (encrypted at rest)
+  1859→2. Use OAuth2 credential type for auto-refresh flows
+  1860→3. Set up webhook endpoints for OAuth2 callbacks
+  1861→4. Monitor token expiration and refresh proactively
+  1862→5. Use separate credentials per environment (dev/staging/prod)
+  1863→```
+  1864→
+  1865→### 9.3 OAuth2 Callback Configuration
+  1866→
+  1867→For platforms requiring redirect URIs (Shopify, Discord, Google, HubSpot):
+  1868→
+  1869→```
+  1870→Callback URL: https://{n8n-domain}/rest/oauth2-credential/callback
+  1871→```
+  1872→
+  1873→Configure this in each platform's developer console before creating OAuth2 credentials in n8n.
+  1874→
+  1875→---
+  1876→
+  1877→## 10. Webhook Configuration
+  1878→
+  1879→### 10.1 Webhook Endpoints
+  1880→
+  1881→| Platform | Webhook URL | Events |
+  1882→|----------|------------|--------|
+  1883→| **WhatsApp** | `https://{n8n}/webhook/whatsapp-incoming` | messages, message_status |
+  1884→| **Stripe** | `https://{n8n}/webhook/stripe-events` | payment_intent.*, invoice.*, customer.subscription.* |
+  1885→| **PayPal** | `https://{n8n}/webhook/paypal-events` | PAYMENT.*, BILLING.* |
+  1886→| **Discord** | WebSocket Gateway (not HTTP) | MESSAGE_CREATE, INTERACTION_CREATE |
+  1887→| **Telegram** | `https://{n8n}/webhook/telegram-bot` | message, callback_query |
+  1888→| **Shopify** | `https://{n8n}/webhook/shopify-events` | orders/*, products/*, app/uninstalled |
+  1889→| **WooCommerce** | `https://{n8n}/webhook/woo-events` | order.created, order.updated, product.* |
+  1890→
+  1891→### 10.2 Webhook Security
+  1892→
+  1893→- **WhatsApp**: Verify `X-Hub-Signature-256` HMAC-SHA256
+  1894→- **Stripe**: Verify `Stripe-Signature` with webhook signing secret
+  1895→- **PayPal**: Verify PayPal signature headers
+  1896→- **Telegram**: Verify `X-Telegram-Bot-Api-Secret-Token`
+  1897→- **Shopify**: Verify `X-Shopify-Hmac-Sha256`
+  1898→- **WooCommerce**: Verify WooCommerce webhook signature
+  1899→
+  1900→---
+  1901→
+  1902→## 11. Rate Limits & Quotas
+  1903→
+  1904→### 11.1 Rate Limits Summary
+  1905→
+  1906→| Platform | Rate Limit | Burst | Reset Window |
+  1907→|----------|-----------|-------|-------------|
+  1908→| **WhatsApp** | 80 msg/min per phone | 25 msg/sec | 1 minute |
+  1909→| **Telegram** | 30 msg/sec per bot | 20 msg/min per group | 1 second |
+  1910→| **Discord** | 5 req/sec per route | 50 req/sec global | Per-route bucket |
+  1911→| **Stripe** | 100 reads/sec, 25 writes/sec | Varies | 1 second |
+  1912→| **PayPal** | 500 req/min (sandbox), varies (live) | N/A | 1 minute |
+  1913→| **Binance** | 1200 req/min (weight-based) | Varies | 1 minute |
+  1914→| **Google** | 300 req/min (per user) | Varies | 1 minute |
+  1915→| **GitHub** | 5000 req/hr (authenticated) | N/A | 1 hour |
+  1916→| **Shopify** | 2 req/sec (per shop) | 40 req burst | 1 second |
+  1917→| **WooCommerce** | Varies (per server) | N/A | N/A |
+  1918→
+  1919→### 11.2 Retry Strategy
+  1920→
+  1921→```
+  1922→For 429 (Rate Limit) responses:
+  1923→1. Read Retry-After header (if available)
+  1924→2. Wait specified seconds
+  1925→3. Retry with exponential backoff: 1s, 2s, 4s, 8s, 16s
+  1926→4. Maximum 5 retries
+  1927→5. Log failure and alert after max retries
+  1928→```
+  1929→
+  1930→---
+  1931→
+  1932→## 12. Error Handling & Retry Strategies
+  1933→
+  1934→### 12.1 Error Categories
+  1935→
+  1936→| Category | HTTP Codes | Strategy |
+  1937→|----------|-----------|----------|
+  1938→| **Authentication** | 401, 403 | Refresh token, check credentials |
+  1939→| **Rate Limit** | 429 | Exponential backoff, respect Retry-After |
+  1940→| **Validation** | 400, 422 | Fix request parameters, log error |
+  1941→| **Server** | 500, 502, 503 | Retry with backoff, fallback to alternative |
+  1942→| **Timeout** | 408, 504 | Retry once, then alert |
+  1943→
+  1944→### 12.2 Platform-Specific Error Handling
+  1945→
+  1946→#### WhatsApp
+  1947→- **190**: Token expired → Refresh token
+  1948→- **10**: Permission error → Check app permissions
+  1949→- **130429**: Rate limit → Wait and retry
+  1950→- **1001**: Template not found → Use correct template name
+  1951→
+  1952→#### Stripe
+  1953→- **card_declined**: Notify customer, offer alternative
+  1954→- **rate_limit**: Wait and retry with backoff
+  1955→- **invalid_request**: Fix parameters and retry
+  1956→- **api_connection_error**: Retry with exponential backoff
+  1957→
+  1958→---
+  1959→
+  1960→## 13. Security Best Practices
+  1961→
+  1962→### 13.1 Credential Management
+  1963→- Store all API keys and tokens in n8n Credentials (encrypted)
+  1964→- Never hardcode credentials in workflow JSON
+  1965→- Use environment variables for sensitive configuration
+  1966→- Rotate API keys on a regular schedule (quarterly minimum)
+  1967→- Use separate credentials for each environment
+  1968→
+  1969→### 13.2 Data Protection
+  1970→- Encrypt sensitive data in transit (HTTPS/TLS)
+  1971→- Mask PII in logs and error messages
+  1972→- Implement data retention policies per platform
+  1973→- Comply with GDPR, CCPA, and regional privacy laws
+  1974→- Use webhook signature verification for all incoming data
+  1975→
+  1976→### 13.3 Access Control
+  1977→- Use principle of least privilege for API permissions
+  1978→- Implement role-based access in n8n
+  1979→- Audit workflow execution logs regularly
+  1980→- Set up IP allowlists for webhook endpoints
+  1981→- Monitor for unusual API usage patterns
+  1982→
+  1983→---
+  1984→
+  1985→## 14. Deployment Guide
+  1986→
+  1987→### 14.1 Quick Start
+  1988→
+  1989→```bash
+  1990→# 1. Clone the repository
+  1991→git clone https://github.com/grootme/workflows.git
+  1992→cd workflows
+  1993→
+  1994→# 2. Choose your tier
+  1995→cd jarvis-starter    # or jarvis-professional / jarvis-enterprise
+  1996→
+  1997→# 3. Start n8n
+  1998→docker-compose up -d
+  1999→
+  2000→# 4. Import workflows
+
+[showing lines 1-2000 of 2454; use offset=2001 with limit to continue reading]
