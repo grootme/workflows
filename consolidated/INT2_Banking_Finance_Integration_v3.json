@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "Banking Finance Integration v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "banking-finance-integration"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "7a7e5786-2514-41d9-be92-12ba1f869f76",
+      "name": "Banking Finance Trigger",
+      "webhookId": "banking-finance-integration"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "method": "POST",
+        "url": "={'https://production.plaid.com/accounts/get'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -40,16 +40,20 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "access_token",
+              "value": "={$fromAI('AccessToken', 'Plaid access token for the user', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
+              "name": "client_id",
+              "value": "={{{$credentials.plaidClientId}}}"
+            },
+            {
+              "name": "secret",
+              "value": "={{{$credentials.plaidSecret}}}"
             }
           ]
         }
@@ -60,13 +64,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "5b4fb6a3-cbdc-49fe-8565-55ebbca02457",
+      "name": "Plaid Accounts"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "method": "POST",
+        "url": "={'https://production.plaid.com/transactions/get'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -88,16 +92,24 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "access_token",
+              "value": "={$fromAI('AccessToken', 'Plaid access token', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
+              "name": "start_date",
+              "value": "={$fromAI('StartDate', 'Start date for transactions (yyyy-MM-dd)', 'string')}"
+            },
+            {
+              "name": "end_date",
+              "value": "={$fromAI('EndDate', 'End date for transactions (yyyy-MM-dd)', 'string')}"
+            },
+            {
+              "name": "options.count",
+              "value": "={$fromAI('Count', 'Number of transactions to return', 'number')}"
             }
           ]
         }
@@ -108,13 +120,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "ecc112ea-1c8c-49ed-891b-46703b0b7021",
+      "name": "Plaid Transactions"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "method": "POST",
+        "url": "={'https://production.plaid.com/accounts/balance/get'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -136,16 +148,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
+              "name": "access_token",
+              "value": "={$fromAI('AccessToken', 'Plaid access token', 'string')}"
             }
           ]
         }
@@ -156,13 +164,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "437190cf-580b-438f-a26f-a80467b37cb0",
+      "name": "Plaid Balance"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "method": "POST",
+        "url": "={'https://production.plaid.com/investments/holdings/get'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -184,16 +192,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
+              "name": "access_token",
+              "value": "={$fromAI('AccessToken', 'Plaid access token', 'string')}"
             }
           ]
         }
@@ -204,13 +208,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "767d5fb6-c5c5-4d28-9ede-f1e99b0569d9",
+      "name": "Plaid Investments"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "url": "={'https://api.stripe.com/v1/payment_intents'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -236,12 +240,12 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "limit",
+              "value": "={{\"$fromAI('Limit', 'Number of payments to list', 'number')\"}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
+              "name": "created[gte]",
+              "value": "={{\"$fromAI('CreatedAfter', 'Unix timestamp for start date', 'string')\"}}"
             }
           ]
         }
@@ -252,13 +256,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "4e953a15-be82-48e4-9b5f-9c0137b54f1a",
+      "name": "Stripe List Payments"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "url": "={'https://api.stripe.com/v1/invoices'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -284,12 +288,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
+              "name": "status",
+              "value": "={{\"$fromAI('Status', 'Invoice status filter (draft, open, paid, void)', 'string')\"}}"
             }
           ]
         }
@@ -300,13 +300,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "dfdd4dfe-880c-40ef-a64d-d3cf7a4f6056",
+      "name": "Stripe Invoices"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "url": "={'https://api.stripe.com/v1/subscriptions'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -332,12 +332,12 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "customer",
+              "value": "={{\"$fromAI('CustomerId', 'Stripe customer ID', 'string')\"}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
+              "name": "status",
+              "value": "={{\"$fromAI('Status', 'Subscription status filter', 'string')\"}}"
             }
           ]
         }
@@ -348,13 +348,13 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "bddc3447-5311-4ff7-a727-79fde176ce95",
+      "name": "Stripe Subscriptions"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
+        "url": "={'https://api.transferwise.com/v1/balances'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -380,12 +380,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
+              "name": "profileId",
+              "value": "={{\"$fromAI('ProfileId', 'Wise profile ID', 'string')\"}}"
             }
           ]
         }
@@ -396,12 +392,73 @@
         1000,
         400
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "f8b0f2d7-4abe-4593-94f3-889312c2d2fc",
+      "name": "Wise Balance"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "method": "GET",
+        "url": "={'https://api.transferwise.com/v1/transfers'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "offset",
+              "value": "={{'0'}}"
+            },
+            {
+              "name": "limit",
+              "value": "={{\"$fromAI('Limit', 'Number of transfers to list', 'number')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        400
+      ],
+      "id": "62750a1a-30dc-457f-a783-553e458bb945",
+      "name": "Wise Transfers"
+    },
+    {
+      "parameters": {
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "9384e153-c9d2-4f1e-bf2e-2fbfd94c1fba",
+      "name": "Financial Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "Banking & Finance Integration v3.0\n\nIntegrates: Plaid, Stripe, Wise\n9 Financial Tools:\n- Plaid: Accounts, Transactions, Balance, Investments\n- Stripe: Payments, Invoices, Subscriptions\n- Wise: Balance, Transfers\n\nZero-debt: All connections via ai_tool pattern",
         "width": 350,
         "height": 250
       },
@@ -411,93 +468,115 @@
         -400,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "05706d74-ff5a-4669-99f6-1f482cbaca82",
+      "name": "Docs 34b623"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "Plaid Accounts": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "Plaid Transactions": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "Plaid Balance": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "Plaid Investments": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "Stripe List Payments": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "Stripe Invoices": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "Stripe Subscriptions": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "Wise Balance": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Banking Finance Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wise Transfers": {
+      "ai_tool": [
+        [
+          {
+            "node": "Banking Finance Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Banking Finance Trigger",
             "type": "ai_tool",
             "index": 0
           }
@@ -514,13 +593,22 @@
   },
   "tags": [
     {
-      "name": "mcp-server"
+      "name": "banking"
     },
     {
-      "name": "wearable"
+      "name": "finance"
     },
     {
-      "name": "health"
+      "name": "plaid"
+    },
+    {
+      "name": "stripe"
+    },
+    {
+      "name": "wise"
+    },
+    {
+      "name": "api-integration"
     },
     {
       "name": "phase-11"

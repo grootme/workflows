@@ -1,0 +1,615 @@
+{
+  "name": "Granular Consent System v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "consent-management"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ],
+      "id": "0dc1b066-4923-417d-9e2f-c1de9823a661",
+      "name": "Consent Management Trigger",
+      "webhookId": "consent-management"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/consents'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={$fromAI('UserId', 'User identifier', 'string')}"
+            },
+            {
+              "name": "data_category",
+              "value": "={$fromAI('DataCategory', 'Category of data: health, financial, social, location, behavioral, personal, biometric, communication', 'string')}"
+            },
+            {
+              "name": "purpose",
+              "value": "={$fromAI('Purpose', 'Purpose of data processing: analytics, personalization, marketing, sharing, storage, ai_training', 'string')}"
+            },
+            {
+              "name": "scope",
+              "value": "={$fromAI('Scope', 'Granular scope: read, write, share, delete, export, anonymize', 'string')}"
+            },
+            {
+              "name": "data_sources",
+              "value": "={$fromAI('DataSources', 'Array of data source identifiers (e.g., apple_health, plaid, facebook)', 'string')}"
+            },
+            {
+              "name": "retention_days",
+              "value": "={$fromAI('RetentionDays', 'Number of days to retain data', 'number')}"
+            },
+            {
+              "name": "auto_expire",
+              "value": "={$fromAI('AutoExpire', 'Whether consent auto-expires', 'boolean')}"
+            },
+            {
+              "name": "third_party_sharing",
+              "value": "={$fromAI('ThirdPartySharing', 'Whether data can be shared with third parties', 'boolean')}"
+            },
+            {
+              "name": "ai_training_allowed",
+              "value": "={$fromAI('AiTrainingAllowed', 'Whether data can be used for AI model training', 'boolean')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        400
+      ],
+      "id": "3422c7e2-91e6-4e89-b9f1-c787bb23afde",
+      "name": "Create Consent"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/consents/' + $fromAI('UserId', 'User identifier', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "data_category",
+              "value": "={{\"$fromAI('DataCategory', 'Filter by data category', 'string')\"}}"
+            },
+            {
+              "name": "active_only",
+              "value": "={{'true'}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "3d222831-8668-402e-8782-74b196c1c4be",
+      "name": "Get User Consents"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/consents/' + $fromAI('ConsentId', 'Consent record ID', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "scope",
+              "value": "={$fromAI('Scope', 'Updated scope', 'string')}"
+            },
+            {
+              "name": "retention_days",
+              "value": "={$fromAI('RetentionDays', 'Updated retention period', 'number')}"
+            },
+            {
+              "name": "third_party_sharing",
+              "value": "={$fromAI('ThirdPartySharing', 'Updated third party sharing', 'boolean')}"
+            },
+            {
+              "name": "ai_training_allowed",
+              "value": "={$fromAI('AiTrainingAllowed', 'Updated AI training permission', 'boolean')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "299540f1-80df-4d65-9ba9-51a226fa32ec",
+      "name": "Update Consent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/consents/' + $fromAI('ConsentId', 'Consent record ID to revoke', 'string') + '/revoke'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "reason",
+              "value": "={$fromAI('Reason', 'Reason for revocation', 'string')}"
+            },
+            {
+              "name": "delete_data",
+              "value": "={$fromAI('DeleteData', 'Whether to delete associated data', 'boolean')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "eeede497-999d-407c-861c-b47ca136cac6",
+      "name": "Revoke Consent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/data-export/' + $fromAI('UserId', 'User identifier', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data_categories",
+              "value": "={$fromAI('DataCategories', 'Array of data categories to export', 'string')}"
+            },
+            {
+              "name": "format",
+              "value": "={$fromAI('Format', 'Export format: json, csv, pdf', 'string')}"
+            },
+            {
+              "name": "date_range",
+              "value": "={$fromAI('DateRange', 'Date range for data export', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "faa99c60-fef4-4a0d-a437-e80ee29e1f29",
+      "name": "Data Export Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/data-deletion/' + $fromAI('UserId', 'User identifier', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data_categories",
+              "value": "={$fromAI('DataCategories', 'Array of data categories to delete', 'string')}"
+            },
+            {
+              "name": "confirmation",
+              "value": "={$fromAI('Confirmation', 'User confirmation for deletion (must be true)', 'boolean')}"
+            },
+            {
+              "name": "cascade",
+              "value": "={$fromAI('Cascade', 'Whether to delete derived data', 'boolean')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "471df8a3-d571-4704-a1ac-b08f8491d249",
+      "name": "Data Deletion Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/consents/verify'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={$fromAI('UserId', 'User identifier', 'string')}"
+            },
+            {
+              "name": "data_category",
+              "value": "={$fromAI('DataCategory', 'Data category to verify', 'string')}"
+            },
+            {
+              "name": "purpose",
+              "value": "={$fromAI('Purpose', 'Purpose to verify', 'string')}"
+            },
+            {
+              "name": "scope",
+              "value": "={$fromAI('Scope', 'Required scope', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "90594cd9-1a5f-4e77-9a38-79d7e9936232",
+      "name": "Verify Consent"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://'$credentials.consentApiHost'/api/v1/audit/' + $fromAI('UserId', 'User identifier', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "action",
+              "value": "={{\"$fromAI('Action', 'Filter by action type', 'string')\"}}"
+            },
+            {
+              "name": "from_date",
+              "value": "={{\"$fromAI('FromDate', 'Start date for audit log', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "eb081bab-4973-43c3-9f43-e41a32b99562",
+      "name": "Consent Audit Log"
+    },
+    {
+      "parameters": {
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "40eef85b-d755-41b6-9d40-70037caa7996",
+      "name": "Privacy Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "Granular Consent System v3.0\n\nGDPR/CCPA compliant data privacy\n8 Consent Tools:\n- CRUD: Create, Get, Update, Revoke\n- Data Rights: Export, Deletion\n- Verification: Consent Check\n- Audit: Full Audit Trail\n\n8 Data Categories:\n  health, financial, social, location,\n  behavioral, personal, biometric, communication\n\n6 Processing Purposes:\n  analytics, personalization, marketing,\n  sharing, storage, ai_training\n\n6 Scopes: read, write, share, delete, export, anonymize\n\nZero-debt: All connections via ai_tool pattern",
+        "width": 350,
+        "height": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -200
+      ],
+      "id": "6da580f3-3f2b-4961-9809-c13dafe54f93",
+      "name": "Docs f916fb"
+    }
+  ],
+  "connections": {
+    "Create Consent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Consents": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Consent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revoke Consent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Export Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Deletion Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Consent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consent Audit Log": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Privacy Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Consent Management Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "consent"
+    },
+    {
+      "name": "privacy"
+    },
+    {
+      "name": "gdpr"
+    },
+    {
+      "name": "ccpa"
+    },
+    {
+      "name": "data-protection"
+    },
+    {
+      "name": "phase-11"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

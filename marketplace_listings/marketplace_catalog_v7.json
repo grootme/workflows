@@ -1,0 +1,338 @@
+{
+  "version": "7.0.0",
+  "generated_at": "2026-07-30T18:52:24.257576",
+  "categories": [
+    {
+      "id": "wearable-health",
+      "name": "Wearable & Health",
+      "icon": "heart-pulse"
+    },
+    {
+      "id": "banking-finance",
+      "name": "Banking & Finance",
+      "icon": "building-columns"
+    },
+    {
+      "id": "social-media",
+      "name": "Social Media",
+      "icon": "share-nodes"
+    },
+    {
+      "id": "vector-db",
+      "name": "Vector Database",
+      "icon": "database"
+    },
+    {
+      "id": "consent-privacy",
+      "name": "Consent & Privacy",
+      "icon": "shield-check"
+    },
+    {
+      "id": "erp-business",
+      "name": "ERP & Business",
+      "icon": "briefcase"
+    },
+    {
+      "id": "code-intelligence",
+      "name": "Code Intelligence",
+      "icon": "code"
+    },
+    {
+      "id": "mcp-proxy",
+      "name": "MCP Proxy & Embeddings",
+      "icon": "arrows-turn-right"
+    },
+    {
+      "id": "mcp-servers",
+      "name": "MCP Servers",
+      "icon": "server"
+    },
+    {
+      "id": "bundles",
+      "name": "Bundles",
+      "icon": "box-open"
+    }
+  ],
+  "items": [
+    {
+      "name": "Wearable Health Data Integration v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 13,
+      "ai_connections": 11,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "wearable",
+        "health",
+        "apple-health",
+        "fitbit",
+        "garmin",
+        "polar",
+        "api-integration",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "Banking Finance Integration v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 12,
+      "ai_connections": 10,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "banking",
+        "finance",
+        "plaid",
+        "stripe",
+        "wise",
+        "api-integration",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "Social Media Automation v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 14,
+      "ai_connections": 12,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "social-media",
+        "facebook",
+        "instagram",
+        "twitter",
+        "linkedin",
+        "kadenzo",
+        "api-integration",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "Vector DB Knowledge Graph v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 13,
+      "ai_connections": 11,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "vector-db",
+        "qdrant",
+        "knowledge-graph",
+        "embeddings",
+        "persistence",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "Granular Consent System v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 11,
+      "ai_connections": 9,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "consent",
+        "privacy",
+        "gdpr",
+        "ccpa",
+        "data-protection",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "ERPNext Business Integration v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 12,
+      "ai_connections": 10,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "erpnext",
+        "frappe",
+        "erp",
+        "business",
+        "api-integration",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "Codebase Memory MCP v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 11,
+      "ai_connections": 9,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "codebase-memory",
+        "code-intelligence",
+        "knowledge-graph",
+        "tree-sitter",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "MCP Proxy FastEmbed v3",
+      "category": "integration",
+      "type": "workflow",
+      "nodes": 10,
+      "ai_connections": 8,
+      "price": {
+        "starter": 29,
+        "professional": 49,
+        "enterprise": 99
+      },
+      "tags": [
+        "mcp-proxy",
+        "fastembed",
+        "embeddings",
+        "local-ai",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "MCP_Wearable_Health_Server_v3",
+      "category": "mcp-server",
+      "type": "mcp-server",
+      "nodes": 10,
+      "ai_connections": 8,
+      "price": {
+        "starter": 19,
+        "professional": 39,
+        "enterprise": 79
+      },
+      "tags": [
+        "mcp-server",
+        "wearable",
+        "health",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "MCP_Social_Media_Server_v3",
+      "category": "mcp-server",
+      "type": "mcp-server",
+      "nodes": 10,
+      "ai_connections": 8,
+      "price": {
+        "starter": 19,
+        "professional": 39,
+        "enterprise": 79
+      },
+      "tags": [
+        "mcp-server",
+        "social-media",
+        "phase-11"
+      ],
+      "version": "3.0"
+    },
+    {
+      "name": "MCP_Consent_Privacy_Server_v3",
+      "category": "mcp-server",
+      "type": "mcp-server",
+      "nodes": 10,
+      "ai_connections": 8,
+      "price": {
+        "starter": 19,
+        "professional": 39,
+        "enterprise": 79
+      },
+      "tags": [
+        "mcp-server",
+        "consent",
+        "privacy",
+        "gdpr",
+        "phase-11"
+      ],
+      "version": "3.0"
+    }
+  ],
+  "bundles": [
+    {
+      "name": "Health + Finance Bundle",
+      "items": [
+        "Wearable Health Data Integration v3",
+        "Banking Finance Integration v3"
+      ],
+      "price": 59,
+      "savings": 18
+    },
+    {
+      "name": "Social Media Pro Bundle",
+      "items": [
+        "Social Media Automation v3",
+        "MCP_Social_Media_Server_v3"
+      ],
+      "price": 49,
+      "savings": 19
+    },
+    {
+      "name": "Data Privacy Suite",
+      "items": [
+        "Granular Consent System v3",
+        "MCP_Consent_Privacy_Server_v3"
+      ],
+      "price": 49,
+      "savings": 19
+    },
+    {
+      "name": "Full Integration Bundle",
+      "items": [
+        "Wearable Health Data Integration v3",
+        "Banking Finance Integration v3",
+        "Social Media Automation v3",
+        "Vector DB Knowledge Graph v3",
+        "Granular Consent System v3",
+        "ERPNext Business Integration v3",
+        "Codebase Memory MCP v3",
+        "MCP Proxy FastEmbed v3"
+      ],
+      "price": 199,
+      "savings": 152
+    }
+  ],
+  "stats": {
+    "total_workflows": 8,
+    "total_mcp_servers": 3,
+    "total_items": 11,
+    "total_bundles": 4,
+    "total_value": 509,
+    "categories": 10
+  }
+}

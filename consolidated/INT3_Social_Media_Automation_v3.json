@@ -1,0 +1,750 @@
+{
+  "name": "Social Media Automation v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "social-media-integration"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ],
+      "id": "688ce966-1545-4bf8-8a26-52ebf5bd0ebe",
+      "name": "Social Media Trigger",
+      "webhookId": "social-media-integration"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('PageId', 'Facebook Page ID', 'string') + '/feed'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={$fromAI('Message', 'Post content', 'string')}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{{$credentials.facebookPageToken}}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        400
+      ],
+      "id": "e88bd5b7-858a-4541-960c-aa47a5e7bf55",
+      "name": "Facebook Post"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('PostId', 'Facebook Post ID', 'string') + '/comments'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{'{{$credentials.facebookPageToken}}'}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "83d961ba-078c-44a2-8d2b-2b497db1eb59",
+      "name": "Facebook Comments"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('PostId', 'Post ID for insights', 'string') + '/insights'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "metric",
+              "value": "={{'post_impressions,post_engaged_users,post_clicks'}}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{'{{$credentials.facebookPageToken}}'}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "8bb16da8-ad73-48a5-90e7-923bfdb4f288",
+      "name": "Facebook Insights"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('CommentId', 'Comment ID to moderate', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "is_hidden",
+              "value": "={$fromAI('IsHidden', 'true to hide comment, false to unhide', 'boolean')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "d7b3b0c8-3927-4b76-8ab4-af7ba035ab3e",
+      "name": "Facebook Comment Moderation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('IgUserId', 'Instagram Business Account ID', 'string') + '/media'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={$fromAI('ImageUrl', 'URL of image to post', 'string')}"
+            },
+            {
+              "name": "caption",
+              "value": "={$fromAI('Caption', 'Instagram caption text', 'string')}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{{$credentials.igAccessToken}}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "1229fc9e-0a65-4b89-a80c-f169dee922cf",
+      "name": "Instagram Post"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://graph.facebook.com/v19.0/' + $fromAI('IgUserId', 'Instagram Business Account ID', 'string') + '/insights'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "metric",
+              "value": "={{'impressions,reach,profile_views'}}"
+            },
+            {
+              "name": "period",
+              "value": "={{'day'}}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{'{{$credentials.igAccessToken}}'}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "6e8c9683-10dc-4445-a077-893d87ad8c2c",
+      "name": "Instagram Insights"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://api.twitter.com/2/tweets'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={$fromAI('TweetText', 'Tweet content (max 280 chars)', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "557773c3-5ed4-4520-b151-2748af98d179",
+      "name": "X Post Tweet"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://api.twitter.com/2/users/' + $fromAI('UserId', 'X user ID', 'string') + '/tweets'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "max_results",
+              "value": "={{\"$fromAI('MaxResults', 'Number of tweets to retrieve', 'number')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "f0aa4c61-45ca-442b-89a0-dc13a9ee28a0",
+      "name": "X Timeline"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://api.linkedin.com/v2/ugcPosts'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "author",
+              "value": "={$fromAI('AuthorUrn', 'LinkedIn author URN', 'string')}"
+            },
+            {
+              "name": "lifecycleState",
+              "value": "={PUBLISHED}"
+            },
+            {
+              "name": "specificContent.com.linkedin.ugc.ShareContent.shareCommentary.text",
+              "value": "={$fromAI('PostText', 'LinkedIn post content', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        400
+      ],
+      "id": "d778ecb8-6c8f-4469-bd34-d8fccddf44ce",
+      "name": "LinkedIn Post"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://api.kadenzo.app/v1/posts'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={$fromAI('Content', 'Post content for social media', 'string')}"
+            },
+            {
+              "name": "platforms",
+              "value": "={$fromAI('Platforms', 'Array of platforms: instagram,tiktok,x,linkedin,youtube,facebook,pinterest,threads,bluesky,mastodon,telegram', 'string')}"
+            },
+            {
+              "name": "scheduled_at",
+              "value": "={$fromAI('ScheduledAt', 'ISO datetime for scheduled posting', 'string')}"
+            },
+            {
+              "name": "media_urls",
+              "value": "={$fromAI('MediaUrls', 'Array of media URLs', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        400
+      ],
+      "id": "9ba2f61c-786d-4011-ab5c-474ada585b90",
+      "name": "Kadenzo Schedule Post"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://api.kadenzo.app/v1/analytics'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Kadenzo account ID', 'string')\"}}"
+            },
+            {
+              "name": "period",
+              "value": "={{\"$fromAI('Period', 'Time period for analytics', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        400
+      ],
+      "id": "0658cfd8-8498-4dcf-8a7f-0831597732dd",
+      "name": "Kadenzo Analytics"
+    },
+    {
+      "parameters": {
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "05af5366-2668-44cb-8cbb-45fcfa4ecde6",
+      "name": "Social Media Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "Social Media Automation v3.0\n\nIntegrates: Facebook, Instagram, X/Twitter, LinkedIn, Kadenzo\n12 Social Tools:\n- Facebook: Post, Comments, Insights, Moderation\n- Instagram: Post, Insights\n- X/Twitter: Post, Timeline\n- LinkedIn: Post\n- Kadenzo: Schedule (11 networks), Analytics\n\nInspired by: facebook-mcp-server, kadenzo-mcp\nZero-debt: All connections via ai_tool pattern",
+        "width": 350,
+        "height": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -200
+      ],
+      "id": "0545f2a1-a186-4070-a24d-087a117e0213",
+      "name": "Docs 565773"
+    }
+  ],
+  "connections": {
+    "Facebook Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Comments": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Insights": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Comment Moderation": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Insights": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X Post Tweet": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "X Timeline": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kadenzo Schedule Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kadenzo Analytics": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Social Media Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "social-media"
+    },
+    {
+      "name": "facebook"
+    },
+    {
+      "name": "instagram"
+    },
+    {
+      "name": "twitter"
+    },
+    {
+      "name": "linkedin"
+    },
+    {
+      "name": "kadenzo"
+    },
+    {
+      "name": "api-integration"
+    },
+    {
+      "name": "phase-11"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

@@ -1,25 +1,409 @@
 {
-  "name": "MCP - Social Media Server",
+  "name": "MCP_Social_Media_Server_v3",
   "nodes": [
     {
       "parameters": {
-        "path": "social-media"
+        "path": "mcp-social-media"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
       "position": [
-        0,
+        200,
         0
       ],
-      "id": "9dc3f4a8-8ffe-4c91-a017-eac4834056ef",
-      "name": "MCP Trigger",
-      "webhookId": "social-media"
+      "id": "f2e6b1a4-e4b5-438d-ab4f-9fa2edf40787",
+      "name": "Social Media MCP",
+      "webhookId": "mcp-social-media"
     },
     {
       "parameters": {
-        "content": "Social Media MCP Server\n\n8 Tools: Twitter/X, LinkedIn,\nInstagram, Facebook, YouTube,\nReddit, TikTok, Mastodon\n\nOAuth2 required for all\nRead + Write capabilities\nAnalytics & insights\nContent publishing",
-        "width": 300,
-        "height": 200
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/post-to-social'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "e57f75a6-5d2e-4119-9c2f-56ddea8e654e",
+      "name": "Post to Social"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/get-post-analytics'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "8e89409c-a501-4aef-b62f-3363085b2b40",
+      "name": "Get Post Analytics"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/moderate-comments'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "0d54516e-7c5c-47ae-a4e6-cc5654bd0a58",
+      "name": "Moderate Comments"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/get-mentions'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "f66da59a-1293-4692-9489-b09bc6d0137d",
+      "name": "Get Mentions"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/schedule-post'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "b8c4ddcc-01b0-4ffb-ae10-3d8b25080814",
+      "name": "Schedule Post"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/get-best-post-times'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "bffce1cc-dbef-4f7e-a308-b7b3d0aabacd",
+      "name": "Get Best Post Times"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/bulk-delete-comments'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "9d14faa1-982c-49e6-b150-7d339a640e41",
+      "name": "Bulk Delete Comments"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://social-api.example.com/v1/get-sentiment-analysis'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "={{\"$fromAI('Platform', 'Social platform name', 'string')\"}}"
+            },
+            {
+              "name": "account_id",
+              "value": "={{\"$fromAI('AccountId', 'Social account ID', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        400
+      ],
+      "id": "f9515e0d-fde3-422b-860c-c05990ac5bf4",
+      "name": "Get Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "content": "Social Media MCP Server v3\n8 Tools for social media automation\nFacebook, Instagram, X, LinkedIn, Kadenzo",
+        "width": 350,
+        "height": 250
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -27,194 +411,94 @@
         -400,
         -200
       ],
-      "id": "e5d183be-4a38-43c0-8c66-b9e938a49ec1",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "description": "Fetch and post data from Twitter/X API v2: tweets, user timeline, mentions, followers, following, likes, bookmarks, spaces. Supports tweet creation, retweet, like. Requires OAuth2 with Twitter scope.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('TWITTER_URL', `Twitter/X Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        -200
-      ],
-      "id": "94ce1a2b-4b78-4e89-80a9-059191181973",
-      "name": "Twitter/X Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch and post data from LinkedIn API: profile, connections, posts, articles, company pages, job listings, skills endorsements. Supports content creation and job search. Requires OAuth2 with LinkedIn scope.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('LINKEDIN_URL', `LinkedIn Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        0
-      ],
-      "id": "d4f2fc64-1323-4249-b3c6-be0da779d48e",
-      "name": "LinkedIn Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch data from Instagram Graph API: posts, stories, insights, followers, hashtags, mentions, media. Supports content publishing for business accounts. Requires Facebook Login with Instagram scope.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('INSTAGRAM_URL', `Instagram Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        200
-      ],
-      "id": "172de5e4-f861-4509-8c47-eeb2915ee58b",
-      "name": "Instagram Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch data from Facebook Graph API: posts, events, groups, pages, marketplace, ads insights. Supports page management and content scheduling. Requires Facebook Login with appropriate scopes.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('FACEBOOK_URL', `Facebook Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        400
-      ],
-      "id": "8401d9f5-4303-4987-a98c-f100e69a65ac",
-      "name": "Facebook Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch data from YouTube Data API v3: videos, channels, playlists, comments, search, analytics. Supports content upload and channel management. Requires Google OAuth2 with YouTube scope.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('YOUTUBE_URL', `YouTube Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        600
-      ],
-      "id": "c65180ac-9bf4-49ca-a8ac-1532f1193eb9",
-      "name": "YouTube Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch data from Reddit API: posts, comments, subreddits, search, user activity, saved posts. Supports posting and commenting. Requires OAuth2 with Reddit scope.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('REDDIT_URL', `Reddit Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        800
-      ],
-      "id": "b7ae5a46-9ce7-4a6c-8cb3-84d687c8fc9c",
-      "name": "Reddit Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch data from TikTok API: videos, user profile, analytics, sounds, hashtags. Supports content publishing for business accounts. Requires TikTok for Business OAuth2.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('TIKTOK_URL', `TikTok Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        1000
-      ],
-      "id": "866282fb-19af-4045-823b-a63956271c6e",
-      "name": "TikTok Data"
-    },
-    {
-      "parameters": {
-        "description": "Fetch and post data from Mastodon API: toots, timelines, notifications, accounts, search, trends. Supports posting, boosting, and favoriting. Requires OAuth2 with Mastodon instance.",
-        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('MASTODON_URL', `Mastodon Data API endpoint URL`, 'string') }",
-        "method": "GET",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        400,
-        1200
-      ],
-      "id": "01bd7da0-6fd1-4dba-afa9-620fec508bb8",
-      "name": "Mastodon Data"
+      "id": "a8dfbf17-3804-40bf-b8f2-98d804e938a7",
+      "name": "Docs e06e91"
     }
   ],
   "connections": {
-    "MCP Trigger": {
-      "main": [
+    "Post to Social": {
+      "ai_tool": [
         [
           {
-            "node": "Twitter/X Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Get Post Analytics": {
+      "ai_tool": [
         [
           {
-            "node": "LinkedIn Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Moderate Comments": {
+      "ai_tool": [
         [
           {
-            "node": "Instagram Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Get Mentions": {
+      "ai_tool": [
         [
           {
-            "node": "Facebook Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Schedule Post": {
+      "ai_tool": [
         [
           {
-            "node": "YouTube Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Get Best Post Times": {
+      "ai_tool": [
         [
           {
-            "node": "Reddit Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Bulk Delete Comments": {
+      "ai_tool": [
         [
           {
-            "node": "TikTok Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Get Sentiment Analysis": {
+      "ai_tool": [
         [
           {
-            "node": "Mastodon Data",
-            "type": "main",
+            "node": "Social Media MCP",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -229,12 +513,15 @@
     "callerPolicy": "workflowsFromSameOwner"
   },
   "tags": [
-    "mcp-server",
-    "social-media",
-    "twitter",
-    "linkedin",
-    "instagram",
-    "youtube"
+    {
+      "name": "mcp-server"
+    },
+    {
+      "name": "social-media"
+    },
+    {
+      "name": "phase-11"
+    }
   ],
   "meta": {
     "templateCredsSetupCompleted": false,

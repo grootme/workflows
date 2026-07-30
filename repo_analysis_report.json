@@ -1,0 +1,334 @@
+{
+  "analysis_date": "2026-07-30T18:52:24.257995",
+  "total_repos_analyzed": 13,
+  "summary": {
+    "high_value": 5,
+    "medium_value": 6,
+    "low_value": 2,
+    "integrated": 11,
+    "not_integrated": 2
+  },
+  "high_value_repos": [
+    {
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "name": "codebase-memory-mcp",
+      "category": "Code Intelligence",
+      "value": "HIGH",
+      "reason": "High-performance code intelligence MCP server with 158 language support, 15 MCP tools, sub-ms queries, persistent knowledge graph. Ships as single binary. Integrates directly with JARVIS for code understanding.",
+      "integration": "INT7_Codebase_Memory_MCP_v3",
+      "tools": [
+        "search",
+        "definitions",
+        "references",
+        "call_chain",
+        "http_routes",
+        "dependencies",
+        "index",
+        "status"
+      ],
+      "key_features": [
+        "158 languages via tree-sitter",
+        "3-minute Linux kernel indexing",
+        "120x fewer tokens than file-by-file",
+        "Built-in 3D graph visualization",
+        "Zero dependencies"
+      ]
+    },
+    {
+      "url": "https://github.com/rakeshgangwar/erpnext-mcp-server",
+      "name": "erpnext-mcp-server",
+      "category": "Business/ERP",
+      "value": "HIGH",
+      "reason": "Full ERPNext/Frappe API integration via MCP. 12 tools for document CRUD, reports, and custom methods. Enables JARVIS to manage business operations directly.",
+      "integration": "INT6_ERPNext_Business_Integration_v3",
+      "tools": [
+        "get_doctypes",
+        "get_doctype_fields",
+        "get_documents",
+        "get_document",
+        "create_document",
+        "update_document",
+        "delete_document",
+        "submit_document",
+        "cancel_document",
+        "call_method",
+        "run_report"
+      ],
+      "key_features": [
+        "Full ERPNext/Frappe API",
+        "12 tools",
+        "TypeScript-based",
+        "Document lifecycle management"
+      ]
+    },
+    {
+      "url": "https://github.com/hagaihen/facebook-mcp-server",
+      "name": "facebook-mcp-server",
+      "category": "Social Media",
+      "value": "HIGH",
+      "reason": "Comprehensive Facebook MCP server with 30+ tools for posts, comments, insights, moderation, and sentiment filtering. Direct integration with JARVIS social media automation.",
+      "integration": "INT3_Social_Media_Automation_v3",
+      "tools": [
+        "post_to_facebook",
+        "reply_to_comment",
+        "get_page_posts",
+        "get_post_comments",
+        "delete_post",
+        "delete_comment",
+        "hide_comment",
+        "filter_negative_comments",
+        "get_post_impressions",
+        "schedule_post",
+        "send_dm_to_user",
+        "post_image_to_facebook",
+        "bulk_delete_comments",
+        "bulk_hide_comments"
+      ],
+      "key_features": [
+        "30+ tools",
+        "Sentiment filtering",
+        "Comment moderation",
+        "Post insights",
+        "DM support",
+        "Bulk operations"
+      ]
+    },
+    {
+      "url": "https://mcprepository.com/Kadenzo/kadenzo-mcp",
+      "name": "kadenzo-mcp",
+      "category": "Social Media",
+      "value": "HIGH",
+      "reason": "Multi-social posting across 11 networks from a single MCP server. Schedule, manage, generate & analyze social posts. Key integration for JARVIS social media automation.",
+      "integration": "INT3_Social_Media_Automation_v3",
+      "tools": [
+        "list_accounts",
+        "schedule_post",
+        "list_posts",
+        "get_post",
+        "update_post",
+        "cancel_post",
+        "upload_media",
+        "get_account_analytics",
+        "get_post_analytics",
+        "generate_content",
+        "get_best_times",
+        "list_mentions",
+        "post_comment"
+      ],
+      "key_features": [
+        "11 social networks",
+        "AI content generation",
+        "Analytics",
+        "Best posting times",
+        "Social listening",
+        "Media upload"
+      ]
+    },
+    {
+      "url": "https://mcpmarket.com/tools/skills/frappe-framework-api-assistant",
+      "name": "frappe-framework-api",
+      "category": "Business/ERP",
+      "value": "HIGH",
+      "reason": "Frappe Framework API assistant - same ecosystem as ERPNext. Provides comprehensive API access to Frappe framework. Duplicate of erpnext-mcp-server functionality.",
+      "integration": "INT6_ERPNext_Business_Integration_v3",
+      "tools": [
+        "frappe_api",
+        "doctype_management"
+      ],
+      "key_features": [
+        "Frappe Framework",
+        "API assistant",
+        "ERPNext compatible"
+      ]
+    }
+  ],
+  "medium_value_repos": [
+    {
+      "url": "https://github.com/polarofficial/polar-ble-sdk",
+      "name": "polar-ble-sdk",
+      "category": "Wearables",
+      "value": "MEDIUM",
+      "reason": "Official Polar BLE SDK for Android/iOS. Provides real-time heart rate, ECG, accelerometer, PPG data. Useful for JARVIS wearable integration but requires native mobile app - not direct API integration.",
+      "integration": "INT1_Wearable_Health_Integration_v3",
+      "tools": [
+        "heart_rate",
+        "ecg",
+        "accelerometer",
+        "ppg",
+        "steps",
+        "sleep"
+      ],
+      "key_features": [
+        "Official Polar SDK",
+        "BLE connectivity",
+        "Real-time data streaming",
+        "Android & iOS",
+        "ReactiveX API"
+      ]
+    },
+    {
+      "url": "https://github.com/nuwax-ai/mcp-proxy",
+      "name": "mcp-proxy",
+      "category": "MCP Infrastructure",
+      "value": "MEDIUM",
+      "reason": "Rust-based MCP proxy server with fastembed for local embeddings. Useful for bridging MCP servers and generating embeddings without external API calls. Good for self-hosted JARVIS.",
+      "integration": "INT8_MCP_Proxy_FastEmbed_v3",
+      "tools": [
+        "proxy",
+        "embed",
+        "rerank",
+        "server_management"
+      ],
+      "key_features": [
+        "Rust-based",
+        "Fastembed local embeddings",
+        "MCP server bridging",
+        "Multi-platform"
+      ]
+    },
+    {
+      "url": "https://github.com/nuwax-ai/nuwax-mobile",
+      "name": "nuwax-mobile",
+      "category": "Mobile",
+      "value": "MEDIUM",
+      "reason": "Mobile MCP client. Enables JARVIS to interact with mobile devices. Useful for on-device AI integration.",
+      "integration": "Future: Mobile integration",
+      "tools": [
+        "mobile_bridge"
+      ],
+      "key_features": [
+        "Mobile MCP client",
+        "Cross-platform"
+      ]
+    },
+    {
+      "url": "https://github.com/Gentleman-Programming/engram",
+      "name": "engram",
+      "category": "Memory",
+      "value": "MEDIUM",
+      "reason": "Memory system for AI agents. Could enhance JARVIS's long-term memory capabilities. Requires further investigation.",
+      "integration": "Enhancement: Memory system",
+      "tools": [
+        "memory_store",
+        "memory_retrieve"
+      ],
+      "key_features": [
+        "Persistent memory",
+        "Agent memory management"
+      ]
+    },
+    {
+      "url": "https://github.com/alessio-web-dev/social-cli-mcp",
+      "name": "social-cli-mcp",
+      "category": "Social Media",
+      "value": "MEDIUM",
+      "reason": "CLI-based social media MCP. Provides command-line interface for social media operations. Complementary to Kadenzo for power users.",
+      "integration": "INT3_Social_Media_Automation_v3",
+      "tools": [
+        "social_post",
+        "social_analytics"
+      ],
+      "key_features": [
+        "CLI-based",
+        "Social media automation"
+      ]
+    },
+    {
+      "url": "https://github.com/codewithaarohi/OpenAI-Agents-SDK",
+      "name": "OpenAI-Agents-SDK",
+      "category": "Reference",
+      "value": "MEDIUM",
+      "reason": "Reference implementation for multi-agent management patterns. Useful for understanding OpenAI Agents SDK patterns that can be applied to JARVIS multi-agent orchestration.",
+      "integration": "Reference: Multi-agent patterns",
+      "tools": [
+        "multi_agent_manager",
+        "agent_handoff",
+        "guardrails"
+      ],
+      "key_features": [
+        "Multi-agent patterns",
+        "Agent handoff",
+        "Session management",
+        "Guardrails"
+      ]
+    }
+  ],
+  "low_value_repos": [
+    {
+      "url": "https://gitee.com/whitea133/mindspore-tools-mcp",
+      "name": "mindspore-tools-mcp",
+      "category": "AI Framework",
+      "value": "LOW",
+      "reason": "Huawei MindSpore specific MCP tools. Limited applicability unless using Huawei AI infrastructure. Not directly useful for JARVIS ecosystem.",
+      "integration": "None",
+      "tools": [
+        "mindspore_training",
+        "mindspore_inference"
+      ],
+      "key_features": [
+        "MindSpore integration",
+        "Huawei AI"
+      ]
+    },
+    {
+      "url": "https://baselight.ai/docs/connecting-to-the-baselight-mcp-server/",
+      "name": "baselight-mcp",
+      "category": "Creative/Production",
+      "value": "LOW",
+      "reason": "MCP server for Baselight color grading software. Very niche use case for film production. Not directly applicable to JARVIS automation.",
+      "integration": "None",
+      "tools": [
+        "color_grade",
+        "scene_management"
+      ],
+      "key_features": [
+        "Baselight integration",
+        "Color grading",
+        "Film production"
+      ]
+    }
+  ],
+  "integration_map": {
+    "wearable_health": [
+      "polar-ble-sdk"
+    ],
+    "banking_finance": [
+      "plaid-api",
+      "stripe-api",
+      "wise-api"
+    ],
+    "social_media": [
+      "facebook-mcp-server",
+      "kadenzo-mcp",
+      "social-cli-mcp"
+    ],
+    "vector_db": [
+      "qdrant",
+      "fastembed"
+    ],
+    "consent_privacy": [
+      "gdpr-framework",
+      "ccpa-framework"
+    ],
+    "erp_business": [
+      "erpnext-mcp-server",
+      "frappe-framework-api"
+    ],
+    "code_intelligence": [
+      "codebase-memory-mcp"
+    ],
+    "mcp_infrastructure": [
+      "mcp-proxy",
+      "nuwax-mobile"
+    ]
+  },
+  "recommendations": [
+    "Integrate codebase-memory-mcp as primary code intelligence tool - 158 languages, zero dependencies",
+    "Use facebook-mcp-server patterns for comprehensive social media automation",
+    "Adopt kadenzo-mcp for multi-network social posting (11 networks)",
+    "Implement erpnext-mcp-server for business/ERP integration",
+    "Use mcp-proxy with fastembed for local embeddings (no API costs)",
+    "Polar BLE SDK requires native mobile app - use Polar Flow API instead for server-side",
+    "Skip mindspore-tools-mcp and baselight-mcp - too niche for JARVIS"
+  ]
+}

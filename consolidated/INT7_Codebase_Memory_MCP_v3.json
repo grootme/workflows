@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "Codebase Memory MCP v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "codebase-memory"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "7ff400d4-844b-4191-9425-1fad212ab8dc",
+      "name": "Codebase Memory Trigger",
+      "webhookId": "codebase-memory"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/index'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -40,16 +40,64 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "path",
+              "value": "={$fromAI('RepoPath', 'Path to the repository to index', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
+              "name": "languages",
+              "value": "={$fromAI('Languages', 'Languages to index (auto-detect if empty)', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        400
+      ],
+      "id": "c9780b06-4086-45da-8dfe-25baed5e12d4",
+      "name": "Codebase Index"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/search'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={$fromAI('Query', 'Structural search query (e.g., functions that handle HTTP requests)', 'string')}"
+            },
+            {
+              "name": "language",
+              "value": "={$fromAI('Language', 'Filter by programming language', 'string')}"
             }
           ]
         }
@@ -60,13 +108,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "3ff8bb62-526d-49f1-9019-7c905327a291",
+      "name": "Codebase Search"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/definitions'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -88,16 +136,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "symbol",
+              "value": "={$fromAI('Symbol', 'Symbol name to find definitions for', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
+              "name": "type",
+              "value": "={$fromAI('Type', 'Symbol type: function, class, method, variable', 'string')}"
             }
           ]
         }
@@ -108,13 +156,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "216b28b7-3e6f-4778-b83e-c7339af6aae8",
+      "name": "Find Definitions"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/references'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -136,16 +184,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
+              "name": "symbol",
+              "value": "={$fromAI('Symbol', 'Symbol name to find references for', 'string')}"
             }
           ]
         }
@@ -156,13 +200,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "833a113f-90ae-4c3d-a14a-305f975dca52",
+      "name": "Find References"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/call-chain'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -184,16 +228,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "function",
+              "value": "={$fromAI('Function', 'Function name to trace call chain', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
+              "name": "depth",
+              "value": "={$fromAI('Depth', 'Maximum depth of call chain', 'number')}"
             }
           ]
         }
@@ -204,13 +248,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "06c1aa9f-c11d-4961-ab9b-aa63cdaae640",
+      "name": "Call Chain Analysis"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/routes'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -232,16 +276,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "path_pattern",
+              "value": "={$fromAI('PathPattern', 'URL path pattern to search', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
+              "name": "method",
+              "value": "={$fromAI('Method', 'HTTP method filter', 'string')}"
             }
           ]
         }
@@ -252,13 +296,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "8921e065-0dd9-4a85-97fd-82036982f765",
+      "name": "HTTP Routes Map"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "method": "POST",
+        "url": "={'http://localhost:9749/api/dependencies'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -280,16 +324,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "module",
+              "value": "={$fromAI('Module', 'Module name to analyze dependencies', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
+              "name": "direction",
+              "value": "={$fromAI('Direction', 'Dependencies direction: incoming, outgoing, both', 'string')}"
             }
           ]
         }
@@ -300,13 +344,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "a67e9b25-726f-4434-a16b-17615e1a1b5c",
+      "name": "Dependency Graph"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "url": "={'http://localhost:9749/api/status'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -327,19 +371,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -348,156 +379,132 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "e82a72e1-f285-490c-851d-07389ab5f55b",
+      "name": "Index Status"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$credentials.apiKey}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "options": {
-          "response": {
-            "response": {
-              "neverError": true,
-              "outputPropertyName": "response"
-            }
-          }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
-            }
-          ]
-        }
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
       },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 1.1,
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
       "position": [
-        1000,
-        400
+        200,
+        600
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "7249ef53-a9f9-4ac6-bbc9-3c55c1b142c8",
+      "name": "Codebase Analyzer"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "content": "Codebase Memory MCP v3.0\n\nCode intelligence via knowledge graph\n8 Codebase Tools (inspired by codebase-memory-mcp):\n- Index: Full repository indexing\n- Search: Structural code search\n- Definitions: Find symbol definitions\n- References: Find all references\n- Call Chain: Trace function call graphs\n- HTTP Routes: Map API endpoints\n- Dependencies: Module dependency graph\n- Status: Index status check\n\nSupports 158 languages via tree-sitter\nZero-debt: All connections via ai_tool pattern",
         "width": 350,
         "height": 250
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -400,
+        -600,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "903ac2a6-22d4-46ba-971e-0f5e74f28f32",
+      "name": "Docs ea511a"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "Codebase Index": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "Codebase Search": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "Find Definitions": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "Find References": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "Call Chain Analysis": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "HTTP Routes Map": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "Dependency Graph": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "Index Status": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Codebase Memory Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Codebase Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Codebase Memory Trigger",
             "type": "ai_tool",
             "index": 0
           }
@@ -514,13 +521,16 @@
   },
   "tags": [
     {
-      "name": "mcp-server"
+      "name": "codebase-memory"
     },
     {
-      "name": "wearable"
+      "name": "code-intelligence"
     },
     {
-      "name": "health"
+      "name": "knowledge-graph"
+    },
+    {
+      "name": "tree-sitter"
     },
     {
       "name": "phase-11"

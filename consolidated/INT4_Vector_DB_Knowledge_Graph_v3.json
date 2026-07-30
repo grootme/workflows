@@ -1,0 +1,643 @@
+{
+  "name": "Vector DB Knowledge Graph v3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "vector-knowledge-graph"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ],
+      "id": "0c69ebec-7a16-4ee9-84c1-30af353a82d8",
+      "name": "Vector KG Trigger",
+      "webhookId": "vector-knowledge-graph"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('Collection', 'Qdrant collection name', 'string') + '/points'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "points",
+              "value": "={$fromAI('Points', 'Array of points with id, vector, payload', 'string')}"
+            },
+            {
+              "name": "batch_size",
+              "value": "={$fromAI('BatchSize', 'Batch size for upsert', 'number')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        400
+      ],
+      "id": "dfec6d4f-b3c5-4baf-aa21-00ce1aa4b73b",
+      "name": "Qdrant Upsert Vectors"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('Collection', 'Collection name', 'string') + '/points/search'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "vector",
+              "value": "={$fromAI('Vector', 'Query vector for similarity search', 'string')}"
+            },
+            {
+              "name": "limit",
+              "value": "={$fromAI('Limit', 'Number of results to return', 'number')}"
+            },
+            {
+              "name": "with_payload",
+              "value": "={True}"
+            },
+            {
+              "name": "score_threshold",
+              "value": "={$fromAI('ScoreThreshold', 'Minimum similarity score (0-1)', 'number')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "1a289284-3e7c-4b99-87dd-2fdde2ca793d",
+      "name": "Qdrant Vector Search"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        400
+      ],
+      "id": "93a831fa-a3b3-45ac-bd48-0b66afcf1a05",
+      "name": "Qdrant List Collections"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('CollectionName', 'Name for new collection', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "vectors",
+              "value": "={{'size': \"$fromAI('VectorSize', 'Dimension of vectors (e.g., 1536 for OpenAI)', 'number')\", 'distance': 'Cosine'}}"
+            },
+            {
+              "name": "optimizers_config",
+              "value": "={{'indexing_threshold': 20000}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "fdb55c00-b087-4772-9c38-c5e5a789a6a0",
+      "name": "Qdrant Create Collection"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('Collection', 'Collection name', 'string') + '/points/' + $fromAI('PointId', 'Point ID to retrieve', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        400
+      ],
+      "id": "30bc7d4a-fddc-4464-b042-9a6f6645c0ad",
+      "name": "Qdrant Get Point"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('Collection', 'Collection name', 'string') + '/points/delete'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "points",
+              "value": "={$fromAI('PointIds', 'Array of point IDs to delete', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        400
+      ],
+      "id": "cb9c972a-31b2-4de1-88de-9883a6351235",
+      "name": "Qdrant Delete Points"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/' + $fromAI('Collection', 'Collection name', 'string') + '/points/scroll'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "={$fromAI('Limit', 'Number of points to return', 'number')}"
+            },
+            {
+              "name": "with_payload",
+              "value": "={True}"
+            },
+            {
+              "name": "with_vector",
+              "value": "={$fromAI('WithVector', 'Include vectors in response', 'boolean')}"
+            },
+            {
+              "name": "filter",
+              "value": "={$fromAI('Filter', 'Filter conditions for points', 'string')}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        400
+      ],
+      "id": "48a08a1a-dcfb-4bba-8a00-95bb795712dd",
+      "name": "Qdrant Scroll Points"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/knowledge_graph/points'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "points",
+              "value": "={[{\"id\": \"$fromAI('EntityId', 'Unique entity identifier', 'string')\", \"vector\": \"$fromAI('EntityVector', 'Embedding vector for entity', 'string')\", \"payload\": {\"type\": \"$fromAI('EntityType', 'Entity type (Person, Organization, Concept, Skill, etc.)', 'string')\", \"name\": \"$fromAI('EntityName', 'Name of the entity', 'string')\", \"properties\": \"$fromAI('Properties', 'Additional entity properties as JSON', 'string')\", \"relations\": \"$fromAI('Relations', 'Array of relation objects', 'string')\"}}]}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "d76be280-67dd-42d5-b46d-55a534a63d90",
+      "name": "KG Add Entity"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={'https://'$credentials.qdrantHost':'$credentials.qdrantPort'/collections/knowledge_graph/points/search'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "vector",
+              "value": "={$fromAI('QueryVector', 'Query embedding for relation search', 'string')}"
+            },
+            {
+              "name": "filter",
+              "value": "={{'must': [{'key': 'relations.target_id', 'match': {'value': \"$fromAI('TargetId', 'Target entity ID to find relations for', 'string')\"}}]}}"
+            },
+            {
+              "name": "limit",
+              "value": "={$fromAI('Limit', 'Max results', 'number')}"
+            },
+            {
+              "name": "with_payload",
+              "value": "={True}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        400
+      ],
+      "id": "2add9c08-57b9-475f-80a2-12192a3dc225",
+      "name": "KG Query Relations"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "input": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', 'Text to generate embedding for', 'string') }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [
+        1200,
+        400
+      ],
+      "id": "06d9cfa9-f125-43b6-9346-d1ea8ba5d1f5",
+      "name": "Generate Embedding",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI Embedding"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "5ccaafa2-9945-4dc2-bc63-809fcd9d589b",
+      "name": "Knowledge Graph Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "Vector DB Knowledge Graph v3.0\n\nQdrant Vector Database for Knowledge Graph persistence\n10 Tools + 1 Embedding node:\n- Qdrant: Upsert, Search, List, Create, Get, Delete, Scroll\n- KG: Add Entity, Query Relations\n- Embedding: text-embedding-3-small\n\n10 entity types: Person, Organization, Concept, Skill,\n  Project, Event, Document, Location, Resource, Goal\n8 relation types: KNOWS, WORKS_FOR, RELATED_TO,\n  DEPENDS_ON, PART_OF, LOCATED_IN, CREATED_BY, MENTIONS\n\nZero-debt: All connections via ai_tool pattern",
+        "width": 350,
+        "height": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -200
+      ],
+      "id": "b05d520d-b845-4d7f-897b-fe85c2356302",
+      "name": "Docs edb6b0"
+    }
+  ],
+  "connections": {
+    "Qdrant Upsert Vectors": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant List Collections": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Create Collection": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Get Point": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Delete Points": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Scroll Points": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KG Add Entity": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KG Query Relations": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embedding": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge Graph Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Vector KG Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Havana",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "name": "vector-db"
+    },
+    {
+      "name": "qdrant"
+    },
+    {
+      "name": "knowledge-graph"
+    },
+    {
+      "name": "embeddings"
+    },
+    {
+      "name": "persistence"
+    },
+    {
+      "name": "phase-11"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

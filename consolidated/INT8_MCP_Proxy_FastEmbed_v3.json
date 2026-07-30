@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "MCP Proxy FastEmbed v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "mcp-proxy-fastembed"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "35578685-a911-441b-ab49-a07d07b6561a",
+      "name": "MCP Proxy Trigger",
+      "webhookId": "mcp-proxy-fastembed"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "url": "={'http://localhost:3000/api/servers'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -39,19 +39,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -60,13 +47,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "756ff5df-b130-4362-baf4-c8d658e2fb26",
+      "name": "List MCP Servers"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "method": "POST",
+        "url": "={'http://localhost:3000/api/tools/call'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -88,16 +75,20 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "server_name",
+              "value": "={$fromAI('ServerName', 'MCP server name to call', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
+              "name": "tool_name",
+              "value": "={$fromAI('ToolName', 'Tool name on the server', 'string')}"
+            },
+            {
+              "name": "arguments",
+              "value": "={$fromAI('Arguments', 'Tool arguments as JSON', 'string')}"
             }
           ]
         }
@@ -108,13 +99,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "7198ee05-5cf7-4cdd-8956-b042a9e1e446",
+      "name": "Call MCP Tool"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "url": "={'http://localhost:3000/api/tools'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -140,12 +131,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
+              "name": "server_name",
+              "value": "={{\"$fromAI('ServerName', 'MCP server name', 'string')\"}}"
             }
           ]
         }
@@ -156,13 +143,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "8f6af44d-bf1b-4d7b-8486-bb5d7a6ccf45",
+      "name": "List MCP Tools"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "method": "POST",
+        "url": "={'http://localhost:3000/api/embeddings'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -184,16 +171,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "texts",
+              "value": "={$fromAI('Texts', 'Array of texts to generate embeddings for', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
+              "name": "model",
+              "value": "={$fromAI('Model', 'FastEmbed model name (e.g., BAAI/bge-small-en-v1.5)', 'string')}"
             }
           ]
         }
@@ -204,13 +191,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "9779935e-a630-408c-b463-c28219bf993a",
+      "name": "FastEmbed Generate"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "method": "POST",
+        "url": "={'http://localhost:3000/api/rerank'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -232,16 +219,20 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "query",
+              "value": "={$fromAI('Query', 'Query for reranking', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
+              "name": "documents",
+              "value": "={$fromAI('Documents', 'Array of documents to rerank', 'string')}"
+            },
+            {
+              "name": "model",
+              "value": "={$fromAI('Model', 'Reranking model name', 'string')}"
             }
           ]
         }
@@ -252,13 +243,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "fabf4cb4-4886-4f98-9e47-908a30260733",
+      "name": "FastEmbed Rerank"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "method": "POST",
+        "url": "={'http://localhost:3000/api/servers'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -280,16 +271,24 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "name",
+              "value": "={$fromAI('Name', 'Server name', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
+              "name": "command",
+              "value": "={$fromAI('Command', 'Command to start the MCP server', 'string')}"
+            },
+            {
+              "name": "args",
+              "value": "={$fromAI('Args', 'Command arguments', 'string')}"
+            },
+            {
+              "name": "env",
+              "value": "={$fromAI('Env', 'Environment variables as JSON', 'string')}"
             }
           ]
         }
@@ -300,13 +299,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "46fb0a54-f53f-43a2-9d90-58f58bfa761e",
+      "name": "Add MCP Server"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "url": "={'http://localhost:3000/health'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -327,19 +326,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -348,60 +334,25 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "324072a8-01b6-489d-a8f2-6be5c743926c",
+      "name": "Proxy Health Check"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$credentials.apiKey}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "options": {
-          "response": {
-            "response": {
-              "neverError": true,
-              "outputPropertyName": "response"
-            }
-          }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
-            }
-          ]
-        }
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
       },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 1.1,
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
       "position": [
-        1000,
-        400
+        200,
+        600
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "bc64159f-d0cf-4491-9f30-7af9be12a5d9",
+      "name": "MCP Proxy Analyzer"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "content": "MCP Proxy & FastEmbed v3.0\n\nRust-based MCP proxy with local embeddings\n7 Tools (inspired by nuwax-ai/mcp-proxy):\n- Proxy: List Servers, Call Tool, List Tools\n- FastEmbed: Generate Embeddings, Rerank\n- Management: Add Server, Health Check\n\nZero-debt: All connections via ai_tool pattern",
         "width": 350,
         "height": 250
       },
@@ -411,93 +362,93 @@
         -400,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "6f2ea296-c872-40f2-8fb2-9a8c382d2bde",
+      "name": "Docs aa9f2b"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "List MCP Servers": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "Call MCP Tool": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "List MCP Tools": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "FastEmbed Generate": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "FastEmbed Rerank": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "Add MCP Server": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "Proxy Health Check": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "MCP Proxy Analyzer": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "MCP Proxy Trigger",
             "type": "ai_tool",
             "index": 0
           }
@@ -514,13 +465,16 @@
   },
   "tags": [
     {
-      "name": "mcp-server"
+      "name": "mcp-proxy"
     },
     {
-      "name": "wearable"
+      "name": "fastembed"
     },
     {
-      "name": "health"
+      "name": "embeddings"
+    },
+    {
+      "name": "local-ai"
     },
     {
       "name": "phase-11"

@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "MCP_Consent_Privacy_Server_v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "mcp-consent-privacy"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "e44d18ba-b7f6-4e26-af4f-4c08fe2416b3",
+      "name": "Consent Privacy MCP",
+      "webhookId": "mcp-consent-privacy"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "url": "={'https://consent-api.example.com/v1/grant-consent'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -46,10 +46,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
             }
           ]
         }
@@ -60,13 +56,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "8eb7fd52-b42b-439c-983a-1767bb78c965",
+      "name": "Grant Consent"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "url": "={'https://consent-api.example.com/v1/revoke-consent'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -94,10 +90,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
             }
           ]
         }
@@ -108,13 +100,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "1c493bd4-d7f7-45ca-856f-e7b998ac676b",
+      "name": "Revoke Consent"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "url": "={'https://consent-api.example.com/v1/check-consent'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -142,10 +134,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
             }
           ]
         }
@@ -156,13 +144,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "e01ab5cf-c53f-4dac-8add-6483a7e8c9cb",
+      "name": "Check Consent"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "url": "={'https://consent-api.example.com/v1/get-consent-history'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -190,10 +178,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
             }
           ]
         }
@@ -204,13 +188,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "e775ad71-00d4-4afb-b40e-a75a6cd12fd5",
+      "name": "Get Consent History"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "url": "={'https://consent-api.example.com/v1/request-data-export'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -238,10 +222,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
             }
           ]
         }
@@ -252,13 +232,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "3cba0d8a-67c0-48ff-8a68-ee219e7f5a41",
+      "name": "Request Data Export"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "url": "={'https://consent-api.example.com/v1/request-data-deletion'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -286,10 +266,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
             }
           ]
         }
@@ -300,13 +276,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "79462011-d5e6-473c-aabd-1e506ff03ed2",
+      "name": "Request Data Deletion"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "url": "={'https://consent-api.example.com/v1/get-privacy-dashboard'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -334,10 +310,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
             }
           ]
         }
@@ -348,13 +320,13 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "05c1552c-3f59-4a47-b354-d40b0d311ad5",
+      "name": "Get Privacy Dashboard"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
+        "url": "={'https://consent-api.example.com/v1/anonymize-data'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -382,10 +354,6 @@
             {
               "name": "user_id",
               "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
             }
           ]
         }
@@ -396,12 +364,12 @@
         1000,
         400
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "885e4143-72d7-45a4-8ab5-2eb6dbcd8096",
+      "name": "Anonymize Data"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "content": "Consent & Privacy MCP Server v3\n8 Tools for GDPR/CCPA compliance\n8 data categories, 6 purposes, 6 scopes",
         "width": 350,
         "height": 250
       },
@@ -411,93 +379,93 @@
         -400,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "4471548e-2609-4a6c-97d0-6b35c7d970df",
+      "name": "Docs cf17f4"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "Grant Consent": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "Revoke Consent": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "Check Consent": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "Get Consent History": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "Request Data Export": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "Request Data Deletion": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "Get Privacy Dashboard": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "Anonymize Data": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Consent Privacy MCP",
             "type": "ai_tool",
             "index": 0
           }
@@ -517,10 +485,13 @@
       "name": "mcp-server"
     },
     {
-      "name": "wearable"
+      "name": "consent"
     },
     {
-      "name": "health"
+      "name": "privacy"
+    },
+    {
+      "name": "gdpr"
     },
     {
       "name": "phase-11"

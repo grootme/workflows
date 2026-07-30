@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "ERPNext Business Integration v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "erpnext-integration"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "0c7630de-7464-49b6-8561-8edeb7a93de2",
+      "name": "ERPNext Trigger",
+      "webhookId": "erpnext-integration"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/DocType'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -44,12 +44,56 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "limit_page_length",
+              "value": "={{\"$fromAI('Limit', 'Number of DocTypes to list', 'number')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        400
+      ],
+      "id": "243dfa63-8215-498e-89aa-e878afcda1fb",
+      "name": "ERP Get DocTypes"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/' + $fromAI('DocType', 'DocType name (e.g., Customer, Item, Sales Order)', 'string')}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit_page_length",
+              "value": "={{\"$fromAI('Limit', 'Number of documents', 'number')\"}}"
+            },
+            {
+              "name": "filters",
+              "value": "={{\"$fromAI('Filters', 'JSON filters for documents', 'string')\"}}"
             }
           ]
         }
@@ -60,13 +104,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "ff01f40a-720e-4e28-8946-c055899d0ecb",
+      "name": "ERP Get Documents"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/' + $fromAI('DocType', 'DocType name', 'string') + '/' + $fromAI('Name', 'Document name/ID', 'string')}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -87,19 +131,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -108,13 +139,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "71bbe1ed-f194-4ffb-af56-0a6f086302f3",
+      "name": "ERP Get Document"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "method": "POST",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/' + $fromAI('DocType', 'DocType to create', 'string')}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -136,16 +167,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
+              "name": "data",
+              "value": "={$fromAI('Data', 'Document data as JSON object', 'string')}"
             }
           ]
         }
@@ -156,13 +183,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "7f57cf7e-a011-4550-a4c7-7ca3780f0b62",
+      "name": "ERP Create Document"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "method": "PUT",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/' + $fromAI('DocType', 'DocType name', 'string') + '/' + $fromAI('Name', 'Document name', 'string')}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -184,16 +211,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
+              "name": "data",
+              "value": "={$fromAI('Data', 'Updated document data as JSON', 'string')}"
             }
           ]
         }
@@ -204,13 +227,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "0c841a22-7ad6-4ffa-a2ff-38a64a78dac2",
+      "name": "ERP Update Document"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "method": "DELETE",
+        "url": "={'https://'$credentials.erpnextUrl'/api/resource/' + $fromAI('DocType', 'DocType name', 'string') + '/' + $fromAI('Name', 'Document name to delete', 'string')}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -231,19 +254,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -252,13 +262,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "46457957-e593-4953-8590-f6ddfa23c0a4",
+      "name": "ERP Delete Document"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "method": "POST",
+        "url": "={'https://'$credentials.erpnextUrl'/api/method/frappe.client.submit'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -280,16 +290,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
+              "name": "doc",
+              "value": "={$fromAI('Doc', 'Document to submit (must be submittable)', 'string')}"
             }
           ]
         }
@@ -300,13 +306,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "8e40e524-4db4-4983-b0b0-88329437ddf9",
+      "name": "ERP Submit Document"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "method": "POST",
+        "url": "={'https://'$credentials.erpnextUrl'/api/method/frappe.desk.query_report.run'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -328,16 +334,16 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "report_name",
+              "value": "={$fromAI('ReportName', 'Name of the report to run', 'string')}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
+              "name": "filters",
+              "value": "={$fromAI('Filters', 'Report filters as JSON', 'string')}"
             }
           ]
         }
@@ -348,13 +354,13 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "76eb045f-6cb8-4552-8e81-ae35fe55df4e",
+      "name": "ERP Run Report"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
+        "method": "POST",
+        "url": "={'https://'$credentials.erpnextUrl'/api/method/' + $fromAI('Method', 'Whitelisted API method path', 'string')}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -376,16 +382,12 @@
             }
           }
         },
-        "sendQuery": true,
-        "queryParameters": {
+        "sendBody": true,
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
+              "name": "args",
+              "value": "={$fromAI('Args', 'Method arguments as JSON', 'string')}"
             }
           ]
         }
@@ -396,108 +398,143 @@
         1000,
         400
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "a8b14cc4-7976-478b-a3de-7258d222fe1a",
+      "name": "ERP Call Method"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "3823d56b-5873-4c0b-b2f2-cb9d1e94762d",
+      "name": "ERP Business Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "ERPNext Business Integration v3.0\n\nFull ERPNext/Frappe API integration\n10 ERP Tools:\n- DocTypes: Get List\n- Documents: Get List, Get, Create, Update, Delete\n- Workflow: Submit Document\n- Reports: Run Report\n- Custom: Call Whitelisted Method\n\nInspired by: erpnext-mcp-server, frappe-framework-api\nZero-debt: All connections via ai_tool pattern",
         "width": 350,
         "height": 250
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -400,
+        -600,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "82dca6fa-51a6-4c53-b138-733976707000",
+      "name": "Docs d3d5ff"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "ERP Get DocTypes": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "ERP Get Documents": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "ERP Get Document": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "ERP Create Document": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "ERP Update Document": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "ERP Delete Document": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "ERP Submit Document": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "ERP Run Report": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "ERPNext Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERP Call Method": {
+      "ai_tool": [
+        [
+          {
+            "node": "ERPNext Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERP Business Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "ERPNext Trigger",
             "type": "ai_tool",
             "index": 0
           }
@@ -514,13 +551,19 @@
   },
   "tags": [
     {
-      "name": "mcp-server"
+      "name": "erpnext"
     },
     {
-      "name": "wearable"
+      "name": "frappe"
     },
     {
-      "name": "health"
+      "name": "erp"
+    },
+    {
+      "name": "business"
+    },
+    {
+      "name": "api-integration"
     },
     {
       "name": "phase-11"

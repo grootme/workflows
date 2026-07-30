@@ -1,9 +1,9 @@
 {
-  "name": "MCP_Wearable_Health_Server_v3",
+  "name": "Wearable Health Data Integration v3",
   "nodes": [
     {
       "parameters": {
-        "path": "mcp-wearable-health"
+        "path": "wearable-health-integration"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 1,
@@ -11,14 +11,14 @@
         200,
         0
       ],
-      "id": "3a5b4c63-8599-4e5f-889f-1675c538e2d7",
-      "name": "Wearable Health MCP",
-      "webhookId": "mcp-wearable-health"
+      "id": "829fb8b8-d1d1-43cd-bd7b-e751e6856d3d",
+      "name": "Wearable Health Trigger",
+      "webhookId": "wearable-health-integration"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-heart-rate'}",
+        "url": "={$json.appleHealthUrl}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -44,12 +44,16 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "type",
+              "value": "={{'HeartRate'}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get heart rate', 'string')\"}}"
+              "name": "startDate",
+              "value": "={{\"$fromAI('StartDate', 'Start date for health data query (ISO format)', 'string')\"}}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{\"$fromAI('EndDate', 'End date for health data query (ISO format)', 'string')\"}}"
             }
           ]
         }
@@ -60,13 +64,13 @@
         -400,
         400
       ],
-      "id": "bb86c1f1-117a-4776-9b2f-48b154c4c445",
-      "name": "Get Heart Rate"
+      "id": "ebfee6d7-b008-4b04-b546-0e9c142a1b92",
+      "name": "Apple Heart Rate"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-steps'}",
+        "url": "={$json.appleHealthUrl}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -92,12 +96,16 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "type",
+              "value": "={{'StepCount'}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get steps', 'string')\"}}"
+              "name": "startDate",
+              "value": "={{\"$fromAI('StartDate', 'Start date for steps data', 'string')\"}}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{\"$fromAI('EndDate', 'End date for steps data', 'string')\"}}"
             }
           ]
         }
@@ -108,13 +116,13 @@
         -200,
         400
       ],
-      "id": "8c553ef2-070e-4c1d-bca1-e3f685dc787f",
-      "name": "Get Steps"
+      "id": "856dd1ca-7107-487d-933e-a4f92efaafa4",
+      "name": "Apple Steps"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-sleep-data'}",
+        "url": "={$json.appleHealthUrl}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -140,12 +148,16 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "type",
+              "value": "={{'SleepAnalysis'}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get sleep data', 'string')\"}}"
+              "name": "startDate",
+              "value": "={{\"$fromAI('StartDate', 'Start date for sleep data', 'string')\"}}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{\"$fromAI('EndDate', 'End date for sleep data', 'string')\"}}"
             }
           ]
         }
@@ -156,13 +168,13 @@
         0,
         400
       ],
-      "id": "1dccc353-0875-42d7-908a-ba23ad302e7c",
-      "name": "Get Sleep Data"
+      "id": "f903095a-d5a0-4431-b78d-3ef4a8a41ab5",
+      "name": "Apple Sleep Analysis"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-activity-summary'}",
+        "url": "={'https://api.fitbit.com/1/user/-/activities.json'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -188,12 +200,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
               "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get activity summary', 'string')\"}}"
+              "value": "={{\"$fromAI('Date', 'Date for Fitbit activities (yyyy-MM-dd)', 'string')\"}}"
             }
           ]
         }
@@ -204,13 +212,13 @@
         200,
         400
       ],
-      "id": "fa1b92b9-76ed-4513-92f7-b79862aefdc7",
-      "name": "Get Activity Summary"
+      "id": "13e4efd3-ba14-413c-882f-1cdafe664b73",
+      "name": "Fitbit Activities"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-blood-oxygen'}",
+        "url": "={'https://api.fitbit.com/1/user/-/activities/heart/date/' + $fromAI('Date', 'Date for heart rate data', 'string') + '/1d.json'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -231,19 +239,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get blood oxygen', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -252,13 +247,13 @@
         400,
         400
       ],
-      "id": "66853318-9680-4125-980e-a2448032322c",
-      "name": "Get Blood Oxygen"
+      "id": "82d49b63-6d11-4dfc-a5b9-5508601b0a4d",
+      "name": "Fitbit Heart Rate"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-stress-level'}",
+        "url": "={'https://api.fitbit.com/1.2/user/-/sleep/date/' + $fromAI('Date', 'Date for sleep data', 'string') + '.json'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -279,19 +274,6 @@
               "outputPropertyName": "response"
             }
           }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
-            },
-            {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get stress level', 'string')\"}}"
-            }
-          ]
         }
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -300,13 +282,13 @@
         600,
         400
       ],
-      "id": "bb6f70e0-7b99-4e7f-a272-ff0b1ba6f007",
-      "name": "Get Stress Level"
+      "id": "03df1aad-6faa-4c63-97b6-ef03c0b2d839",
+      "name": "Fitbit Sleep"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/get-body-composition'}",
+        "url": "={'https://connectapi.garmin.com/activitylist-service/activities/search/activities'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -332,12 +314,12 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "limit",
+              "value": "={{\"$fromAI('Limit', 'Number of activities to retrieve', 'number')\"}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for get body composition', 'string')\"}}"
+              "name": "startDate",
+              "value": "={{\"$fromAI('StartDate', 'Start date for Garmin activities', 'string')\"}}"
             }
           ]
         }
@@ -348,13 +330,13 @@
         800,
         400
       ],
-      "id": "b2e4bc04-e7f3-4f6e-ae76-332accd47b0e",
-      "name": "Get Body Composition"
+      "id": "783cc52e-d715-456f-8c81-78887f4f8b8b",
+      "name": "Garmin Activities"
     },
     {
       "parameters": {
         "method": "GET",
-        "url": "={'https://wearable-api.example.com/v1/sync-wearable-data'}",
+        "url": "={'https://connectapi.garmin.com/health-data-service/userstats'}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -380,12 +362,12 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "user_id",
-              "value": "={{\"$fromAI('UserId', 'User identifier', 'string')\"}}"
+              "name": "fromDate",
+              "value": "={{\"$fromAI('FromDate', 'Start date for health snapshot', 'string')\"}}"
             },
             {
-              "name": "date",
-              "value": "={{\"$fromAI('Date', 'Date for sync wearable data', 'string')\"}}"
+              "name": "untilDate",
+              "value": "={{\"$fromAI('UntilDate', 'End date for health snapshot', 'string')\"}}"
             }
           ]
         }
@@ -396,12 +378,117 @@
         1000,
         400
       ],
-      "id": "93d2c886-66c5-4564-b5d4-cb5331233d6a",
-      "name": "Sync Wearable Data"
+      "id": "bf7c82af-c80a-4308-9210-ada361f389c1",
+      "name": "Garmin Health Snapshot"
     },
     {
       "parameters": {
-        "content": "Wearable Health MCP Server v3\n8 Tools for wearable device data\nApple Health, Fitbit, Garmin, Polar BLE",
+        "method": "GET",
+        "url": "={'https://flow.polar.com/api/heart-rate'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{\"$fromAI('UserId', 'Polar user identifier', 'string')\"}}"
+            },
+            {
+              "name": "date",
+              "value": "={{\"$fromAI('Date', 'Date for Polar data', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        400
+      ],
+      "id": "58d26a61-8be8-4d49-8e65-e1bffd56825a",
+      "name": "Polar Heart Rate"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={'https://flow.polar.com/api/training'}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "outputPropertyName": "response"
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{\"$fromAI('UserId', 'Polar user identifier', 'string')\"}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        400
+      ],
+      "id": "53f32d1a-c438-45be-938c-16585bf358c6",
+      "name": "Polar Training Data"
+    },
+    {
+      "parameters": {
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thought', 'Internal reasoning step - analyze data before acting', 'string') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.tool",
+      "typeVersion": 1,
+      "position": [
+        200,
+        600
+      ],
+      "id": "1062c8c7-dfeb-437f-a6af-c23424c3ae3b",
+      "name": "Health Data Analyzer"
+    },
+    {
+      "parameters": {
+        "content": "Wearable Health Integration v3.0\n\nIntegrates: Apple Health, Fitbit, Garmin, Polar BLE\n10 Health Data Tools:\n- Apple: Heart Rate, Steps, Sleep\n- Fitbit: Activities, Heart Rate, Sleep\n- Garmin: Activities, Health Snapshot\n- Polar: Heart Rate, Training Data\n\nAll tools use $fromAI() for parameter injection\nZero-debt: All connections via ai_tool pattern",
         "width": 350,
         "height": 250
       },
@@ -411,93 +498,126 @@
         -400,
         -200
       ],
-      "id": "d71e49eb-5539-4622-996e-c55019230711",
-      "name": "Docs f8f6b7"
+      "id": "0a4b5891-265d-4285-9ff5-204e49ab0e44",
+      "name": "Docs bcca1e"
     }
   ],
   "connections": {
-    "Get Heart Rate": {
+    "Apple Heart Rate": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Steps": {
+    "Apple Steps": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Sleep Data": {
+    "Apple Sleep Analysis": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Activity Summary": {
+    "Fitbit Activities": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Blood Oxygen": {
+    "Fitbit Heart Rate": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Stress Level": {
+    "Fitbit Sleep": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Get Body Composition": {
+    "Garmin Activities": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Sync Wearable Data": {
+    "Garmin Health Snapshot": {
       "ai_tool": [
         [
           {
-            "node": "Wearable Health MCP",
+            "node": "Wearable Health Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Polar Heart Rate": {
+      "ai_tool": [
+        [
+          {
+            "node": "Wearable Health Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Polar Training Data": {
+      "ai_tool": [
+        [
+          {
+            "node": "Wearable Health Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Data Analyzer": {
+      "ai_tool": [
+        [
+          {
+            "node": "Wearable Health Trigger",
             "type": "ai_tool",
             "index": 0
           }
@@ -514,13 +634,25 @@
   },
   "tags": [
     {
-      "name": "mcp-server"
-    },
-    {
       "name": "wearable"
     },
     {
       "name": "health"
+    },
+    {
+      "name": "apple-health"
+    },
+    {
+      "name": "fitbit"
+    },
+    {
+      "name": "garmin"
+    },
+    {
+      "name": "polar"
+    },
+    {
+      "name": "api-integration"
     },
     {
       "name": "phase-11"
