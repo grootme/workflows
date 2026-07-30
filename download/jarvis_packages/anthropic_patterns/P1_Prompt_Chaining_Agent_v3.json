@@ -1,0 +1,476 @@
+{
+  "name": "P1 Prompt Chaining Agent v3",
+  "nodes": [
+    {
+      "parameters": {
+        "initialMessages": [
+          {
+            "role": "assistant",
+            "content": "I'll help you create high-quality content. I'll first research, then draft, then polish it. What topic would you like me to write about?"
+          }
+        ]
+      },
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e97c14f2-e32e-459c-a2f6-d7f127cf9d60",
+      "name": "Chat Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# Research Agent (Step 1: Prompt Chaining)\n\nYou are a research specialist. Your job is to gather comprehensive information about the given topic.\n\n## Skills Loaded:\n- deep-research: Systematic multi-angle research methodology\n- data-analysis: Extract insights from data\n\n## Output Format:\nReturn a structured research summary with:\n- Key facts and data points\n- 2-3 concrete examples\n- Expert perspectives\n- Current trends\n- Challenges/limitations\n\n## Rules:\n- Search from at least 3-5 different angles\n- Always verify facts from multiple sources\n- Include specific numbers and statistics\n- Current datetime: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        400,
+        0
+      ],
+      "id": "a63ddfcd-6f68-4b72-8ea3-5008c6309d56",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "52d79e23-118d-49d7-8b20-f6bbed554dbe",
+      "name": "GPT-4o-mini Research",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "f78b949f-4629-480a-9ef0-e1ee95efafcf",
+      "name": "Research Memory"
+    },
+    {
+      "parameters": {
+        "description": "Search the web for current information, news, and data about any topic",
+        "url": "={ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_URL', `The search API endpoint URL`, 'string') }",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ],
+      "id": "b31787ea-a8de-4956-bde7-44ec2279b9c2",
+      "name": "Web Search Tool"
+    },
+    {
+      "parameters": {
+        "description": "Plan research strategy and organize findings before drafting"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "680e367a-ef3f-4eb1-b66f-3eadb2fbdbce",
+      "name": "Think Tool"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.output.length }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -300
+      ],
+      "id": "57d8ea90-ffe7-4028-ae4b-2e18a24ebfc4",
+      "name": "Quality Gate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Research Agent').item.json.output }}",
+        "options": {
+          "systemMessage": "=# Draft Agent (Step 2: Prompt Chaining)\n\nYou are a content drafting specialist. Using the research provided, create a well-structured draft.\n\n## Skills Loaded:\n- consulting-analysis: Professional analysis framework\n- newsletter-generation: Content structure and formatting\n\n## Output Format:\n- Engaging headline\n- 3-5 key sections with subheadings\n- Specific data points and examples from research\n- Actionable takeaways\n\n## Rules:\n- Every claim must reference the research\n- Use the user's preferred language\n- Keep paragraphs concise (3-5 sentences)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1100,
+        -300
+      ],
+      "id": "1176dc76-0bfc-45a8-99f8-6b4ce3ba6db4",
+      "name": "Draft Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "3a091a58-0b75-438f-ad52-46d142c862e4",
+      "name": "GPT-4.1-mini Draft",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1300,
+        0
+      ],
+      "id": "c4f78220-bca3-4a31-aa3d-94758cce81ef",
+      "name": "Draft Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Draft Agent').item.json.output }}",
+        "options": {
+          "systemMessage": "=# Polish Agent (Step 3: Prompt Chaining)\n\nYou are a content polishing specialist. Review and improve the draft for quality, clarity, and impact.\n\n## Skills Loaded:\n- code-documentation: Precision and clarity standards\n\n## Quality Checklist:\n- Every factual claim has a source\n- No duplicate content\n- Consistent formatting\n- Engaging opening\n- Clear closing\n- No typos or broken formatting\n\n## Rules:\n- Only improve, never add fabricated information\n- Preserve the original voice and structure\n- Add transitions between sections if missing"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1500,
+        -300
+      ],
+      "id": "efeecdea-45a3-4b4e-84e1-49f7a652f6d9",
+      "name": "Polish Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        0
+      ],
+      "id": "02ef60a5-5986-48b0-9d4b-ebd4b61c9f6e",
+      "name": "GPT-4.1 Polish",
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || 'default' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1700,
+        0
+      ],
+      "id": "9451da50-b8f8-4110-8a16-5265266ae6a2",
+      "name": "Polish Memory"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "headline": {
+              "type": "string",
+              "description": "The main headline"
+            },
+            "content": {
+              "type": "string",
+              "description": "The polished content in markdown"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Source URLs referenced"
+            },
+            "quality_score": {
+              "type": "number",
+              "description": "Self-assessed quality score 1-10"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        1700,
+        300
+      ],
+      "id": "2cfeb50d-4f38-4d58-ba31-2c932757f020",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "🔗 P1: Prompt Chaining (Anthropic Pattern)\n\nStep 1: Research → Gate\nStep 2: Draft → Gate\nStep 3: Polish → Output\n\nEach step uses a specialized agent.\nGates ensure quality before proceeding.\nTiered LLM: mini→4.1-mini→4.1\n\nSkills: deep-research, consulting-analysis, newsletter-generation",
+        "width": 300,
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -400
+      ],
+      "id": "64f43371-de11-4742-b834-0d81167139a1",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Quality Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Gate": {
+      "main": [
+        [
+          {
+            "node": "Draft Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Agent": {
+      "main": [
+        [
+          {
+            "node": "Polish Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Polish Agent": {
+      "main": [
+        []
+      ]
+    },
+    "GPT-4o-mini Research": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1-mini Draft": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Draft Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Draft Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4.1 Polish": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Polish Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Polish Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Polish Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Polish Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  }
+}

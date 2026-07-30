@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://www.anthropic.com/engineering/building-effective-agents",
+    "name": "Building Effective AI Agents",
+    "snippet": "Dec 19, 2024 — In this section, we'll explore the common patterns for agentic systems we've seen in production. best practices for tool development in ...",
+    "host_name": "www.anthropic.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://resources.anthropic.com/hubfs/Building%20Effective%20AI%20Agents-%20Architecture%20Patterns%20and%20Implementation%20Frameworks.pdf",
+    "name": "Building Effective AI Agents: Architecture Patterns and",
+    "snippet": "Architecture patterns from single agents to multi-agent orchestration , with clear guidance on matching your specific problem to the right pattern(s) Agent ... 30 pages",
+    "host_name": "resources.anthropic.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=uhJJgc-0iTQ",
+    "name": "Building more effective AI agents",
+    "snippet": "1. Remove the weekly limits . 2. Fix the search function within chats. 3. Fix the voice chat. Tips for building AI agents",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.anthropic.com/engineering/writing-tools-for-agents",
+    "name": "Writing effective tools for AI agents—using",
+    "snippet": "Sep 11, 2025 — In this post, we describe our most effective techniques for improving performance in a variety of agentic AI systems 1 . We begin by covering how ... Read more\nSep 11, 2025 — Agents are only as effective as the tools we give them. We share how to write high-quality tools and evaluations, and how you can boost ...",
+    "host_name": "www.anthropic.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.pulumi.com/blog/how-building-ai-agents-has-changed",
+    "name": "How Building AI Agents Has Changed in 2026",
+    "snippet": "May 14, 2026 — Anthropic's own writing on building effective agents lands in the same place: start with the simplest thing, add complexity only when the ... Read more",
+    "host_name": "www.pulumi.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1hiww4y/i_just_read_anthropics_blog_on_building_effective",
+    "name": "I just read Anthropic's blog on 'Building effective agents",
+    "snippet": "Anthropic has observed that the most effective LLM agents are built with simple, composable patterns rather than complex frameworks.",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to/kazuya_dev/aws-reinvent-2025-what-anthropic-learned-building-ai-agents-in-2025-aim277-16lc",
+    "name": "AWS re:Invent 2025 - What Anthropic Learned Building AI",
+    "snippet": "Dec 5, 2025 — In this video, Cal from Anthropic's Applied AI team shares key learnings from building AI agents in 2024, focusing on Claude's evolution ...\nDec 5, 2025 — Building Effective Agents . This is where we talk about agents versus workflows and talk about what the agentic architecture is.",
+    "host_name": "dev.to",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/intuitionmachine/structuring-agents-skills-and-mcps-best-practices-from-anthropic-9312849ccea6",
+    "name": "Structuring Agents, Skills, and MCPs: Best Practices from",
+    "snippet": "This essay examines a three-layer architecture for agentic systems — skills, agents , and MCP connectors — and distills the design principles ... Read more",
+    "host_name": "medium.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

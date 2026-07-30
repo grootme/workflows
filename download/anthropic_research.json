@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+    "name": "Equipping agents for the real world with Agent Skills",
+    "snippet": "Oct 16, 2025 — Discover how Anthropic builds AI agents with practical capabilities through modular skills , enabling them to handle complex real-world tasks ...\nDiscover how Anthropic builds AI agents with practical capabilities through modular skills, enabling them to handle complex real-world tasks more effectively and reliably.",
+    "host_name": "www.anthropic.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+    "name": "Agent Skills - Claude Platform Docs",
+    "snippet": "Equipping agents for the real world with Agent Skills. Anthropic provides pre-built Agent Skills for common document tasks (PowerPoint, Excel, Word, PDF), and ...\nAnthropic provides pre-built Agent Skills for common document tasks (PowerPoint, Excel, Word, PDF), and you can create your own custom Skills. Both work the same way: once a Skill is available in your environment, Claude uses it automatically when relevant to your request.",
+    "host_name": "platform.claude.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@martinkeywood/equipping-agents-for-the-real-world-with-agent-skills-a-practical-guide-of-a-brilliant-anthropic-0f546d9be089",
+    "name": "Equipping Agents for the Real World with Agent Skills",
+    "snippet": "Think of Agent Skills as little knowledge packages that transform general-purpose Claude into a specialized assistant for your specific needs.\nAnthropic is continuing to develop the Skills ecosystem, with plans to add features for creating, editing, discovering, sharing, and using ... Read more\nInstead of cramming everything into your prompts or building custom agents from scratch for each use case, you can now create modular, reusable skills that Claude can tap into as needed.",
+    "host_name": "medium.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.deeplearning.ai/courses/agent-skills-with-anthropic",
+    "name": "Agent Skills with Anthropic",
+    "snippet": "Equip agents with expert on-demand knowledge to enable reliable coding, research, and data analysis workflows.",
+    "host_name": "www.deeplearning.ai",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/anthropics/skills",
+    "name": "GitHub - anthropics/skills: Public repository for Agent Skills",
+    "snippet": "Skills are folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. Equipping agents for the ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://anthropic.skilljar.com/introduction-to-agent-skills",
+    "name": "Introduction to agent skills - Anthropic Courses",
+    "snippet": "Introduction to agent skills. Learn how to build, configure, and share Skills in Claude Code — reusable markdown instructions that Claude automatically ...",
+    "host_name": "anthropic.skilljar.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/DeepLearningAIHQ/videos/agent-skills-with-anthropic-is-now-live-this-new-short-course-built-with-anthrop/1710316566614764",
+    "name": "Agent Skills with Anthropic is now live! This new short course",
+    "snippet": "You'll learn how to design and apply skills across real- world scenarios , and how they fit alongside tools, MCP, and subagents in modern ...",
+    "host_name": "www.facebook.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/AkihikoWatanabe/paper_notes/issues/4025",
+    "name": "Equipping agents for the real world with Agent Skills,",
+    "snippet": "Dec 20, 2025 — Equipping agents for the real world with Agent Skills, Anthropic, 2025.10 ・ opened on Dec 20, 2025 the-real-world-with-agent-skills ・ to join ...",
+    "host_name": "github.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to/s1infeb/equipping-agents-for-the-real-world-with-agent-skills-1kj1",
+    "name": "Equipping Agents for the Real World with Agent Skills",
+    "snippet": "Oct 20, 2025 — Equipping agents with real - world skills requires a comprehensive approach that addresses various challenges and opportunities. By focusing on ... Read more",
+    "host_name": "dev.to",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://claude.com/blog/building-agents-with-skills-equipping-agents-for-specialized-work",
+    "name": "Building Agents with Skills: Equipping Agents for Specialized",
+    "snippet": "In this post, we'll explain why we stopped building specialized agents and started building skills instead, and how this shift is changing how we think about extending agent capabilities.",
+    "host_name": "claude.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
